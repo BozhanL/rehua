@@ -12,6 +12,7 @@ allow-licenses:
   - CC0-1.0
   - CC-BY-4.0
   - 0BSD
+  - BlueOak-1.0.0
 
 fail-on-severity: low
 license-check: true
