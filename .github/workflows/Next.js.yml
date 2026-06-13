@@ -61,7 +61,7 @@ jobs:
         run: npm ci --no-audit
 
       - name: 🧪 Run tests
-        run: npm run test:cov -w web | tee ./coverage.txt && exit ${PIPESTATUS[0]}
+        run: npm run test:cov -w web | tee ./web/coverage.txt && exit ${PIPESTATUS[0]}
 
       - name: 🧪 Run Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@40d7aed38d0fbaea266c34c12ab06356eec894eb # v1.0.33
