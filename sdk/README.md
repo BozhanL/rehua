@@ -10,7 +10,7 @@ Just import and call some API functions like gif image below:
 
 > Left is server code, and right is client code utilizing the SDK
 
-# What [`Nestia`](https://nestia.io) is:
+## What [`Nestia`](https://nestia.io) is:
 
 ![Nestia Logo](https://nestia.io/logo.png)
 

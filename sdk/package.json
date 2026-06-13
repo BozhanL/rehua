@@ -14,12 +14,10 @@
   "private": true,
   "exports": {
     ".": {
-      "default": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "default": "./src/index.ts"
     },
     "./functional": {
-      "default": "./lib/functional/index.js",
-      "types": "./lib/functional/index.d.ts"
+      "default": "./src/functional/index.ts"
     },
     "./package.json": "./package.json"
   },
