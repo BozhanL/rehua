@@ -12,6 +12,10 @@
   },
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "^24",
+    "npm": "^11.11"
+  },
   "workspaces": [
     "api",
     "web",
@@ -21,8 +25,9 @@
     "commitlint": "commitlint",
     "prepare": "ts-patch install && husky",
     "postinstall": "patch-package",
-    "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "prettier": "prettier --ignore-path .gitignore --ignore-path .prettierignore --ignore-path sdk/.gitignore --ignore-path sdk/.prettierignore --ignore-path web/.gitignore --ignore-path api/.gitignore",
+    "format": "npm run prettier -- --check .",
+    "format:fix": "npm run prettier -- --write . "
   },
   "config": {
     "commitizen": {
