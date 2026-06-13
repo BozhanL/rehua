@@ -40,6 +40,6 @@
   },
   "dependencies": {
     "@nestia/fetcher": "11.2.1",
-    "typia": "12.1.0"
+    "typia": "12.1.1"
   }
 }
