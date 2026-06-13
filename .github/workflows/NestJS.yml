@@ -1,0 +1,122 @@
+name: NestJS CI/CD
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    strategy:
+      matrix:
+        command: [type, lint, format, test:e2e]
+
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: package.json
+          cache: npm
+          check-latest: true
+
+      - name: 📦 Install dependencies
+        run: npm ci --no-audit
+
+      - name: 🧪 Run ${{ matrix.command }} -w api
+        run: npm run ${{ matrix.command }} -w api
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # To create commit comment
+      pull-requests: write
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: package.json
+          cache: npm
+          check-latest: true
+
+      - name: 📦 Install dependencies
+        id: install
+        run: npm ci --no-audit
+
+      - name: 🧪 Run tests
+        run: npm run test:cov -w api | tee ./api/coverage.txt && exit ${PIPESTATUS[0]}
+
+      - name: 🧪 Run Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@40d7aed38d0fbaea266c34c12ab06356eec894eb # v1.0.33
+        if: ${{ success() || (failure() && steps.install.conclusion == 'success') }}
+        with:
+          create-new-comment: false
+          coverage-path: ./api/coverage.txt
+          coverage-summary-path: ./api/coverage/coverage-summary.json
+          junitxml-path: ./api/coverage/junit.xml
+          unique-id-for-comment: NestJS
+          title: Coverage Report (NestJS)
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: package.json
+          cache: npm
+          check-latest: true
+
+      - name: 📦 Install dependencies
+        run: npm ci --no-audit
+
+      - name: 🏗️ Build
+        run: npm run build -w api
+
+      - name: 📦 Upload build artifacts to GitHub
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        id: upload
+        with:
+          name: dist
+          if-no-files-found: error
+          path: ./api/dist
+          retention-days: 7
+
+  collect:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    name: Final Results
+    timeout-minutes: 2
+    needs:
+      - check
+      - test
+      - build
+    steps:
+      - name: ✔️ Fail if any dependency failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1

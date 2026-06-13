@@ -1,0 +1,24 @@
+{
+  "features": {
+    "ghcr.io/devcontainers-extra/features/cz-cli:1": {
+      "version": "1.0.2",
+      "resolved": "ghcr.io/devcontainers-extra/features/cz-cli@sha256:84d32f60ec45bdca23a0ec69d753883fb01fe594f204c5903b2871b2ac4075ed",
+      "integrity": "sha256:84d32f60ec45bdca23a0ec69d753883fb01fe594f204c5903b2871b2ac4075ed"
+    },
+    "ghcr.io/devcontainers-extra/features/nestjs-cli:2": {
+      "version": "2.0.16",
+      "resolved": "ghcr.io/devcontainers-extra/features/nestjs-cli@sha256:ab4c5c5064288e2d1d51081e3429fabb3394fdfc575305c768328d5ab167f8b6",
+      "integrity": "sha256:ab4c5c5064288e2d1d51081e3429fabb3394fdfc575305c768328d5ab167f8b6"
+    },
+    "ghcr.io/devcontainers-extra/features/npm-package:1": {
+      "version": "1.0.4",
+      "resolved": "ghcr.io/devcontainers-extra/features/npm-package@sha256:ee315c064588643e1178eec33275efa55739f43761fc965b95a5d05eed70c76d",
+      "integrity": "sha256:ee315c064588643e1178eec33275efa55739f43761fc965b95a5d05eed70c76d"
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "1.9.1",
+      "resolved": "ghcr.io/devcontainers/features/docker-outside-of-docker@sha256:dc89605f01ff2f24252c61f7c8ba2a58ccdbc14f2ebf87a7952d9e2b89834850",
+      "integrity": "sha256:dc89605f01ff2f24252c61f7c8ba2a58ccdbc14f2ebf87a7952d9e2b89834850"
+    }
+  }
+}

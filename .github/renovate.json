@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    "helpers:disableTypesNodeMajor",
+    "helpers:pinGitHubActionDigestsToSemver",
+    // ":assignAndReview(BozhanL)", // Add this back when development starts
+    ":label(dependencies)",
+    ":semanticCommits",
+    "local>BozhanL/rehua-web//.github/renovate/minimumReleaseAge"
+  ],
+  "ignorePresets": ["security:minimumReleaseAgeNpm"],
+  "postUpdateOptions": ["npmDedupe", "npmInstallTwice"],
+  "timezone": "Pacific/Auckland"
+}

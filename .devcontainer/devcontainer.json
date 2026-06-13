@@ -1,0 +1,42 @@
+{
+  "name": "Node.js & TypeScript",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:24-trixie",
+  "forwardPorts": [3001],
+  "remoteUser": "node",
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      "extensions": [
+        "Orta.vscode-jest",
+        "ms-vsliveshare.vsliveshare",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "redhat.vscode-yaml",
+        "dbaeumer.vscode-eslint",
+        "HTMLHint.vscode-htmlhint",
+        "ecmel.vscode-html-css",
+        "ms-azuretools.vscode-containers",
+        "SonarSource.sonarlint-vscode",
+        "oderwat.indent-rainbow"
+      ]
+    }
+  },
+  "postCreateCommand": "npm install",
+  "features": {
+    "ghcr.io/devcontainers-extra/features/nestjs-cli:2": {},
+    "ghcr.io/devcontainers-extra/features/cz-cli:1": {},
+    "ghcr.io/devcontainers-extra/features/npm-package:1": {
+      "package": "@commitlint/cz-commitlint"
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "moby": false
+    }
+  },
+  "mounts": [
+    {
+      "source": "/var/run/docker.sock",
+      "target": "/var/run/docker-host.sock",
+      "type": "bind"
+    }
+  ]
+}

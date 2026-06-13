@@ -1,0 +1,15 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "files.associations": {
+    "renovate.json": "jsonc"
+  },
+  "eslint.format.enable": false,
+  "editor.formatOnSave": false,
+  "editor.tabSize": 2,
+  "sonarlint.connectedMode.project": {
+    "connectionId": "bozhanl",
+    "projectKey": "BozhanL_rehua"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "name": "@rehua/web",
+  "version": "0.0.1",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/BozhanL/rehua",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BozhanL/rehua.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BozhanL/rehua/issues"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^24",
+    "npm": "^11.11"
+  },
+  "scripts": {
+    "dev": "next dev -p 3000 --webpack",
+    "build": "next build --webpack",
+    "start": "serve out",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint": "eslint --max-warnings 0 .",
+    "lint:fix": "eslint --max-warnings 0 --fix .",
+    "type": "tsc --noEmit",
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "check-all:par": "concurrently --kill-others-on-fail npm:type npm:lint npm:test:cov npm:format",
+    "check-all": "npm run check-all:par -- -m 1",
+    "fix-all": "concurrently -m 1 --kill-others-on-fail npm:lint:fix npm:format:fix"
+  },
+  "dependencies": {
+    "@rehua/sdk": "*",
+    "@tanstack/react-query": "5.101.0",
+    "@tanstack/react-query-devtools": "5.101.0",
+    "next": "16.2.7",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "typia": "12.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.4",
+    "@tailwindcss/postcss": "4.3.0",
+    "@tanstack/eslint-plugin-query": "5.101.0",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@trivago/prettier-plugin-sort-imports": "6.0.2",
+    "@types/jest": "30.0.0",
+    "@types/node": "25.9.1",
+    "@types/react": "19.2.16",
+    "@types/react-dom": "19.2.3",
+    "@typia/unplugin": "12.1.1",
+    "concurrently": "10.0.3",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.7",
+    "eslint-config-prettier": "10.1.8",
+    "jest": "30.4.2",
+    "jest-environment-jsdom": "30.4.1",
+    "jest-junit": "17.0.0",
+    "prettier": "3.8.3",
+    "serve": "14.2.6",
+    "tailwindcss": "4.3.0",
+    "ts-jest": "29.4.11",
+    "ts-node": "10.9.2",
+    "ts-patch": "4.0.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.60.1"
+  }
+}

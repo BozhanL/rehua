@@ -1,0 +1,149 @@
+name: Next.js CI/CD
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    strategy:
+      matrix:
+        command: [type, lint, format]
+
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: package.json
+          cache: npm
+          check-latest: true
+
+      - name: 📦 Install dependencies
+        run: npm ci --no-audit
+
+      - name: 🧪 Run ${{ matrix.command }} -w web
+        run: npm run ${{ matrix.command }} -w web
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # To create commit comment
+      pull-requests: write
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: package.json
+          cache: npm
+          check-latest: true
+
+      - name: 📦 Install dependencies
+        id: install
+        run: npm ci --no-audit
+
+      - name: 🧪 Run tests
+        run: npm run test:cov -w web | tee ./coverage.txt && exit ${PIPESTATUS[0]}
+
+      - name: 🧪 Run Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@40d7aed38d0fbaea266c34c12ab06356eec894eb # v1.0.33
+        if: ${{ success() || (failure() && steps.install.conclusion == 'success') }}
+        with:
+          create-new-comment: false
+          coverage-path: ./web/coverage.txt
+          coverage-summary-path: ./web/coverage/coverage-summary.json
+          junitxml-path: ./web/coverage/junit.xml
+          unique-id-for-comment: Next.js
+          title: Coverage Report (Next.js)
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: package.json
+          cache: npm
+          check-latest: true
+
+      - name: 📦 Install dependencies
+        run: npm ci --no-audit
+
+      - name: 🏗️ Build
+        run: npm run build -w web
+
+      - name: 📦 Upload build artifacts to GitHub
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        id: upload
+        with:
+          name: out
+          if-no-files-found: error
+          path: ./web/out
+          retention-days: 7
+
+  page:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    timeout-minutes: 5
+    needs: build
+    permissions:
+      contents: write
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: 📦 Download page files
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        id: download
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact-id }}
+          path: out
+
+      - name: 📦 Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
+        with:
+          folder: ${{ steps.download.outputs.download-path }}
+          branch: gh-pages
+          clean-exclude: pr-preview
+          force: false
+
+  collect:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    name: Final Results
+    timeout-minutes: 2
+    needs:
+      - check
+      - test
+      - build
+      - page
+    steps:
+      - name: ✔️ Fail if any dependency failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
