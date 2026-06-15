@@ -10,7 +10,7 @@ import { functional } from 'typia';
 function useHelloOptions(): ReturnType<
   typeof queryOptions<string, Error, string, string[]>
 > {
-  const host = useContext(APIUrlContext).href;
+  const host = useContext(APIUrlContext);
 
   return queryOptions({
     queryKey: ['hello', host],
