@@ -1,0 +1,45 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "name": "Jest (web)",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceFolder}/web/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      "cwd": "${workspaceFolder}/web",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "windows": {
+        "runtimeArgs": [
+          "--inspect-brk",
+          "${workspaceFolder}/web/node_modules/jest/bin/jest.js",
+          "--runInBand"
+        ]
+      }
+    },
+    {
+      "type": "node",
+      "name": "Jest (api)",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceFolder}/api/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      "cwd": "${workspaceFolder}/api",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "windows": {
+        "runtimeArgs": [
+          "--inspect-brk",
+          "${workspaceFolder}/api/node_modules/jest/bin/jest.js",
+          "--runInBand"
+        ]
+      }
+    }
+  ]
+}

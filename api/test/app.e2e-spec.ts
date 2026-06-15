@@ -1,10 +1,10 @@
 import { AppModule } from '@/app.module.js';
-import { afterEach, beforeEach, describe, it } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 import type { INestApplication } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
-import { json } from 'typia';
+import { assert, json, TypeGuardError } from 'typia';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -27,5 +27,18 @@ describe('AppController (e2e)', () => {
 
   afterEach(async () => {
     await app.close();
+  });
+});
+
+describe('typia', () => {
+  it('should not raise an error', () => {
+    expect(() => assert<number>(1)).not.toThrow();
+    expect(assert<number>(1)).toBe(1);
+  });
+
+  it('should not raise an error', () => {
+    expect(() => assert<string>(1 as unknown as string)).toThrow(
+      TypeGuardError,
+    );
   });
 });

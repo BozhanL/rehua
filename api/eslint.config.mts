@@ -1,11 +1,13 @@
 import eslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import { configs as sonarjs } from 'eslint-plugin-sonarjs';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 const eslintConfig = defineConfig([
   eslint.configs.recommended,
+  sonarjs.recommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
   {

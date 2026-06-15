@@ -2,12 +2,14 @@ import js from '@eslint/js';
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import { configs as sonarjs } from 'eslint-plugin-sonarjs';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
 const eslintConfig = defineConfig([
   nextVitals,
   js.configs.recommended,
+  sonarjs.recommended,
 
   pluginQuery.configs['flat/recommended-strict'],
 
