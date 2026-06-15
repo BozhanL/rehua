@@ -21,7 +21,7 @@ export default function Providers({
 
   useEffect(() => {
     if (apiUrl === null) {
-      setApiUrl(new URL('/api', window.location.href));
+      setApiUrl(new URL('/api', globalThis.location.href));
     }
   }, [apiUrl, setApiUrl]);
 
