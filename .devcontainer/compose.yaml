@@ -1,13 +1,13 @@
 services:
   app:
-    image: mcr.microsoft.com/devcontainers/typescript-node:24-trixie
+    image: mcr.microsoft.com/devcontainers/typescript-node:24-trixie@sha256:e36c918ec9c679c18451231e277ea9122c00a097fb6e4a23c8c3d35bf08bbc3a
     volumes:
       - ..:/workspace:cached
     network_mode: service:db
     command: sleep infinity
 
   db:
-    image: mongo:8.3
+    image: mongo:8.3@sha256:48a009d2d8007e92d6d7e8baa31713cd11c48c06e827e856240e5a1d319b49d9
     restart: unless-stopped
     volumes:
       - mongodb-data:/data/db
