@@ -12,7 +12,10 @@ export default function Providers({
   children,
 }: Readonly<{ children: ReactNode }>): JSX.Element {
   const isClient = useIsClient();
-  const [apiUrl, setApiUrl] = useLocalStorage<string>('apiUrl', '');
+  const [apiUrl, setApiUrl] = useLocalStorage<string>('apiUrl', '', {
+    serializer: (d) => d,
+    deserializer: (d) => d,
+  });
 
   useEffect(() => {
     if (apiUrl.trim() === '') {
