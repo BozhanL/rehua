@@ -1,8 +1,11 @@
 {
-  "name": "Node.js & TypeScript",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:24-trixie",
-  "forwardPorts": [3001],
+  "name": "Node.js & TypeScript & MongoDB",
+  "dockerComposeFile": "compose.yaml",
+  "service": "app",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [3000, 3001, "db:27017"],
   "remoteUser": "node",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "customizations": {
     // Configure properties specific to VS Code.
     "vscode": {
@@ -17,7 +20,8 @@
         "ecmel.vscode-html-css",
         "ms-azuretools.vscode-containers",
         "SonarSource.sonarlint-vscode",
-        "oderwat.indent-rainbow"
+        "oderwat.indent-rainbow",
+        "mongodb.mongodb-vscode"
       ]
     }
   },
@@ -28,7 +32,7 @@
     "ghcr.io/devcontainers-extra/features/npm-package:1": {
       "package": "@commitlint/cz-commitlint"
     },
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1.10.0": {
       "moby": false
     }
   },

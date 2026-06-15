@@ -1,0 +1,18 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/typescript-node:24-trixie
+    volumes:
+      - ..:/workspace:cached
+    network_mode: service:db
+    command: sleep infinity
+
+  db:
+    image: mongo:8.3
+    restart: unless-stopped
+    volumes:
+      - mongodb-data:/data/db
+      - mongo_config:/data/configdb
+
+volumes:
+  mongodb-data:
+  mongo_config:

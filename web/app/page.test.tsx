@@ -5,11 +5,11 @@ import { assert, TypeGuardError } from 'typia';
 
 describe('Page', () => {
   beforeEach(() => {
-    jest.spyOn(global.Math, 'random').mockReturnValue(0.123456789);
+    jest.spyOn(globalThis.Math, 'random').mockReturnValue(0.123456789);
   });
 
   afterEach(() => {
-    jest.spyOn(global.Math, 'random').mockRestore();
+    jest.spyOn(globalThis.Math, 'random').mockRestore();
   });
 
   it('renders page', () => {
