@@ -1,25 +1,29 @@
 'use client';
 
+import { APIUrlContext } from './providers';
+import isTesting from '@/app/functions/isTesting';
 import { getHello } from '@rehua/sdk/functional';
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { env } from 'process';
-import type { JSX } from 'react';
+import { useContext, type JSX } from 'react';
 import { functional } from 'typia';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function getHelloOptions() {
+function useHelloOptions(): ReturnType<
+  typeof queryOptions<string, Error, string, string[]>
+> {
+  const host = useContext(APIUrlContext).href;
+
   return queryOptions({
-    queryKey: ['hello'],
+    queryKey: ['hello', host],
     queryFn: () =>
       getHello({
-        host: 'http://localhost:3001',
-        simulate: env.NODE_ENV === 'test',
+        host: host,
+        simulate: isTesting(),
       }),
   });
 }
 
 function Home(): JSX.Element {
-  const query = useQuery(getHelloOptions());
+  const query = useQuery(useHelloOptions());
 
   if (query.isLoading) {
     return <h1>Loading...</h1>;
