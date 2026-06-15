@@ -11,5 +11,20 @@
   "sonarlint.connectedMode.project": {
     "connectionId": "bozhanl",
     "projectKey": "BozhanL_rehua"
-  }
+  },
+  "jest.virtualFolders": [
+    {
+      "name": "api",
+      "rootPath": "api"
+    },
+    {
+      "name": "api:e2e",
+      "rootPath": "api/test",
+      "jestCommandLine": "npm run test:e2e --"
+    },
+    {
+      "name": "web",
+      "rootPath": "web"
+    }
+  ]
 }

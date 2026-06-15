@@ -1,7 +1,7 @@
 import Page from '@/app/page';
 import Providers from '@/app/providers';
 import { render, screen } from '@testing-library/react';
-import typia from 'typia';
+import { assert, TypeGuardError } from 'typia';
 
 describe('Page', () => {
   beforeEach(() => {
@@ -28,6 +28,13 @@ describe('Page', () => {
 
 describe('typia', () => {
   it('should not raise an error', () => {
-    typia.assert<number>(1);
+    expect(() => assert<number>(1)).not.toThrow();
+    expect(assert<number>(1)).toBe(1);
+  });
+
+  it('should not raise an error', () => {
+    expect(() => assert<string>(1 as unknown as string)).toThrow(
+      TypeGuardError,
+    );
   });
 });
