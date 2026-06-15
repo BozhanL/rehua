@@ -1,4 +1,5 @@
-import { AppModule } from './app.module';
+import { AppModule } from '@/app.module';
+import { isProduction } from '@/utils/env';
 import type { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
@@ -6,7 +7,7 @@ export async function createApp(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: true,
+    origin: !isProduction,
     credentials: true,
   });
 
