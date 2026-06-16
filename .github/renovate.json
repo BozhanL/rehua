@@ -8,12 +8,12 @@
     ":timezone(Pacific/Auckland)",
 
     // ":assignAndReview(BozhanL)", // Add this back when development starts
-    ":labels(dependencies, {{{manager}}})",
 
     "local>BozhanL/rehua//.github/renovate/minimumReleaseAge",
     "local>BozhanL/rehua//.github/renovate/automerge"
   ],
   "ignorePresets": ["security:minimumReleaseAgeNpm"],
 
+  "labels": ["dependencies", "{{{manager}}}"],
   "postUpdateOptions": ["npmDedupe", "npmInstallTwice"]
 }
