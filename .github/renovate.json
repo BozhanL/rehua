@@ -8,8 +8,7 @@
     ":timezone(Pacific/Auckland)",
 
     // ":assignAndReview(BozhanL)", // Add this back when development starts
-    ":label(dependencies)",
-    ":label({{{manager}}})",
+    ":labels(dependencies, {{{manager}}})",
 
     "local>BozhanL/rehua//.github/renovate/minimumReleaseAge",
     "local>BozhanL/rehua//.github/renovate/automerge"
