@@ -4,13 +4,23 @@
     "config:best-practices",
     "helpers:disableTypesNodeMajor",
     "helpers:pinGitHubActionDigestsToSemver",
+    ":semanticCommits",
+    ":timezone(Pacific/Auckland)",
+
     // ":assignAndReview(BozhanL)", // Add this back when development starts
     ":label(dependencies)",
     ":label({{{manager}}})",
-    ":semanticCommits",
-    "local>BozhanL/rehua-web//.github/renovate/minimumReleaseAge"
+
+    ":automergePr",
+    ":automergeRequireAllStatusChecks",
+    ":automergeLinters",
+    ":automergeTesters",
+    ":automergeDigest",
+    ":automergePatch",
+
+    "local>BozhanL/rehua//.github/renovate/minimumReleaseAge"
   ],
   "ignorePresets": ["security:minimumReleaseAgeNpm"],
-  "postUpdateOptions": ["npmDedupe", "npmInstallTwice"],
-  "timezone": "Pacific/Auckland"
+
+  "postUpdateOptions": ["npmDedupe", "npmInstallTwice"]
 }
