@@ -11,14 +11,8 @@
     ":label(dependencies)",
     ":label({{{manager}}})",
 
-    ":automergePr",
-    ":automergeRequireAllStatusChecks",
-    ":automergeLinters",
-    ":automergeTesters",
-    ":automergeDigest",
-    ":automergePatch",
-
-    "local>BozhanL/rehua//.github/renovate/minimumReleaseAge"
+    "local>BozhanL/rehua//.github/renovate/minimumReleaseAge",
+    "local>BozhanL/rehua//.github/renovate/automerge"
   ],
   "ignorePresets": ["security:minimumReleaseAgeNpm"],
 
