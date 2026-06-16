@@ -6,6 +6,7 @@
     "helpers:pinGitHubActionDigestsToSemver",
     // ":assignAndReview(BozhanL)", // Add this back when development starts
     ":label(dependencies)",
+    ":label({{{manager}}})",
     ":semanticCommits",
     "local>BozhanL/rehua-web//.github/renovate/minimumReleaseAge"
   ],
