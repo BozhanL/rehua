@@ -36,7 +36,7 @@
     "fix-all": "concurrently -m 1 --kill-others-on-fail npm:lint:fix npm:format:fix"
   },
   "dependencies": {
-    "@nestia/core": "11.2.1",
+    "@nestia/core": "11.3.0",
     "@nestia/e2e": "11.2.1",
     "@nestia/fetcher": "11.2.1",
     "@nestia/sdk": "11.2.1",
