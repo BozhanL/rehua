@@ -10,7 +10,8 @@
     // ":assignAndReview(BozhanL)", // Add this back when development starts
 
     "local>BozhanL/rehua//.github/renovate/minimumReleaseAge",
-    "local>BozhanL/rehua//.github/renovate/automerge"
+    "local>BozhanL/rehua//.github/renovate/automerge",
+    "local>BozhanL/rehua//.github/renovate/nestia"
   ],
   "ignorePresets": ["security:minimumReleaseAgeNpm"],
 
