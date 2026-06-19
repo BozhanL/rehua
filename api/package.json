@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@nestia/core": "11.3.0",
-    "@nestia/e2e": "11.2.1",
+    "@nestia/e2e": "11.3.0",
     "@nestia/fetcher": "11.2.1",
     "@nestia/sdk": "11.2.1",
     "@nestjs/common": "11.1.26",
