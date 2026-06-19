@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
-    "@tailwindcss/postcss": "4.3.0",
+    "@tailwindcss/postcss": "4.3.1",
     "@tanstack/eslint-plugin-query": "5.101.0",
     "@testing-library/dom": "10.4.1",
     "@testing-library/jest-dom": "6.9.1",
@@ -64,7 +64,7 @@
     "jest-junit": "17.0.0",
     "prettier": "3.8.4",
     "serve": "14.2.6",
-    "tailwindcss": "4.3.0",
+    "tailwindcss": "4.3.1",
     "ts-jest": "29.4.11",
     "ts-node": "10.9.2",
     "ts-patch": "4.0.1",
