@@ -21,7 +21,9 @@
         "ms-azuretools.vscode-containers",
         "SonarSource.sonarlint-vscode",
         "oderwat.indent-rainbow",
-        "mongodb.mongodb-vscode"
+        "mongodb.mongodb-vscode",
+        "github.vscode-github-actions",
+        "GitHub.vscode-pull-request-github"
       ]
     }
   },

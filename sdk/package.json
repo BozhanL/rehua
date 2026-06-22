@@ -19,6 +19,9 @@
     "./functional": {
       "default": "./src/functional/index.ts"
     },
+    "./functional/*": {
+      "default": "./src/functional/*/index.ts"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {

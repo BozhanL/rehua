@@ -1,7 +1,7 @@
 'use client';
 
 import { APIUrlContext } from './providers';
-import isTesting from '@/app/functions/isTesting';
+import { isTesting } from '@/app/utils/env';
 import { getHello } from '@rehua/sdk/functional';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import { useContext, type JSX } from 'react';
@@ -10,14 +10,14 @@ import { functional } from 'typia';
 function useHelloOptions(): ReturnType<
   typeof queryOptions<string, Error, string, string[]>
 > {
-  const host = useContext(APIUrlContext).href;
+  const host = useContext(APIUrlContext);
 
   return queryOptions({
     queryKey: ['hello', host],
     queryFn: () =>
       getHello({
         host: host,
-        simulate: isTesting(),
+        simulate: isTesting,
       }),
   });
 }
