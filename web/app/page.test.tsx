@@ -32,7 +32,7 @@ describe('typia', () => {
     expect(assert<number>(1)).toBe(1);
   });
 
-  it('should not raise an error', () => {
+  it('should raise an error', () => {
     expect(() => assert<string>(1 as unknown as string)).toThrow(
       TypeGuardError,
     );
