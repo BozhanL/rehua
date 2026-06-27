@@ -1,0 +1,14 @@
+# Ignore all
+**
+
+# Except
+!.npmrc
+!package.json
+!package-lock.json
+
+!api/package.json
+!api/package-lock.json
+!api/nest-cli.json
+!api/nestia.config.ts
+!api/tsconfig*.json
+!api/src/**
