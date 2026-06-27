@@ -64,4 +64,4 @@ jobs:
         with:
           subject-name: ghcr.io/BozhanL/rehua-api
           subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+          push-to-registry: false
