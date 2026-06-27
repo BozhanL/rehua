@@ -28,7 +28,6 @@ jobs:
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee
-        if: github.event_name != 'pull_request'
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -38,7 +37,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9
         with:
-          images: ghcr.io/rehua/api
+          images: ghcr.io/BozhanL/rehua-api
           labels: |
             org.opencontainers.image.licenses=GPL-3.0-or-later
 
@@ -54,7 +53,7 @@ jobs:
         with:
           context: .
           file: ./api/Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           sbom: true
           provenance: mode=max
           tags: ${{ steps.meta.outputs.tags }}
@@ -62,8 +61,7 @@ jobs:
 
       - name: Generate artifact attestation
         uses: actions/attest@a1948c3f048ba23858d222213b7c278aabede763
-        if: github.event_name != 'pull_request'
         with:
-          subject-name: ghcr.io/rehua/api
+          subject-name: ghcr.io/BozhanL/rehua-api
           subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+          push-to-registry: false
