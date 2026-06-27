@@ -64,7 +64,7 @@ jobs:
         run: npm run test:cov -w api | tee ./api/coverage.txt && exit ${PIPESTATUS[0]}
 
       - name: 🧪 Run Jest Coverage Comment
-        uses: MishaKav/jest-coverage-comment@40d7aed38d0fbaea266c34c12ab06356eec894eb # v1.0.33
+        uses: MishaKav/jest-coverage-comment@25f2818fee93043532f640ad32a7565b4bd4ea9a # v1.0.34
         if: ${{ success() || (failure() && steps.install.conclusion == 'success') }}
         with:
           create-new-comment: false
@@ -99,7 +99,7 @@ jobs:
         run: npm run test:e2e -w api
 
       - name: 🧪 Run Jest Coverage Comment
-        uses: MishaKav/jest-coverage-comment@40d7aed38d0fbaea266c34c12ab06356eec894eb # v1.0.33
+        uses: MishaKav/jest-coverage-comment@25f2818fee93043532f640ad32a7565b4bd4ea9a # v1.0.34
         if: ${{ success() || (failure() && steps.install.conclusion == 'success') }}
         with:
           create-new-comment: false
