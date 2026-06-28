@@ -7,8 +7,18 @@
 !package-lock.json
 
 !api/package.json
-!api/package-lock.json
 !api/nest-cli.json
 !api/nestia.config.ts
-!api/tsconfig*.json
+!api/tsconfig.json
+!api/tsconfig.build.json
 !api/src/**
+
+!sdk/package.json
+!sdk/tsconfig.json
+!sdk/src/**
+
+!web/package.json
+!web/postcss.config.ts
+!web/next.config.mts
+!web/tsconfig.json
+!web/app/**
