@@ -22,6 +22,10 @@ jobs:
       attestations: write
       id-token: write
 
+    strategy:
+      matrix:
+        workspace: [web, api]
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -37,9 +41,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
         with:
-          images: ghcr.io/BozhanL/rehua-api
+          images: ghcr.io/BozhanL/rehua-${{ matrix.workspace }}
           labels: |
             org.opencontainers.image.licenses=GPL-3.0-or-later
+            org.opencontainers.image.title=rehua-${{ matrix.workspace }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@06116385d9baf250c9f4dcb4858b16962ea869c3 # v4.1.0
@@ -52,7 +57,7 @@ jobs:
         id: push
         with:
           context: .
-          file: ./api/Dockerfile
+          file: ./${{ matrix.workspace }}/Dockerfile
           push: true
           sbom: true
           provenance: mode=max
@@ -62,6 +67,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest@a1948c3f048ba23858d222213b7c278aabede763 # v4.1.1
         with:
-          subject-name: ghcr.io/BozhanL/rehua-api
+          subject-name: ghcr.io/BozhanL/rehua-${{ matrix.workspace }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: false

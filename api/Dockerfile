@@ -2,7 +2,8 @@ FROM node:24-trixie-slim@sha256:366fdef91728b1b7fa18c84fba63b6e79ed77b7e10cc2068
 
 WORKDIR /app
 
-COPY ./ ./
+COPY ./package-lock.json ./package.json ./.npmrc /app/
+COPY ./api /app/api
 
 RUN npm ci --no-audit && \
   npm run build -w api && \
