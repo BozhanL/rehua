@@ -63,39 +63,7 @@ jobs:
       - name: 🧪 Run tests
         run: npm run test:cov -w api | tee ./api/coverage.txt && exit ${PIPESTATUS[0]}
 
-      - name: 🧪 Run Jest Coverage Comment
-        uses: MishaKav/jest-coverage-comment@25f2818fee93043532f640ad32a7565b4bd4ea9a # v1.0.34
-        if: ${{ success() || (failure() && steps.install.conclusion == 'success') }}
-        with:
-          create-new-comment: false
-          coverage-path: ./api/coverage.txt
-          coverage-summary-path: ./api/coverage/coverage-summary.json
-          junitxml-path: ./api/coverage/junit.xml
-          unique-id-for-comment: NestJS
-          title: Coverage Report (NestJS)
-
-  test-e2e:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: write # To create commit comment
-      pull-requests: write
-    steps:
-      - name: 🏗 Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-
-      - name: 🏗 Setup Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version-file: package.json
-          cache: npm
-          check-latest: true
-
-      - name: 📦 Install dependencies
-        id: install
-        run: npm ci --no-audit
-
-      - name: 🧪 Run tests
+      - name: 🧪 Run tests (E2E)
         run: npm run test:e2e -w api
 
       - name: 🧪 Run Jest Coverage Comment
@@ -103,9 +71,14 @@ jobs:
         if: ${{ success() || (failure() && steps.install.conclusion == 'success') }}
         with:
           create-new-comment: false
-          junitxml-path: ./api/test/coverage/junit.xml
-          unique-id-for-comment: NestJS E2E
-          title: Test Report (NestJS E2E)
+          coverage-path: ./api/coverage.txt
+          multiple-junitxml-files: |
+            Unit test, ./api/coverage/junit.xml
+            E2E, ./api/test/coverage/junit.xml
+          coverage-summary-path: ./api/coverage/coverage-summary.json
+          coverage-path-prefix: api/
+          unique-id-for-comment: NestJS
+          title: Coverage Report (NestJS)
 
   build:
     runs-on: ubuntu-latest
