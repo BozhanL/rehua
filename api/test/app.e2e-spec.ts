@@ -20,10 +20,11 @@ describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
   let mongod: MongoMemoryServer;
 
+  // Set timeout to 30s to allow MongoMemoryServer to download binary
   beforeAll(async () => {
     mongod = await MongoMemoryServer.create();
     process.env['MONGODB_URI'] = mongod.getUri();
-  });
+  }, 30 * 1000);
 
   afterAll(async () => {
     await mongod.stop();
