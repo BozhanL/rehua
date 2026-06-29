@@ -7,15 +7,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import Joi from 'joi';
 
+// Allow e2e test to override this module
+export const mongoModule = MongooseModule.forRootAsync({
+  imports: [ConfigModule],
+  useFactory: (configService: ConfigService<Config, true>) => ({
+    uri: configService.get<string>('MONGODB_URI'),
+    dbName: 'rehua',
+  }),
+  inject: [ConfigService],
+});
+
 @Module({
   imports: [
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService<Config, true>) => ({
-        uri: configService.get<string>('MONGODB_URI'),
-      }),
-      inject: [ConfigService],
-    }),
+    mongoModule,
 
     ConfigModule.forRoot({
       validationSchema: Joi.object({
