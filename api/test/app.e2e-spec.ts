@@ -2,14 +2,19 @@ import { AppModule } from '@/app.module.js';
 import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 import type { INestApplication } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { assert, json, TypeGuardError } from 'typia';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
+  let mongod: MongoMemoryServer;
 
   beforeEach(async () => {
+    mongod = await MongoMemoryServer.create();
+    process.env['MONGODB_URI'] = mongod.getUri();
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -27,6 +32,7 @@ describe('AppController (e2e)', () => {
 
   afterEach(async () => {
     await app.close();
+    await mongod.stop();
   });
 });
 

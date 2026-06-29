@@ -6,8 +6,10 @@
 //================================================================
 import type { IConnection } from "@nestia/fetcher";
 import { PlainFetcher } from "@nestia/fetcher";
-import type { Primitive, Resolved } from "typia";
+import type { Resolved } from "typia";
 import typia from "typia";
+
+export * as hello from "./hello/index";
 
 /**
  * @controller AppController.getHello
@@ -27,7 +29,7 @@ export async function getHello(
       });
 }
 export namespace getHello {
-  export type Output = Primitive<string>;
+  export type Output = string;
 
   export const METADATA = {
     method: "GET",
@@ -41,8 +43,7 @@ export namespace getHello {
   } as const;
 
   export const path = () => "/";
-  export const random = (): Resolved<Primitive<string>> =>
-    typia.random<Primitive<string>>();
+  export const random = (): Resolved<string> => typia.random<string>();
   export const simulate = (_connection: IConnection): Output => {
     return random();
   };

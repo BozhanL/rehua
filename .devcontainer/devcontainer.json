@@ -44,5 +44,19 @@
       "target": "/var/run/docker-host.sock",
       "type": "bind"
     }
-  ]
+  ],
+  "containerEnv": {
+    "MONGODB_URI": "mongodb://localhost:27017/"
+  },
+  "portsAttributes": {
+    "3000": {
+      "label": "web"
+    },
+    "3001": {
+      "label": "api"
+    },
+    "27017": {
+      "label": "mongodb"
+    }
+  }
 }

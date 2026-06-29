@@ -1,9 +1,8 @@
-import Page from '@/app/page';
+import Page from '@/app/hello/page';
 import Providers from '@/app/providers';
 import { render, screen } from '@testing-library/react';
 import { uniformFloat64 } from 'pure-rand/distribution/uniformFloat64';
 import { xoroshiro128plus } from 'pure-rand/generator/xoroshiro128plus';
-import { assert, TypeGuardError } from 'typia';
 
 describe('Page', () => {
   beforeEach(() => {
@@ -27,20 +26,7 @@ describe('Page', () => {
 
   it('renders homepage unchanged', async () => {
     const { container } = render(<Page />, { wrapper: Providers });
-    await screen.findByText('Hello', { exact: false });
+    await screen.findByText('Create Hello');
     expect(container).toMatchSnapshot();
-  });
-});
-
-describe('typia', () => {
-  it('should not raise an error', () => {
-    expect(() => assert<number>(1)).not.toThrow();
-    expect(assert<number>(1)).toBe(1);
-  });
-
-  it('should raise an error', () => {
-    expect(() => assert<string>(1 as unknown as string)).toThrow(
-      TypeGuardError,
-    );
   });
 });
