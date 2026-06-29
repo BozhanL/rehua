@@ -18,8 +18,8 @@ What kind of change does this PR introduce?
 
 <!-- Please check the one that applies to this PR using "x". -->
 
-- [ ] Bugfix <!-- closes # (issue number) -->
-- [ ] Feature <!-- Add feature name or id here -->
+- [ ] Bugfix: <!-- closes # (issue number) -->
+- [ ] Feature: <!-- Add feature name or id here -->
 - [ ] Code style update (formatting, local variables)
 - [ ] Refactoring (no functional changes, no api changes)
 - [ ] Build related changes (e.g. dependency updates, npm scripts, etc.)
