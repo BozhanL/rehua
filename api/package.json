@@ -21,7 +21,7 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "dev": "npm run start:dev",
-    "start": "nest start",
+    "start": "cross-env NODE_ENV=production nest start",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main",

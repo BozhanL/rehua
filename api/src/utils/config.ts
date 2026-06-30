@@ -1,3 +1,4 @@
+import { registerAs } from '@nestjs/config';
 import { tags } from 'typia';
 
 export interface Config {
@@ -6,4 +7,14 @@ export interface Config {
   NODE_ENV: 'test' | 'development' | 'production';
 
   MONGODB_URI_FILE: string;
+
+  https: {
+    cert: string;
+    key: string;
+  };
 }
+
+export const https = registerAs('https', () => ({
+  cert: process.env['API_CERT'],
+  key: process.env['API_KEY'],
+}));

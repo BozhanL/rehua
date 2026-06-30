@@ -1,7 +1,7 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HelloModule } from './hello/hello.module';
-import { Config } from './utils/config';
+import { Config, https } from './utils/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -22,43 +22,51 @@ export const mongoModule = MongooseModule.forRootAsync({
   inject: [ConfigService],
 });
 
+// Allow bootstrap to create this module and read https config
+export const configModule = ConfigModule.forRoot({
+  validationSchema: Joi.object({
+    NODE_ENV: Joi.string()
+      .valid('development', 'production', 'test')
+      .required(),
+    PORT: Joi.number().port().default(3001),
+    API_CERT: requiredReadableFilePath(['test', 'development']),
+    API_KEY: requiredReadableFilePath(['test', 'development']),
+    MONGODB_URI_FILE: requiredReadableFilePath(['test']),
+  }),
+  load: [https],
+});
+
+// eslint-disable-next-line sonarjs/function-return-type
+function fileExistsValidator(
+  value: string,
+  helpers: CustomHelpers,
+): string | ErrorReport {
+  try {
+    accessSync(value, constants.R_OK);
+    return value;
+  } catch (e) {
+    return typia.is<Error>(e)
+      ? helpers.error(e.message)
+      : helpers.error(
+          'Unknown error during MONGODB_URI_FILE file permission validation',
+        );
+  }
+}
+
+function requiredReadableFilePath(
+  skipEnvs: Config['NODE_ENV'][],
+): Joi.StringSchema {
+  return Joi.string()
+    .when('NODE_ENV', {
+      is: Joi.valid(...skipEnvs),
+      then: Joi.optional(),
+      otherwise: Joi.required(),
+    })
+    .custom(fileExistsValidator, 'file permission validation');
+}
+
 @Module({
-  imports: [
-    mongoModule,
-
-    ConfigModule.forRoot({
-      validationSchema: Joi.object({
-        NODE_ENV: Joi.string()
-          .valid('development', 'production', 'test')
-          .required(),
-        PORT: Joi.number().port().default(3001),
-        MONGODB_URI_FILE: Joi.string()
-          .when('NODE_ENV', {
-            is: 'test',
-            then: Joi.optional(),
-            otherwise: Joi.required(),
-          })
-          .custom(
-            // eslint-disable-next-line sonarjs/function-return-type
-            (value: string, helpers: CustomHelpers): string | ErrorReport => {
-              try {
-                accessSync(value, constants.R_OK);
-                return value;
-              } catch (e) {
-                return typia.is<Error>(e)
-                  ? helpers.error(e.message)
-                  : helpers.error(
-                      'Unknown error during MONGODB_URI_FILE file permission validation',
-                    );
-              }
-            },
-            'file permission validation',
-          ),
-      }),
-    }),
-
-    HelloModule,
-  ],
+  imports: [mongoModule, configModule, HelloModule],
   controllers: [AppController],
   providers: [AppService],
 })
