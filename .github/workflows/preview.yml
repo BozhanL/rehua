@@ -37,22 +37,15 @@ jobs:
         if: ${{ github.event.action != 'closed' }}
         run: npm ci --no-audit
 
+      - name: 📦 Configure GitHub Pages
+        id: setup
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
       - name: 🏗️ Build
         if: ${{ github.event.action != 'closed' }}
         env:
-          BASE_URL: '/pr-preview/pr-${{ github.event.number }}'
+          BASE_URL: '${{ steps.setup.outputs.base_path }}/pr-preview/pr-${{ github.event.number }}'
         run: npm run build -w web
-
-      - name: 📦 Get GitHub Pages URL
-        uses: TuftsRT/get-pages-url@03ca0ae86ff191bc1167b5f0d72773e69ca4e5a9 # v1.0.1
-        id: get-url
-
-      - name: Extract domain
-        id: domain
-        run: |
-          url="${{ steps.get-url.outputs.url }}"
-          domain=$(echo "$url" | awk -F/ '{print $3}')
-          echo "domain=$domain" >> $GITHUB_OUTPUT
 
       - name: 📦 Upload preview build to GitHub
         uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
@@ -60,5 +53,5 @@ jobs:
           source-dir: ./web/out
           preview-branch: gh-pages
           umbrella-dir: pr-preview
-          pages-base-url: ${{ steps.domain.outputs.domain }}
+          pages-base-url: ${{ steps.setup.outputs.host }}
           wait-for-pages-deployment: false
