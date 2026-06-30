@@ -11,10 +11,12 @@ export interface Config {
   https: {
     cert: string;
     key: string;
+    ca: string;
   };
 }
 
 export const https = registerAs('https', () => ({
   cert: process.env['API_CERT'],
   key: process.env['API_KEY'],
+  ca: process.env['API_CA'],
 }));

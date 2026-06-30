@@ -12,10 +12,11 @@ async function getHttpsConfig(): Promise<HttpsOptions> {
   const httpsConfig = configAppService.get<Config['https']>('https');
   await configApp.close();
 
-  if (!!httpsConfig.cert && !!httpsConfig.key) {
+  if (!!httpsConfig.cert && !!httpsConfig.key && !!httpsConfig.ca) {
     const key = await readFile(httpsConfig.key, 'utf8');
     const cert = await readFile(httpsConfig.cert, 'utf8');
-    return { key, cert };
+    const ca = await readFile(httpsConfig.ca, 'utf8');
+    return { key, cert, ca, requestCert: true, rejectUnauthorized: true };
   }
   return {};
 }

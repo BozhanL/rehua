@@ -31,6 +31,7 @@ export const configModule = ConfigModule.forRoot({
     PORT: Joi.number().port().default(3001),
     API_CERT: requiredReadableFilePath(['test', 'development']),
     API_KEY: requiredReadableFilePath(['test', 'development']),
+    API_CA: requiredReadableFilePath(['test', 'development']),
     MONGODB_URI_FILE: requiredReadableFilePath(['test']),
   }),
   load: [https],
