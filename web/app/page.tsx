@@ -7,9 +7,8 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 import { useContext, type JSX } from 'react';
 import { functional } from 'typia';
 
-function useHelloOptions(): ReturnType<
-  typeof queryOptions<string, Error, string, string[]>
-> {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function useHelloOptions() {
   const host = useContext(APIUrlContext);
 
   return queryOptions({
@@ -25,7 +24,7 @@ function useHelloOptions(): ReturnType<
 function Home(): JSX.Element {
   const query = useQuery(useHelloOptions());
 
-  if (query.isLoading) {
+  if (!query.isSuccess) {
     return <h1>Loading...</h1>;
   }
 

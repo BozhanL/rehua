@@ -3,14 +3,18 @@
 import { APIUrlContext } from '@/app/providers';
 import { isTesting } from '@/app/utils/env';
 import { create, remove, findAll } from '@rehua/sdk/functional/hello';
-import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import Form from 'next/form';
 import { useContext, type JSX } from 'react';
 import typia, { functional } from 'typia';
 
-function useHelloOptions(): ReturnType<
-  typeof queryOptions<findAll.Output, Error, findAll.Output, string[]>
-> {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function useHelloOptions() {
   const host = useContext(APIUrlContext);
 
   return queryOptions({
@@ -23,6 +27,35 @@ function useHelloOptions(): ReturnType<
   });
 }
 
+function createHello({
+  host,
+  formData,
+}: {
+  host: string;
+  formData: FormData;
+}): Promise<create.Output> {
+  return create(
+    { host, simulate: isTesting },
+    {
+      id: typia.assert<string>(formData.get('id')),
+      content: typia.assert<string>(formData.get('content')),
+    },
+  );
+}
+
+function deleteHello({
+  host,
+  formData,
+}: {
+  host: string;
+  formData: FormData;
+}): Promise<remove.Output> {
+  return remove(
+    { host, simulate: isTesting },
+    typia.assert<string>(formData.get('id')),
+  );
+}
+
 function Home(): JSX.Element {
   const host = useContext(APIUrlContext);
   const queryClient = useQueryClient();
@@ -30,31 +63,23 @@ function Home(): JSX.Element {
   const options = useHelloOptions();
   const findAllHello = useQuery(options);
 
-  async function createHello(formData: FormData): Promise<void> {
-    await create(
-      { host, simulate: isTesting },
-      {
-        id: typia.assert<string>(formData.get('id')),
-        content: typia.assert<string>(formData.get('content')),
-      },
-    );
+  const createHelloMutation = useMutation({
+    mutationFn: createHello,
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: options.queryKey,
+      }),
+  });
 
-    await queryClient.invalidateQueries({
-      queryKey: options.queryKey,
-    });
-  }
-  async function deleteHello(formData: FormData): Promise<void> {
-    await remove(
-      { host, simulate: isTesting },
-      typia.assert<string>(formData.get('id')),
-    );
+  const deleteHelloMutation = useMutation({
+    mutationFn: deleteHello,
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: options.queryKey,
+      }),
+  });
 
-    await queryClient.invalidateQueries({
-      queryKey: options.queryKey,
-    });
-  }
-
-  if (findAllHello.isLoading) {
+  if (!findAllHello.isSuccess) {
     return <h1>Loading...</h1>;
   }
 
@@ -63,7 +88,11 @@ function Home(): JSX.Element {
       <h1>Hello world</h1>
 
       <div>
-        <Form action={createHello}>
+        <Form
+          action={(formData: FormData) => {
+            createHelloMutation.mutate({ host, formData });
+          }}
+        >
           <input name="id" required />
           <input name="content" required />
           <button type="submit">Create Hello</button>
@@ -71,14 +100,18 @@ function Home(): JSX.Element {
       </div>
 
       <div>
-        <Form action={deleteHello}>
+        <Form
+          action={(formData: FormData) => {
+            deleteHelloMutation.mutate({ host, formData });
+          }}
+        >
           <input name="id" required />
           <button type="submit">Delete Hello</button>
         </Form>
       </div>
 
       <div>
-        {findAllHello.data?.map((d) => (
+        {findAllHello.data.map((d) => (
           <p key={d.id}>
             {d.id} -- {d.content}
           </p>
