@@ -8,7 +8,7 @@ import { readFile } from 'node:fs/promises';
 import type { ServerOptions } from 'node:https';
 import typia from 'typia';
 
-async function getHttpsConfig(): Promise<ServerOptions> {
+async function getHttpsConfig(): Promise<ServerOptions | undefined> {
   const configApp = await NestFactory.create(configModule);
   const configAppService = configApp.get(ConfigService<Config, true>);
   const httpsConfig = configAppService.get<Config['https']>('https');
@@ -34,13 +34,15 @@ async function getHttpsConfig(): Promise<ServerOptions> {
       minVersion: 'TLSv1.3',
     };
   }
-  return {};
+  return undefined;
 }
 
 export async function createApp(): Promise<INestApplication> {
-  const httpsOptions = typia.assert<HttpsOptions>(await getHttpsConfig());
+  const httpsOptions = typia.assert<HttpsOptions | undefined>(
+    await getHttpsConfig(),
+  );
   const app = await NestFactory.create(AppModule, {
-    httpsOptions,
+    ...(httpsOptions && { httpsOptions }),
   });
 
   const configService = app.get(ConfigService<Config, true>);
