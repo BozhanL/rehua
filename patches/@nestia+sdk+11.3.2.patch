@@ -1,5 +1,5 @@
 diff --git a/node_modules/@nestia/sdk/package.json b/node_modules/@nestia/sdk/package.json
-index 31c6b84..80fa87d 100644
+index 291c8bc..5afca34 100644
 --- a/node_modules/@nestia/sdk/package.json
 +++ b/node_modules/@nestia/sdk/package.json
 @@ -53,6 +53,7 @@

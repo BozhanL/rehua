@@ -5,7 +5,13 @@
     {
       "matchSourceUrls": ["https://github.com/samchon/nestia"],
       "groupName": "nestia monorepo",
-      "matchUpdateTypes": ["digest", "patch", "minor", "major"]
+      "matchUpdateTypes": ["digest", "patch", "minor", "major"],
+
+      // Must update the patch in the patches folder before update
+      "automerge": false,
+      "prBodyNotes": [
+        "⚠️ **WARNING:** Must update the patch in the patches folder before merge"
+      ]
     }
   ]
 }
