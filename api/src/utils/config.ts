@@ -5,7 +5,5 @@ export interface Config {
 
   NODE_ENV: 'test' | 'development' | 'production';
 
-  MONGODB_URI: string &
-    tags.Format<'uri'> &
-    tags.Pattern<'^mongodb(?:\\+srv)?'>;
+  MONGODB_URI_FILE: string;
 }

@@ -27,7 +27,10 @@
       ]
     }
   },
-  "postCreateCommand": "npm install",
+  "postCreateCommand": {
+    "mongodb_url": "echo 'mongodb://localhost:27017/' > ${containerWorkspaceFolder}/api/mongodb_url.txt",
+    "npm": ["npm", "install"]
+  },
   "features": {
     "ghcr.io/devcontainers-extra/features/nestjs-cli:2": {},
     "ghcr.io/devcontainers-extra/features/cz-cli:1": {},
@@ -46,7 +49,7 @@
     }
   ],
   "containerEnv": {
-    "MONGODB_URI": "mongodb://localhost:27017/"
+    "MONGODB_URI_FILE": "${containerWorkspaceFolder}/api/mongodb_url.txt"
   },
   "portsAttributes": {
     "3000": {
