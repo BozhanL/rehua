@@ -35,7 +35,7 @@ describe('AppController (e2e)', () => {
       imports: [AppModule],
     })
       .overrideModule(mongoModule)
-      .useModule(MongooseModule.forRoot(mongod.getUri()))
+      .useModule(MongooseModule.forRoot(mongod.getUri(), { dbName: 'rehua' }))
       .compile();
 
     app = moduleFixture.createNestApplication();
