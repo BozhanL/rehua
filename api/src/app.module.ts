@@ -77,11 +77,7 @@ export class AppModule {
   static forRoot(mongo: DynamicModule | undefined): DynamicModule {
     return {
       module: AppModule,
-      imports: [
-        configModule,
-        HelloModule,
-        ...(mongo ? [mongo] : [mongoModule]),
-      ],
+      imports: [configModule, HelloModule, mongo ?? mongoModule],
       controllers: [AppController],
       providers: [AppService],
     };
