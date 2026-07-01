@@ -5,7 +5,7 @@ import type { INestApplication } from '@nestjs/common';
 import type { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import { type OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { readFile } from 'node:fs/promises';
 import type { ServerOptions } from 'node:https';
