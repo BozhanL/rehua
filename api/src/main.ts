@@ -1,9 +1,12 @@
 import { AppModule, configModule } from '@/app.module';
 import type { Config } from '@/utils/config';
+import { NestiaSwaggerComposer } from '@nestia/sdk';
 import type { INestApplication } from '@nestjs/common';
 import type { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { type OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { readFile } from 'node:fs/promises';
 import type { ServerOptions } from 'node:https';
 import typia from 'typia';
@@ -41,16 +44,18 @@ export async function createApp(): Promise<INestApplication> {
   const httpsOptions = typia.assert<HttpsOptions | undefined>(
     await getHttpsConfig(),
   );
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     ...(httpsOptions && { httpsOptions }),
   });
 
   const configService = app.get(ConfigService<Config, true>);
 
   app.enableCors({
-    origin: configService.get('NODE_ENV') !== 'production',
+    origin: configService.get<Config['NODE_ENV']>('NODE_ENV') !== 'production',
     credentials: true,
   });
+
+  app.disable('x-powered-by');
 
   return app;
 }
@@ -59,7 +64,18 @@ async function bootstrap(): Promise<void> {
   const app = await createApp();
   const configService = app.get(ConfigService<Config, true>);
 
-  await app.listen(configService.get('PORT'));
+  if (configService.get<Config['NODE_ENV']>('NODE_ENV') !== 'production') {
+    const document = await NestiaSwaggerComposer.document(app, {
+      openapi: '3.2',
+      servers: [{ url: '/' }],
+    });
+    SwaggerModule.setup('swagger', app, typia.assert<OpenAPIObject>(document), {
+      jsonDocumentUrl: 'swagger/json',
+      yamlDocumentUrl: 'swagger/yaml',
+    });
+  }
+
+  await app.listen(configService.get<Config['PORT']>('PORT'));
 }
 
 void bootstrap();

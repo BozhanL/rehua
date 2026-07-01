@@ -4,11 +4,3 @@ export class CreateHelloDto {
     public content: string,
   ) {}
 }
-
-export class CreateHelloResponseDto {
-  constructor(
-    public id: string,
-    public content: string,
-    public createdAt: Date,
-  ) {}
-}

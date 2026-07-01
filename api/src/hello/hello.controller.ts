@@ -2,7 +2,12 @@ import type { CreateHelloDto } from './dto/create-hello.dto';
 import { UpdateHelloDto } from './dto/update-hello.dto';
 import { Hello } from './entities/hello.entity';
 import { HelloService } from './hello.service';
-import { TypedBody, TypedParam, TypedRoute } from '@nestia/core';
+import {
+  SwaggerExample,
+  TypedBody,
+  TypedParam,
+  TypedRoute,
+} from '@nestia/core';
 import { Controller, Param } from '@nestjs/common';
 import { UpdateWriteOpResult, DeleteResult } from 'mongoose';
 
@@ -29,6 +34,8 @@ export class HelloController {
   }
 
   @TypedRoute.Get(':id')
+  @SwaggerExample.Response('Found', { value: new Hello('1', 'test') })
+  @SwaggerExample.Response('Not found', { value: null })
   findOne(@TypedParam('id') id: string): Promise<Hello | null> {
     return this.helloService.findOne(id);
   }
