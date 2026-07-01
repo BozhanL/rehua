@@ -1,4 +1,4 @@
-import { AppModule, mongoModule } from '@/app.module.js';
+import { AppModule } from '@/app.module.js';
 import {
   afterAll,
   afterEach,
@@ -32,11 +32,11 @@ describe('AppController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      .overrideModule(mongoModule)
-      .useModule(MongooseModule.forRoot(mongod.getUri(), { dbName: 'rehua' }))
-      .compile();
+      imports: [
+        AppModule.forRoot(false),
+        MongooseModule.forRoot(mongod.getUri(), { dbName: 'rehua' }),
+      ],
+    }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();

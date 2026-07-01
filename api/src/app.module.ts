@@ -2,7 +2,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HelloModule } from './hello/hello.module';
 import { Config, https } from './utils/config';
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import Joi, { CustomHelpers, ErrorReport } from 'joi';
@@ -15,7 +15,12 @@ export const mongoModule = MongooseModule.forRootAsync({
   imports: [ConfigModule],
   useFactory: async (configService: ConfigService<Config, true>) => ({
     uri: (
-      await readFile(configService.get<string>('MONGODB_URI_FILE'), 'utf8')
+      await readFile(
+        typia.assert<NonNullable<Config['MONGODB_URI_FILE']>>(
+          configService.get<Config['MONGODB_URI_FILE']>('MONGODB_URI_FILE'),
+        ),
+        'utf8',
+      )
     ).trim(),
     dbName: 'rehua',
   }),
@@ -26,13 +31,13 @@ export const mongoModule = MongooseModule.forRootAsync({
 export const configModule = ConfigModule.forRoot({
   validationSchema: Joi.object({
     NODE_ENV: Joi.string()
-      .valid('development', 'production', 'test')
+      .valid('development', 'production', 'test', 'nestia')
       .required(),
     PORT: Joi.number().port().default(3001),
-    API_CERT: requiredReadableFilePath(['test', 'development']),
-    API_KEY: requiredReadableFilePath(['test', 'development']),
-    API_CA: requiredReadableFilePath(['test', 'development']),
-    MONGODB_URI_FILE: requiredReadableFilePath(['test']),
+    API_CERT: requiredReadableFilePath(['test', 'development', 'nestia']),
+    API_KEY: requiredReadableFilePath(['test', 'development', 'nestia']),
+    API_CA: requiredReadableFilePath(['test', 'development', 'nestia']),
+    MONGODB_URI_FILE: requiredReadableFilePath(['test', 'nestia']),
   }),
   load: [https],
 });
@@ -66,9 +71,19 @@ function requiredReadableFilePath(
     .custom(fileExistsValidator, 'file permission validation');
 }
 
-@Module({
-  imports: [mongoModule, configModule, HelloModule],
-  controllers: [AppController],
-  providers: [AppService],
-})
-export class AppModule {}
+@Module({})
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class AppModule {
+  static forRoot(disableMongo: boolean): DynamicModule {
+    return {
+      module: AppModule,
+      imports: [
+        configModule,
+        HelloModule,
+        ...(disableMongo ? [] : [mongoModule]),
+      ],
+      controllers: [AppController],
+      providers: [AppService],
+    };
+  }
+}

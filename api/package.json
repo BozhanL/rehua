@@ -18,6 +18,8 @@
   },
   "scripts": {
     "build": "nest build",
+    "build:sdk": "cross-env NODE_ENV=nestia npx nestia sdk",
+    "build:api": "cross-env NODE_ENV=nestia npx nestia swagger",
     "type": "tsc --noEmit",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",

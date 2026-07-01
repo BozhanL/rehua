@@ -1,6 +1,6 @@
 import { AppModule, configModule } from '@/app.module';
 import type { Config } from '@/utils/config';
-import { NestiaSwaggerComposer } from '@nestia/sdk';
+import { INestiaConfig, NestiaSwaggerComposer } from '@nestia/sdk';
 import type { INestApplication } from '@nestjs/common';
 import type { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { ConfigService } from '@nestjs/config';
@@ -40,13 +40,33 @@ async function getHttpsConfig(): Promise<ServerOptions | undefined> {
   return undefined;
 }
 
+async function getNodeEnv(): Promise<Config['NODE_ENV']> {
+  const configApp = await NestFactory.create(configModule);
+  const configAppService = configApp.get(ConfigService<Config, true>);
+  const nodeEnv = configAppService.get<Config['NODE_ENV']>('NODE_ENV');
+  await configApp.close();
+
+  return nodeEnv;
+}
+
+export const swaggerConfig: Omit<INestiaConfig.ISwaggerConfig, 'output'> = {
+  openapi: '3.2',
+  servers: [{ url: '/', description: 'Local Server' }],
+};
+
 export async function createApp(): Promise<INestApplication> {
   const httpsOptions = typia.assert<HttpsOptions | undefined>(
     await getHttpsConfig(),
   );
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    ...(httpsOptions && { httpsOptions }),
-  });
+
+  const nodeEnv = await getNodeEnv();
+
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule.forRoot(nodeEnv === 'production' || nodeEnv === 'development'),
+    {
+      ...(httpsOptions && { httpsOptions }),
+    },
+  );
 
   const configService = app.get(ConfigService<Config, true>);
 
@@ -65,10 +85,7 @@ async function bootstrap(): Promise<void> {
   const configService = app.get(ConfigService<Config, true>);
 
   if (configService.get<Config['NODE_ENV']>('NODE_ENV') !== 'production') {
-    const document = await NestiaSwaggerComposer.document(app, {
-      openapi: '3.2',
-      servers: [{ url: '/' }],
-    });
+    const document = await NestiaSwaggerComposer.document(app, swaggerConfig);
     SwaggerModule.setup('swagger', app, typia.assert<OpenAPIObject>(document), {
       jsonDocumentUrl: 'swagger/json',
       yamlDocumentUrl: 'swagger/yaml',
