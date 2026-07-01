@@ -1,0 +1,123 @@
+# Based on https://github.com/jellyfin/jellyfin/blob/a43fd188dc0d2a3cfdd4ae3b71b537780dcb3fc9/.github/workflows/openapi-pull-request.yml
+# and https://github.com/jellyfin/jellyfin/blob/a43fd188dc0d2a3cfdd4ae3b71b537780dcb3fc9/.github/workflows/openapi-workflow-run.yml
+# This copy may contain project-specific modifications.
+name: OpenAPI Check
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  ancestor:
+    name: Common Ancestor
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+    outputs:
+      base_ref: ${{ steps.ancestor.outputs.base_ref }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          fetch-depth: 0
+
+      - name: Search History
+        id: ancestor
+        run: |
+          git remote add upstream https://github.com/${{ github.event.pull_request.base.repo.full_name }}
+
+          git fetch --prune --progress --no-recurse-submodules upstream +refs/heads/*:refs/remotes/upstream/* +refs/tags/*:refs/tags/*
+
+          ANCESTOR_REF=$(git merge-base upstream/${{ github.base_ref }} HEAD)
+
+          echo "ref: ${ANCESTOR_REF}"
+
+          echo "base_ref=${ANCESTOR_REF}" >> "$GITHUB_OUTPUT"
+
+  head:
+    name: Head Artifact
+    permissions:
+      contents: read
+    uses: ./.github/workflows/openapi-generate.yml
+    with:
+      ref: ${{ github.event.pull_request.head.sha }}
+      repository: ${{ github.event.pull_request.head.repo.full_name }}
+      artifact: openapi-head
+
+  base:
+    name: Base Artifact
+    permissions:
+      contents: read
+    uses: ./.github/workflows/openapi-generate.yml
+    if: ${{ github.event_name == 'pull_request' }}
+    needs:
+      - ancestor
+    with:
+      ref: ${{ needs.ancestor.outputs.base_ref }}
+      repository: ${{ github.event.pull_request.base.repo.full_name }}
+      artifact: openapi-base
+
+  diff:
+    name: Generate Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      pull-requests: write # To create comment
+    needs:
+      - head
+      - base
+
+    steps:
+      - name: Download Head
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: openapi-head
+          path: openapi-head
+
+      - name: Download Base
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: openapi-base
+          path: openapi-base
+
+      - name: Detect Changes
+        id: openapi-diff
+        env:
+          OPENAPI_VERSION: 2.1.7 # renovate: datasource=docker depName=openapitools/openapi-diff
+        run: |
+          sed -i 's:allOf:oneOf:g' openapi-head/swagger.json
+          sed -i 's:allOf:oneOf:g' openapi-base/swagger.json
+
+          mkdir -p /tmp/openapi-report
+          mv openapi-head/swagger.json /tmp/openapi-report/head.json
+          mv openapi-base/swagger.json /tmp/openapi-report/base.json
+
+          docker run -v /tmp/openapi-report:/data openapitools/openapi-diff:"$OPENAPI_VERSION" /data/base.json /data/head.json --state -l ERROR --markdown /data/openapi-report.md
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
+        with:
+          file-path: /tmp/openapi-report/openapi-report.md
+          comment-tag: openapi-report
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: openapi-report
+          if-no-files-found: error
+          path: /tmp/openapi-report/openapi-report.md
+          retention-days: 7
