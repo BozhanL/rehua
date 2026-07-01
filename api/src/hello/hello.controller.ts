@@ -33,11 +33,6 @@ export class HelloController {
     return this.helloService.findAll();
   }
 
-  @TypedRoute.Get('testtest')
-  test(): Promise<Hello[]> {
-    return this.helloService.findAll();
-  }
-
   @TypedRoute.Get(':id')
   @SwaggerExample.Response('Found', { value: new Hello('1', 'test') })
   @SwaggerExample.Response('Not found', { value: null })
