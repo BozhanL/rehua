@@ -74,13 +74,14 @@ function requiredReadableFilePath(
 @Module({})
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class AppModule {
-  static forRoot(disableMongo: boolean): DynamicModule {
+  static forRoot(mongo: DynamicModule | undefined): DynamicModule {
+    console.log(typeof mongo);
     return {
       module: AppModule,
       imports: [
         configModule,
         HelloModule,
-        ...(disableMongo ? [] : [mongoModule]),
+        ...(mongo ? [mongo] : [mongoModule]),
       ],
       controllers: [AppController],
       providers: [AppService],

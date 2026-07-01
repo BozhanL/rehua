@@ -33,8 +33,9 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        AppModule.forRoot(false),
-        MongooseModule.forRoot(mongod.getUri(), { dbName: 'rehua' }),
+        AppModule.forRoot(
+          MongooseModule.forRoot(mongod.getUri(), { dbName: 'rehua' }),
+        ),
       ],
     }).compile();
 

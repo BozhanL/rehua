@@ -1,8 +1,18 @@
-import { createApp, swaggerConfig } from '@/main';
+import { createApp, swaggerConfig } from '@/helpers';
 import type { INestiaConfig } from '@nestia/sdk';
+import { MongooseModule } from '@nestjs/mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 
 const NESTIA_CONFIG: INestiaConfig = {
-  input: createApp,
+  input: async () => {
+    const mongod = await MongoMemoryServer.create();
+
+    const app = createApp(
+      MongooseModule.forRoot(mongod.getUri(), { dbName: 'rehua' }),
+    );
+
+    return app;
+  },
   output: '../sdk/src',
   distribute: '../sdk',
   simulate: true,
@@ -12,6 +22,10 @@ const NESTIA_CONFIG: INestiaConfig = {
     ...swaggerConfig,
 
     output: 'swagger.json',
+
+    // openapitools/openapi-diff uses swagger-parser, and it does not support 3.2
+    // https://github.com/swagger-api/swagger-parser/issues/2248
+    openapi: '3.1',
     servers: [
       {
         url: 'http://localhost:3001/',
