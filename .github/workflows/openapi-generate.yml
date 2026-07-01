@@ -1,0 +1,53 @@
+# Based on https://github.com/jellyfin/jellyfin/blob/a43fd188dc0d2a3cfdd4ae3b71b537780dcb3fc9/.github/workflows/openapi-generate.yml
+# This copy may contain project-specific modifications.
+name: OpenAPI Generate
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+      repository:
+        required: true
+        type: string
+      artifact:
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ inputs.ref }}
+          repository: ${{ inputs.repository }}
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: package.json
+          cache: npm
+          check-latest: true
+
+      - name: 📦 Install dependencies
+        run: npm ci --no-audit
+
+      - name: 🏗️ Build openapi
+        run: npm run build:api -w api
+
+      - name: 📦 Upload Artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ inputs.artifact }}
+          if-no-files-found: error
+          path: api/swagger.json
+          retention-days: 7
