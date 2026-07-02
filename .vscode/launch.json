@@ -7,7 +7,7 @@
       "request": "launch",
       "runtimeArgs": [
         "--inspect-brk",
-        "${workspaceFolder}/web/node_modules/.bin/jest",
+        "${workspaceFolder}/node_modules/.bin/jest",
         "--runInBand"
       ],
       "cwd": "${workspaceFolder}/web",
@@ -16,7 +16,7 @@
       "windows": {
         "runtimeArgs": [
           "--inspect-brk",
-          "${workspaceFolder}/web/node_modules/jest/bin/jest.js",
+          "${workspaceFolder}/node_modules/jest/bin/jest.js",
           "--runInBand"
         ]
       }
@@ -27,7 +27,7 @@
       "request": "launch",
       "runtimeArgs": [
         "--inspect-brk",
-        "${workspaceFolder}/api/node_modules/.bin/jest",
+        "${workspaceFolder}/node_modules/.bin/jest",
         "--runInBand"
       ],
       "cwd": "${workspaceFolder}/api",
@@ -36,7 +36,7 @@
       "windows": {
         "runtimeArgs": [
           "--inspect-brk",
-          "${workspaceFolder}/api/node_modules/jest/bin/jest.js",
+          "${workspaceFolder}/node_modules/jest/bin/jest.js",
           "--runInBand"
         ]
       }

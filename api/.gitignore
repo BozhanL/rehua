@@ -43,6 +43,9 @@ lerna-debug.log*
 .env.production.local
 .env.local
 
+# MongoDB connection string
+/mongodb_url.txt
+
 # temp directory
 .temp
 .tmp

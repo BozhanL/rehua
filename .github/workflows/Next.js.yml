@@ -71,6 +71,7 @@ jobs:
           coverage-path: ./web/coverage.txt
           coverage-summary-path: ./web/coverage/coverage-summary.json
           junitxml-path: ./web/coverage/junit.xml
+          coverage-path-prefix: web/
           unique-id-for-comment: Next.js
           title: Coverage Report (Next.js)
 

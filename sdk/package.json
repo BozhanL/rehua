@@ -26,7 +26,7 @@
   },
   "scripts": {
     "build": "npm run build:sdk && npm run compile",
-    "build:sdk": "rimraf src/functional && cd ../api && npx nestia sdk && cd ../sdk",
+    "build:sdk": "rimraf src/functional && cd ../api && cross-env NODE_ENV=development npx nestia sdk && cd ../sdk",
     "compile": "rimraf lib && tsc",
     "deploy": "npm run build && npm publish"
   },
@@ -36,6 +36,7 @@
     "README.md"
   ],
   "devDependencies": {
+    "cross-env": "10.1.0",
     "rimraf": "6.1.3",
     "ts-patch": "4.0.1",
     "typescript": "6.0.3"

@@ -6,5 +6,6 @@ const NESTIA_CONFIG: INestiaConfig = {
   output: '../sdk/src',
   distribute: '../sdk',
   simulate: true,
+  clone: true,
 };
 export default NESTIA_CONFIG;
