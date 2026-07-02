@@ -13,6 +13,7 @@ allow-licenses:
   - CC-BY-4.0
   - 0BSD
   - BlueOak-1.0.0
+  - Python-2.0
 
 fail-on-severity: low
 license-check: true

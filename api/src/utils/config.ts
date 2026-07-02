@@ -4,14 +4,14 @@ import { tags } from 'typia';
 export interface Config {
   PORT: number & tags.Type<'uint32'> & tags.Minimum<0> & tags.Maximum<65535>;
 
-  NODE_ENV: 'test' | 'development' | 'production';
+  NODE_ENV: 'test' | 'development' | 'production' | 'nestia';
 
-  MONGODB_URI_FILE: string;
+  MONGODB_URI_FILE?: string;
 
   https: {
-    cert: string;
-    key: string;
-    ca: string;
+    cert?: string;
+    key?: string;
+    ca?: string;
   };
 }
 

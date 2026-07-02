@@ -10,6 +10,7 @@
   "bugs": {
     "url": "https://github.com/BozhanL/rehua/issues"
   },
+  "description": "Digital Patient File Storage Enhancement - Ex32 Code",
   "private": true,
   "type": "module",
   "engines": {
