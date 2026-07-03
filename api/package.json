@@ -70,7 +70,7 @@
     "@types/supertest": "7.2.0",
     "concurrently": "10.0.3",
     "cross-env": "10.1.0",
-    "eslint": "10.5.0",
+    "eslint": "10.6.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-sonarjs": "4.1.0",
     "globals": "17.7.0",
