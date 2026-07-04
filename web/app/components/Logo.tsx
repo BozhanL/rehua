@@ -32,6 +32,7 @@ function Logo({
       {...props}
       alt={alt}
       height={height}
+      unoptimized // property due to static export config, since there is no Next.js server for image optimisation
       sizes={sizes ?? `${String(width)}px`} // linting rule + if size is null or undefined, fallback to width in pixels
       src="/temporary-logo.jpg"
       style={{
