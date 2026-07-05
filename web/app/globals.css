@@ -12,9 +12,9 @@
   --font-semibold: 600;
   --font-bold: 700;
 
-  /* the only colours to be used by all components */
+  /* the only colours to be used by the whole UI */
 
-  /* basic shades for the whole UI */
+  /* basic shades */
   --black: #000000;
   --white: #ffffff;
   --light-gray: #f0f0f0;
@@ -112,13 +112,6 @@ input,
 textarea,
 select {
   font: inherit;
-}
-
-/* paragraph text reads a little better with a smaller size and relaxed spacing */
-p,
-li {
-  font-size: 1rem;
-  line-height: 1.65;
 }
 
 /* to keep links readable without enforcing a specific colour */
