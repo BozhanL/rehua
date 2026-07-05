@@ -17,10 +17,10 @@ const instrumentSans = Instrument_Sans({
 });
 
 // page metadata, shown on the browser tab
-// TODO: favicon?
 export const metadata: Metadata = {
   title: 'Rehua',
   description: 'Digital Patient File Storage Enhancement',
+  icons: 'temporary-favicon.jpg',
 };
 
 export const dynamic = 'error';
