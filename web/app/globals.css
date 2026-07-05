@@ -1,35 +1,127 @@
 @import 'tailwindcss';
 
+/* global styles for the whole project (colours, fonts, html, components, etc) */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* only font to be used */
+  --font-sans: var(--font-instrument-sans);
+
+  /* font weights */
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* the only colours to be used by all components */
+
+  /* basic shades for the whole UI */
+  --black: #000000;
+  --white: #ffffff;
+  --light-gray: #f0f0f0;
+  --gray: #e6e6e6;
+  --dark-gray: #c4c4c4;
+
+  /* main colours */
+  --rehua-yellow: #fee88f;
+  --rehua-orange: #ff8b61;
+  --rehua-red: #ff5050;
+  --rehua-green: #8de07c;
+  --rehua-jordy: #7e9be4;
+  --rehua-blue: #76d1f3;
+  --rehua-navy: #395497;
+  --rehua-midnight: #1c2742;
+
+  --rehua-maroon: #732322;
+  --rehua-ruby: #e62e24;
+  --rehua-tangerine: #e86b31;
+  --rehua-mustard: #e4984a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* basic html and body styles to ensure a consistent baseline for all components */
+html {
+  font-family: var(--font-sans), sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* regular texts */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  color-scheme: light dark;
+  margin: 0;
+  color: var(--black);
+  min-height: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: var(--font-regular);
 }
 
+/* texts that need slightly bolder looks */
+.body-medium {
+  font-weight: var(--font-medium);
+}
+
+.body-semibold {
+  font-weight: var(--font-semibold);
+}
+
+/* headings are bold and vary in size */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font: inherit;
+  font-weight: var(--font-bold);
+}
+
+h1 {
+  font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.15rem);
+  line-height: 1.15;
+}
+
+h3 {
+  font-size: clamp(1.35rem, 1.05rem + 0.8vw, 1.7rem);
+  line-height: 1.2;
+}
+
+h4 {
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.35rem);
+  line-height: 1.25;
+}
+
+h5 {
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+h6 {
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+/* all text elements inherit same properties as the body */
+p,
+li,
+label,
 input,
 textarea,
 select {
-  background: var(--background);
-  color: var(--foreground);
-  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  font: inherit;
+}
+
+/* paragraph text reads a little better with a smaller size and relaxed spacing */
+p,
+li {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* to keep links readable without enforcing a specific colour */
+a {
+  color: inherit;
 }
