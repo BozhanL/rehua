@@ -1,4 +1,4 @@
-# Rehua project
+# Rehua Project
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=BozhanL_rehua&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=BozhanL_rehua)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=BozhanL_rehua&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=BozhanL_rehua)
@@ -12,7 +12,7 @@
 
 [![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-highlight.svg)](https://sonarcloud.io/summary/new_code?id=BozhanL_rehua)
 
-## License
+## Rehua License
 
 ```text
 Rehua web frontend Copyright (C) 2026 Rehua Contributors
@@ -22,4 +22,8 @@ This program is free software: you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+```
+
+```text
+All UI work used from external sources has been credited. Please see the details of the attribution within web/README.md.
 ```
