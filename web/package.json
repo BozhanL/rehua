@@ -30,7 +30,8 @@
     "test:cov": "jest --coverage",
     "check-all:par": "concurrently --kill-others-on-fail npm:type npm:lint npm:test:cov npm:format",
     "check-all": "npm run check-all:par -- -m 1",
-    "fix-all": "concurrently -m 1 --kill-others-on-fail npm:lint:fix npm:format:fix"
+    "fix-all": "concurrently -m 1 --kill-others-on-fail npm:lint:fix npm:format:fix",
+    "generate-icons": "ts-node app/assets/scripts/generate-icons.ts"
   },
   "dependencies": {
     "@rehua/sdk": "*",
