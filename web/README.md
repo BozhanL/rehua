@@ -15,7 +15,10 @@ You should have received a copy of the GNU General Public License along with thi
 ## Rehua Icons License
 
 ```text
-All icons within this project were modified via scripts and code to fit the needs of the UI. All icons were published under the Attribution 4.0 International (CC BY 4.0) <https://creativecommons.org/licenses/by/4.0/> license (see below) and were obtained via Figma Community.
+All icons within this project were modified via scripts and code to fit the
+needs of the UI. All icons were published under the Attribution 4.0 International (CC BY 4.0)
+<https://creativecommons.org/licenses/by/4.0/> license (see below) and were obtained
+via Figma Community.
 
 Icons Creators:
 - Craftwork, https://www.figma.com/community/file/931906394678748246

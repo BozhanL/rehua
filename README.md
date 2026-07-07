@@ -25,5 +25,6 @@ You should have received a copy of the GNU General Public License along with thi
 ```
 
 ```text
-All UI work used from external sources has been credited. Please see the details of the attribution within web/README.md.
+All UI work used from external sources has been credited.
+Please see the details of the attribution within web/README.md.
 ```
