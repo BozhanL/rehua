@@ -38,6 +38,11 @@
 }
 
 @theme {
+  --color-rehua-black: var(--black);
+  --color-rehua-white: var(--white);
+  --color-rehua-light-gray: var(--light-gray);
+  --color-rehua-gray: var(--gray);
+  --color-rehua-dark-gray: var(--dark-gray);
   --color-rehua-yellow: var(--rehua-yellow);
   --color-rehua-orange: var(--rehua-orange);
   --color-rehua-red: var(--rehua-red);
