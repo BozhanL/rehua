@@ -3,7 +3,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ICONS_DR = path.resolve('app/assets/icons');
-const OUTPUT_FILE = path.resolve('app/assets/scripts/generated-icons.ts');
+const OUTPUT_FILE = path.resolve('app/components/auto-generated-icons.ts');
 
 /*
   remove .svg extension of file name, split name with hyphens + underscores into word parts,
@@ -42,7 +42,8 @@ async function generateIcons(): Promise<void> {
     .join('\n');
 
   // create output string (content) for generated-icons.ts file
-  const output = `// AUTO-GENERATED FILE, DO NOT MODIFY !!!
+  const output = `// AUTO-GENERATED FILE FOR UI ICONS
+// DO NOT MODIFY !!!
 
 ${imports}
 

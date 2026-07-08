@@ -1,4 +1,5 @@
-// AUTO-GENERATED FILE, DO NOT MODIFY !!!
+// AUTO-GENERATED FILE FOR UI ICONS
+// DO NOT MODIFY !!!
 import Access from '../icons/access.svg';
 import Alert from '../icons/alert.svg';
 import ButtonAccessArrow from '../icons/button-access-arrow.svg';

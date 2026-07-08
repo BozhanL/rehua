@@ -1,4 +1,4 @@
-import { icons } from '../assets/scripts/generated-icons';
+import { icons } from './auto-generated-icons';
 import type { JSX, SVGProps } from 'react';
 
 // type that is a subset of SVGProps, omitting some props to ensure consistent aspect ratio
