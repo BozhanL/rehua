@@ -1,6 +1,6 @@
-# API Backend for the Rehua project
+# API Backend for the Rehua Project
 
-## License
+## Rehua License
 
 ```text
 Rehua API backend Copyright (C) 2026 Rehua Contributors

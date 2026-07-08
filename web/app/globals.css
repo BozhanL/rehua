@@ -37,6 +37,26 @@
   --rehua-mustard: #e4984a;
 }
 
+@theme {
+  --color-rehua-black: var(--black);
+  --color-rehua-white: var(--white);
+  --color-rehua-light-gray: var(--light-gray);
+  --color-rehua-gray: var(--gray);
+  --color-rehua-dark-gray: var(--dark-gray);
+  --color-rehua-yellow: var(--rehua-yellow);
+  --color-rehua-orange: var(--rehua-orange);
+  --color-rehua-red: var(--rehua-red);
+  --color-rehua-green: var(--rehua-green);
+  --color-rehua-jordy: var(--rehua-jordy);
+  --color-rehua-blue: var(--rehua-blue);
+  --color-rehua-navy: var(--rehua-navy);
+  --color-rehua-midnight: var(--rehua-midnight);
+  --color-rehua-maroon: var(--rehua-maroon);
+  --color-rehua-ruby: var(--rehua-ruby);
+  --color-rehua-tangerine: var(--rehua-tangerine);
+  --color-rehua-mustard: var(--rehua-mustard);
+}
+
 /* basic html and body styles to ensure a consistent baseline for all components */
 html {
   font-family: var(--font-sans), sans-serif;
