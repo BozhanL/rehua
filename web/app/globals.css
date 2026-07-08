@@ -35,14 +35,29 @@
   --rehua-ruby: #e62e24;
   --rehua-tangerine: #e86b31;
   --rehua-mustard: #e4984a;
+
+  /* mini-labels */
+  --rehua-mini-green: #0fb800;
+  --rehua-mini-opaque-pink: #b8004a;
+  --rehua-mini-translucent-pink: #b80043;
+  --rehua-mini-navy: #0071b8;
+  --rehua-mini-opaque-orange: #b85600;
+  --rehua-mini-translucent-orange: #b81500;
+  --rehua-mini-red: #b80000;
+  --rehua-mini-opaque-discharged: #323232;
+  --rehua-mini-opaque-upload: #587cd8;
+  --rehua-mini-translucent-upload: #7e9be4;
 }
 
 @theme {
+  /* basic shades */
   --color-rehua-black: var(--black);
   --color-rehua-white: var(--white);
   --color-rehua-light-gray: var(--light-gray);
   --color-rehua-gray: var(--gray);
   --color-rehua-dark-gray: var(--dark-gray);
+
+  /* main colours */
   --color-rehua-yellow: var(--rehua-yellow);
   --color-rehua-orange: var(--rehua-orange);
   --color-rehua-red: var(--rehua-red);
@@ -55,6 +70,45 @@
   --color-rehua-ruby: var(--rehua-ruby);
   --color-rehua-tangerine: var(--rehua-tangerine);
   --color-rehua-mustard: var(--rehua-mustard);
+
+  /* mini-labels */
+  --color-rehua-mini-opaque-green: var(--rehua-mini-green);
+  --color-rehua-mini-translucent-green: rgb(
+    from var(--rehua-mini-green) r g b / 0.14
+  );
+
+  --color-rehua-mini-opaque-pink: var(--rehua-mini-opaque-pink);
+  --color-rehua-mini-translucent-pink: rgb(
+    from var(--rehua-mini-translucent-pink) r g b / 0.14
+  );
+
+  --color-rehua-mini-opaque-navy: var(--rehua-mini-navy);
+  --color-rehua-mini-translucent-navy: rgb(
+    from var(--rehua-mini-navy) r g b / 0.14
+  );
+
+  --color-rehua-mini-opaque-orange: var(--rehua-mini-opaque-orange);
+  --color-rehua-mini-translucent-orange: rgb(
+    from var(--rehua-mini-translucent-orange) r g b / 0.14
+  );
+
+  --color-rehua-mini-opaque-discharged: var(--rehua-mini-opaque-discharged);
+  --color-rehua-mini-translucent-discharged: rgb(
+    from var(--black) r g b / 0.14
+  );
+
+  --color-rehua-mini-opaque-deceased: var(--white);
+  --color-rehua-mini-translucent-deceased: rgb(from var(--black) r g b / 0.63);
+
+  --color-rehua-mini-opaque-upload: var(--rehua-mini-opaque-upload);
+  --color-rehua-mini-translucent-upload: rgb(
+    from var(--rehua-mini-translucent-upload) r g b / 0.3
+  );
+
+  --color-rehua-mini-opaque-red: var(--rehua-mini-red);
+  --color-rehua-mini-translucent-red: rgb(
+    from var(--rehua-mini-red) r g b / 0.14
+  );
 }
 
 /* basic html and body styles to ensure a consistent baseline for all components */
