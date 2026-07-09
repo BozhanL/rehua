@@ -25,6 +25,7 @@
   --rehua-yellow: #fee88f;
   --rehua-orange: #ff8b61;
   --rehua-red: #ff5050;
+  --rehua-pastel-pink: #ff8f9b;
   --rehua-green: #8de07c;
   --rehua-jordy: #7e9be4;
   --rehua-blue: #76d1f3;
@@ -61,6 +62,7 @@
   --color-rehua-yellow: var(--rehua-yellow);
   --color-rehua-orange: var(--rehua-orange);
   --color-rehua-red: var(--rehua-red);
+  --color-rehua-pastel-pink: var(--rehua-pastel-pink);
   --color-rehua-green: var(--rehua-green);
   --color-rehua-jordy: var(--rehua-jordy);
   --color-rehua-blue: var(--rehua-blue);
