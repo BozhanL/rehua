@@ -1,35 +1,35 @@
 'use client';
 
-import Icon from './Icon';
-import { icons } from './auto-generated-icons';
+import Icon, { type IconProps } from './Icon';
 import type { ButtonHTMLAttributes, JSX } from 'react';
 
+// type that is a subset of ButtonHTMLAttributes, omitting 'disabled' as buttons will always be enabled
 type ContentButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
   'disabled'
 > & {
-  text1?: string;
+  text1?: string; // bottom and top lines within button, up to 2 lines allowed
   text2?: string;
-  icon?: keyof typeof icons;
-  iconWidth?: number;
-  iconPosition?: 'left' | 'right' | 'center';
-  textAlign?: 'left' | 'right' | 'center';
-  textIconGap?: number;
-  height?: number;
-  foregroundColor?: string;
-  backgroundColor?: string;
-  horizontalPadding?: number;
-  verticalPadding?: number;
-  lineHeight?: number;
-  onClick?: () => void;
+  // colour for icons is set via foregroundColor
+  // width should be set as a scale value based on button height (e.g. 0.7 = 70% of button height)
+  iconProps?: Omit<IconProps, 'className'>;
+  iconPosition?: 'left' | 'right' | 'center'; // determines where icon is placed relative to text, fallback to 'center'
+  textAlign?: 'left' | 'right' | 'center'; // determines how text is aligned, fallback to 'center'
+  textIconGap?: number; // gap between icon and text, in proportion to button height (e.g. 0.2 = 20% of button height)
+  height?: number; // height of button in pixels, fallback to 40px
+  foregroundColor?: string; // Tailwind CSS class for text and icon colour
+  backgroundColor?: string; // Tailwind CSS class for button background colour
+  horizontalPadding?: number; // padding on left and right, in proportion to button height
+  verticalPadding?: number; // padding on top and bottom, in proportion to button height
+  lineHeight?: number; // line height for text, "vertical text spacing", fallback to 1 (single line spacing)
+  onClick?: () => void; // callback function when button is clicked
 };
 
 function ContentButton({
   text1,
   text2,
-  icon,
+  iconProps,
   iconPosition = 'center',
-  iconWidth,
   textAlign = 'center',
   textIconGap,
   height = 40,
@@ -43,38 +43,32 @@ function ContentButton({
   ...props
 }: ContentButtonProps): JSX.Element {
   const borderRadius = Math.round(height * 0.35);
-  const buttonIconWidth = iconWidth
-    ? Math.round(height * iconWidth)
-    : Math.round(height * 0.7);
+  // icon width acts as a scale as opposed to a fixed pixel width, so that the icon scales with button height
+  const iconWidth = Math.round(height * (iconProps?.width ?? 0.7));
   const fontSize = Math.round(height * 0.45);
+
   const paddingX = horizontalPadding
     ? Math.round(height * horizontalPadding)
     : Math.round(height * 0.3);
+
   const paddingY = verticalPadding
     ? Math.round(height * verticalPadding)
     : null;
+
   const gap = textIconGap
     ? Math.round(height * textIconGap)
     : Math.round(height * 0.2);
 
+  // flex direction determined based on icon position; aka layout of button content
   const direction = iconPosition === 'right' ? 'flex-row-reverse' : 'flex-row';
 
-  // eslint-disable-next-line no-useless-assignment
-  let textAlignment = '';
-  switch (textAlign) {
-    case 'left':
-      textAlignment = 'text-left';
-      break;
+  const textAlignment = {
+    left: 'text-left',
+    right: 'text-right',
+    center: 'text-center',
+  }[textAlign];
 
-    case 'right':
-      textAlignment = 'text-right';
-      break;
-
-    default:
-      textAlignment = 'text-center';
-  }
-
-  const showIcon = icon !== undefined;
+  // boolean flags to determine whether to render text1 and text2 spans
   const showText1 = text1 !== undefined;
   const showText2 = text2 !== undefined;
 
@@ -89,7 +83,7 @@ function ContentButton({
         paddingInline: paddingX,
         paddingBlock: paddingY ?? undefined,
         gap,
-        boxShadow: 'inset 0 4px 10px rgb(0 0 0 / 0.3)',
+        boxShadow: 'inset 0 4px 10px rgb(0 0 0 / 0.3)', // subtle inner shadow
       }}
       className={`
         inline-flex
@@ -105,8 +99,8 @@ function ContentButton({
       `}
       onClick={onClick}
     >
-      {showIcon && (
-        <Icon name={icon} width={buttonIconWidth} className={foregroundColor} />
+      {iconProps && (
+        <Icon {...iconProps} width={iconWidth} className={foregroundColor} />
       )}
       {showText1 && (
         <span
