@@ -101,11 +101,11 @@ function MiniLabel({
       {...props}
       style={{
         ...style,
-        width: `${String(width)}px`,
-        height: `${String(height)}px`,
-        borderRadius: `${String(borderRadius)}px`,
-        fontSize: `${String(fontSize)}px`,
-        paddingInline: `${String(paddingX)}px`,
+        width: width,
+        height: height,
+        borderRadius: borderRadius,
+        fontSize: fontSize,
+        paddingInline: paddingX,
       }}
       // Tailwind classes for consistent styling and text overflow handling
       className={`
