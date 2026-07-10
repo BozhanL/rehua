@@ -126,3 +126,4 @@ function MiniLabel({
 }
 
 export default MiniLabel;
+export type { MiniLabelProps };
