@@ -43,3 +43,4 @@ function Surface({
 }
 
 export default Surface;
+export type { SurfaceProps };
