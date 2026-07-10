@@ -25,6 +25,7 @@ type ContentButtonProps = Omit<
   onClick?: () => void; // callback function when button is clicked
 };
 
+// React component that renders button with text and/or icon, with consistent aspect ratio and styling
 function ContentButton({
   text1,
   text2,
