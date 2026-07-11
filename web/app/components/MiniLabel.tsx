@@ -126,4 +126,4 @@ function MiniLabel({
 }
 
 export default MiniLabel;
-export type { MiniLabelProps };
+export type MiniLabelName = keyof typeof presetLabels; // just export the labels
