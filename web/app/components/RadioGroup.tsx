@@ -35,6 +35,14 @@ function RadioGroup<T extends string = string>({
   radioGroupStyle,
   className,
 }: Readonly<RadioGroupProps<T>>): JSX.Element {
+  // converts buttonLabelPosition prop to corresponding CSS flexDirection value for layout
+  const flexDirection = {
+    top: 'column-reverse',
+    bottom: 'column',
+    left: 'row-reverse',
+    right: 'row',
+  }[buttonLabelPosition] as CSSProperties['flexDirection'];
+
   return (
     // outer div serves as radio button group container, applying flex layout and gap between buttons
     <div
@@ -48,14 +56,6 @@ function RadioGroup<T extends string = string>({
     >
       {/* maps over options array to render each radio button and its label */}
       {options.map((option) => {
-        // converts buttonLabelPosition prop to corresponding CSS flexDirection value for layout
-        const flexDirection = {
-          top: 'column-reverse',
-          bottom: 'column',
-          left: 'row-reverse',
-          right: 'row',
-        }[buttonLabelPosition] as CSSProperties['flexDirection'];
-
         return (
           // label element wraps radio input and its label, allows label of button to be clickable
           <label
