@@ -11,20 +11,20 @@ export class HelloService {
     @InjectModel(Hello.name) private readonly helloModel: Model<Hello>,
   ) {}
 
-  create(createHelloDto: CreateHelloDto): Promise<HelloDocument> {
+  async create(createHelloDto: CreateHelloDto): Promise<HelloDocument> {
     const createdCat = new this.helloModel(createHelloDto);
     return createdCat.save();
   }
 
-  findAll(): Promise<Hello[]> {
+  async findAll(): Promise<Hello[]> {
     return this.helloModel.find().exec();
   }
 
-  findOne(id: string): Promise<Hello | null> {
+  async findOne(id: string): Promise<Hello | null> {
     return this.helloModel.findOne({ id }).exec();
   }
 
-  update(
+  async update(
     id: string,
     updateHelloDto: UpdateHelloDto,
   ): Promise<UpdateWriteOpResult> {
@@ -38,7 +38,7 @@ export class HelloService {
       .exec();
   }
 
-  remove(id: string): Promise<DeleteResult> {
+  async remove(id: string): Promise<DeleteResult> {
     return this.helloModel.deleteOne({ id }).exec();
   }
 }

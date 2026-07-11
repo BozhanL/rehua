@@ -6,8 +6,11 @@ import { env } from 'node:process';
 const nextConfig: NextConfig = {
   basePath: env['BASE_URL'] ?? '',
   output: 'export',
+
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
   webpack(config) {
     // Grab the existing rule that handles SVG imports
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fileLoaderRule = config.module.rules.find((rule: any) =>
       rule.test?.test?.('.svg'),
     );
@@ -33,6 +36,7 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+  /* eslint-enable */
 };
 
 const unpluginTypiaOptions: Options = {

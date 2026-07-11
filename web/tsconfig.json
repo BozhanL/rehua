@@ -50,8 +50,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    "postcss.config.mjs"
+    "**/*.mts"
   ],
   "exclude": ["node_modules"]
 }

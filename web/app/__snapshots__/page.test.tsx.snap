@@ -6,5 +6,10 @@ exports[`Page renders homepage unchanged 1`] = `
     Hello world -- 
     zisqodowlqvetmuftrbcecsnftwdypldvvnfbonexlwrjrlzwgybmgbyxpmweckbetqjqfgrpykducbxltemdfgnetuifrztnnkq
   </h1>
+  <svg
+    preserveAspectRatio="xMidYMid meet"
+    style="transform-origin: center; transform-box: fill-box;"
+    width="24"
+  />
 </div>
 `;
