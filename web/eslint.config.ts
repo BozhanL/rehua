@@ -65,9 +65,12 @@ const eslintConfig = defineConfig([
     'build/**',
     'next-env.d.ts',
     'coverage/**',
-    'next.config.mts',
-    'svgr.d.ts',
   ]),
+
+  {
+    files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
+    ...tseslint.configs.disableTypeChecked,
+  },
 
   {
     settings: {
