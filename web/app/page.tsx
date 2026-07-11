@@ -14,7 +14,7 @@ function useHelloOptions() {
 
   return queryOptions({
     queryKey: ['hello', host],
-    queryFn: () =>
+    queryFn: async () =>
       getHello({
         host: host,
         simulate: isTesting,
