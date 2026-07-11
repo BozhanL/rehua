@@ -35,20 +35,25 @@ async function generateIcons(): Promise<void> {
   // generate mapping of icon names to their corresponding components
   const map = files
     .map((file) => {
-      const key = file.replace(/\.svg$/, '');
+      let key = file.replace(/\.svg$/, '');
       const componentName = toPascalCase(file);
-      return `  '${key}': ${componentName},`; // e.g. 'smiley-face': SmileyFace,
+
+      // Key with hyphen must be wrap in quotes
+      if (key.includes('-')) {
+        key = `'${key}'`;
+      }
+
+      return `  ${key}: ${componentName},`; // e.g. 'smiley-face': SmileyFace,
     })
     .join('\n');
 
   // create output string (content) for generated-icons.ts file
   const output = `// AUTO-GENERATED FILE FOR UI ICONS
 // DO NOT MODIFY !!!
-
 ${imports}
 
 export const icons = {
-  ${map}
+${map}
 } as const;
 `;
 
