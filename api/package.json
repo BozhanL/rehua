@@ -18,7 +18,7 @@
   },
   "scripts": {
     "build": "nest build",
-    "build:sdk": "cross-env NODE_ENV=nestia npx nestia sdk",
+    "build:sdk": "npm run build:sdk -w ../sdk",
     "build:api": "cross-env NODE_ENV=nestia npx nestia swagger",
     "type": "tsc --noEmit",
     "format": "prettier --check .",
