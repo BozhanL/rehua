@@ -26,7 +26,7 @@
   },
   "scripts": {
     "build": "npm run build:sdk && npm run compile",
-    "build:sdk": "rimraf src/functional && cd ../api && cross-env NODE_ENV=nestia npx nestia sdk && cd ../sdk",
+    "build:sdk": "rimraf src/functional && cross-env NODE_ENV=nestia npx -w ../api nestia sdk && npm run format:fix -w=false --include-workspace-root",
     "compile": "rimraf lib && tsc",
     "deploy": "npm run build && npm publish"
   },

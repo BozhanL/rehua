@@ -24,6 +24,7 @@ const eslintConfig = defineConfig([
     },
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/promise-function-async': 'error',
     },
   },
   {

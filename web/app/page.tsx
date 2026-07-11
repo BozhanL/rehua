@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from './components/Icon';
 import { APIUrlContext } from './providers';
 import { isTesting } from '@/app/utils/env';
 import { getHello } from '@rehua/sdk/functional';
@@ -13,7 +14,7 @@ function useHelloOptions() {
 
   return queryOptions({
     queryKey: ['hello', host],
-    queryFn: () =>
+    queryFn: async () =>
       getHello({
         host: host,
         simulate: isTesting,
@@ -28,7 +29,12 @@ function Home(): JSX.Element {
     return <h1>Loading...</h1>;
   }
 
-  return <h1>Hello world -- {query.data}</h1>;
+  return (
+    <>
+      <h1>Hello world -- {query.data}</h1>
+      <Icon name={'eye'} />
+    </>
+  );
 }
 
 export default functional.assertFunction(Home);
