@@ -13,7 +13,8 @@ interface RadioGroupProps<T extends string = string> {
   selectedButton: T; // currently selected button
   onChange: (selectedButton: T) => void; // callback function to handle selection change
   size?: number; // size of radio button in pixels, fallback to 20px
-  color?: string; // color of radio buttons, fallback to 'text-rehua-navy'
+  buttonColor?: string; // color of radio buttons, fallback to 'text-rehua-navy'
+  buttonLabelColor?: string; // color of button labels, fallback to 'text-rehua-navy'
   buttonLabelPosition?: 'top' | 'bottom' | 'left' | 'right'; // fallback to 'bottom'
   direction?: 'horizontal' | 'vertical'; // layout direction of radio buttons, fallback to 'horizontal'
   gap?: number; // gap between radio buttons in pixels, fallback to 10px
@@ -28,7 +29,8 @@ function RadioGroup<T extends string = string>({
   selectedButton,
   onChange,
   size = 20,
-  color = 'text-rehua-navy',
+  buttonColor = 'text-rehua-navy',
+  buttonLabelColor = 'text-rehua-navy',
   buttonLabelPosition = 'bottom',
   direction = 'horizontal',
   gap = 10,
@@ -81,12 +83,12 @@ function RadioGroup<T extends string = string>({
               style={{
                 width: size,
                 height: size,
-                accentColor: color,
+                accentColor: buttonColor,
                 margin: 0,
               }}
             />
             {/* label for the radio button */}
-            <span>{option.buttonLabel}</span>
+            <span className={buttonLabelColor}>{option.buttonLabel}</span>
           </label>
         );
       })}
