@@ -13,8 +13,10 @@ interface RadioGroupProps<T extends string = string> {
   selectedButton: T; // currently selected button
   onChange: (selectedButton: T) => void; // callback function to handle selection change
   size?: number; // size of radio button in pixels, fallback to 20px
-  buttonColor?: string; // color of radio buttons, fallback to 'text-rehua-navy'
+  buttonColor?: string; // color of radio buttons, fallback to 'accent-rehua-navy'
   buttonLabelColor?: string; // color of button labels, fallback to 'text-rehua-navy'
+  buttonLabelFontSize?: number; // font size of button labels in pixels, fallback to 50% of button size
+  buttonLabelFontWeight?: string; // font weight of button labels, fallback to 'font-bold'
   buttonLabelPosition?: 'top' | 'bottom' | 'left' | 'right'; // fallback to 'bottom'
   direction?: 'horizontal' | 'vertical'; // layout direction of radio buttons, fallback to 'horizontal'
   gap?: number; // gap between radio buttons in pixels, fallback to 10px
@@ -29,8 +31,10 @@ function RadioGroup<T extends string = string>({
   selectedButton,
   onChange,
   size = 20,
-  buttonColor = 'text-rehua-navy',
+  buttonColor = 'accent-rehua-navy',
   buttonLabelColor = 'text-rehua-navy',
+  buttonLabelFontSize = Math.round(size * 0.5),
+  buttonLabelFontWeight = 'font-bold',
   buttonLabelPosition = 'bottom',
   direction = 'horizontal',
   gap = 10,
@@ -66,7 +70,6 @@ function RadioGroup<T extends string = string>({
               display: 'flex',
               flexDirection,
               alignItems: 'center',
-              justifyContent: 'center',
               gap: 6,
               cursor: 'pointer',
             }}
@@ -83,12 +86,20 @@ function RadioGroup<T extends string = string>({
               style={{
                 width: size,
                 height: size,
-                accentColor: buttonColor,
                 margin: 0,
               }}
+              className={buttonColor}
             />
             {/* label for the radio button */}
-            <span className={buttonLabelColor}>{option.buttonLabel}</span>
+            <span
+              style={{ fontSize: buttonLabelFontSize }}
+              className={`
+                ${buttonLabelColor}
+                ${buttonLabelFontWeight}
+              `}
+            >
+              {option.buttonLabel}
+            </span>
           </label>
         );
       })}
