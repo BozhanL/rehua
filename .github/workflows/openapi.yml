@@ -97,7 +97,8 @@ jobs:
       - name: Detect Changes
         id: openapi-diff
         env:
-          OPENAPI_VERSION: 2.1.7 # renovate: datasource=docker depName=openapitools/openapi-diff
+          # renovate: datasource=docker depName=openapitools/openapi-diff
+          OPENAPI_VERSION: 2.1.7
         run: |
           sed -i 's:allOf:oneOf:g' openapi-head/swagger.json
           sed -i 's:allOf:oneOf:g' openapi-base/swagger.json

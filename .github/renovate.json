@@ -7,6 +7,9 @@
     ":semanticCommits",
     ":timezone(Pacific/Auckland)",
 
+    "customManagers:dockerfileVersions",
+    "customManagers:githubActionsVersions",
+
     ":assignAndReview(BozhanL)",
 
     "local>BozhanL/rehua//.github/renovate/minimumReleaseAge",
