@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
 import { configs as sonarjs } from 'eslint-plugin-sonarjs';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
@@ -12,6 +13,21 @@ const eslintConfig = defineConfig([
   sonarjs.recommended,
 
   pluginQuery.configs['flat/recommended-strict'],
+
+  eslintPluginBetterTailwindcss.configs['recommended-error'],
+  {
+    settings: {
+      'better-tailwindcss': {
+        entryPoint: 'app/globals.css',
+      },
+    },
+    rules: {
+      'better-tailwindcss/enforce-consistent-line-wrapping': [
+        'error',
+        { strictness: 'loose' },
+      ],
+    },
+  },
 
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
