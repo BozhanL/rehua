@@ -109,12 +109,7 @@ function MiniLabel({
       }}
       // Tailwind classes for consistent styling and text overflow handling
       className={`
-        inline-flex 
-        items-center
-        justify-center
-        whitespace-nowrap
-        overflow-hidden
-        text-ellipsis
+        inline-flex items-center justify-center truncate
         ${label.color.textColor}
         ${label.color.backgroundColor}
         font-bold

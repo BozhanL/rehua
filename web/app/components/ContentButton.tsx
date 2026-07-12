@@ -87,16 +87,11 @@ function ContentButton({
         boxShadow: 'inset 0 4px 10px rgb(0 0 0 / 0.3)', // subtle inner shadow
       }}
       className={`
-        inline-flex
-        w-fit
-        items-center
-        justify-center
-        cursor-pointer
+        inline-flex w-fit cursor-pointer items-center justify-center
         ${direction}
         ${backgroundColor}
+        transition-all duration-100
         active:brightness-80
-        transition-all
-        duration-100
       `}
       onClick={onClick}
     >
@@ -106,8 +101,7 @@ function ContentButton({
       {showText1 && (
         <span
           className={`
-            inline-flex
-            flex-col
+            inline-flex flex-col
             ${textAlignment}
             ${foregroundColor}
             font-semibold
