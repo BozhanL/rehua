@@ -29,19 +29,19 @@ export class HelloController {
   }
 
   @TypedRoute.Get()
-  findAll(): Promise<Hello[]> {
+  async findAll(): Promise<Hello[]> {
     return this.helloService.findAll();
   }
 
   @TypedRoute.Get(':id')
   @SwaggerExample.Response('Found', { value: new Hello('1', 'test') })
   @SwaggerExample.Response('Not found', { value: null })
-  findOne(@TypedParam('id') id: string): Promise<Hello | null> {
+  async findOne(@TypedParam('id') id: string): Promise<Hello | null> {
     return this.helloService.findOne(id);
   }
 
   @TypedRoute.Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @TypedBody() updateHelloDto: UpdateHelloDto,
   ): Promise<UpdateWriteOpResult> {
@@ -49,7 +49,7 @@ export class HelloController {
   }
 
   @TypedRoute.Delete(':id')
-  remove(@Param('id') id: string): Promise<DeleteResult> {
+  async remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.helloService.remove(id);
   }
 }

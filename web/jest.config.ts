@@ -99,6 +99,7 @@ const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
     '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^.+\\.(svg)$': '<rootDir>/app/__mocks__/svg.ts',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

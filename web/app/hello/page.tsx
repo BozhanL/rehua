@@ -19,7 +19,7 @@ function useHelloOptions() {
 
   return queryOptions({
     queryKey: ['hello', host],
-    queryFn: () =>
+    queryFn: async () =>
       findAll({
         host: host,
         simulate: isTesting,
@@ -27,7 +27,7 @@ function useHelloOptions() {
   });
 }
 
-function createHello({
+async function createHello({
   host,
   formData,
 }: {
@@ -43,7 +43,7 @@ function createHello({
   );
 }
 
-function deleteHello({
+async function deleteHello({
   host,
   formData,
 }: {
@@ -65,7 +65,7 @@ function Home(): JSX.Element {
 
   const createHelloMutation = useMutation({
     mutationFn: createHello,
-    onSuccess: () =>
+    onSuccess: async () =>
       queryClient.invalidateQueries({
         queryKey: options.queryKey,
       }),
@@ -73,7 +73,7 @@ function Home(): JSX.Element {
 
   const deleteHelloMutation = useMutation({
     mutationFn: deleteHello,
-    onSuccess: () =>
+    onSuccess: async () =>
       queryClient.invalidateQueries({
         queryKey: options.queryKey,
       }),
