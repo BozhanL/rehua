@@ -50,14 +50,7 @@ function Modal({
   return (
     // div acts as a background overlay, centres surface by default
     <div
-      className={`
-        fixed
-        inset-0
-        z-50
-        flex
-        items-center
-        justify-center
-      `}
+      className={`fixed inset-0 z-50 flex items-center justify-center`}
       style={{
         ...backgroundStyle,
         backgroundColor: showBackground
