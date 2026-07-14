@@ -1,7 +1,7 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { assert, TypeGuardError } from 'typia';
 
 describe('AppController', () => {

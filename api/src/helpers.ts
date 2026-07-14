@@ -1,6 +1,6 @@
 import { configModule, AppModule } from './app.module';
 import type { Config } from './utils/config';
-import { INestiaConfig } from '@nestia/sdk';
+import type { INestiaConfig } from '@nestia/sdk';
 import type { DynamicModule, INestApplication } from '@nestjs/common';
 import type { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { ConfigService } from '@nestjs/config';

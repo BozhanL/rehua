@@ -39,6 +39,13 @@ const eslintConfig = defineConfig([
       },
     },
     rules: {
+      '@typescript-eslint/no-import-type-side-effects': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { fixStyle: 'inline-type-imports' },
+      ],
+      '@typescript-eslint/consistent-type-exports': 'error',
+
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/promise-function-async': 'error',
     },

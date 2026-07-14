@@ -3,7 +3,7 @@ import { HelloController } from './hello.controller';
 import { HelloService } from './hello.service';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { getModelToken } from '@nestjs/mongoose';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 
 describe('HelloController', () => {
   let controller: HelloController;
