@@ -9,7 +9,9 @@ services:
   db:
     image: mongo:8.3@sha256:0f887198e29c093fd2b36c3e2eb43c7b98e47c081d89fbd5bc212da0cd43ec58
     restart: unless-stopped
-    environment: 
+    environment:
+      # Work around MongoDB 8.0+ startup crashes on Linux kernel 6.19
+      # https://jira.mongodb.org/browse/SERVER-121912?focusedId=839528
       GLIBC_TUNABLES: glibc.pthread.rseq=1
     volumes:
       - mongodb-data:/data/db
