@@ -193,12 +193,15 @@ const config: Config = {
       'ts-jest',
       {
         tsconfig: './tsconfig.test.json',
+        useESM: true,
       },
     ],
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: ['rehua/sdk'],
+
+  extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
