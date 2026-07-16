@@ -1,7 +1,8 @@
 import eslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import jest from 'eslint-plugin-jest';
 import { configs as sonarjs } from 'eslint-plugin-sonarjs';
-import { defineConfig } from 'eslint/config';
+import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -66,11 +67,22 @@ const eslintConfig = defineConfig([
   },
 
   {
-    files: ['commitlint.config.js'],
-    ...tseslint.configs.disableTypeChecked,
+    files: ['**/*.test.tsx', '**/*.test.ts', '**/*.spec.tsx', '**/*.spec.ts'],
+    ...jest.configs['flat/all'],
+  },
+  {
+    rules: {
+      'jest/no-hooks': 'off',
+      'jest/prefer-mock-return-shorthand': 'off',
+    },
   },
 
-  { ignores: ['node_modules/**', 'dist/**', 'coverage/**', '.husky/**'] },
+  globalIgnores(['node_modules/**', 'dist/**', 'coverage/**', '.husky/**']),
+
+  {
+    files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
+    ...tseslint.configs.disableTypeChecked,
+  },
 
   eslintConfigPrettier,
 ]);
