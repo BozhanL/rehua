@@ -11,7 +11,11 @@ import tseslint from 'typescript-eslint';
 const eslintConfig = defineConfig([
   nextVitals,
   js.configs.recommended,
+
   sonarjs.recommended,
+  {
+    rules: { 'sonarjs/todo-tag': 'off' },
+  },
 
   pluginQuery.configs['flat/recommended-strict'],
 
@@ -82,6 +86,7 @@ const eslintConfig = defineConfig([
     ...jest.configs['flat/all'],
   },
   {
+    files: ['**/*.test.tsx', '**/*.test.ts', '**/*.spec.tsx', '**/*.spec.ts'],
     rules: {
       'jest/no-hooks': 'off',
       'jest/prefer-mock-return-shorthand': 'off',

@@ -22,7 +22,9 @@ export type FormTemplateProps<
   'onChange' | 'formData'
 >;
 
-const FormWithTheme = withTheme(generateTheme()) as typeof FormType;
+// TODO: remove @rjsf/mui and create our own theme
+const theme = generateTheme();
+const FormWithTheme = withTheme(theme) as typeof FormType;
 
 export default function FormTemplate<
   T = unknown,
@@ -31,8 +33,8 @@ export default function FormTemplate<
 >({ validator, ...prop }: Readonly<FormTemplateProps<T, S, F>>): JSX.Element {
   return (
     <FormWithTheme
-      validator={validator ?? (defaultValidator as ValidatorType<T, S, F>)}
       {...prop}
+      validator={validator ?? (defaultValidator as ValidatorType<T, S, F>)}
     />
   );
 }
