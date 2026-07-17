@@ -39,10 +39,10 @@
     "fix-all": "concurrently -m 1 --kill-others-on-fail npm:lint:fix npm:format:fix"
   },
   "dependencies": {
-    "@nestia/core": "11.3.4",
-    "@nestia/e2e": "11.3.4",
-    "@nestia/fetcher": "11.3.4",
-    "@nestia/sdk": "11.3.4",
+    "@nestia/core": "12.0.0",
+    "@nestia/e2e": "12.0.0",
+    "@nestia/fetcher": "12.0.0",
+    "@nestia/sdk": "12.0.0",
     "@nestjs/common": "11.1.28",
     "@nestjs/config": "4.0.4",
     "@nestjs/core": "11.1.28",
@@ -59,7 +59,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "3.3.6",
     "@eslint/js": "10.0.1",
-    "@nestia/benchmark": "11.3.4",
+    "@nestia/benchmark": "12.0.0",
     "@nestjs/cli": "11.0.24",
     "@nestjs/schematics": "11.1.0",
     "@nestjs/testing": "11.1.28",
@@ -78,7 +78,7 @@
     "jest-junit": "17.0.0",
     "jiti": "2.7.0",
     "mongodb-memory-server": "11.2.0",
-    "nestia": "11.3.4",
+    "nestia": "12.0.0",
     "prettier": "3.9.5",
     "source-map-support": "0.5.21",
     "supertest": "7.2.2",
