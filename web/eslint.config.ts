@@ -3,6 +3,7 @@ import pluginQuery from '@tanstack/eslint-plugin-query';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
+import jest from 'eslint-plugin-jest';
 import { configs as sonarjs } from 'eslint-plugin-sonarjs';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
@@ -39,6 +40,13 @@ const eslintConfig = defineConfig([
       },
     },
     rules: {
+      '@typescript-eslint/no-import-type-side-effects': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { fixStyle: 'inline-type-imports' },
+      ],
+      '@typescript-eslint/consistent-type-exports': 'error',
+
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/promise-function-async': 'error',
     },
@@ -70,8 +78,14 @@ const eslintConfig = defineConfig([
   },
 
   {
-    files: ['commitlint.config.js'],
-    ...tseslint.configs.disableTypeChecked,
+    files: ['**/*.test.tsx', '**/*.test.ts', '**/*.spec.tsx', '**/*.spec.ts'],
+    ...jest.configs['flat/all'],
+  },
+  {
+    rules: {
+      'jest/no-hooks': 'off',
+      'jest/prefer-mock-return-shorthand': 'off',
+    },
   },
 
   // Override default ignores of eslint-config-next.

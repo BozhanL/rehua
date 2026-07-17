@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { tags } from 'typia';
+import type { tags } from 'typia';
 
 export interface Config {
   PORT: number & tags.Type<'uint32'> & tags.Minimum<0> & tags.Maximum<65535>;

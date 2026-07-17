@@ -2,9 +2,9 @@ import { Hello } from './entities/hello.entity';
 import { HelloService } from './hello.service';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { getModelToken } from '@nestjs/mongoose';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 
-describe('HelloService', () => {
+describe('helloService', () => {
   let service: HelloService;
 
   const mockHelloModel = {
@@ -26,6 +26,8 @@ describe('HelloService', () => {
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect.assertions(1);
+
+    expect(service).toBeInstanceOf(HelloService);
   });
 });
