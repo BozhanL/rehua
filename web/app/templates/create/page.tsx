@@ -152,9 +152,7 @@ export default function Home(): JSX.Element {
             },
           );
         }}
-      >
-        Create Template
-      </ContentButton>
+      />
     </>
   );
 }
