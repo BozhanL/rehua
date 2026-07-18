@@ -1,5 +1,6 @@
 'use client';
 
+import ContentButton from '@/app/components/ContentButton';
 import { useEffect, type JSX } from 'react';
 
 export default function ErrorPage({
@@ -18,7 +19,15 @@ export default function ErrorPage({
     <div>
       <h2>Something went wrong!</h2>
       <p>{error.message}</p>
-      <button onClick={unstable_retry}>Try again</button>
+      <ContentButton
+        type="button"
+        text1="Try again"
+        iconProps={{ name: 'alert' }}
+        foregroundColor="text-rehua-white"
+        backgroundColor="bg-rehua-green"
+        textAlign="right"
+        onClick={unstable_retry}
+      />
     </div>
   );
 }
