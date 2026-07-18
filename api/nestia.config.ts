@@ -17,6 +17,7 @@ const NESTIA_CONFIG: INestiaConfig = {
   distribute: '../sdk',
   simulate: true,
   clone: true,
+  assert: true,
 
   swagger: {
     ...swaggerConfig,

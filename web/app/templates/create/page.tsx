@@ -1,6 +1,5 @@
 'use client';
 
-import FormTemplate from '@/app/components/FormTemplate';
 import { APIUrlContext } from '@/app/providers';
 import { isTesting } from '@/app/utils/env';
 import {
@@ -11,48 +10,37 @@ import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   queryOptions,
   useMutation,
-  useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { useContext, useState, type JSX } from 'react';
+import { useRouter } from 'next/navigation';
+import { useContext, type JSX } from 'react';
 
 const schema: RJSFSchema = {
-  title: 'A registration form',
-  description: 'A simple form example.',
   type: 'object',
-  required: ['firstName', 'lastName'],
   properties: {
-    firstName: {
+    'First name': {
       type: 'string',
-      title: 'First name',
       default: 'Chuck',
     },
     lastName: {
       type: 'string',
-      title: 'Last name',
     },
     age: {
       type: 'integer',
-      title: 'Age',
     },
     bio: {
       type: 'string',
-      title: 'Bio',
     },
     password: {
       type: 'string',
-      title: 'Password',
-      minLength: 3,
     },
     telephone: {
       type: 'string',
-      title: 'Telephone',
-      minLength: 10,
     },
   },
 };
 const uiSchema: UiSchema = {
-  firstName: {
+  'First name': {
     'ui:autofocus': true,
     'ui:emptyValue': '',
     'ui:placeholder':
@@ -120,13 +108,12 @@ function useTemplateOptions() {
 }
 
 export default function Home(): JSX.Element {
-  const [formData, setFormData] = useState<unknown>(undefined);
+  const router = useRouter();
 
   const host = useContext(APIUrlContext);
   const queryClient = useQueryClient();
 
   const options = useTemplateOptions();
-  const findTemplate = useQuery(options);
 
   const createTemplateMutation = useMutation({
     mutationFn: createTemplate,
@@ -136,35 +123,26 @@ export default function Home(): JSX.Element {
       }),
   });
 
-  if (!findTemplate.isSuccess || !findTemplate.data[0]) {
-    return (
-      <>
-        <h1>Loading...</h1>
-        <button
-          onClick={() => {
-            createTemplateMutation.mutate({ host });
-          }}
-        >
-          Create Template
-        </button>
-      </>
-    );
-  }
-
-  const data = findTemplate.data[0];
-
   return (
     <>
-      <h1>Form example</h1>
-
-      <FormTemplate
-        schema={data.schema}
-        uiSchema={data.uiSchema as UiSchema}
-        formData={formData}
-        onChange={(e) => {
-          setFormData(e.formData);
+      <h1>Create form example</h1>
+      <button
+        type="button"
+        onClick={() => {
+          createTemplateMutation.mutate(
+            { host },
+            {
+              onSuccess: (resp) => {
+                const searchParams = new URLSearchParams();
+                searchParams.append('id', resp._id);
+                router.push(`/templates?${searchParams.toString()}`);
+              },
+            },
+          );
         }}
-      />
+      >
+        Create Template
+      </button>
     </>
   );
 }

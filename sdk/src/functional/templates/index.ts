@@ -5,11 +5,11 @@
  */
 //================================================================
 import type { CreateTemplateDto } from '../../structures/CreateTemplateDto';
-import type { Template_idstring } from '../../structures/Template_idstring';
+import type { Template_idMongoId } from '../../structures/Template_idMongoId';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
-import type { Resolved } from 'typia';
 import typia from 'typia';
+import type { Resolved, tags } from 'typia';
 
 /**
  * @controller TemplatesController.create
@@ -21,6 +21,7 @@ export async function create(
   connection: IConnection,
   createTemplateDto: create.Body,
 ): Promise<create.Output> {
+  typia.assert<typeof createTemplateDto>(createTemplateDto);
   return true === connection.simulate
     ? create.simulate(connection, createTemplateDto)
     : PlainFetcher.fetch(
@@ -41,7 +42,7 @@ export async function create(
 }
 export namespace create {
   export type Body = CreateTemplateDto;
-  export type Output = Template_idstring;
+  export type Output = Template_idMongoId;
 
   export const METADATA = {
     method: 'POST',
@@ -58,8 +59,8 @@ export namespace create {
   } as const;
 
   export const path = () => '/templates';
-  export const random = (): Resolved<Template_idstring> =>
-    typia.random<Template_idstring>();
+  export const random = (): Resolved<Template_idMongoId> =>
+    typia.random<Template_idMongoId>();
   export const simulate = (
     connection: IConnection,
     createTemplateDto: Body,
@@ -83,8 +84,9 @@ export namespace create {
  */
 export async function findOne(
   connection: IConnection,
-  id: string,
+  id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>,
 ): Promise<findOne.Output> {
+  typia.assert<typeof id>(id);
   return true === connection.simulate
     ? findOne.simulate(connection, id)
     : PlainFetcher.fetch(connection, {
@@ -94,7 +96,7 @@ export async function findOne(
       });
 }
 export namespace findOne {
-  export type Output = null | Template_idstring.o1;
+  export type Output = null | Template_idMongoId.o1;
 
   export const METADATA = {
     method: 'GET',
@@ -107,11 +109,14 @@ export namespace findOne {
     status: 200,
   } as const;
 
-  export const path = (id: string) =>
+  export const path = (id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>) =>
     `/templates/${encodeURIComponent(id?.toString() ?? 'null')}`;
-  export const random = (): Resolved<null | Template_idstring.o1> =>
-    typia.random<null | Template_idstring.o1>();
-  export const simulate = (connection: IConnection, id: string): Output => {
+  export const random = (): Resolved<null | Template_idMongoId.o1> =>
+    typia.random<null | Template_idMongoId.o1>();
+  export const simulate = (
+    connection: IConnection,
+    id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>,
+  ): Output => {
     const assert = NestiaSimulator.assert({
       method: METADATA.method,
       host: connection.host,
@@ -141,7 +146,7 @@ export async function findAll(
       });
 }
 export namespace findAll {
-  export type Output = Template_idstring.o2[];
+  export type Output = Template_idMongoId.o2[];
 
   export const METADATA = {
     method: 'GET',
@@ -155,8 +160,8 @@ export namespace findAll {
   } as const;
 
   export const path = () => '/templates';
-  export const random = (): Resolved<Template_idstring.o2[]> =>
-    typia.random<Template_idstring.o2[]>();
+  export const random = (): Resolved<Template_idMongoId.o2[]> =>
+    typia.random<Template_idMongoId.o2[]>();
   export const simulate = (_connection: IConnection): Output => {
     return random();
   };
@@ -170,8 +175,9 @@ export namespace findAll {
  */
 export async function remove(
   connection: IConnection,
-  id: string,
+  id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>,
 ): Promise<remove.Output> {
+  typia.assert<typeof id>(id);
   return true === connection.simulate
     ? remove.simulate(connection, id)
     : PlainFetcher.fetch(connection, {
@@ -181,7 +187,7 @@ export async function remove(
       });
 }
 export namespace remove {
-  export type Output = null | Template_idstring.o3;
+  export type Output = null | Template_idMongoId.o3;
 
   export const METADATA = {
     method: 'DELETE',
@@ -194,11 +200,14 @@ export namespace remove {
     status: 200,
   } as const;
 
-  export const path = (id: string) =>
+  export const path = (id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>) =>
     `/templates/${encodeURIComponent(id?.toString() ?? 'null')}`;
-  export const random = (): Resolved<null | Template_idstring.o3> =>
-    typia.random<null | Template_idstring.o3>();
-  export const simulate = (connection: IConnection, id: string): Output => {
+  export const random = (): Resolved<null | Template_idMongoId.o3> =>
+    typia.random<null | Template_idMongoId.o3>();
+  export const simulate = (
+    connection: IConnection,
+    id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>,
+  ): Output => {
     const assert = NestiaSimulator.assert({
       method: METADATA.method,
       host: connection.host,

@@ -1,3 +1,4 @@
+import type { MakeOptional, MakeRequired } from '@/app/utils/types';
 import type FormType from '@rjsf/core';
 import { type FormProps, withTheme } from '@rjsf/core';
 import { generateTheme } from '@rjsf/mui';
@@ -9,9 +10,6 @@ import type {
 } from '@rjsf/utils';
 import defaultValidator from '@rjsf/validator-ajv8';
 import type { JSX } from 'react';
-
-type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-type MakeRequired<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
 export type FormTemplateProps<
   T = unknown,
