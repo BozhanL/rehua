@@ -13,8 +13,7 @@ export class TemplatesService {
   async create(
     createTemplateDto: CreateTemplateDto,
   ): Promise<TemplateDocument> {
-    const createdTemplate = new this.templateModel(createTemplateDto);
-    return createdTemplate.save();
+    return this.templateModel.create(createTemplateDto);
   }
 
   async findOne(id: string): Promise<TemplateDocument | null> {
