@@ -31,8 +31,8 @@ export default function FormTemplate<
 >({ validator, ...prop }: Readonly<FormTemplateProps<T, S, F>>): JSX.Element {
   return (
     <FormWithTheme
-      {...prop}
       validator={validator ?? (defaultValidator as ValidatorType<T, S, F>)}
+      {...prop}
     />
   );
 }

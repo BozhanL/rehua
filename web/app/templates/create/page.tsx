@@ -1,10 +1,15 @@
 'use client';
 
+import ContentButton from '@/app/components/ContentButton';
+import FormTemplate from '@/app/components/form/FormTemplate';
+import ObjectFieldTemplate, {
+  type ObjectFieldTemplateContext,
+} from '@/app/components/form/ObjectFieldTemplate';
 import { APIUrlContext } from '@/app/providers';
 import { isTesting } from '@/app/utils/env';
 import {
-  findAll as findAllTemplate,
-  create,
+  findAll as findAllTemplateSDK,
+  create as createTemplateSDK,
 } from '@rehua/sdk/functional/templates';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import {
@@ -13,16 +18,15 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useContext, type JSX } from 'react';
+import { useContext, useState, type JSX } from 'react';
 
-const schema: RJSFSchema = {
+const defaultSchema: RJSFSchema = {
   type: 'object',
   properties: {
     'First name': {
       type: 'string',
-      default: 'Chuck',
     },
-    lastName: {
+    'Last name': {
       type: 'string',
     },
     age: {
@@ -39,41 +43,17 @@ const schema: RJSFSchema = {
     },
   },
 };
-const uiSchema: UiSchema = {
-  'First name': {
-    'ui:autofocus': true,
-    'ui:emptyValue': '',
-    'ui:placeholder':
-      'ui:emptyValue causes this field to always be valid despite being required',
-    'ui:autocomplete': 'family-name',
-    'ui:enableMarkdownInDescription': true,
-    'ui:description':
-      'Make text **bold** or *italic*. Take a look at other options [here](https://markdown-to-jsx.quantizor.dev/).',
-  },
-  lastName: {
-    'ui:autocomplete': 'given-name',
-    'ui:enableMarkdownInDescription': true,
-    'ui:description':
-      'Make things **bold** or *italic*. Embed snippets of `code`. <small>NOTE: Unsafe HTML, not rendered</small> ',
-  },
-  age: {
-    'ui:widget': 'updown',
-    'ui:title': 'Age of person',
-    'ui:description': '(earth year)',
-  },
-  bio: {
-    'ui:widget': 'textarea',
-  },
-  password: {
-    'ui:widget': 'password',
-    'ui:help': 'Hint: Make it strong!',
-  },
-  telephone: {
-    'ui:options': {
-      inputType: 'tel',
-    },
-  },
 
+const defaultUiSchema: UiSchema = {
+  'ui:label': true,
+  'ui:order': [
+    'First name',
+    'Last name',
+    'age',
+    'bio',
+    'password',
+    'telephone',
+  ],
   'ui:submitButtonOptions': {
     norender: true,
   },
@@ -81,10 +61,14 @@ const uiSchema: UiSchema = {
 
 async function createTemplate({
   host,
+  schema,
+  uiSchema,
 }: {
   host: string;
-}): Promise<create.Output> {
-  return create(
+  schema: RJSFSchema;
+  uiSchema: UiSchema;
+}): Promise<createTemplateSDK.Output> {
+  return createTemplateSDK(
     { host, simulate: isTesting },
     {
       schema,
@@ -100,7 +84,7 @@ function useTemplateOptions() {
   return queryOptions({
     queryKey: ['templates', host],
     queryFn: async () =>
-      findAllTemplate({
+      findAllTemplateSDK({
         host: host,
         simulate: isTesting,
       }),
@@ -108,6 +92,10 @@ function useTemplateOptions() {
 }
 
 export default function Home(): JSX.Element {
+  const [formData, setFormData] = useState<unknown>(undefined);
+  const [schema, setSchema] = useState<RJSFSchema>(defaultSchema);
+  const [uiSchema, setUiSchema] = useState<UiSchema>(defaultUiSchema);
+
   const router = useRouter();
 
   const host = useContext(APIUrlContext);
@@ -126,11 +114,35 @@ export default function Home(): JSX.Element {
   return (
     <>
       <h1>Create form example</h1>
-      <button
+
+      <FormTemplate<
+        unknown,
+        RJSFSchema,
+        { objectFieldTemplate: ObjectFieldTemplateContext }
+      >
+        schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        onChange={(e) => {
+          setFormData(e.formData);
+        }}
+        templates={{ ObjectFieldTemplate }}
+        formContext={{
+          objectFieldTemplate: { schema, uiSchema, setSchema, setUiSchema },
+        }}
+      />
+
+      <ContentButton
         type="button"
+        text1="Save"
+        text2="Template"
+        iconProps={{ name: 'save' }}
+        foregroundColor="text-rehua-white"
+        backgroundColor="bg-rehua-green"
+        textAlign="right"
         onClick={() => {
           createTemplateMutation.mutate(
-            { host },
+            { host, schema, uiSchema },
             {
               onSuccess: (resp) => {
                 const searchParams = new URLSearchParams();
@@ -142,7 +154,7 @@ export default function Home(): JSX.Element {
         }}
       >
         Create Template
-      </button>
+      </ContentButton>
     </>
   );
 }

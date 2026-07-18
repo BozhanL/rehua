@@ -1,6 +1,6 @@
 'use client';
 
-import FormTemplate from '@/app/components/FormTemplate';
+import FormTemplate from '@/app/components/form/FormTemplate';
 import { APIUrlContext } from '@/app/providers';
 import { isTesting } from '@/app/utils/env';
 import { findOne as findOneTemplate } from '@rehua/sdk/functional/templates';

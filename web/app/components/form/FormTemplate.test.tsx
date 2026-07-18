@@ -47,6 +47,7 @@ const schema: RJSFSchema = {
     },
   },
 };
+
 const uiSchema: UiSchema = {
   firstName: {
     'ui:autofocus': true,
