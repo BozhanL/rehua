@@ -128,7 +128,11 @@ export default function Home(): JSX.Element {
         }}
         templates={{ ObjectFieldTemplate }}
         formContext={{
-          objectFieldTemplate: { schema, uiSchema, setSchema, setUiSchema },
+          objectFieldTemplate: {
+            templates: uiSchema['ui:order'] ?? [],
+            setSchema,
+            setUiSchema,
+          },
         }}
       />
 

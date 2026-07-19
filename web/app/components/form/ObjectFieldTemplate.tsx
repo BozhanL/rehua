@@ -10,8 +10,7 @@ import { useState, type Dispatch, type JSX, type SetStateAction } from 'react';
 import typia from 'typia';
 
 export interface ObjectFieldTemplateContext {
-  schema: RJSFSchema;
-  uiSchema: UiSchema;
+  templates: string[];
   setSchema: Dispatch<SetStateAction<RJSFSchema>>;
   setUiSchema: Dispatch<SetStateAction<UiSchema>>;
 }
@@ -88,8 +87,7 @@ export default function ObjectFieldTemplate(
     context,
   );
   const [addPosition, setAddPosition] = useState<number | null>(null);
-  const { schema, uiSchema, setSchema, setUiSchema } =
-    context.objectFieldTemplate;
+  const { templates, setSchema, setUiSchema } = context.objectFieldTemplate;
 
   return (
     <>
@@ -104,8 +102,7 @@ export default function ObjectFieldTemplate(
           if (
             addPosition === null ||
             !trimedName ||
-            schema.properties?.[trimedName] !== undefined ||
-            uiSchema['ui:order']?.includes(trimedName)
+            templates.includes(trimedName)
           ) {
             return;
           }
