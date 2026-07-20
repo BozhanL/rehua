@@ -116,7 +116,7 @@ jobs:
   collect:
     if: ${{ always() }}
     runs-on: ubuntu-latest
-    name: Final Results
+    name: Final Results (NestJS)
     timeout-minutes: 2
     needs:
       - check
