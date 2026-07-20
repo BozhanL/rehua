@@ -3,4 +3,4 @@
 3:I[92236,["971","static/chunks/971-1e82eea1dae336c8.js","127","static/chunks/app/templates/error-90b2ecd83681b984.js"],"default"]
 4:I[86192,[],""]
 5:[]
-0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$3","errorStyles":[],"errorScripts":[],"template":["$","$L4",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W5","buildId":"h3bVIUwH1FDEyb23FNSgg"}
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$3","errorStyles":[],"errorScripts":[],"template":["$","$L4",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W5","buildId":"vHV4h2cxWEy1uPcdeV0KE"}
