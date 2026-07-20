@@ -39,7 +39,7 @@
     "cross-env": "10.1.0",
     "rimraf": "6.1.3",
     "ts-patch": "3.3.0",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   },
   "dependencies": {
     "@nestia/fetcher": "11.3.4",
