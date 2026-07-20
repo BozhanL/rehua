@@ -193,9 +193,12 @@ const config: Config = {
       'ts-jest',
       {
         tsconfig: './tsconfig.test.json',
+        useESM: true,
       },
     ],
   },
+
+  extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: ['rehua/sdk'],

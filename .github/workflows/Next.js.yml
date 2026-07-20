@@ -143,7 +143,7 @@ jobs:
   collect:
     if: ${{ always() }}
     runs-on: ubuntu-latest
-    name: Final Results
+    name: Final Results (Next.js)
     timeout-minutes: 2
     needs:
       - check
