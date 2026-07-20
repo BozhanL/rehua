@@ -1,6 +1,6 @@
 'use client';
 import Icon from './Icon';
-import { useState, type JSX } from 'react';
+import React, { useState, useRef, type JSX, useEffect } from 'react';
 
 interface DropdownProps<T extends string = string> {
   options: T[]; // list of options to select
@@ -12,7 +12,7 @@ interface DropdownProps<T extends string = string> {
   width?: number; // Width in pixels
   lengthOfDropdown?: number; // argument for maxHeight style for dropdown
   selectedColor?: string; // Tailwind CSS string for the colour of the selected option
-  textAlign?: 'left' | 'right' | 'center'; // determines how text is aligned, fallback to 'left'
+  textAlign?: 'left' | 'right' | 'center'; // fallback to 'left'
   style?: React.CSSProperties;
 }
 
@@ -23,7 +23,7 @@ function DropdownBar<T extends string = string>({
   defaultText = 'Select',
   search = false,
   onChange,
-  width = 32,
+  width = 124,
   lengthOfDropdown,
   selectedColor = 'bg-rehua-blue',
   textAlign = 'left',
@@ -31,11 +31,65 @@ function DropdownBar<T extends string = string>({
 }: Readonly<DropdownProps<T>>): JSX.Element {
   const [isOpen, setIsOpen] = useState(false); // dropdown open/closed
   const [query, setQuery] = useState(''); // search query
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const listBoxRef = useRef<HTMLDivElement>(null); // reference to dropdown box - to enable keyboard interaction (esc,up,down)
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    if (isOpen && !search) {
+      listBoxRef.current?.focus();
+    }
+  }, [isOpen, search]);
+
+  function handleUpArrow(length: number): void {
+    const newIndex = (activeIndex + 1) % length;
+    setActiveIndex(newIndex);
+    const button = buttonRefs.current[newIndex];
+    if (button !== undefined) {
+      button?.scrollIntoView({ block: 'nearest' });
+    }
+  }
+  function handleDownArrow(length: number): void {
+    const newIndex = (activeIndex + length - 1) % length; // length is added to handle negative numbers because in js (-1 % 5 = -1 ) not 4
+    setActiveIndex(newIndex);
+    const button = buttonRefs.current[newIndex];
+    if (button !== undefined) {
+      button?.scrollIntoView({ block: 'nearest' });
+    }
+  }
+
+  function handleKeyPress(e: React.KeyboardEvent): void {
+    const length = filteredOptions.length;
+    // const option = options;
+    switch (e.key) {
+      case 'ArrowUp':
+        e.preventDefault();
+        handleDownArrow(length);
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        handleUpArrow(length);
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setIsOpen(false);
+        setActiveIndex(-1);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (filteredOptions[activeIndex] !== undefined && activeIndex !== -1) {
+          handleOptionClick(filteredOptions[activeIndex]);
+          break;
+        }
+        return;
+      default:
+        return;
+    }
+  }
 
   // helper function to handle selecting options in the dropdown
   function handleOptionClick(option: T): void {
     let newValue: T[];
-
     // 1) Single Select
     // 2) Multi Select, option clicked was already selected
     // 3) Multi Select, option clicked not selected
@@ -54,7 +108,10 @@ function DropdownBar<T extends string = string>({
   function toggleOpen(): void {
     const next = !isOpen;
     setIsOpen(next);
-    if (!next) setQuery(''); // reset filter when closing
+    if (!next) {
+      setActiveIndex(-1); // reset active index
+      setQuery(''); // reset filter when closing
+    }
   }
 
   const filteredOptions = search
@@ -82,6 +139,14 @@ function DropdownBar<T extends string = string>({
       {/* Render options in dropdown bar  (list of buttons) */}
       {isOpen && (
         <div
+          tabIndex={0}
+          ref={listBoxRef}
+          onKeyDown={(e) => {
+            // handle key press
+            handleKeyPress(e);
+          }}
+          // aria-multiselectable={multiple}
+          // role="listbox"
           className="
             absolute top-full left-0 z-10 overflow-x-hidden overflow-y-auto
             bg-white shadow-md
@@ -112,6 +177,7 @@ function DropdownBar<T extends string = string>({
             // render each option as a button
             filteredOptions.map((option) => {
               const isSelected = selectedValues.includes(option);
+              const index = filteredOptions.indexOf(option);
               return (
                 <button
                   key={option}
@@ -119,7 +185,11 @@ function DropdownBar<T extends string = string>({
                   className={`
                     w-full
                     ${isSelected ? selectedColor : ''}
+                    ${activeIndex === index ? selectedColor : ''}
                   `}
+                  ref={(e) => {
+                    buttonRefs.current[index] = e;
+                  }}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
