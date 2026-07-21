@@ -1,4 +1,5 @@
 import { AppModule } from '@/app.module.js';
+import type { JwtPayload } from '@/auth/auth.service';
 import {
   afterAll,
   afterEach,
@@ -9,8 +10,10 @@ import {
   it,
 } from '@jest/globals';
 import type { INestApplication } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Test, type TestingModule } from '@nestjs/testing';
+import cookieParser from 'cookie-parser';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
@@ -40,6 +43,9 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
+    app.use(cookieParser());
+
     await app.init();
   });
 
@@ -55,10 +61,20 @@ describe('AppController (e2e)', () => {
   });
 
   it('/hello (POST)', async () => {
+    const payload: JwtPayload = {
+      username: 'test',
+      userId: 123,
+    };
+
+    const jwtService = app.get(JwtService);
+    const token = jwtService.sign(payload);
+
     const res = await request(app.getHttpServer())
       .post('/hello/')
       .set('Accept', 'application/json')
+      .set('Cookie', [`jwt=${token}`])
       .send({ id: '123', content: 'aaa' });
+
     expect(res.get('Content-Type')).toMatch(/json/);
     expect(res.status).toEqual(201);
     expect(res.body).toEqual(
