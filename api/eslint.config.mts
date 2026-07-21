@@ -92,7 +92,13 @@ const eslintConfig = defineConfig([
   },
 
   {
-    files: ['**/*.test.tsx', '**/*.test.ts', '**/*.spec.tsx', '**/*.spec.ts'],
+    files: [
+      '**/*.test.tsx',
+      '**/*.test.ts',
+      '**/*.spec.tsx',
+      '**/*.spec.ts',
+      '**/*e2e-spec.ts',
+    ],
     ...jest.configs['flat/all'],
   },
   {
