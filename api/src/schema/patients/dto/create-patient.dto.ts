@@ -12,7 +12,7 @@ export class CreatePatientDto {
     public roomNumber: number,
     public status: string,
     public email: string,
-    public homePhoneNumber: number,
+    public homePhoneNumber: string,
     public gender: string,
     public primaryLanguage: string,
     public maritalStatus: string,
