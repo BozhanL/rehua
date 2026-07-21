@@ -6,6 +6,7 @@ import type { HttpsOptions } from '@nestjs/common/interfaces/external/https-opti
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
+import cookieParser from 'cookie-parser';
 import { readFile } from 'node:fs/promises';
 import type { ServerOptions } from 'node:https';
 import typia from 'typia';
@@ -64,6 +65,8 @@ export async function createApp(
     origin: configService.get<Config['NODE_ENV']>('NODE_ENV') !== 'production',
     credentials: true,
   });
+
+  app.use(cookieParser());
 
   app.disable('x-powered-by');
 
