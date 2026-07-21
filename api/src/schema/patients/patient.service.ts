@@ -11,8 +11,8 @@ export class PatientService {
     @InjectModel(Patient.name) private readonly patientModel: Model<Patient>,
   ) {}
 
-  async create(CreatePatientDto: CreatePatientDto): Promise<PatientDocument> {
-    const createdPatient = new this.patientModel(CreatePatientDto);
+  async create(createPatientDto: CreatePatientDto): Promise<PatientDocument> {
+    const createdPatient = new this.patientModel(createPatientDto);
     return createdPatient.save();
   }
 
