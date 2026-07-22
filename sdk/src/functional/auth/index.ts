@@ -11,6 +11,8 @@ import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
 import type { Resolved } from 'typia';
 import typia from 'typia';
 
+export * as totp from './totp/index';
+
 /**
  * @controller AuthController.login
  * @path POST /auth/login

@@ -1,4 +1,5 @@
-import { AuthService } from './auth.service';
+import { AuthService, TotpPayload } from './auth.service';
+import { JwtAuthGuard } from './jwt.guard';
 import { JWT_COOKIE_NAME } from './jwt.strategy';
 import { LocalAuthGuard } from './local.guard';
 import { TOTPAuthGuard } from './totp.guard';
@@ -14,12 +15,12 @@ export interface AuthLoginBody {
   totpCode: string;
 }
 
-@Controller()
+@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard, TOTPAuthGuard)
-  @TypedRoute.Post('auth/login')
+  @TypedRoute.Post('login')
   login(
     @UserDecorator() user: UserType,
     @Res({ passthrough: true }) response: Response,
@@ -31,5 +32,11 @@ export class AuthController {
       sameSite: 'lax',
     });
     return user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @TypedRoute.Get('totp')
+  getTotpSecret(@UserDecorator() user: UserType): TotpPayload | null {
+    return this.authService.getTotpSecretUri(user);
   }
 }
