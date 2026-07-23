@@ -7,6 +7,7 @@ export interface UserSchema {
   totpSecret: string;
 }
 
+// TODO: replace with a proper database implementation. This is just a mock implementation for testing purposes.
 @Injectable()
 export class UsersService {
   private readonly users: UserSchema[] = [
