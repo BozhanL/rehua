@@ -4,11 +4,11 @@ import React, { useState, useRef, type JSX, useEffect } from 'react';
 
 interface DropdownProps<T extends string = string> {
   options: T[]; // list of options to select
-  selectedValues?: T[]; // Either one or multiple element array depending on multiple flag
+  selectedValues: T[]; // Either one or multiple element array depending on multiple flag
+  onChange: (newValues: T[]) => void; // Callback function to handle new list of selected values
   multiple?: boolean;
   search?: boolean; // Render a search bar
   defaultText?: string; // Default text in the expand dropdown button
-  onChange?: (newValues: T[]) => void; // Callback function to handle new list of selected values
   width?: number; // Width in pixels
   lengthOfDropdown?: number; // argument for maxHeight style for dropdown
   selectedColor?: string; // Tailwind CSS string for the colour of the selected option
@@ -18,7 +18,7 @@ interface DropdownProps<T extends string = string> {
 
 function DropdownBar<T extends string = string>({
   options,
-  selectedValues = [],
+  selectedValues,
   multiple = false,
   defaultText = 'Select',
   search = false,
@@ -33,16 +33,39 @@ function DropdownBar<T extends string = string>({
   const [query, setQuery] = useState(''); // search query
   const [activeIndex, setActiveIndex] = useState(-1);
   const listBoxRef = useRef<HTMLDivElement>(null); // reference to dropdown box - to enable keyboard interaction (esc,up,down)
-  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]); // reference to an array of buttons (dropdown items)
+  const wrapperRef = useRef<HTMLDivElement>(null); // reference to the whole dropdown
 
+  // focus the inner dropdown box to handle keyboard interaction
   useEffect(() => {
     if (isOpen && !search) {
       listBoxRef.current?.focus();
     }
   }, [isOpen, search]);
 
+  // Close dropdown when click or touch outside of the wider dropdown wrapper
+  useEffect(() => {
+    if (!isOpen) return;
+    // While dropdown is open check each click for any outside of the dropdown wrapper
+    function handleOutsideInteraction(e: PointerEvent): void {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+        setActiveIndex(-1);
+        setQuery('');
+      }
+    }
+    document.addEventListener('pointerdown', handleOutsideInteraction);
+    return (): void => {
+      document.removeEventListener('pointerdown', handleOutsideInteraction);
+    };
+  }, [isOpen]);
+
+  // Helper functions to handle arrow key presses
   function handleUpArrow(length: number): void {
-    const newIndex = (activeIndex + 1) % length;
+    const newIndex = (activeIndex + length - 1) % length; // length is added to handle negative numbers because in js (-1 % 5 = -1 ) not 4
     setActiveIndex(newIndex);
     const button = buttonRefs.current[newIndex];
     if (button !== undefined) {
@@ -50,7 +73,7 @@ function DropdownBar<T extends string = string>({
     }
   }
   function handleDownArrow(length: number): void {
-    const newIndex = (activeIndex + length - 1) % length; // length is added to handle negative numbers because in js (-1 % 5 = -1 ) not 4
+    const newIndex = (activeIndex + 1) % length;
     setActiveIndex(newIndex);
     const button = buttonRefs.current[newIndex];
     if (button !== undefined) {
@@ -60,15 +83,15 @@ function DropdownBar<T extends string = string>({
 
   function handleKeyPress(e: React.KeyboardEvent): void {
     const length = filteredOptions.length;
-    // const option = options;
+    if (length === 0) return;
     switch (e.key) {
       case 'ArrowUp':
         e.preventDefault();
-        handleDownArrow(length);
+        handleUpArrow(length);
         break;
       case 'ArrowDown':
         e.preventDefault();
-        handleUpArrow(length);
+        handleDownArrow(length);
         break;
       case 'Escape':
         e.preventDefault();
@@ -102,7 +125,7 @@ function DropdownBar<T extends string = string>({
       newValue = [...selectedValues, option];
     }
 
-    onChange?.(newValue); // return new values to parent component
+    onChange(newValue); // return new values to parent component
   }
 
   function toggleOpen(): void {
@@ -119,12 +142,15 @@ function DropdownBar<T extends string = string>({
     : options;
 
   return (
-    <div className="relative inline-block" style={style}>
+    <div className="relative inline-block" style={style} ref={wrapperRef}>
       <button
         className={`
           flex items-center justify-between gap-2 rounded-sm border
           border-rehua-gray p-1
         `}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-controls="dropdown-listbox"
         type="button"
         style={{ width }}
         onClick={toggleOpen}
@@ -141,15 +167,15 @@ function DropdownBar<T extends string = string>({
         <div
           tabIndex={0}
           ref={listBoxRef}
+          id="dropdown-listbox"
+          role="listbox"
+          aria-multiselectable={multiple}
           onKeyDown={(e) => {
-            // handle key press
             handleKeyPress(e);
           }}
-          // aria-multiselectable={multiple}
-          // role="listbox"
           className="
             absolute top-full left-0 z-10 overflow-x-hidden overflow-y-auto
-            bg-white shadow-md
+            bg-white shadow-md outline-none
           "
           style={{
             maxHeight: lengthOfDropdown,
@@ -158,7 +184,7 @@ function DropdownBar<T extends string = string>({
           {search && (
             // add search box at the top of dropdown bar if dev specifies
             <input
-              autoFocus // Auto Select search bar when dropdown opens
+              autoFocus // Auto focus search bar when dropdown opens
               type="text"
               value={query}
               onChange={(e) => {
@@ -175,24 +201,23 @@ function DropdownBar<T extends string = string>({
             <div className="px-2 py-1 text-gray-400">No results</div>
           ) : (
             // render each option as a button
-            filteredOptions.map((option) => {
+            filteredOptions.map((option, index) => {
               const isSelected = selectedValues.includes(option);
-              const index = filteredOptions.indexOf(option);
               return (
                 <button
                   key={option}
+                  role="option"
+                  aria-selected={isSelected}
                   type="button"
                   className={`
-                    w-full
-                    ${isSelected ? selectedColor : ''}
-                    ${activeIndex === index ? selectedColor : ''}
+                    flex w-full items-center gap-2 outline-none
+                    ${isSelected && !multiple ? selectedColor : ''}
+                    ${!isSelected && activeIndex === index ? 'bg-rehua-light-gray' : ''}
                   `}
                   ref={(e) => {
                     buttonRefs.current[index] = e;
                   }}
                   style={{
-                    display: 'flex',
-                    flexDirection: 'column',
                     width: width,
                     textAlign: textAlign,
                   }}
@@ -200,7 +225,39 @@ function DropdownBar<T extends string = string>({
                     handleOptionClick(option);
                   }}
                 >
-                  {option}
+                  {/* Render checkboxes to denote selection */}
+                  {multiple && (
+                    <span
+                      className={`
+                        flex size-4 shrink-0 items-center justify-center
+                        rounded-sm border border-rehua-gray
+                        ${
+                          isSelected
+                            ? `
+                              ${selectedColor}
+                              border-transparent
+                            `
+                            : 'bg-white'
+                        }
+                      `}
+                    >
+                      {isSelected && (
+                        <svg
+                          viewBox="0 0 16 16"
+                          width="10"
+                          height="10"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M3 8l3.5 3.5L13 5" />
+                        </svg>
+                      )}
+                    </span>
+                  )}
+                  <span className="truncate">{option}</span>
                 </button>
               );
             })
