@@ -1,0 +1,38 @@
+import type { MakeOptional, MakeRequired } from '@/app/utils/types';
+import type FormType from '@rjsf/core';
+import { type FormProps, withTheme } from '@rjsf/core';
+import { generateTheme } from '@rjsf/mui';
+import type {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from '@rjsf/utils';
+import defaultValidator from '@rjsf/validator-ajv8';
+import type { JSX } from 'react';
+
+export type FormTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = MakeRequired<
+  MakeOptional<FormProps<T, S, F>, 'validator'>,
+  'onChange' | 'formData'
+>;
+
+// TODO: remove @rjsf/mui and create our own theme
+const theme = generateTheme();
+const FormWithTheme = withTheme(theme) as typeof FormType;
+
+export default function FormTemplate<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ validator, ...prop }: Readonly<FormTemplateProps<T, S, F>>): JSX.Element {
+  return (
+    <FormWithTheme
+      validator={validator ?? (defaultValidator as ValidatorType<T, S, F>)}
+      {...prop}
+    />
+  );
+}

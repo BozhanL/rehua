@@ -1,6 +1,7 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HelloModule } from './hello/hello.module';
+import { TemplatesModule } from './templates/templates.module';
 import { Config, https } from './utils/config';
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -71,15 +72,17 @@ function requiredReadableFilePath(
     .custom(fileExistsValidator, 'file permission validation');
 }
 
-@Module({})
+@Module({
+  imports: [configModule, HelloModule, TemplatesModule],
+  controllers: [AppController],
+  providers: [AppService],
+})
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class AppModule {
   static forRoot(mongo: DynamicModule | undefined): DynamicModule {
     return {
       module: AppModule,
-      imports: [configModule, HelloModule, mongo ?? mongoModule],
-      controllers: [AppController],
-      providers: [AppService],
+      imports: [mongo ?? mongoModule],
     };
   }
 }

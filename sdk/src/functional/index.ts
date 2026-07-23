@@ -10,6 +10,7 @@ import type { Resolved } from 'typia';
 import typia from 'typia';
 
 export * as hello from './hello/index';
+export * as templates from './templates/index';
 
 /**
  * @controller AppController.getHello
