@@ -28,7 +28,9 @@ export class AuthController {
     const token = this.authService.signJwt(user);
 
     response.cookie(JWT_COOKIE_NAME, token, {
-      // Make it a session cookie, so it will be deleted when the browser is closed
+      // TODO: replace with a proper expiration time
+      // Browser may keep session cookies even after the browser is closed, so we need to set an expiration time for the cookie
+      // Maybe we can set the expiration time to a few minutes, and refresh the token when the user sends a request to the server.
       expires: undefined,
 
       // Secure cookie settings
