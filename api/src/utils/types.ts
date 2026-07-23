@@ -1,9 +1,9 @@
-import type { User as UserSchema } from '@/users/users.service';
+import type { UserSchema } from '@/users/users.service';
 
-export type User = Omit<UserSchema, 'password' | 'totpSecret'>;
+export type ExpressUser = Omit<UserSchema, 'password' | 'totpSecret'>;
 
 declare module 'express' {
   interface Request {
-    user?: User | null;
+    user?: ExpressUser | undefined;
   }
 }

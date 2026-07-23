@@ -1,5 +1,6 @@
 import { AppModule } from '@/app.module.js';
-import type { JwtPayload } from '@/auth/auth.service';
+import type { JwtContent } from '@/auth/entities/jwt-content.entity';
+import { JWT_COOKIE_NAME } from '@/auth/jwt.strategy';
 import {
   afterAll,
   afterEach,
@@ -65,9 +66,8 @@ describe('appController (e2e)', () => {
   it('/hello (POST)', async () => {
     expect.assertions(3);
 
-    const payload: JwtPayload = {
-      username: 'test',
-      userId: 123,
+    const payload: JwtContent = {
+      userId: 1,
     };
 
     const jwtService = app.get(JwtService);
@@ -76,7 +76,7 @@ describe('appController (e2e)', () => {
     const res = await request(app.getHttpServer())
       .post('/hello/')
       .set('Accept', 'application/json')
-      .set('Cookie', [`jwt=${token}`])
+      .set('Cookie', [`${JWT_COOKIE_NAME}=${token}`])
       .send({ id: '123', content: 'aaa' });
 
     expect(res.get('Content-Type')).toMatch(/json/);

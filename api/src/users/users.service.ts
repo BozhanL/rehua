@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-export interface User {
+export interface UserSchema {
   userId: number;
   username: string;
   password: string;
@@ -9,7 +9,7 @@ export interface User {
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [
+  private readonly users: UserSchema[] = [
     {
       userId: 1,
       username: 'john',
@@ -24,7 +24,7 @@ export class UsersService {
     },
   ];
 
-  findOne(userId: number): User | null {
+  findOne(userId: number): UserSchema | null {
     return this.users.find((user) => user.userId === userId) ?? null;
   }
 }

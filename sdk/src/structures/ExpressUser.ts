@@ -1,4 +1,4 @@
-export type User = {
+export type ExpressUser = {
   userId: number;
   username: string;
 };

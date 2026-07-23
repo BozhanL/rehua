@@ -1,18 +1,11 @@
+import type { TotpResponse } from './dto/totp-response.dto';
+import { JwtContent } from './entities/jwt-content.entity';
 import { UsersService } from '@/users/users.service';
-import type { User } from '@/utils/types';
+import type { ExpressUser } from '@/utils/types';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { generateURI, verify } from 'otplib';
-
-export interface JwtPayload {
-  username: string;
-  userId: number;
-}
-
-export interface TotpPayload {
-  totpSecret: string;
-  totpUri: string;
-}
+import { misc } from 'typia';
 
 @Injectable()
 export class AuthService {
@@ -21,11 +14,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  validateUser(userId: number, pass: string): User | null {
+  validateUser(userId: number, pass: string): ExpressUser | null {
     const user = this.usersService.findOne(userId);
+
     if (user?.password === pass) {
-      const { password: _, ...result } = user;
-      return result;
+      return misc.assertPrune<ExpressUser>(misc.clone(user));
     }
     return null;
   }
@@ -39,26 +32,27 @@ export class AuthService {
     const result = await verify({
       token: totpCode,
       secret: user.totpSecret,
+
+      // Accept tokens that are at max 30 seconds old.
+      // Reject tokens that are older than 30 seconds, or newer than the current time.
       epochTolerance: [30, 0],
     });
 
     return result.valid;
   }
 
-  login(user: User): string {
-    const payload: JwtPayload = {
-      username: user.username,
-      userId: user.userId,
-    };
+  signJwt(user: ExpressUser): string {
+    const payload: JwtContent = { userId: user.userId };
 
     return this.jwtService.sign(payload);
   }
 
-  getTotpSecretUri(user: User): TotpPayload | null {
+  getTotpSecretUri(user: ExpressUser): TotpResponse | null {
     const userData = this.usersService.findOne(user.userId);
     if (!userData) {
       return null;
     }
+
     return {
       totpSecret: userData.totpSecret,
       totpUri: generateURI({

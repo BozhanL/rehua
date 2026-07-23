@@ -8,7 +8,12 @@ import tseslint from 'typescript-eslint';
 
 const eslintConfig = defineConfig([
   eslint.configs.recommended,
+
   sonarjs.recommended,
+  {
+    rules: { 'sonarjs/todo-tag': 'off' },
+  },
+
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
   {

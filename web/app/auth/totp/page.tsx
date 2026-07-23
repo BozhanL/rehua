@@ -31,16 +31,11 @@ function Home(): JSX.Element {
   const options = useGetTotpSecretOptions();
   const { data, error, isSuccess } = useQuery(options);
 
-  const is401Error = error instanceof HttpError && error.status === 401;
   useEffect(() => {
-    if (is401Error) {
+    if (error instanceof HttpError && error.status === 401) {
       router.push('/auth/login');
     }
-  }, [is401Error, router]);
-
-  if (is401Error) {
-    return <></>;
-  }
+  }, [error, router]);
 
   if (!isSuccess || !data) {
     return <h1>Loading...</h1>;

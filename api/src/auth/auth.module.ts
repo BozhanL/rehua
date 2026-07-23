@@ -1,17 +1,15 @@
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt.strategy';
+import { JWT_SECRET, JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { TOTPStrategy } from './totp.strategy';
 import { UsersModule } from '@/users/users.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import type { SignOptions } from 'jsonwebtoken';
 
-export const jwtConstants = {
-  secret:
-    'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.',
-};
+const JWT_SIGN_OPTIONS: SignOptions = { expiresIn: '1h' };
 
 @Module({
   controllers: [AuthController],
@@ -19,8 +17,8 @@ export const jwtConstants = {
     UsersModule,
     PassportModule,
     JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
+      secret: JWT_SECRET,
+      signOptions: JWT_SIGN_OPTIONS,
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, TOTPStrategy],
