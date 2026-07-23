@@ -1,3 +1,4 @@
+import { AuthLoginBody } from './auth.controller';
 import { AuthService } from './auth.service';
 import { User } from '@/utils/types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -8,8 +9,10 @@ import { Strategy } from 'passport-local';
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
     super({
-      usernameField: 'userId',
-      passwordField: 'password',
+      usernameField: 'userId' satisfies keyof AuthLoginBody,
+      passwordField: 'password' satisfies keyof AuthLoginBody,
+      passReqToCallback: false,
+      session: false,
     });
   }
 
