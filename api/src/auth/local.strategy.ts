@@ -8,6 +8,9 @@ import typia from 'typia';
 
 export const LOCAL_STRATEGY_NAME = 'local';
 
+// This strategy is used to authenticate users using their userId and password.
+// It validates the userId and password against the database and returns the ExpressUser from database if valid.
+// TOTP checking is done in the TOTPStrategy, so we don't need to check the TOTP code here.
 @Injectable()
 export class LocalStrategy extends PassportStrategy(
   Strategy,

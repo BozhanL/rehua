@@ -22,6 +22,7 @@ function cookieExtractor(req: Request): string | null {
   return null;
 }
 
+// This strategy is used to authenticate users using their JWT token.
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
   constructor(private readonly usersService: UsersService) {
