@@ -43,7 +43,7 @@ export async function login(
 }
 export namespace login {
   export type Body = LoginBody;
-  export type Output = undefined | ExpressUser;
+  export type Output = ExpressUser;
 
   export const METADATA = {
     method: 'POST',
@@ -60,8 +60,8 @@ export namespace login {
   } as const;
 
   export const path = () => '/auth/login';
-  export const random = (): Resolved<undefined | ExpressUser> =>
-    typia.random<undefined | ExpressUser>();
+  export const random = (): Resolved<ExpressUser> =>
+    typia.random<ExpressUser>();
   export const simulate = (connection: IConnection, _body: Body): Output => {
     const assert = NestiaSimulator.assert({
       method: METADATA.method,
