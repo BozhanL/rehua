@@ -17,7 +17,7 @@ export interface AuthLoginBody {
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard, TOTPAuthGuard)
   @TypedRoute.Post('login')

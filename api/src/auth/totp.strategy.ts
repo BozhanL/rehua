@@ -8,7 +8,7 @@ import { Strategy } from 'passport-local';
 
 @Injectable()
 export class TOTPStrategy extends PassportStrategy(Strategy, 'totp') {
-  constructor(private authService: AuthService) {
+  constructor(private readonly authService: AuthService) {
     super({
       usernameField: 'userId' satisfies keyof AuthLoginBody,
       passwordField: 'totpCode' satisfies keyof AuthLoginBody,

@@ -17,8 +17,8 @@ export interface TotpPayload {
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService,
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
   validateUser(userId: number, pass: string): User | null {
