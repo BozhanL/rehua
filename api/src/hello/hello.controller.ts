@@ -2,15 +2,17 @@ import type { CreateHelloDto } from './dto/create-hello.dto';
 import { UpdateHelloDto } from './dto/update-hello.dto';
 import { Hello } from './entities/hello.entity';
 import { HelloService } from './hello.service';
+import { JwtAuthGuard } from '@/auth/jwt.guard';
 import {
   SwaggerExample,
   TypedBody,
   TypedParam,
   TypedRoute,
 } from '@nestia/core';
-import { Controller, Param } from '@nestjs/common';
+import { Controller, Param, UseGuards } from '@nestjs/common';
 import { UpdateWriteOpResult, DeleteResult } from 'mongoose';
 
+@UseGuards(JwtAuthGuard)
 @Controller('hello')
 export class HelloController {
   constructor(private readonly helloService: HelloService) {}
