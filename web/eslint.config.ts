@@ -11,7 +11,11 @@ import tseslint from 'typescript-eslint';
 const eslintConfig = defineConfig([
   nextVitals,
   js.configs.recommended,
+
   sonarjs.recommended,
+  {
+    rules: { 'sonarjs/todo-tag': 'off' },
+  },
 
   pluginQuery.configs['flat/recommended-strict'],
 
@@ -66,6 +70,31 @@ const eslintConfig = defineConfig([
       'import/namespace': 'off',
       'import/default': 'off',
       'import/no-named-as-default-member': 'off',
+    },
+  },
+  {
+    rules: {
+      // Duplicate of @typescript-eslint/no-unused-vars
+      'sonarjs/no-unused-vars': 'off',
+      'no-unused-vars': 'off',
+
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+
+          args: 'all',
+          argsIgnorePattern: '^_',
+
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+
+          destructuredArrayIgnorePattern: '^_',
+
+          reportUsedIgnorePattern: true,
+        },
+      ],
     },
   },
   {
