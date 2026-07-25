@@ -1,7 +1,7 @@
 'use client';
 import Icon, { type IconProps } from './Icon';
 import type { ReactNode } from 'react';
-import type { JSX } from 'react/jsx-runtime';
+import type { JSX } from 'react';
 
 //Different variants for row CSS
 const variants = {
