@@ -41,7 +41,8 @@ function ListView({
     <ul className="overflow-hidden" style={{ maxWidth }}>
       {rows.map((row, index) => {
         //If style variant specified for this row
-        const style = variants[row.variant ?? 'normal'];
+        const variant: keyof typeof variants = row.variant ?? 'normal'; // Check style variant
+        const style = variants[variant]; // Select style
         //Render row
         return (
           <li
