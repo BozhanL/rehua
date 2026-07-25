@@ -1,4 +1,4 @@
-import type { MakeOptional, MakeRequired } from '@/app/utils/types';
+import type { MakeOptional } from '@/app/utils/types';
 import type FormType from '@rjsf/core';
 import { type FormProps, withTheme } from '@rjsf/core';
 import { generateTheme } from '@rjsf/mui';
@@ -15,10 +15,7 @@ export type FormTemplateProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = MakeRequired<
-  MakeOptional<FormProps<T, S, F>, 'validator'>,
-  'onChange' | 'formData'
->;
+> = MakeOptional<FormProps<T, S, F>, 'validator'>;
 
 // TODO: remove @rjsf/mui and create our own theme
 const theme = generateTheme();

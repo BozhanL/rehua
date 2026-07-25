@@ -1,3 +1,4 @@
+import type { IconProps } from '../Icon';
 import AddSectionModal from './AddSectionModal';
 import ContentButton from '@/app/components/ContentButton';
 import type {
@@ -24,6 +25,7 @@ function removeSection(
     const { [name]: removedSection, ...properties } =
       prevSchema.properties ?? {};
 
+    // Do nothing if the section does not exist in the schema
     if (removedSection === undefined) {
       return prevSchema;
     }
@@ -37,7 +39,8 @@ function removeSection(
   setUiSchema((prev) => {
     const order = prev['ui:order'];
 
-    if (!order) {
+    // Do nothing if the section does not exist in the schema
+    if (order === undefined) {
       return prev;
     }
 
@@ -53,6 +56,7 @@ function addSection(
 
   name: string,
   content: JSONSchema7Definition,
+  uiContent: UiSchema,
 
   setSchema: Dispatch<SetStateAction<RJSFSchema>>,
   setUiSchema: Dispatch<SetStateAction<UiSchema>>,
@@ -68,15 +72,39 @@ function addSection(
   setUiSchema((prev) => {
     const order = prev['ui:order'];
 
-    if (!order) {
-      return prev;
-    }
-
     return {
       ...prev,
-      'ui:order': order.toSpliced(position, 0, name),
+      [name]: uiContent,
+      'ui:order': order ? order.toSpliced(position, 0, name) : [name],
     };
   });
+}
+
+interface AddSectionButtonProps {
+  flip?: IconProps['flip'];
+  index: number;
+  setAddPosition: Dispatch<SetStateAction<number | null>>;
+}
+
+function AddSectionButton({
+  flip,
+  index,
+  setAddPosition,
+}: Readonly<AddSectionButtonProps>): JSX.Element {
+  return (
+    <ContentButton
+      type="button"
+      iconProps={{ name: 'section-plus', flip }}
+
+      foregroundColor="text-rehua-dark-green"
+      backgroundColor="transparent"
+      style={{ boxShadow: 'none' }}
+
+      onClick={() => {
+        setAddPosition(index);
+      }}
+    />
+  );
 }
 
 export default function ObjectFieldTemplate(
@@ -96,7 +124,7 @@ export default function ObjectFieldTemplate(
         onCancel={() => {
           setAddPosition(null);
         }}
-        onSave={(name, content) => {
+        onSave={(name, content, uiContent) => {
           const trimedName = name.trim();
 
           if (
@@ -107,7 +135,14 @@ export default function ObjectFieldTemplate(
             return;
           }
 
-          addSection(addPosition, trimedName, content, setSchema, setUiSchema);
+          addSection(
+            addPosition,
+            trimedName,
+            content,
+            uiContent,
+            setSchema,
+            setUiSchema,
+          );
 
           setAddPosition(null);
         }}
@@ -116,18 +151,7 @@ export default function ObjectFieldTemplate(
       {props.properties.map((element, index) => (
         <div key={element.name}>
           {index === 0 && (
-            <ContentButton
-              type="button"
-              iconProps={{ name: 'section-plus' }}
-
-              foregroundColor="text-rehua-green"
-              backgroundColor="transparent"
-              style={{ boxShadow: 'none' }}
-
-              onClick={() => {
-                setAddPosition(index);
-              }}
-            />
+            <AddSectionButton index={index} setAddPosition={setAddPosition} />
           )}
 
           <div className="flex items-center gap-2">
@@ -147,20 +171,20 @@ export default function ObjectFieldTemplate(
             />
           </div>
 
-          <ContentButton
-            type="button"
-            iconProps={{ name: 'section-plus', flip: 'vertical' }}
-
-            foregroundColor="text-rehua-green"
-            backgroundColor="transparent"
-            style={{ boxShadow: 'none' }}
-
-            onClick={() => {
-              setAddPosition(index + 1);
-            }}
+          <AddSectionButton
+            flip="vertical"
+            index={index + 1}
+            setAddPosition={setAddPosition}
           />
         </div>
       ))}
+      {props.properties.length === 0 && (
+        <AddSectionButton
+          flip="vertical"
+          index={0}
+          setAddPosition={setAddPosition}
+        />
+      )}
     </>
   );
 }
