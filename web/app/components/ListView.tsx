@@ -6,15 +6,15 @@ import type { JSX } from 'react/jsx-runtime';
 const variants = {
   normal: {
     heading: 'font-bold text-black',
-    content: 'font-normal text-black',
+    content: '', // inherit default css
   },
   emphasis: {
     heading: 'font-bold',
     content: 'font-bold',
   },
   warning: {
-    heading: 'font-bold text-red-600',
-    content: 'font-bold text-red-600',
+    heading: 'font-bold text-rehua-red',
+    content: 'font-bold text-rehua-red',
   },
 } as const;
 
