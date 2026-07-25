@@ -107,7 +107,13 @@ const eslintConfig = defineConfig([
     ...jest.configs['flat/all'],
   },
   {
-    files: ['**/*.test.tsx', '**/*.test.ts', '**/*.spec.tsx', '**/*.spec.ts'],
+    files: [
+      '**/*.test.tsx',
+      '**/*.test.ts',
+      '**/*.spec.tsx',
+      '**/*.spec.ts',
+      '**/*e2e-spec.ts',
+    ],
     rules: {
       'jest/no-hooks': 'off',
       'jest/prefer-mock-return-shorthand': 'off',
