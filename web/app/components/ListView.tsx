@@ -3,6 +3,7 @@ import Icon, { type IconProps } from './Icon';
 import type { ReactNode } from 'react';
 import type { JSX } from 'react/jsx-runtime';
 
+//Different variants for row CSS
 const variants = {
   normal: {
     heading: 'font-bold text-black',
@@ -20,11 +21,12 @@ const variants = {
 
 export interface ListRow {
   heading: string;
-  content: ReactNode | string[]; // either String or React Element e.g. MiniLabel
-  variant?: keyof typeof variants; // More granular style control for rows
+  content: ReactNode | string[]; // either String[] (e.g. allergies) or React Node (Element or primitive type)
+  variant?: keyof typeof variants; // more granular style control for rows
   iconName?: IconProps['name']; // type check to make sure input of iconName exists
 }
 
+//Parent component to build an array of Rows to pass as prop
 interface ListViewProps {
   rows: ListRow[];
   maxWidth?: string;
@@ -38,8 +40,9 @@ function ListView({
   return (
     <ul className="overflow-hidden" style={{ maxWidth }}>
       {rows.map((row, index) => {
+        //If style variant specified for this row
         const style = variants[row.variant ?? 'normal'];
-
+        //Render row
         return (
           <li
             key={row.heading}
