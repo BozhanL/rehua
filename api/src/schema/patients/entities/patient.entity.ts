@@ -6,9 +6,6 @@ export type PatientDocument = HydratedDocument<Patient>;
 @Schema()
 export class Patient {
   @Prop({ required: true })
-  id: string;
-
-  @Prop({ required: true })
   firstName: string;
 
   @Prop({ required: true })
@@ -69,7 +66,6 @@ export class Patient {
   tod: string | undefined; //not required, admin only
 
   constructor(
-    id: string,
     firstName: string,
     lastName: string,
     dob: Date,
@@ -93,7 +89,6 @@ export class Patient {
     funding?: string, //Admin only
     tod?: string, //Admin only
   ) {
-    this.id = id;
     this.pfp = pfp;
     this.firstName = firstName;
     this.lastName = lastName;

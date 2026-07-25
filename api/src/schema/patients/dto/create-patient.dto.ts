@@ -1,6 +1,5 @@
 export class CreatePatientDto {
   constructor(
-    public id: string,
     public firstName: string,
     public lastName: string,
     public dob: Date,

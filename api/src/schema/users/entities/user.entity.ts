@@ -6,9 +6,6 @@ export type UserDocument = HydratedDocument<User>;
 @Schema()
 export class User {
   @Prop({ required: true })
-  id: string;
-
-  @Prop({ required: true })
   username: string;
 
   @Prop({ required: true })
@@ -33,7 +30,6 @@ export class User {
   group: 'admin' | 'nurse';
 
   constructor(
-    id: string,
     username: string,
     firstName: string,
     lastName: string,
@@ -43,7 +39,6 @@ export class User {
     address: string,
     group: 'admin' | 'nurse',
   ) {
-    this.id = id;
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
