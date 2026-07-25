@@ -1,11 +1,11 @@
 'use client';
 import Icon, { type IconProps } from './Icon';
-import type { ReactNode, JSX } from 'react';
+import type { ReactNode, JSX, CSSProperties } from 'react';
 
 //Different variants for row CSS
 const variants = {
   normal: {
-    heading: 'font-bold text-black',
+    heading: 'font-bold text-rehua-black',
     content: '', // inherit default css
   },
   emphasis: {
@@ -28,13 +28,13 @@ export interface ListRow {
 //Parent component to build an array of Rows to pass as prop
 interface ListViewProps {
   rows: ListRow[];
-  maxWidth?: string;
+  maxWidth?: CSSProperties['maxWidth'];
 }
 
 // Render Rows
 function ListView({
   rows,
-  maxWidth = '28rem',
+  maxWidth = '100%',
 }: Readonly<ListViewProps>): JSX.Element {
   return (
     <ul className="overflow-hidden" style={{ maxWidth }}>
@@ -48,7 +48,7 @@ function ListView({
             key={row.heading}
             className={`
               flex gap-x-2 px-4 py-2
-              ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+              ${index % 2 === 0 ? 'bg-rehua-white' : 'bg-gray-50'}
             `}
           >
             <span
