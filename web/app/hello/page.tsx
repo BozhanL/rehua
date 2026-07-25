@@ -23,6 +23,7 @@ function useHelloOptions() {
       findAll({
         host: host,
         simulate: isTesting,
+        options: { credentials: 'include' },
       }),
   });
 }
@@ -35,7 +36,7 @@ async function createHello({
   formData: FormData;
 }): Promise<create.Output> {
   return create(
-    { host, simulate: isTesting },
+    { host, simulate: isTesting, options: { credentials: 'include' } },
     {
       id: typia.assert<string>(formData.get('id')),
       content: typia.assert<string>(formData.get('content')),
@@ -51,7 +52,7 @@ async function deleteHello({
   formData: FormData;
 }): Promise<remove.Output> {
   return remove(
-    { host, simulate: isTesting },
+    { host, simulate: isTesting, options: { credentials: 'include' } },
     typia.assert<string>(formData.get('id')),
   );
 }
