@@ -36,14 +36,13 @@ export class UserController {
   @TypedRoute.Get(':id')
   @SwaggerExample.Response('Found', {
     value: new User(
-      '1',
-      'DEF4568',
+      'ACB123',
       'John',
       'Doe',
-      'email@domain.com',
+      'jd@hospital.com',
       'active',
-      '+64123456789',
-      '123 drive, city, suburb',
+      '0123456789',
+      '123 magic street',
       'nurse',
     ),
   })
@@ -55,8 +54,8 @@ export class UserController {
   @TypedRoute.Patch('id')
   async update(
     @Param('id') id: string,
-    @TypedBody() UpdateUserDto: UpdateUserDto,
+    @TypedBody() updateUserDto: UpdateUserDto,
   ): Promise<UpdateWriteOpResult> {
-    return this.userService.update(id, UpdateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 }
