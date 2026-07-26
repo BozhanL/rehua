@@ -36,7 +36,6 @@ export class PatientController {
   @TypedRoute.Get(':id')
   @SwaggerExample.Response('Found', {
     value: new Patient(
-      '1',
       'John',
       'Doe',
       new Date('1990-07-21'),
