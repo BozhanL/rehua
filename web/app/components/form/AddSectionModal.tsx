@@ -3,7 +3,12 @@ import ContentButton from '@/app/components/ContentButton';
 import Icon from '@/app/components/Icon';
 import Modal from '@/app/components/Modal';
 import type { IChangeEvent } from '@rjsf/core';
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import {
+  mergeObjects,
+  mergeSchemas,
+  type RJSFSchema,
+  type UiSchema,
+} from '@rjsf/utils';
 import type { JSONSchema7Definition } from 'json-schema';
 import { useState, type JSX } from 'react';
 import typia from 'typia';
@@ -28,24 +33,40 @@ interface SectionSchema {
   sectionUiSchema: UiSchema;
 }
 
-const sectionSchema = [
+const sectionSchema: readonly SectionSchema[] = [
   {
     id: 'normal-string',
     displaySchema: {
       type: 'object',
-      required: ['name'],
       properties: {
-        name: {
-          type: 'string',
-          title: 'Name of this section',
+        json: {
+          type: 'object',
+          required: ['title'],
+
+          properties: {
+            title: {
+              type: 'string',
+              title: 'Name of this section',
+            },
+          },
         },
       },
     },
-    displayUiSchema: {},
+    displayUiSchema: {
+      json: {
+        'ui:options': {
+          title: false,
+        },
+      },
+      ui: {
+        'ui:options': {
+          title: false,
+        },
+      },
+    },
 
     sectionSchema: {
       type: 'string',
-      title: 'Name of this section',
     },
     sectionUiSchema: {},
   },
@@ -54,28 +75,226 @@ const sectionSchema = [
     id: 'textarea-string',
     displaySchema: {
       type: 'object',
-      required: ['name'],
       properties: {
-        name: {
-          type: 'string',
-          title: 'Name of this section',
+        json: {
+          type: 'object',
+          required: ['title'],
+
+          properties: {
+            title: {
+              type: 'string',
+              title: 'Name of this section',
+            },
+          },
+        },
+
+        ui: {
+          type: 'object',
+          required: ['rows'],
+          properties: {
+            rows: {
+              type: 'integer',
+              title: 'Number of rows',
+              minimum: 1,
+              default: 5,
+            },
+          },
         },
       },
     },
-    displayUiSchema: {},
+    displayUiSchema: {
+      json: {
+        'ui:options': {
+          title: false,
+        },
+      },
+      ui: {
+        'ui:options': {
+          title: false,
+        },
+      },
+    },
 
     sectionSchema: {
       type: 'string',
-      title: 'Name of this section',
     },
     sectionUiSchema: {
       'ui:widget': 'textarea',
-      'ui:options': {
-        rows: 5, // Maps directly to MUI's TextField rows prop
-      },
     },
   },
-] as const satisfies readonly SectionSchema[];
+
+  {
+    id: 'radio',
+    displaySchema: {
+      type: 'object',
+      properties: {
+        json: {
+          type: 'object',
+          required: ['title', 'enum'],
+
+          properties: {
+            title: {
+              type: 'string',
+              title: 'Name of this section',
+            },
+
+            enum: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
+          },
+        },
+
+        ui: {
+          type: 'object',
+          required: ['inline'],
+          properties: {
+            inline: {
+              type: 'boolean',
+              title: 'Display inline',
+              default: true,
+            },
+          },
+        },
+      },
+    },
+    displayUiSchema: {
+      json: {
+        'ui:options': {
+          title: false,
+        },
+      },
+      ui: {
+        'ui:options': {
+          title: false,
+        },
+      },
+    },
+
+    sectionSchema: {
+      type: 'string',
+    },
+    sectionUiSchema: {
+      'ui:widget': 'radio',
+    },
+  },
+
+  {
+    id: 'checkboxes',
+    displaySchema: {
+      type: 'object',
+      properties: {
+        json: {
+          type: 'object',
+          required: ['title', 'items'],
+
+          properties: {
+            title: {
+              type: 'string',
+              title: 'Name of this section',
+            },
+
+            items: {
+              type: 'object',
+              required: ['enum'],
+              properties: {
+                enum: {
+                  type: 'array',
+                  title: 'items',
+                  items: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        },
+
+        ui: {
+          type: 'object',
+          required: ['inline'],
+          properties: {
+            inline: {
+              type: 'boolean',
+              title: 'Display inline',
+              default: true,
+            },
+          },
+        },
+      },
+    },
+    displayUiSchema: {
+      json: {
+        'ui:options': {
+          title: false,
+        },
+        items: {
+          'ui:options': {
+            title: false,
+          },
+        },
+      },
+      ui: {
+        'ui:options': {
+          title: false,
+        },
+      },
+    },
+
+    sectionSchema: {
+      type: 'array',
+      uniqueItems: true,
+      items: {
+        type: 'string',
+      },
+    },
+    sectionUiSchema: {
+      'ui:widget': 'checkboxes',
+    },
+  },
+
+  {
+    id: 'description-text',
+    displaySchema: {
+      type: 'object',
+      properties: {
+        json: {
+          type: 'object',
+          required: ['title'],
+
+          properties: {
+            title: {
+              type: 'string',
+              title: 'Content of this section',
+            },
+          },
+        },
+      },
+    },
+    displayUiSchema: {
+      json: {
+        'ui:options': {
+          title: false,
+        },
+      },
+      ui: {
+        'ui:options': {
+          title: false,
+        },
+      },
+    },
+
+    sectionSchema: {
+      type: 'string',
+    },
+    sectionUiSchema: {
+      'ui:disabled': true,
+      // TODO: add a custom widget for description text
+    },
+  },
+];
 
 export default function AddSectionModal({
   open,
@@ -83,12 +302,18 @@ export default function AddSectionModal({
   onSave: onSubmit,
 }: Readonly<AddSectionModalProps>): JSX.Element {
   const [formData, setFormData] = useState<
-    Record<string, { name: string | undefined }>
+    Record<
+      string,
+      {
+        json: Record<string, unknown> | undefined;
+        ui?: Record<string, unknown> | undefined;
+      }
+    >
   >({});
 
   return (
     <Modal open={open}>
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex h-full flex-col gap-4 p-4">
         {/* Modal Header */}
         <div className="flex text-rehua-maroon">
           <ContentButton
@@ -109,7 +334,7 @@ export default function AddSectionModal({
           <h2>Add New Section to Template</h2>
         </div>
 
-        <ol>
+        <ol className="divide-y overflow-y-auto">
           {sectionSchema.map((section) => (
             <li key={section.id}>
               <FormTemplate
@@ -117,7 +342,28 @@ export default function AddSectionModal({
                 uiSchema={section.displayUiSchema}
                 formData={formData[section.id] ?? {}}
                 onChange={({ formData: newFormData }: IChangeEvent) => {
-                  console.log('formData', newFormData);
+                  console.log({
+                    type: 'object',
+                    properties: {
+                      preview: mergeSchemas(
+                        section.sectionSchema,
+                        formData[section.id]?.json ?? {},
+                      ),
+                    },
+                  });
+                  console.log({
+                    preview: {
+                      ...section.sectionUiSchema,
+                      'ui:options': mergeObjects(
+                        section.sectionUiSchema['ui:options'] ?? {},
+                        formData[section.id]?.ui ?? {},
+                      ),
+                    },
+                    'ui:submitButtonOptions': {
+                      norender: true,
+                    },
+                  });
+
                   setFormData((prevFormData) => ({
                     ...prevFormData,
                     [section.id]:
@@ -125,11 +371,17 @@ export default function AddSectionModal({
                   }));
                 }}
                 onSubmit={() => {
-                  const schema: RJSFSchema = {
-                    ...section.sectionSchema,
-                    title: formData[section.id]?.name,
+                  const schema: RJSFSchema = mergeSchemas(
+                    section.sectionSchema,
+                    formData[section.id]?.json ?? {},
+                  );
+                  const uiSchema: UiSchema = {
+                    ...section.sectionUiSchema,
+                    'ui:options': mergeObjects(
+                      section.sectionUiSchema['ui:options'] ?? {},
+                      formData[section.id]?.ui ?? {},
+                    ),
                   };
-                  const uiSchema: UiSchema = { ...section.sectionUiSchema };
 
                   onSubmit(crypto.randomUUID(), schema, uiSchema);
 
@@ -141,16 +393,21 @@ export default function AddSectionModal({
                 readonly
                 schema={{
                   type: 'object',
-                  required: ['name'],
                   properties: {
-                    preview: {
-                      ...section.sectionSchema,
-                      title: formData[section.id]?.name,
-                    },
+                    preview: mergeSchemas(
+                      section.sectionSchema,
+                      formData[section.id]?.json ?? {},
+                    ),
                   },
                 }}
                 uiSchema={{
-                  preview: section.sectionUiSchema,
+                  preview: {
+                    ...section.sectionUiSchema,
+                    'ui:options': mergeObjects(
+                      section.sectionUiSchema['ui:options'] ?? {},
+                      formData[section.id]?.ui ?? {},
+                    ),
+                  },
                   'ui:submitButtonOptions': {
                     norender: true,
                   },
