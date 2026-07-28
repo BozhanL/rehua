@@ -22,6 +22,7 @@ interface RadioGroupProps<T extends string = string> {
   gap?: number; // gap between radio buttons in pixels, fallback to 10px
   radioGroupStyle?: CSSProperties; // additional styles for the radio group container
   className?: string; // optional class name for the radio group container
+  disabled?: boolean; // optional prop to disable all radio buttons in the group, fallback to false
 }
 
 // React component for rendering a styled group of radio buttons
@@ -40,6 +41,7 @@ function RadioGroup<T extends string = string>({
   gap = 10,
   radioGroupStyle,
   className,
+  disabled = false,
 }: Readonly<RadioGroupProps<T>>): JSX.Element {
   // converts buttonLabelPosition prop to corresponding CSS flexDirection value for layout
   const flexDirection = {
@@ -71,7 +73,7 @@ function RadioGroup<T extends string = string>({
               flexDirection,
               alignItems: 'center',
               gap: 6,
-              cursor: 'pointer',
+              cursor: disabled ? 'not-allowed' : 'pointer',
             }}
           >
             {/* radio input element */}
@@ -81,6 +83,7 @@ function RadioGroup<T extends string = string>({
               value={option.buttonOption}
               checked={selectedButton === option.buttonOption}
               onChange={() => {
+                if (disabled) return; // read-only mode
                 onChange(option.buttonOption);
               }}
               style={{
@@ -89,6 +92,7 @@ function RadioGroup<T extends string = string>({
                 margin: 0,
               }}
               className={buttonColor}
+              disabled={disabled}
             />
             {/* label for the radio button */}
             <span

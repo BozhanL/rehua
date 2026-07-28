@@ -15,6 +15,7 @@ interface CheckboxGroupProps<T extends string = string> {
   gap?: number; // gap between checkboxes in pixels, fallback to 10px
   checkboxGroupStyle?: CSSProperties; // additional styles for the checkbox group container
   className?: string; // optional class name for the checkbox group container
+  disabled?: boolean; // optional prop to disable all checkboxes in the group, fallback to false
 }
 
 // React component for rendering a styled group of checkboxes
@@ -32,6 +33,7 @@ function CheckboxGroup<T extends string = string>({
   gap = 10,
   checkboxGroupStyle,
   className,
+  disabled = false,
 }: Readonly<CheckboxGroupProps<T>>): JSX.Element {
   // converts boxLabelPosition prop to corresponding CSS flexDirection value for layout
   const flexDirection = {
@@ -63,7 +65,7 @@ function CheckboxGroup<T extends string = string>({
               flexDirection,
               alignItems: 'center',
               gap: 6,
-              cursor: 'pointer',
+              cursor: disabled ? 'not-allowed' : 'pointer',
             }}
           >
             {/* checkbox input element */}
@@ -74,6 +76,7 @@ function CheckboxGroup<T extends string = string>({
               // updates selectedBoxes state when checkbox is ticked, adding or removing the option from the array
               // depending on whether the checkbox was already ticked or not
               onChange={() => {
+                if (disabled) return; // read-only mode
                 const newSelectedBoxes = selectedBoxes.includes(option)
                   ? selectedBoxes.filter(
                       (selectedOption) => selectedOption !== option,
@@ -87,6 +90,7 @@ function CheckboxGroup<T extends string = string>({
                 margin: 0,
               }}
               className={boxColor}
+              disabled={disabled}
             />
             {/* label for the checkbox */}
             <span
