@@ -9,9 +9,9 @@ interface RadioButton<T extends string = string> {
 // interface for a group of radio buttons
 interface RadioGroupProps<T extends string = string> {
   radioGroupName: string; // name attribute which groups radio buttons together
-  options: RadioButton<T>[]; // array of radio button options
+  options?: RadioButton<T>[] | undefined; // array of radio button options
   selectedButton: T; // currently selected button
-  onChange: (selectedButton: T) => void; // callback function to handle selection change
+  onChange: ((selectedButton: T) => void) | undefined; // callback function to handle selection change
   size?: number; // size of radio button in pixels, fallback to 20px
   buttonColor?: string; // color of radio buttons, fallback to 'accent-rehua-navy'
   buttonLabelColor?: string; // color of button labels, fallback to 'text-rehua-navy'
@@ -61,7 +61,7 @@ function RadioGroup<T extends string = string>({
       }}
     >
       {/* maps over options array to render each radio button and its label */}
-      {options.map((option) => {
+      {options?.map((option) => {
         return (
           // label element wraps radio input and its label, allows label of button to be clickable
           <label
@@ -81,7 +81,7 @@ function RadioGroup<T extends string = string>({
               value={option.buttonOption}
               checked={selectedButton === option.buttonOption}
               onChange={() => {
-                onChange(option.buttonOption);
+                onChange?.(option.buttonOption);
               }}
               style={{
                 width: size,

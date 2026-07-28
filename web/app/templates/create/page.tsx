@@ -1,7 +1,7 @@
 'use client';
 
 import ContentButton from '@/app/components/ContentButton';
-import FormTemplate from '@/app/components/form/FormTemplate';
+import FormTemplate from '@/app/components/form';
 import ObjectFieldTemplate, {
   type ObjectFieldTemplateContext,
 } from '@/app/components/form/ObjectFieldTemplate';
@@ -18,7 +18,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useContext, useState, type JSX } from 'react';
+import { useContext, useEffect, useState, type JSX } from 'react';
 
 const defaultSchema: RJSFSchema = {
   type: 'object',
@@ -110,6 +110,10 @@ export default function Home(): JSX.Element {
         queryKey: options.queryKey,
       }),
   });
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   return (
     <>

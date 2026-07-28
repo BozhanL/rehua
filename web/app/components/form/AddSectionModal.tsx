@@ -287,11 +287,10 @@ const sectionSchema: readonly SectionSchema[] = [
     },
 
     sectionSchema: {
-      type: 'string',
+      type: 'null',
     },
     sectionUiSchema: {
       'ui:disabled': true,
-      // TODO: add a custom widget for description text
     },
   },
 ];
