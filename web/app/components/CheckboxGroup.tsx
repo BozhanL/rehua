@@ -78,7 +78,9 @@ function CheckboxGroup<T extends string = string>({
               // updates selectedBoxes state when checkbox is ticked, adding or removing the option from the array
               // depending on whether the checkbox was already ticked or not
               onChange={() => {
-                if (disabled) return; // read-only mode
+                if (disabled) {
+                  return;
+                } // read-only mode
                 const newSelectedBoxes = selectedBoxes.includes(option)
                   ? selectedBoxes.filter(
                       (selectedOption) => selectedOption !== option,

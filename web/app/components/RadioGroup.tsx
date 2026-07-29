@@ -85,7 +85,9 @@ function RadioGroup<T extends string = string>({
               value={option.buttonOption}
               checked={selectedButton === option.buttonOption}
               onChange={() => {
-                if (disabled) return; // read-only mode
+                if (disabled) {
+                  return;
+                } // read-only mode
                 onChange(option.buttonOption);
               }}
               style={{
