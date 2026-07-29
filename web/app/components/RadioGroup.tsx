@@ -22,7 +22,7 @@ interface RadioGroupProps<T extends string = string> {
   gap?: number; // gap between radio buttons in pixels, fallback to 10px
   radioGroupStyle?: CSSProperties; // additional styles for the radio group container
   className?: string; // optional class name for the radio group container
-  disabled?: boolean; // optional prop to disable all radio buttons in the group, fallback to false
+  disabled?: boolean | undefined; // optional prop to disable all radio buttons in the group, fallback to false
 }
 
 // React component for rendering a styled group of radio buttons
