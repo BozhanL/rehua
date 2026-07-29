@@ -36,12 +36,14 @@ function CheckboxGroup<T extends string = string>({
   disabled = false,
 }: Readonly<CheckboxGroupProps<T>>): JSX.Element {
   // converts boxLabelPosition prop to corresponding CSS flexDirection value for layout
-  const flexDirection = {
-    top: 'column-reverse',
-    bottom: 'column',
-    left: 'row-reverse',
-    right: 'row',
-  }[boxLabelPosition] as CSSProperties['flexDirection'];
+  const flexDirection: CSSProperties['flexDirection'] = (
+    {
+      top: 'column-reverse',
+      bottom: 'column',
+      left: 'row-reverse',
+      right: 'row',
+    } as const
+  )[boxLabelPosition];
 
   return (
     // outer div serves as checkboxes group container, applying flex layout and gap between boxes
