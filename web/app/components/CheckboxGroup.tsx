@@ -15,7 +15,7 @@ interface CheckboxGroupProps<T extends string = string> {
   gap?: number; // gap between checkboxes in pixels, fallback to 10px
   checkboxGroupStyle?: CSSProperties; // additional styles for the checkbox group container
   className?: string; // optional class name for the checkbox group container
-  disabled?: boolean; // optional prop to disable all checkboxes in the group, fallback to false
+  disabled?: boolean | undefined; // optional prop to disable all checkboxes in the group, fallback to false
 }
 
 // React component for rendering a styled group of checkboxes
