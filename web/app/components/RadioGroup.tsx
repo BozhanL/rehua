@@ -44,12 +44,14 @@ function RadioGroup<T extends string = string>({
   disabled = false,
 }: Readonly<RadioGroupProps<T>>): JSX.Element {
   // converts buttonLabelPosition prop to corresponding CSS flexDirection value for layout
-  const flexDirection = {
-    top: 'column-reverse',
-    bottom: 'column',
-    left: 'row-reverse',
-    right: 'row',
-  }[buttonLabelPosition] as CSSProperties['flexDirection'];
+  const flexDirection: CSSProperties['flexDirection'] = (
+    {
+      top: 'column-reverse',
+      bottom: 'column',
+      left: 'row-reverse',
+      right: 'row',
+    } as const
+  )[buttonLabelPosition];
 
   return (
     // outer div serves as radio button group container, applying flex layout and gap between buttons
