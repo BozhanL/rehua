@@ -1,0 +1,5 @@
+.github/** @BozhanL
+
+# Code style configuration files
+eslint.config.* @BozhanL @waniven
+.prettierrc @BozhanL @waniven
