@@ -99,9 +99,7 @@ const eslintConfig = defineConfig([
   },
   {
     rules: {
-      curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
-      'prefer-arrow-callback': 'error',
       'func-style': ['error', 'declaration'],
     },
   },
@@ -144,6 +142,15 @@ const eslintConfig = defineConfig([
   },
 
   eslintConfigPrettier,
+  {
+    // These configs are disabled by eslint-config-prettier, but we want to enable them.
+    rules: {
+      // https://github.com/prettier/eslint-config-prettier#curly
+      curly: ['error', 'all'],
+      // https://github.com/prettier/eslint-config-prettier#arrow-body-style-and-prefer-arrow-callback
+      'prefer-arrow-callback': 'error',
+    },
+  },
 ]);
 
 export default eslintConfig;
