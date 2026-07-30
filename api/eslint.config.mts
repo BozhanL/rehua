@@ -8,7 +8,12 @@ import tseslint from 'typescript-eslint';
 
 const eslintConfig = defineConfig([
   eslint.configs.recommended,
+
   sonarjs.recommended,
+  {
+    rules: { 'sonarjs/todo-tag': 'off' },
+  },
+
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
   {
@@ -59,15 +64,44 @@ const eslintConfig = defineConfig([
   },
   {
     rules: {
-      curly: ['error', 'all'],
+      // Duplicate of @typescript-eslint/no-unused-vars
+      'sonarjs/no-unused-vars': 'off',
+      'no-unused-vars': 'off',
+
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+
+          args: 'all',
+          argsIgnorePattern: '^_',
+
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+
+          destructuredArrayIgnorePattern: '^_',
+
+          reportUsedIgnorePattern: true,
+        },
+      ],
+    },
+  },
+  {
+    rules: {
       eqeqeq: ['error', 'always'],
-      'prefer-arrow-callback': 'error',
       'func-style': ['error', 'declaration'],
     },
   },
 
   {
-    files: ['**/*.test.tsx', '**/*.test.ts', '**/*.spec.tsx', '**/*.spec.ts'],
+    files: [
+      '**/*.test.tsx',
+      '**/*.test.ts',
+      '**/*.spec.tsx',
+      '**/*.spec.ts',
+      '**/*e2e-spec.ts',
+    ],
     ...jest.configs['flat/all'],
   },
   {
@@ -85,6 +119,15 @@ const eslintConfig = defineConfig([
   },
 
   eslintConfigPrettier,
+  {
+    // These configs are disabled by eslint-config-prettier, but we want to enable them.
+    rules: {
+      // https://github.com/prettier/eslint-config-prettier#curly
+      curly: ['error', 'all'],
+      // https://github.com/prettier/eslint-config-prettier#arrow-body-style-and-prefer-arrow-callback
+      'prefer-arrow-callback': 'error',
+    },
+  },
 ]);
 
 export default eslintConfig;
