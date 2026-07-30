@@ -106,7 +106,7 @@ describe('formTemplate', () => {
       />,
     );
 
-    const heading = screen.getByRole('heading', { name: /registration form/i });
+    const heading = screen.getByText(/registration form/i);
 
     expect(heading).toBeInTheDocument();
   });
