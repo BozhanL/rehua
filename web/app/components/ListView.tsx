@@ -2,27 +2,15 @@
 import Icon, { type IconProps } from './Icon';
 import type { ReactNode, JSX, CSSProperties } from 'react';
 
-//Different variants for row CSS
-const variants = {
-  normal: {
-    heading: 'font-bold text-rehua-black',
-    content: '', // inherit default css
-  },
-  emphasis: {
-    heading: 'font-bold',
-    content: 'font-bold',
-  },
-  warning: {
-    heading: 'font-bold text-rehua-red',
-    content: 'font-bold text-rehua-red',
-  },
-} as const;
-
 export interface ListRow {
   heading: string;
-  content: ReactNode | string[]; // either String[] (e.g. allergies) or React Node (Element or primitive type)
-  variant?: keyof typeof variants; // more granular style control for rows
-  iconName?: IconProps['name']; // type check to make sure input of iconName exists
+  content: ReactNode; // Row content - React Node (Element or primitive type)
+  emphasise?: boolean; // Emphasise the row with red and bold text
+  iconName?: IconProps['name']; // Type check to make sure input of iconName exists
+  contentStyle?: CSSProperties; // Lets parent set custom CSS of the content data
+  stacked?: boolean; // Render content below the heading instead of inline
+  fontSize?: number; // Set custom font size for heading
+  verticalAlign?: 'top'; // If content long, use this to change position of heading. Undefined fall back to center
 }
 
 //Parent component to build an array of Rows to pass as prop
@@ -37,34 +25,54 @@ function ListView({
   maxWidth = '100%',
 }: Readonly<ListViewProps>): JSX.Element {
   return (
+    //Render List of Rows
     <ul className="overflow-hidden" style={{ maxWidth }}>
       {rows.map((row, index) => {
         //If style variant specified for this row
-        const variant: keyof typeof variants = row.variant ?? 'normal'; // Check style variant
-        const style = variants[variant]; // Select style
-        //Render row
+        const headingStyle = row.emphasise
+          ? 'font-bold text-rehua-ruby'
+          : 'font-bold text-rehua-black';
+        const contentStyle = row.emphasise ? 'font-bold text-rehua-ruby' : '';
+        const iconStyle =
+          row.iconName === 'asterisk' ? 'size-2 text-rehua-ruby' : ''; // Override default style for icon to make asterisk smaller
+
         return (
+          //Render individual row - option to stack heading and content, alternating between white and gray
           <li
             key={row.heading}
             className={`
-              flex gap-x-2 px-4 py-2
-              ${index % 2 === 0 ? 'bg-rehua-white' : 'bg-gray-50'}
+              flex gap-x-2
+              ${row.stacked ? 'flex-col items-start gap-y-1' : 'items-center'}
+              ${index % 2 === 0 ? 'bg-rehua-white' : 'bg-rehua-light-gray'}
             `}
+            style={{
+              padding: '0.5em 1em',
+              gap: '0.5em',
+              fontSize: row.fontSize, // undefined falls back to inherited/default size
+            }}
           >
+            {/* Render the Icon (optional) and Heading */}
             <span
               className={`
                 flex items-center gap-x-1
-                ${style.heading}
+                ${headingStyle}
+                ${row.verticalAlign === 'top' ? 'self-start' : ''}
               `}
             >
-              {row.iconName && <Icon name={row.iconName} />}
+              {row.iconName && (
+                <Icon name={row.iconName} className={iconStyle} />
+              )}
               {row.heading}:
             </span>
-
-            <span className={style.content}>
-              {Array.isArray(row.content)
-                ? row.content.join(', ')
-                : row.content}
+            {/*   Render the row content */}
+            <span
+              className={`
+                inline-flex items-center
+                ${contentStyle}
+              `}
+              style={row.contentStyle}
+            >
+              {row.content}
             </span>
           </li>
         );
