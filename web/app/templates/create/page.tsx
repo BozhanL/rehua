@@ -11,7 +11,7 @@ import { create as createTemplateSDK } from '@rehua/sdk/functional/templates';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useContext, useEffect, useState, type JSX } from 'react';
+import { useContext, useState, type JSX } from 'react';
 
 const defaultSchema: RJSFSchema = {
   type: 'object',
@@ -54,11 +54,6 @@ export default function Home(): JSX.Element {
   const createTemplateMutation = useMutation({
     mutationFn: createTemplate,
   });
-
-  // TODO: Remove this console log when the form is working correctly. It is here to help debug the formData state.
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
 
   return (
     <>

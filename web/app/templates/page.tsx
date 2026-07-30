@@ -10,7 +10,7 @@ import {
   type QueryFunctionContext,
 } from '@tanstack/react-query';
 import { notFound, useSearchParams } from 'next/navigation';
-import { useEffect, useState, type JSX } from 'react';
+import { useState, type JSX } from 'react';
 import typia from 'typia';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -41,10 +41,6 @@ export default function Home(): JSX.Element {
 
   const options = useTemplateOptions(id);
   const findTemplate = useQuery(options);
-
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
 
   if (findTemplate.isError) {
     throw findTemplate.error;

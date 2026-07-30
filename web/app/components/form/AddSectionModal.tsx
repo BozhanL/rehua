@@ -277,28 +277,6 @@ export default function AddSectionModal({
                 })}
                 formData={formData[section.id] ?? {}}
                 onChange={({ formData: newFormData }: IChangeEvent) => {
-                  console.log({
-                    type: 'object',
-                    properties: {
-                      preview: mergeSchemas(
-                        section.sectionSchema,
-                        formData[section.id]?.json ?? {},
-                      ),
-                    },
-                  });
-                  console.log({
-                    preview: {
-                      ...section.sectionUiSchema,
-                      'ui:options': mergeObjects(
-                        section.sectionUiSchema['ui:options'] ?? {},
-                        formData[section.id]?.ui ?? {},
-                      ),
-                    },
-                    'ui:submitButtonOptions': {
-                      norender: true,
-                    },
-                  });
-
                   setFormData((prevFormData) => ({
                     ...prevFormData,
                     [section.id]:
