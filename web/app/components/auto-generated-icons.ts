@@ -2,6 +2,7 @@
 // DO NOT MODIFY !!!
 import Access from '../assets/icons/access.svg';
 import Alert from '../assets/icons/alert.svg';
+import Asterisk from '../assets/icons/asterisk.svg';
 import ButtonAccessArrow from '../assets/icons/button-access-arrow.svg';
 import Calendar from '../assets/icons/calendar.svg';
 import Camera from '../assets/icons/camera.svg';
@@ -47,6 +48,7 @@ import X from '../assets/icons/x.svg';
 export const icons = {
   access: Access,
   alert: Alert,
+  asterisk: Asterisk,
   'button-access-arrow': ButtonAccessArrow,
   calendar: Calendar,
   camera: Camera,
