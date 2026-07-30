@@ -100,7 +100,7 @@ function AddSectionButton({
       iconProps={{ name: 'section-plus', flip }}
 
       foregroundColor="text-rehua-dark-green"
-      backgroundColor="transparent"
+      backgroundColor="bg-transparent"
       style={{ boxShadow: 'none' }}
 
       onClick={() => {
@@ -165,7 +165,7 @@ export default function ObjectFieldTemplate(
               iconProps={{ name: 'trash' }}
 
               foregroundColor="text-rehua-red"
-              backgroundColor="transparent"
+              backgroundColor="bg-transparent"
               style={{ boxShadow: 'none' }}
 
               onClick={() => {

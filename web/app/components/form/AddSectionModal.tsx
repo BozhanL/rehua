@@ -10,9 +10,9 @@ import {
   type UiSchema,
 } from '@rjsf/utils';
 import type { JSONSchema7Definition } from 'json-schema';
-import { useState, type JSX } from 'react';
-import type { ReadonlyDeep } from 'type-fest';
-import typia, { misc } from 'typia';
+import { useMemo, useState, type JSX } from 'react';
+import type { ReadonlyDeep, StructuredCloneable } from 'type-fest';
+import typia from 'typia';
 
 interface AddSectionModalProps {
   open: boolean;
@@ -64,7 +64,7 @@ const defaultDisplaySchema = {
   },
 } as const satisfies RJSFSchema;
 
-const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
+const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = Object.freeze([
   {
     id: 'normal-string',
     displaySchema: defaultDisplaySchema,
@@ -123,18 +123,6 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
             },
           },
         },
-
-        ui: {
-          type: 'object',
-          required: ['inline'],
-          properties: {
-            inline: {
-              type: 'boolean',
-              title: 'Display inline',
-              default: true,
-            },
-          },
-        },
       },
     }),
     displayUiSchema: {
@@ -168,18 +156,6 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
                   },
                 },
               },
-            },
-          },
-        },
-
-        ui: {
-          type: 'object',
-          required: ['inline'],
-          properties: {
-            inline: {
-              type: 'boolean',
-              title: 'Display inline',
-              default: true,
             },
           },
         },
@@ -232,7 +208,7 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
       'ui:options': {},
     },
   },
-] as const;
+] as const) satisfies StructuredCloneable;
 
 export default function AddSectionModal({
   open,
@@ -249,8 +225,9 @@ export default function AddSectionModal({
     >
   >({});
 
-  const [sectionSchema] = useState(
-    misc.clone(defaultSectionSchema as SectionSchema[]),
+  const sectionSchema = useMemo(
+    () => structuredClone(defaultSectionSchema) as unknown as SectionSchema[],
+    [],
   );
 
   return (
@@ -263,7 +240,7 @@ export default function AddSectionModal({
             iconProps={{ name: 'circle-arrow' }}
 
             foregroundColor="text-rehua-navy"
-            backgroundColor="transparent"
+            backgroundColor="bg-transparent"
             style={{ boxShadow: 'none' }}
 
             onClick={() => {
@@ -280,7 +257,7 @@ export default function AddSectionModal({
           {sectionSchema.map((section) => (
             <li key={section.id}>
               <FormTemplate
-                schema={structuredClone(section.displaySchema)}
+                schema={section.displaySchema}
                 uiSchema={section.displayUiSchema}
                 formData={formData[section.id] ?? {}}
                 onChange={({ formData: newFormData }: IChangeEvent) => {
