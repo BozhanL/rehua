@@ -1,8 +1,8 @@
-import { CreateTemplateDto } from './dto/create-template.dto';
+import type { CreateTemplateDto } from './dto/create-template.dto';
 import { Template, TemplateDocument } from './entities/template.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import type { Model } from 'mongoose';
 
 @Injectable()
 export class TemplatesService {

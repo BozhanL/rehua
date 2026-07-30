@@ -1,5 +1,5 @@
-import { CreateTemplateDto } from './dto/create-template.dto';
-import { Template } from './entities/template.entity';
+import type { CreateTemplateDto } from './dto/create-template.dto';
+import type { Template } from './entities/template.entity';
 import { TemplatesService } from './templates.service';
 import type { MongoId } from '@/utils/types';
 import { TypedBody, TypedParam, TypedRoute } from '@nestia/core';
