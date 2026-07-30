@@ -4,7 +4,11 @@ import FormTemplate from '@/app/components/form';
 import { APIUrlContext } from '@/app/providers';
 import { isTesting } from '@/app/utils/env';
 import { findOne as findOneTemplate } from '@rehua/sdk/functional/templates';
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import { notFound, useSearchParams } from 'next/navigation';
 import { useContext, useState, type JSX } from 'react';
 import typia from 'typia';
@@ -15,11 +19,12 @@ function useTemplateOptions(id: string) {
 
   return queryOptions({
     queryKey: ['templates', host, id],
-    queryFn: async () => {
+    queryFn: async ({ signal }: QueryFunctionContext) => {
       return findOneTemplate(
         {
           host: host,
           simulate: isTesting,
+          options: { signal },
         },
         id,
       );
