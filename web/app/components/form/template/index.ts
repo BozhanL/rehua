@@ -1,21 +1,46 @@
+import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
+import ArrayFieldTemplate from './ArrayFieldTemplate';
+import { generateButtonTemplates } from './ButtonTemplates';
+import CheckboxesWidget from './CheckboxesWidget';
 import RadioWidget from './RadioWidget';
-import type { ThemeProps } from '@rjsf/core';
-import { generateTheme } from '@rjsf/mui';
+import type { MakeRequired } from '@/app/utils/types';
+import type { ThemeProps as DefaultThemeProps } from '@rjsf/core';
+import type {
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
+} from '@rjsf/utils';
 
-const muiTheme: ThemeProps = generateTheme();
-const theme: ThemeProps = {};
+type ThemeProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = MakeRequired<
+  DefaultThemeProps<T, S, F>,
+  'widgets' | 'templates' | 'fields'
+>;
 
-theme.widgets ??= {};
-theme.widgets['RadioWidget'] = RadioWidget;
+export function generateTheme<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): DefaultThemeProps<T, S, F> {
+  const ButtonTemplates = generateButtonTemplates<T, S, F>();
 
-theme.templates ??= {};
-theme.templates['ArrayFieldTemplate'] =
-  muiTheme.templates?.['ArrayFieldTemplate'];
-theme.templates['ArrayFieldItemTemplate'] =
-  muiTheme.templates?.['ArrayFieldItemTemplate'];
-theme.templates['ArrayFieldItemButtonTemplate'] =
-  muiTheme.templates?.['ArrayFieldItemButtonTemplate'];
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
-theme.templates.ButtonTemplates = muiTheme.templates?.ButtonTemplates!;
+  const theme: ThemeProps<T, S, F> = {
+    widgets: {
+      RadioWidget,
+      CheckboxesWidget,
+    },
+    templates: {
+      ArrayFieldTemplate,
+      ArrayFieldItemTemplate,
+      ButtonTemplates,
+    },
+    fields: {},
+  };
 
-export default theme;
+  return theme;
+}
+
+export default generateTheme();

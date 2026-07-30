@@ -57,58 +57,56 @@ function CheckboxGroup<T extends string = string>({
       }}
     >
       {/* maps over options array to render each checkbox and its label */}
-      {options.map((option) => {
-        return (
-          // label element wraps checkbox input and its label, allows label of box to be clickable
-          <label
-            key={option}
-            style={{
-              display: 'flex',
-              flexDirection,
-              alignItems: 'center',
-              gap: 6,
-              cursor: disabled ? 'not-allowed' : 'pointer',
+      {options.map((option, index) => (
+        // label element wraps checkbox input and its label, allows label of box to be clickable
+        <label
+          key={`${String(index)}-${option}`}
+          style={{
+            display: 'flex',
+            flexDirection,
+            alignItems: 'center',
+            gap: 6,
+            cursor: disabled ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {/* checkbox input element */}
+          <input
+            type="checkbox"
+            value={option}
+            checked={selectedBoxes.includes(option)}
+            // updates selectedBoxes state when checkbox is ticked, adding or removing the option from the array
+            // depending on whether the checkbox was already ticked or not
+            onChange={() => {
+              if (disabled) {
+                return;
+              } // read-only mode
+              const newSelectedBoxes = selectedBoxes.includes(option)
+                ? selectedBoxes.filter(
+                    (selectedOption) => selectedOption !== option,
+                  )
+                : [...selectedBoxes, option];
+              onChange(newSelectedBoxes);
             }}
+            style={{
+              width: size,
+              height: size,
+              margin: 0,
+            }}
+            className={boxColor}
+            disabled={disabled}
+          />
+          {/* label for the checkbox */}
+          <span
+            style={{ fontSize: boxLabelFontSize }}
+            className={`
+              ${boxLabelColor}
+              ${boxLabelFontWeight}
+            `}
           >
-            {/* checkbox input element */}
-            <input
-              type="checkbox"
-              value={option}
-              checked={selectedBoxes.includes(option)}
-              // updates selectedBoxes state when checkbox is ticked, adding or removing the option from the array
-              // depending on whether the checkbox was already ticked or not
-              onChange={() => {
-                if (disabled) {
-                  return;
-                } // read-only mode
-                const newSelectedBoxes = selectedBoxes.includes(option)
-                  ? selectedBoxes.filter(
-                      (selectedOption) => selectedOption !== option,
-                    )
-                  : [...selectedBoxes, option];
-                onChange(newSelectedBoxes);
-              }}
-              style={{
-                width: size,
-                height: size,
-                margin: 0,
-              }}
-              className={boxColor}
-              disabled={disabled}
-            />
-            {/* label for the checkbox */}
-            <span
-              style={{ fontSize: boxLabelFontSize }}
-              className={`
-                ${boxLabelColor}
-                ${boxLabelFontWeight}
-              `}
-            >
-              {option}
-            </span>
-          </label>
-        );
-      })}
+            {option}
+          </span>
+        </label>
+      ))}
     </div>
   );
 }

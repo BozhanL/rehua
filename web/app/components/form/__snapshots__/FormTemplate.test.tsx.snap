@@ -213,17 +213,24 @@ exports[`formTemplate renders FormTemplate unchanged 1`] = `
         </div>
       </fieldset>
     </div>
-    <div
-      class="MuiBox-root css-178yklu"
+    <button
+      class="
+        inline-flex w-fit cursor-pointer items-center justify-center
+        flex-row
+        bg-transparent
+        transition-all duration-100
+        active:brightness-80
+      "
+      style="min-height: 40px; border-radius: 14px; font-size: 18px; padding-inline: 12px; gap: 8px; box-shadow: none;"
+      type="submit"
     >
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary css-74d805-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
+      <svg
+        class="text-rehua-dark-green"
+        preserveAspectRatio="xMidYMid meet"
+        style="transform-origin: center; transform-box: fill-box;"
+        width="28"
+      />
+    </button>
   </form>
 </div>
 `;

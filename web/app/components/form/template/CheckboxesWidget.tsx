@@ -1,4 +1,4 @@
-import RadioGroup from '@/app/components/RadioGroup';
+import CheckboxGroup from '@/app/components/CheckboxGroup';
 import type {
   StrictRJSFSchema,
   RJSFSchema,
@@ -8,24 +8,22 @@ import type {
 import type { JSX } from 'react';
 import typia from 'typia';
 
-export default function RadioWidget<
+export default function CheckboxesWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: Readonly<WidgetProps<T, S, F>>): JSX.Element {
-  const { id, htmlName, options, readonly, disabled, onChange } = props;
+  const { options, readonly, disabled, onChange } = props;
   const value = props.value as unknown;
 
   return (
-    <RadioGroup
-      radioGroupName={htmlName ?? id}
+    <CheckboxGroup
       options={
-        options.enumOptions?.map((option) => ({
-          buttonOption: typia.assert<string>(option.value ?? ''),
-          buttonLabel: option.label,
-        })) ?? []
+        options.enumOptions?.map((option) =>
+          typia.assert<string>(option.value ?? ''),
+        ) ?? []
       }
-      selectedButton={typia.assert<string | undefined>(value)}
+      selectedBoxes={typia.assert<string[]>(value ?? [])}
       onChange={onChange}
       disabled={readonly || disabled}
     />
