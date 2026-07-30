@@ -37,6 +37,7 @@ export class TemplatesController {
       _id: doc._id.toString(),
     };
   }
+
   @TypedRoute.Get()
   async findAll(): Promise<(Template & { _id: MongoId })[]> {
     const docs = await this.templatesService.findAll();
@@ -46,21 +47,5 @@ export class TemplatesController {
       ...doc.toJSON(),
       _id: doc._id.toString(),
     }));
-  }
-
-  @TypedRoute.Delete(':id')
-  async remove(
-    @TypedParam('id') id: MongoId,
-  ): Promise<(Template & { _id: MongoId }) | null> {
-    const doc = await this.templatesService.remove(id);
-    if (!doc) {
-      return null;
-    }
-
-    return {
-      // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      ...doc.toJSON(),
-      _id: doc._id.toString(),
-    };
   }
 }

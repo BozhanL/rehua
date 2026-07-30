@@ -17,9 +17,4 @@ export namespace Template_idMongoId {
     uiSchema: Recordstringunknown;
     _id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>;
   };
-  export type o3 = {
-    schema: Recordstringunknown;
-    uiSchema: Recordstringunknown;
-    _id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>;
-  };
 }
