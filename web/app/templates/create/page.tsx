@@ -1,3 +1,5 @@
+'use client';
+
 import ContentButton from '@/app/components/ContentButton';
 import FormTemplate, {
   ObjectFieldTemplate,
