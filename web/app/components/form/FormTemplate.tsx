@@ -1,5 +1,4 @@
 import { generateTheme } from './template';
-import type { MakeOptional } from '@/app/utils/types';
 import { type FormProps, withTheme } from '@rjsf/core';
 import type {
   FormContextType,
@@ -8,12 +7,13 @@ import type {
 } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { useMemo, type JSX } from 'react';
+import type { SetOptional } from 'type-fest';
 
 export type FormTemplateProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = MakeOptional<FormProps<T, S, F>, 'validator'>;
+> = SetOptional<FormProps<T, S, F>, 'validator'>;
 
 export default function FormTemplate<
   T = unknown,

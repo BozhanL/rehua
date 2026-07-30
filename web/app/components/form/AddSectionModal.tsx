@@ -11,7 +11,8 @@ import {
 } from '@rjsf/utils';
 import type { JSONSchema7Definition } from 'json-schema';
 import { useState, type JSX } from 'react';
-import typia from 'typia';
+import type { ReadonlyDeep } from 'type-fest';
+import typia, { misc } from 'typia';
 
 interface AddSectionModalProps {
   open: boolean;
@@ -33,7 +34,20 @@ interface SectionSchema {
   sectionUiSchema: UiSchema;
 }
 
-const sectionSchema: readonly SectionSchema[] = [
+const defaultUiSchema = {
+  json: {
+    'ui:options': {
+      title: false,
+    },
+  },
+  ui: {
+    'ui:options': {
+      title: false,
+    },
+  },
+} as const;
+
+const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
   {
     id: 'normal-string',
     displaySchema: {
@@ -53,16 +67,7 @@ const sectionSchema: readonly SectionSchema[] = [
       },
     },
     displayUiSchema: {
-      json: {
-        'ui:options': {
-          title: false,
-        },
-      },
-      ui: {
-        'ui:options': {
-          title: false,
-        },
-      },
+      ...defaultUiSchema,
     },
 
     sectionSchema: {
@@ -103,16 +108,7 @@ const sectionSchema: readonly SectionSchema[] = [
       },
     },
     displayUiSchema: {
-      json: {
-        'ui:options': {
-          title: false,
-        },
-      },
-      ui: {
-        'ui:options': {
-          title: false,
-        },
-      },
+      ...defaultUiSchema,
     },
 
     sectionSchema: {
@@ -161,16 +157,7 @@ const sectionSchema: readonly SectionSchema[] = [
       },
     },
     displayUiSchema: {
-      json: {
-        'ui:options': {
-          title: false,
-        },
-      },
-      ui: {
-        'ui:options': {
-          title: false,
-        },
-      },
+      ...defaultUiSchema,
     },
 
     sectionSchema: {
@@ -225,23 +212,15 @@ const sectionSchema: readonly SectionSchema[] = [
         },
       },
     },
-    displayUiSchema: {
+    displayUiSchema: mergeObjects(defaultUiSchema, {
       json: {
-        'ui:options': {
-          title: false,
-        },
         items: {
           'ui:options': {
             title: false,
           },
         },
       },
-      ui: {
-        'ui:options': {
-          title: false,
-        },
-      },
-    },
+    }),
 
     sectionSchema: {
       type: 'array',
@@ -274,16 +253,7 @@ const sectionSchema: readonly SectionSchema[] = [
       },
     },
     displayUiSchema: {
-      json: {
-        'ui:options': {
-          title: false,
-        },
-      },
-      ui: {
-        'ui:options': {
-          title: false,
-        },
-      },
+      ...defaultUiSchema,
     },
 
     sectionSchema: {
@@ -291,9 +261,10 @@ const sectionSchema: readonly SectionSchema[] = [
     },
     sectionUiSchema: {
       'ui:disabled': true,
+      'ui:options': {},
     },
   },
-];
+] as const;
 
 export default function AddSectionModal({
   open,
@@ -309,6 +280,10 @@ export default function AddSectionModal({
       }
     >
   >({});
+
+  const [sectionSchema] = useState(
+    misc.clone(defaultSectionSchema as SectionSchema[]),
+  );
 
   return (
     <Modal open={open}>
@@ -337,7 +312,7 @@ export default function AddSectionModal({
           {sectionSchema.map((section) => (
             <li key={section.id}>
               <FormTemplate
-                schema={section.displaySchema}
+                schema={structuredClone(section.displaySchema)}
                 uiSchema={section.displayUiSchema}
                 formData={formData[section.id] ?? {}}
                 onChange={({ formData: newFormData }: IChangeEvent) => {
