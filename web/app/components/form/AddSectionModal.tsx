@@ -150,6 +150,7 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = Object.freeze([
               properties: {
                 enum: {
                   type: 'array',
+                  uniqueItems: true,
                   title: 'items',
                   items: {
                     type: 'string',
@@ -257,8 +258,23 @@ export default function AddSectionModal({
           {sectionSchema.map((section) => (
             <li key={section.id}>
               <FormTemplate
-                schema={section.displaySchema}
-                uiSchema={section.displayUiSchema}
+                schema={mergeSchemas(section.displaySchema, {
+                  properties: {
+                    preview: mergeSchemas(
+                      section.sectionSchema,
+                      formData[section.id]?.json ?? {},
+                    ),
+                  },
+                })}
+                uiSchema={mergeObjects(section.displayUiSchema, {
+                  preview: {
+                    ...section.sectionUiSchema,
+                    'ui:options': mergeObjects(
+                      section.sectionUiSchema['ui:options'] ?? {},
+                      formData[section.id]?.ui ?? {},
+                    ),
+                  },
+                })}
                 formData={formData[section.id] ?? {}}
                 onChange={({ formData: newFormData }: IChangeEvent) => {
                   console.log({
@@ -305,31 +321,6 @@ export default function AddSectionModal({
                   onSubmit(crypto.randomUUID(), schema, uiSchema);
 
                   setFormData({});
-                }}
-              />
-
-              <FormTemplate
-                readonly
-                schema={{
-                  type: 'object',
-                  properties: {
-                    preview: mergeSchemas(
-                      section.sectionSchema,
-                      formData[section.id]?.json ?? {},
-                    ),
-                  },
-                }}
-                uiSchema={{
-                  preview: {
-                    ...section.sectionUiSchema,
-                    'ui:options': mergeObjects(
-                      section.sectionUiSchema['ui:options'] ?? {},
-                      formData[section.id]?.ui ?? {},
-                    ),
-                  },
-                  'ui:submitButtonOptions': {
-                    norender: true,
-                  },
                 }}
               />
             </li>
