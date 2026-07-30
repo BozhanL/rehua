@@ -12,10 +12,15 @@ export default function RadioWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: Readonly<WidgetProps<T, S, F>>): JSX.Element {
-  const { id, htmlName, options, readonly, disabled, onChange } = props;
-  const value = props.value as unknown;
-
+>({
+  id,
+  htmlName,
+  options,
+  readonly,
+  disabled,
+  onChange,
+  value,
+}: Readonly<WidgetProps<T, S, F>>): JSX.Element {
   return (
     <RadioGroup
       radioGroupName={htmlName ?? id}

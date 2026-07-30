@@ -1,3 +1,6 @@
-import FormTemplate from './FormTemplate';
+export {
+  default as ObjectFieldTemplate,
+  type ObjectFieldTemplateContext,
+} from './ObjectFieldTemplate';
 
-export default FormTemplate;
+export { default } from './FormTemplate';

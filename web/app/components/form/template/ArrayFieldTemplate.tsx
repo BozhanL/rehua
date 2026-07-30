@@ -7,44 +7,49 @@ import {
   getUiOptions,
   buttonId,
 } from '@rjsf/utils';
-import type { JSX } from 'react';
+import { useMemo, type JSX } from 'react';
 
 export default function ArrayFieldTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: ArrayFieldTemplateProps<T, S, F>): JSX.Element {
-  const {
-    canAdd,
-    disabled,
-    fieldPathId,
-    uiSchema,
-    items,
-    optionalDataControl,
-    onAddClick,
-    readonly,
-    registry,
-    required,
-    schema,
-    title,
-  } = props;
-
-  const showOptionalDataControlInTitle = !readonly && !disabled;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<
-    'ArrayFieldDescriptionTemplate',
-    T,
-    S,
-    F
-  >('ArrayFieldDescriptionTemplate', registry, uiOptions);
-  const ArrayFieldTitleTemplate = getTemplate<
-    'ArrayFieldTitleTemplate',
-    T,
-    S,
-    F
-  >('ArrayFieldTitleTemplate', registry, uiOptions);
+>({
+  canAdd,
+  disabled,
+  fieldPathId,
+  uiSchema,
+  items,
+  optionalDataControl,
+  onAddClick,
+  readonly,
+  registry,
+  required,
+  schema,
+  title,
+}: ArrayFieldTemplateProps<T, S, F>): JSX.Element {
+  const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema), [uiSchema]);
+  const ArrayFieldDescriptionTemplate = useMemo(
+    () =>
+      getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
+        'ArrayFieldDescriptionTemplate',
+        registry,
+        uiOptions,
+      ),
+    [registry, uiOptions],
+  );
+  const ArrayFieldTitleTemplate = useMemo(
+    () =>
+      getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
+        'ArrayFieldTitleTemplate',
+        registry,
+        uiOptions,
+      ),
+    [registry, uiOptions],
+  );
 
   const { AddButton } = registry.templates.ButtonTemplates;
+
+  const showOptionalDataControlInTitle = !readonly && !disabled;
 
   return (
     <div>
@@ -60,6 +65,7 @@ export default function ArrayFieldTemplate<
           showOptionalDataControlInTitle ? optionalDataControl : undefined
         }
       />
+
       {/* eslint-disable-next-line react-hooks/static-components */}
       <ArrayFieldDescriptionTemplate
         fieldPathId={fieldPathId}

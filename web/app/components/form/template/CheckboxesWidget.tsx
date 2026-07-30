@@ -12,10 +12,13 @@ export default function CheckboxesWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: Readonly<WidgetProps<T, S, F>>): JSX.Element {
-  const { options, readonly, disabled, onChange } = props;
-  const value = props.value as unknown;
-
+>({
+  options,
+  readonly,
+  disabled,
+  onChange,
+  value,
+}: Readonly<WidgetProps<T, S, F>>): JSX.Element {
   return (
     <CheckboxGroup
       options={

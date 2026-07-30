@@ -34,7 +34,7 @@ interface SectionSchema {
   sectionUiSchema: UiSchema;
 }
 
-const defaultUiSchema = {
+const defaultDisplayUiSchema = {
   json: {
     'ui:options': {
       title: false,
@@ -45,29 +45,31 @@ const defaultUiSchema = {
       title: false,
     },
   },
-} as const;
+} as const satisfies UiSchema;
+
+const defaultDisplaySchema = {
+  type: 'object',
+  properties: {
+    json: {
+      type: 'object',
+      required: ['title'],
+
+      properties: {
+        title: {
+          type: 'string',
+          title: 'Name of this section',
+        },
+      },
+    },
+  },
+} as const satisfies RJSFSchema;
 
 const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
   {
     id: 'normal-string',
-    displaySchema: {
-      type: 'object',
-      properties: {
-        json: {
-          type: 'object',
-          required: ['title'],
-
-          properties: {
-            title: {
-              type: 'string',
-              title: 'Name of this section',
-            },
-          },
-        },
-      },
-    },
+    displaySchema: defaultDisplaySchema,
     displayUiSchema: {
-      ...defaultUiSchema,
+      ...defaultDisplayUiSchema,
     },
 
     sectionSchema: {
@@ -78,21 +80,8 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
 
   {
     id: 'textarea-string',
-    displaySchema: {
-      type: 'object',
+    displaySchema: mergeSchemas(defaultDisplaySchema, {
       properties: {
-        json: {
-          type: 'object',
-          required: ['title'],
-
-          properties: {
-            title: {
-              type: 'string',
-              title: 'Name of this section',
-            },
-          },
-        },
-
         ui: {
           type: 'object',
           required: ['rows'],
@@ -106,9 +95,9 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
           },
         },
       },
-    },
+    }),
     displayUiSchema: {
-      ...defaultUiSchema,
+      ...defaultDisplayUiSchema,
     },
 
     sectionSchema: {
@@ -121,19 +110,11 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
 
   {
     id: 'radio',
-    displaySchema: {
-      type: 'object',
+    displaySchema: mergeSchemas(defaultDisplaySchema, {
       properties: {
         json: {
-          type: 'object',
-          required: ['title', 'enum'],
-
+          required: ['enum'],
           properties: {
-            title: {
-              type: 'string',
-              title: 'Name of this section',
-            },
-
             enum: {
               type: 'array',
               items: {
@@ -155,9 +136,9 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
           },
         },
       },
-    },
+    }),
     displayUiSchema: {
-      ...defaultUiSchema,
+      ...defaultDisplayUiSchema,
     },
 
     sectionSchema: {
@@ -170,19 +151,11 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
 
   {
     id: 'checkboxes',
-    displaySchema: {
-      type: 'object',
+    displaySchema: mergeSchemas(defaultDisplaySchema, {
       properties: {
         json: {
-          type: 'object',
-          required: ['title', 'items'],
-
+          required: ['items'],
           properties: {
-            title: {
-              type: 'string',
-              title: 'Name of this section',
-            },
-
             items: {
               type: 'object',
               required: ['enum'],
@@ -211,8 +184,8 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
           },
         },
       },
-    },
-    displayUiSchema: mergeObjects(defaultUiSchema, {
+    }),
+    displayUiSchema: mergeObjects(defaultDisplayUiSchema, {
       json: {
         items: {
           'ui:options': {
@@ -236,24 +209,19 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = [
 
   {
     id: 'description-text',
-    displaySchema: {
-      type: 'object',
+    displaySchema: mergeSchemas(defaultDisplaySchema, {
       properties: {
         json: {
-          type: 'object',
-          required: ['title'],
-
           properties: {
             title: {
-              type: 'string',
               title: 'Content of this section',
             },
           },
         },
       },
-    },
+    }),
     displayUiSchema: {
-      ...defaultUiSchema,
+      ...defaultDisplayUiSchema,
     },
 
     sectionSchema: {

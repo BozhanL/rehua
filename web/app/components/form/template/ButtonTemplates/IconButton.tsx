@@ -7,7 +7,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import type { JSX } from 'react/jsx-runtime';
+import type { JSX } from 'react';
 
 type MoveButtonProps<
   T = unknown,

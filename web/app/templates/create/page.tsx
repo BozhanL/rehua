@@ -1,10 +1,8 @@
-'use client';
-
 import ContentButton from '@/app/components/ContentButton';
-import FormTemplate from '@/app/components/form';
-import ObjectFieldTemplate, {
+import FormTemplate, {
+  ObjectFieldTemplate,
   type ObjectFieldTemplateContext,
-} from '@/app/components/form/ObjectFieldTemplate';
+} from '@/app/components/form';
 import { APIUrlContext } from '@/app/providers';
 import { isTesting } from '@/app/utils/env';
 import { create as createTemplateSDK } from '@rehua/sdk/functional/templates';
@@ -55,6 +53,7 @@ export default function Home(): JSX.Element {
     mutationFn: createTemplate,
   });
 
+  // TODO: Remove this console log when the form is working correctly. It is here to help debug the formData state.
   useEffect(() => {
     console.log(formData);
   }, [formData]);

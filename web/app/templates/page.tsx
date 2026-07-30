@@ -1,7 +1,7 @@
 'use client';
 
 import FormTemplate from '@/app/components/form';
-import { APIUrlContext } from '@/app/providers';
+import useApiUrl from '@/app/hooks/useApiUrl';
 import { isTesting } from '@/app/utils/env';
 import { findOne as findOneTemplate } from '@rehua/sdk/functional/templates';
 import {
@@ -10,12 +10,12 @@ import {
   type QueryFunctionContext,
 } from '@tanstack/react-query';
 import { notFound, useSearchParams } from 'next/navigation';
-import { useContext, useEffect, useState, type JSX } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import typia from 'typia';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function useTemplateOptions(id: string) {
-  const host = useContext(APIUrlContext);
+  const host = useApiUrl();
 
   return queryOptions({
     queryKey: ['templates', host, id],

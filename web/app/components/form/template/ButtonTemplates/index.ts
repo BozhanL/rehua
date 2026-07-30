@@ -13,15 +13,13 @@ export function generateButtonTemplates<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(): Partial<TemplatesType<T, S, F>['ButtonTemplates']> {
-  const ButtonTemplates: Partial<TemplatesType<T, S, F>['ButtonTemplates']> = {
+  return {
     SubmitButton,
     AddButton,
     MoveDownButton,
     MoveUpButton,
     RemoveButton,
   };
-
-  return ButtonTemplates;
 }
 
 export default generateButtonTemplates();

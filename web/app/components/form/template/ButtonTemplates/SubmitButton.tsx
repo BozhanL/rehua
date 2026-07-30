@@ -6,7 +6,7 @@ import {
   type StrictRJSFSchema,
   type SubmitButtonProps,
 } from '@rjsf/utils';
-import type { JSX } from 'react/jsx-runtime';
+import type { JSX } from 'react';
 
 export default function SubmitButton<
   T = unknown,
