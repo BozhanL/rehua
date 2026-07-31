@@ -17,6 +17,7 @@ export class EmergencyContactController {
     private readonly emergencyContactService: EmergencyContactService,
   ) {}
 
+  //Add emergency contact, returns the created object in json
   @TypedRoute.Post()
   async create(
     @TypedBody() createEmergencyContactDto: CreateEmergencyContactDto,
@@ -35,6 +36,7 @@ export class EmergencyContactController {
   @SwaggerExample.Response('Found', {
     value: new EmergencyContact(
       'ACB123',
+      1,
       'John',
       'Doe',
       'Father',
@@ -44,6 +46,8 @@ export class EmergencyContactController {
       'Can be unsupportive',
     ),
   })
+
+  //Get all emergency contacts for a patient
   @TypedRoute.Get()
   async findPatientEmergncyContacts(
     @TypedParam('id') id: string,
@@ -51,6 +55,7 @@ export class EmergencyContactController {
     return this.emergencyContactService.getPatientEmergencyContacts(id);
   }
 
+  //update an emergency contact by their id
   @TypedRoute.Patch('id')
   async update(
     @Param('id') id: string,
@@ -58,4 +63,6 @@ export class EmergencyContactController {
   ): Promise<UpdateWriteOpResult> {
     return this.emergencyContactService.update(id, updateEmergencyContactDto);
   }
+
+  //to-do: API for editing prirority of emergency contacts and check priorities have no duplicates
 }

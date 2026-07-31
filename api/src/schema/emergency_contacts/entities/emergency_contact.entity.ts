@@ -15,6 +15,9 @@ export class EmergencyContact {
   patientId: string;
 
   @Prop({ required: true, type: String })
+  priority: number;
+
+  @Prop({ required: true, type: String })
   firstName: string;
 
   @Prop({ required: true, type: String })
@@ -37,6 +40,7 @@ export class EmergencyContact {
 
   constructor(
     patientId: string,
+    priority: number,
     firstName: string,
     lastName: string,
     relationship: string,
@@ -46,6 +50,7 @@ export class EmergencyContact {
     notes?: string,
   ) {
     this.patientId = patientId;
+    this.priority = priority;
     this.firstName = firstName;
     this.lastName = lastName;
     this.relationship = relationship;
