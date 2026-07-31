@@ -60,6 +60,14 @@ export class PatientController {
     return this.patientService.findOne(id);
   }
 
+  //returns patients like in a the list view (number of results shown, page number)
+  async findPage(
+    @TypedParam('pageNumber') pageNumber: number,
+    @TypedParam('pageSize') pageSize: number,
+  ): Promise<Patient[] | null> {
+    return this.patientService.findPage(pageSize, pageNumber);
+  }
+
   @TypedRoute.Patch(':id')
   async update(
     @Param('id') id: string,

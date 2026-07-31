@@ -24,6 +24,17 @@ export class PatientService {
     return this.patientModel.findOne({ id }).exec();
   }
 
+  async findPage(
+    pageSize: number,
+    pageNumber: number,
+  ): Promise<Patient[] | null> {
+    return this.patientModel
+      .find()
+      .skip(pageNumber * pageSize)
+      .limit(pageSize)
+      .exec();
+  }
+
   async update(
     id: string,
     updatePatientDto: UpdatePatientDto,
