@@ -43,6 +43,7 @@ export class ObservationsController {
     return this.observationService.getAllObservations(id);
   }
 
+  @TypedRoute.Get(':id/:type')
   async findByType(
     @TypedParam('id') id: string,
     @Query('type') type: ObservationType,
@@ -50,11 +51,12 @@ export class ObservationsController {
     return this.observationService.getAllSpecificObservationType(id, type);
   }
 
+  @TypedRoute.Get(':id/:type/:startDate/:endDate')
   async findObservationByDate(
     @TypedParam('id') id: string,
     @Query('type') type: ObservationType,
     @Query('startDate') startDate: string,
-    @Query('enddate') endDate: string,
+    @Query('endDate') endDate: string,
   ): Promise<Observation | null> {
     return this.findObservationByDate(id, type, startDate, endDate);
   }

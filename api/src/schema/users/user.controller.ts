@@ -51,6 +51,14 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  @TypedRoute.Get('page/:pageNumber/:pageSize')
+  async findPage(
+    @TypedParam('pageSize') pageSize: number,
+    @TypedParam('pageNumber') pageNumber: number,
+  ): Promise<User[] | null> {
+    return this.userService.findPage(pageSize, pageNumber);
+  }
+
   @TypedRoute.Patch('id')
   async update(
     @Param('id') id: string,

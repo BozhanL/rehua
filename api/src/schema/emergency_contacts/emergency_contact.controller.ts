@@ -48,7 +48,7 @@ export class EmergencyContactController {
   })
 
   //Get all emergency contacts for a patient
-  @TypedRoute.Get()
+  @TypedRoute.Get(':id')
   async findPatientEmergncyContacts(
     @TypedParam('id') id: string,
   ): Promise<EmergencyContact[]> {
@@ -56,7 +56,7 @@ export class EmergencyContactController {
   }
 
   //update an emergency contact by their id
-  @TypedRoute.Patch('id')
+  @TypedRoute.Patch(':id')
   async update(
     @Param('id') id: string,
     @TypedBody() updateEmergencyContactDto: UpdateEmergencyContactDto,

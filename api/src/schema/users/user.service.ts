@@ -24,6 +24,14 @@ export class UserService {
     return this.userModel.findOne({ id }).exec();
   }
 
+  async findPage(pageSize: number, pageNumber: number): Promise<User[] | null> {
+    return this.userModel
+      .find()
+      .skip(pageNumber * pageSize)
+      .limit(pageSize)
+      .exec();
+  }
+
   async update(
     id: string,
     updateUserDto: UpdateUserDto,

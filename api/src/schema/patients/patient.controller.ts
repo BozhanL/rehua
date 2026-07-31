@@ -56,14 +56,16 @@ export class PatientController {
     ),
   })
   @SwaggerExample.Response('Not found', { value: null })
+  @TypedRoute.Get(':id')
   async findOne(@TypedParam('id') id: string): Promise<Patient | null> {
     return this.patientService.findOne(id);
   }
 
   //returns patients like in a the list view (number of results shown, page number)
+  @TypedRoute.Get('page/:pageNumber/:pageSize')
   async findPage(
-    @TypedParam('pageNumber') pageNumber: number,
     @TypedParam('pageSize') pageSize: number,
+    @TypedParam('pageNumber') pageNumber: number,
   ): Promise<Patient[] | null> {
     return this.patientService.findPage(pageSize, pageNumber);
   }
