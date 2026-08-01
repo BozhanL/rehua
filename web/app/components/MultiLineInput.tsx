@@ -11,7 +11,7 @@ function MultiLineInput({
       className="bg-rehua-white"
       style={{
         width: '100%',
-        fontSize: 24, // by default, height is determined based on font size
+        fontSize: 20, // by default, height is determined based on font size
         padding: '0 10px', // spacing of the first letter of row and the front of the input box
         border: '1px solid',
         borderRadius: 6,
