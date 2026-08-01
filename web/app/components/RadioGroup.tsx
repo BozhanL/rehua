@@ -1,3 +1,5 @@
+'use client';
+
 import type { CSSProperties, JSX } from 'react';
 
 // interface for individual radio button
@@ -22,6 +24,7 @@ interface RadioGroupProps<T extends string = string> {
   gap?: number; // gap between radio buttons in pixels, fallback to 10px
   radioGroupStyle?: CSSProperties; // additional styles for the radio group container
   className?: string; // optional class name for the radio group container
+  disabled?: boolean | undefined; // optional prop to disable all radio buttons in the group, fallback to false
 }
 
 // React component for rendering a styled group of radio buttons
@@ -40,14 +43,17 @@ function RadioGroup<T extends string = string>({
   gap = 10,
   radioGroupStyle,
   className,
+  disabled = false,
 }: Readonly<RadioGroupProps<T>>): JSX.Element {
   // converts buttonLabelPosition prop to corresponding CSS flexDirection value for layout
-  const flexDirection = {
-    top: 'column-reverse',
-    bottom: 'column',
-    left: 'row-reverse',
-    right: 'row',
-  }[buttonLabelPosition] as CSSProperties['flexDirection'];
+  const flexDirection: CSSProperties['flexDirection'] = (
+    {
+      top: 'column-reverse',
+      bottom: 'column',
+      left: 'row-reverse',
+      right: 'row',
+    } as const
+  )[buttonLabelPosition];
 
   return (
     // outer div serves as radio button group container, applying flex layout and gap between buttons
@@ -71,7 +77,7 @@ function RadioGroup<T extends string = string>({
               flexDirection,
               alignItems: 'center',
               gap: 6,
-              cursor: 'pointer',
+              cursor: disabled ? 'not-allowed' : 'pointer',
             }}
           >
             {/* radio input element */}
@@ -81,6 +87,9 @@ function RadioGroup<T extends string = string>({
               value={option.buttonOption}
               checked={selectedButton === option.buttonOption}
               onChange={() => {
+                if (disabled) {
+                  return;
+                } // read-only mode
                 onChange(option.buttonOption);
               }}
               style={{
@@ -89,6 +98,7 @@ function RadioGroup<T extends string = string>({
                 margin: 0,
               }}
               className={buttonColor}
+              disabled={disabled}
             />
             {/* label for the radio button */}
             <span
