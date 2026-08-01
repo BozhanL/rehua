@@ -5,75 +5,63 @@ import type { ReactNode, JSX, CSSProperties } from 'react';
 export interface ListRow {
   heading: string;
   content: ReactNode; // Row content - React Node (Element or primitive type)
-  emphasise?: boolean; // Emphasise the row with red and bold text
-  iconName?: IconProps['name']; // Type check to make sure input of iconName exists
+  internalRowSize?: number; // Size of the icon, content (if plain text) and heading
   contentStyle?: CSSProperties; // Lets parent set custom CSS of the content data
+  redRow?: boolean; // Apply rehua-ruby colour to row
+  iconProps?: Omit<IconProps, 'className'>; // Optional icon to display next to heading
   stacked?: boolean; // Render content below the heading instead of inline
-  fontSize?: number; // Set custom font size for heading
-  verticalAlign?: 'top'; // If content long, use this to change position of heading. Undefined fall back to center
 }
 
-//Parent component to build an array of Rows to pass as prop
-interface ListViewProps {
+export interface ListViewProps {
   rows: ListRow[];
-  maxWidth?: CSSProperties['maxWidth'];
 }
 
-// Render Rows
-function ListView({
-  rows,
-  maxWidth = '100%',
-}: Readonly<ListViewProps>): JSX.Element {
+// React component that renders a list of rows with headings and content, optionally with icons and custom styles
+function ListView({ rows }: Readonly<ListViewProps>): JSX.Element {
   return (
-    //Render List of Rows
-    <ul className="overflow-hidden" style={{ maxWidth }}>
+    <ul className="overflow-hidden" style={{ maxWidth: '100%' }}>
       {rows.map((row, index) => {
-        //If style variant specified for this row
-        const headingStyle = row.emphasise
-          ? 'font-bold text-rehua-ruby'
-          : 'font-bold text-rehua-black';
-        const contentStyle = row.emphasise ? 'font-bold text-rehua-ruby' : '';
-        const iconStyle =
-          row.iconName === 'asterisk' ? 'size-2 text-rehua-ruby' : ''; // Override default style for icon to make asterisk smaller
-
+        const redRowStyle = row.redRow ? 'text-rehua-ruby' : ''; // Apply rehua-ruby colour to row if redRow is true
+        const internalRowSize = row.internalRowSize ?? 20; // Font size applied to headers and text-based content (fallback to 20 if not specified)
         return (
-          //Render individual row - option to stack heading and content, alternating between white and gray
           <li
             key={row.heading}
+            // Render content below heading if stacked is true, otherwise render inline
+            // Alternate bg colour between white and light gray for each row
             className={`
-              flex gap-x-2
+              flex gap-x-2 px-4 py-2
               ${row.stacked ? 'flex-col items-start gap-y-1' : 'items-center'}
               ${index % 2 === 0 ? 'bg-rehua-white' : 'bg-rehua-light-gray'}
             `}
-            style={{
-              padding: '0.5em 1em',
-              gap: '0.5em',
-              fontSize: row.fontSize, // undefined falls back to inherited/default size
-            }}
           >
-            {/* Render the Icon (optional) and Heading */}
+            {/* Render the icon and heading */}
             <span
               className={`
-                flex items-center gap-x-1
-                ${headingStyle}
-                ${row.verticalAlign === 'top' ? 'self-start' : ''}
+                flex items-center gap-x-2 font-bold
+                ${redRowStyle}
               `}
+              style={{ fontSize: internalRowSize }}
             >
-              {row.iconName && (
-                <Icon name={row.iconName} className={iconStyle} />
+              {row.iconProps && (
+                <Icon
+                  {...row.iconProps}
+                  width={internalRowSize}
+                  className={redRowStyle}
+                />
               )}
               {row.heading}:
             </span>
-            {/*   Render the row content */}
-            <span
+            {/* Render the row content */}
+            <div
               className={`
-                inline-flex items-center
-                ${contentStyle}
+                min-w-0 flex-1
+                ${row.stacked ? 'w-full' : ''}
+                ${redRowStyle}
               `}
-              style={row.contentStyle}
+              style={{ fontSize: internalRowSize, ...row.contentStyle }}
             >
               {row.content}
-            </span>
+            </div>
           </li>
         );
       })}
