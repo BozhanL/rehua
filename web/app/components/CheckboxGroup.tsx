@@ -1,3 +1,5 @@
+'use client';
+
 import type { CSSProperties, JSX } from 'react';
 
 // interface for a group of checkboxes

@@ -1,4 +1,3 @@
-'use client';
 import Icon, { type IconProps } from './Icon';
 import type { ReactNode, JSX, CSSProperties } from 'react';
 
