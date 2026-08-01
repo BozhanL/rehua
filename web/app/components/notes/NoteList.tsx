@@ -8,8 +8,8 @@ interface Note {
   id: string;
   authorName: string;
   createdAt: string;
-  plainText: string;
-  html: string;
+  plainText: string; // immutable, once note is created, the plain text cannot be changed
+  html: string; // mutable, can be changed when formatting is edited
   lastFormattedBy?: string;
   lastFormattedAt?: string;
 }
@@ -44,7 +44,7 @@ function NotesList({
             </div>
           </div>
 
-          {/* note content, in formatted HTML */}
+          {/* note content, in formatted HTML, height depends on number of lines */}
           <div
             className="rounded-md border p-3 text-xl"
             style={{
