@@ -5,7 +5,7 @@ import type { JSX } from 'react';
 
 // interface representing data for audit of a note (version history)
 interface NoteAuditEntry {
-  id: string;
+  auditId: string;
   formattedBy: string;
   formattedAt: string; // ISO date string representing when formatting changes were made
   beforeHtml: string; // html content of note before formatting changes were made
@@ -14,7 +14,7 @@ interface NoteAuditEntry {
 
 // interface representing a single note, including its metadata and content
 interface Note {
-  id: string;
+  noteId: string;
   authorName: string;
   createdAt: string; // ISO date string representing when note was created
   plainText: string; // immutable, once note is created, the plain text cannot be changed
@@ -46,7 +46,7 @@ function NotesList({
     <div className="flex flex-col gap-4">
       {/* iterate through sorted notes */}
       {sortedNotes.map((note) => (
-        <div key={note.id} className="flex flex-col gap-3 p-4">
+        <div key={note.noteId} className="flex flex-col gap-3 p-4">
           {/* display note author and creation date */}
           <div className="flex items-start justify-between">
             <div className="text-xl font-bold">

@@ -16,7 +16,7 @@ interface AddNoteModalProps {
    * backend:
    * - create note object
    * - set the id, authorName, createdAt
-   * - plaintext is given by frontend, intialise html from that plaintext
+   * - plaintext is given by frontend, intialise html from that plaintext (TODO: come back to this)
    * - lastFormattedBy, lastFormattedAt and auditHistory = empty at first
    */
   onAdd: (text: string) => void; // callback function to add a new note
