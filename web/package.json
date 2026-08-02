@@ -35,10 +35,8 @@
     "normalise-icons": "ts-node app/assets/scripts/normalise-icons.ts"
   },
   "dependencies": {
-    "@lexical/history": "0.48.0",
     "@lexical/html": "0.48.0",
     "@lexical/react": "0.48.0",
-    "@lexical/rich-text": "0.48.0",
     "@rehua/sdk": "*",
     "@tanstack/react-query": "5.101.4",
     "@tanstack/react-query-devtools": "5.101.4",
