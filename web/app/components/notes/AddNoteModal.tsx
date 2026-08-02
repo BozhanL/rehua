@@ -42,7 +42,7 @@ function AddNoteModal({
       <div className="flex h-full flex-col gap-7 p-8">
         {/* modal top row content */}
         <div className="flex items-center gap-6">
-          <button onClick={onClose}>
+          <button onClick={onClose} style={{ cursor: 'pointer' }}>
             <Icon name="circle-arrow" width={65} className="text-rehua-navy" />
           </button>
           <Icon name="clipboard" width={45} className="text-rehua-maroon" />
@@ -56,7 +56,7 @@ function AddNoteModal({
           <MultiLineInput
             value={text}
             placeholder="Enter new note here . . ."
-            style={{ height: '100%', fontSize: 35 }}
+            style={{ height: '100%', fontSize: 25 }}
             // update text state on input change
             onChange={(e) => {
               setText(e.target.value);
@@ -68,7 +68,7 @@ function AddNoteModal({
         <div className="flex justify-end gap-3">
           <ContentButton
             text1="Add New Note"
-            height={55}
+            height={50}
             iconProps={{ name: 'plus' }}
             backgroundColor="bg-rehua-green"
             verticalPadding={0.2}
