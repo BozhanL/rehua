@@ -40,6 +40,7 @@ function ContentButton({
   verticalPadding,
   lineHeight = 1,
   style,
+  className,
   onClick,
   ...props
 }: ContentButtonProps): JSX.Element {
@@ -77,7 +78,6 @@ function ContentButton({
     <button
       {...props}
       style={{
-        ...style,
         minHeight: height,
         borderRadius: borderRadius,
         fontSize: fontSize,
@@ -85,6 +85,7 @@ function ContentButton({
         paddingBlock: paddingY ?? undefined,
         gap,
         boxShadow: 'inset 0 4px 10px rgb(0 0 0 / 0.3)', // subtle inner shadow
+        ...style,
       }}
       className={`
         inline-flex w-fit cursor-pointer items-center justify-center
@@ -105,6 +106,7 @@ function ContentButton({
             ${textAlignment}
             ${foregroundColor}
             font-semibold
+            ${String(className) || ''}
           `}
           style={{ lineHeight: lineHeight }}
         >
