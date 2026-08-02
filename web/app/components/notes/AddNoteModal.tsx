@@ -11,6 +11,14 @@ import { useState, type JSX } from 'react';
 interface AddNoteModalProps {
   open: boolean; // whether modal is open or closed
   onClose: () => void; // callback function to close modal
+
+  /**
+   * backend:
+   * - create note object
+   * - set the id, authorName, createdAt
+   * - plaintext is given by frontend, intialise html from that plaintext
+   * - lastFormattedBy, lastFormattedAt and auditHistory = empty at first
+   */
   onAdd: (text: string) => void; // callback function to add a new note
 }
 
@@ -25,14 +33,14 @@ function AddNoteModal({
 
   // function to handle adding a new note; trims whitespace and checks for empty input before calling onAdd callback
   function handleAdd(): void {
-    const trimmed = text.trim();
+    const plainText = text.trim();
 
-    if (!trimmed) {
+    if (!plainText) {
       return;
     }
 
-    // call onAdd callback with trimmed text, reset input field, and close modal
-    onAdd(trimmed);
+    // call onAdd callback with trimmed text (plainText), reset input field, and close modal
+    onAdd(plainText);
     setText('');
     onClose();
   }

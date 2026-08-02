@@ -6,8 +6,8 @@ import type { JSX } from 'react';
 // interface representing data for audit of a note (version history)
 interface NoteAuditEntry {
   id: string;
-  auditorName: string;
-  formattedAt: string;
+  formattedBy: string;
+  formattedAt: string; // ISO date string representing when formatting changes were made
   beforeHtml: string; // html content of note before formatting changes were made
   afterHtml: string; // html content of note after formatting changes were made
 }
@@ -16,11 +16,11 @@ interface NoteAuditEntry {
 interface Note {
   id: string;
   authorName: string;
-  createdAt: string;
+  createdAt: string; // ISO date string representing when note was created
   plainText: string; // immutable, once note is created, the plain text cannot be changed
   html: string; // mutable, can be changed when formatting is edited
   lastFormattedBy?: string;
-  lastFormattedAt?: string;
+  lastFormattedAt?: string; // ISO date string representing when note was last formatted
   auditHistory?: NoteAuditEntry[]; // version history of note, may not be present if no formatting edits have been made
 }
 
@@ -49,7 +49,7 @@ function NotesList({
         <div key={note.id} className="flex flex-col gap-3 p-4">
           {/* display note author and creation date */}
           <div className="flex items-start justify-between">
-            <div className="text-xl font-semibold">
+            <div className="text-xl font-bold">
               {note.authorName}
               <br />
               {note.createdAt}
@@ -78,7 +78,7 @@ function NotesList({
                 onEditFormatting(note);
               }}
             />
-            {note.auditHistory && (
+            {Boolean(note.auditHistory?.length) && (
               <ContentButton
                 text1="Previous Audits"
                 iconProps={{ name: 'version-history' }}
