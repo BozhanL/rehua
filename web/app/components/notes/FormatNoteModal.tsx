@@ -166,7 +166,7 @@ export default function EditFormattingModal({
       {/* overall modal layout */}
       <div className="flex h-full flex-col gap-5 p-6">
         {/* top row with back button, icon, and title */}
-        <div className="flex items-center gap-5 p-2">
+        <div className="flex items-center gap-6">
           <button onClick={onClose} style={{ cursor: 'pointer' }}>
             <Icon name="circle-arrow" width={65} className="text-rehua-navy" />
           </button>
@@ -218,7 +218,7 @@ export default function EditFormattingModal({
         </LexicalComposer>
 
         {/* submit audit button */}
-        <div className="flex justify-end p-2">
+        <div className="flex justify-end">
           <ContentButton
             text1="Submit Audit"
             height={50}
