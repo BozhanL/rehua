@@ -8,6 +8,9 @@ export interface Config {
 
   MONGODB_URI_FILE?: string;
 
+  // The path to store user uploaded files. Including patient images, manual files, and other files.
+  DATA_PATH?: string;
+
   https: {
     cert?: string;
     key?: string;

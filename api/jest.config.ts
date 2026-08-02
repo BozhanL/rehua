@@ -7,6 +7,10 @@ import { createDefaultEsmPreset } from 'ts-jest';
 
 const presetConfig = createDefaultEsmPreset({
   tsconfig: 'tsconfig.test.json',
+
+  // jest does not work when isolatedModules is enabled
+  // isolatedModules is enabled in build environment
+  diagnostics: { ignoreCodes: [151002] },
 });
 
 const config: Config = {
@@ -164,7 +168,7 @@ const config: Config = {
   // ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
-  testRegex: '.*\\.spec\\.ts$',
+  testRegex: String.raw`.*\.spec\.ts$`,
 
   // This option allows the use of a custom results processor
   // testResultsProcessor: undefined,

@@ -2,6 +2,10 @@
 
 import Icon from './components/Icon';
 import { APIUrlContext } from './providers';
+import {
+  ShowManualButton,
+  UploadManualButton,
+} from '@/app/components/ManualButtons';
 import { isTesting } from '@/app/utils/env';
 import { getHello } from '@rehua/sdk/functional';
 import { queryOptions, useQuery } from '@tanstack/react-query';
@@ -33,6 +37,8 @@ function Home(): JSX.Element {
     <>
       <h1>Hello world -- {query.data}</h1>
       <Icon name={'eye'} />
+      <UploadManualButton />
+      <ShowManualButton />
     </>
   );
 }
