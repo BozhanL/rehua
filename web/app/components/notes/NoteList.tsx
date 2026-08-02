@@ -78,24 +78,26 @@ function NotesList({
                 onEditFormatting(note);
               }}
             />
-            <ContentButton
-              text1="Previous Audits"
-              iconProps={{ name: 'version-history' }}
-              backgroundColor="bg-rehua-red"
-              textIconGap={0.3}
-              verticalPadding={0.2}
-              onClick={() => {
-                onViewAuditHistory(note);
-              }}
-            />
+            {note.auditHistory && (
+              <ContentButton
+                text1="Previous Audits"
+                iconProps={{ name: 'version-history' }}
+                backgroundColor="bg-rehua-red"
+                textIconGap={0.3}
+                verticalPadding={0.2}
+                onClick={() => {
+                  onViewAuditHistory(note);
+                }}
+              />
+            )}
           </div>
 
           {/* footer of each note */}
-          {note.lastFormattedAt && (
-            <div className="border-b text-base font-semibold text-rehua-maroon">
-              Last updated by {note.lastFormattedBy} on {note.lastFormattedAt}
-            </div>
-          )}
+          <div className="border-b text-base font-semibold text-rehua-maroon">
+            {note.lastFormattedAt && note.lastFormattedBy
+              ? `Last updated by ${note.lastFormattedBy} on ${note.lastFormattedAt}`
+              : 'No audits have been made to this note yet.'}
+          </div>
         </div>
       ))}
     </div>
