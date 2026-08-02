@@ -13,9 +13,9 @@ interface AddNoteModalProps {
   onClose: () => void; // callback function to close modal
 
   /**
-   * backend:
+   * TODO backend (remove this comment when backend is implemented):
    * - create note object
-   * - set the id, authorName, createdAt
+   * - set the noteId, authorName, createdAt
    * - plaintext is given by frontend, intialise html from that plaintext (TODO: come back to this)
    * - lastFormattedBy, lastFormattedAt and auditHistory = empty at first
    */
