@@ -59,8 +59,7 @@ jobs:
           context: .
           file: ./${{ matrix.workspace }}/Dockerfile
           push: true
-          sbom: true
-          provenance: mode=max
+          provenance: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
