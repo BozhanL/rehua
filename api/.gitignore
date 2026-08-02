@@ -47,6 +47,9 @@ lerna-debug.log*
 # MongoDB connection string
 /mongodb_url.txt
 
+# Path to store user uploaded files. Including patient images, manual files, and other files.
+/data
+
 # temp directory
 .temp
 .tmp

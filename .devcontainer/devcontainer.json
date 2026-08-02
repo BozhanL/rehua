@@ -30,7 +30,8 @@
   },
   "postCreateCommand": {
     "mongodb_url": "echo 'mongodb://localhost:27017/' > ${containerWorkspaceFolder}/api/mongodb_url.txt",
-    "npm": ["npm", "install"]
+    "npm": ["npm", "install"],
+    "data folder": "mkdir -p \"${DATA_PATH}\""
   },
   "features": {
     "ghcr.io/devcontainers-extra/features/nestjs-cli:2": {},
@@ -50,7 +51,8 @@
     }
   ],
   "containerEnv": {
-    "MONGODB_URI_FILE": "${containerWorkspaceFolder}/api/mongodb_url.txt"
+    "MONGODB_URI_FILE": "${containerWorkspaceFolder}/api/mongodb_url.txt",
+    "DATA_PATH": "${containerWorkspaceFolder}/api/data"
   },
   "portsAttributes": {
     "3000": {

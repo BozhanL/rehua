@@ -2,6 +2,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { HelloModule } from './hello/hello.module';
+import { ManualModule } from './manual/manual.module';
 import { UsersModule } from './users/users.module';
 import { Config, https } from './utils/config';
 import { DynamicModule, Module } from '@nestjs/common';
@@ -18,8 +19,8 @@ export const mongoModule = MongooseModule.forRootAsync({
   useFactory: async (configService: ConfigService<Config, true>) => ({
     uri: (
       await readFile(
-        typia.assert<NonNullable<Config['MONGODB_URI_FILE']>>(
-          configService.get<Config['MONGODB_URI_FILE']>('MONGODB_URI_FILE'),
+        configService.getOrThrow<Config['MONGODB_URI_FILE']>(
+          'MONGODB_URI_FILE',
         ),
         'utf8',
       )
@@ -40,6 +41,10 @@ export const configModule = ConfigModule.forRoot({
     API_KEY: requiredReadableFilePath(['test', 'development', 'nestia']),
     API_CA: requiredReadableFilePath(['test', 'development', 'nestia']),
     MONGODB_URI_FILE: requiredReadableFilePath(['test', 'nestia']),
+    DATA_PATH: requiredReadableFilePath(
+      ['nestia'],
+      constants.W_OK | constants.R_OK,
+    ),
   }),
   load: [https],
 });
@@ -48,9 +53,10 @@ export const configModule = ConfigModule.forRoot({
 function fileExistsValidator(
   value: string,
   helpers: CustomHelpers,
+  accessMode: number,
 ): string | ErrorReport {
   try {
-    accessSync(value, constants.R_OK);
+    accessSync(value, accessMode);
     return value;
   } catch (e) {
     return typia.is<Error>(e)
@@ -63,6 +69,7 @@ function fileExistsValidator(
 
 function requiredReadableFilePath(
   skipEnvs: Config['NODE_ENV'][],
+  accessMode: number = constants.R_OK,
 ): Joi.StringSchema {
   return Joi.string()
     .when('NODE_ENV', {
@@ -70,11 +77,16 @@ function requiredReadableFilePath(
       then: Joi.optional(),
       otherwise: Joi.required(),
     })
-    .custom(fileExistsValidator, 'file permission validation');
+    .custom(
+      (value: string, helpers: CustomHelpers) =>
+        fileExistsValidator(value, helpers, accessMode),
+
+      'file permission validation',
+    );
 }
 
 @Module({
-  imports: [configModule, HelloModule, AuthModule, UsersModule],
+  imports: [configModule, HelloModule, AuthModule, UsersModule, ManualModule],
   controllers: [AppController],
   providers: [AppService],
 })
