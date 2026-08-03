@@ -27,7 +27,7 @@ interface EditFormattingModalProps {
    * - update note.html
    * - update lastFormattedBy and lastFormattedAt
    * - add an entry to auditHistory array (backend generate auditId)
-   * - check if plaintext and html are the same in backend for extra validation
+   * - validate if plaintext and html are the same in backend for extra validation
    *   -- note text should not be changed in formatting modal, only html formatting should be changed
    */
   onSave: (auditUpdate: {

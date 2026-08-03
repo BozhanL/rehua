@@ -16,10 +16,35 @@ interface AddNoteModalProps {
    * TODO backend (remove this comment when backend is implemented):
    * - create note object
    * - set the noteId, authorName, createdAt
-   * - plaintext is given by frontend, intialise html from that plaintext (TODO: come back to this)
+   * - plaintext is given by frontend, intialise html from that plaintext
    * - lastFormattedBy, lastFormattedAt and auditHistory = empty at first
    */
-  onAdd: (text: string) => void; // callback function to add a new note
+  onAdd: (noteInput: { plainText: string; html: string }) => void; // callback function to add a new note
+}
+
+// function to convert plain text to html by wrapping each line in <p> tags (inclusive of empty lines)
+export function plainTextToHtml(plainText: string): string {
+  return plainText
+    .split(/\r?\n/)
+    .map((text) => `<p>${escapeHtml(text)}</p>`)
+    .join('');
+}
+
+// record of characters to escape in html
+const HTML_ESCAPE_CHARS: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
+// function to escape html special characters in the plaintext, XSS attack prevention and proper rendering
+function escapeHtml(text: string): string {
+  return text.replace(/[&<>"']/g, (char) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return HTML_ESCAPE_CHARS[char]!;
+  });
 }
 
 // React component that renders a modal for adding a new note
@@ -39,8 +64,10 @@ function AddNoteModal({
       return;
     }
 
+    const html = plainTextToHtml(plainText);
+
     // call onAdd callback with trimmed text (plainText), reset input field, and close modal
-    onAdd(plainText);
+    onAdd({ plainText, html });
     setText('');
     onClose();
   }
