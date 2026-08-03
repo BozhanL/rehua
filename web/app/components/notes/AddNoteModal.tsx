@@ -26,7 +26,9 @@ interface AddNoteModalProps {
 export function plainTextToHtml(plainText: string): string {
   return plainText
     .split(/\r?\n/)
-    .map((text) => `<p>${escapeHtml(text)}</p>`)
+    .map((line) =>
+      line.trim().length === 0 ? '<p>&nbsp;</p>' : `<p>${escapeHtml(line)}</p>`,
+    )
     .join('');
 }
 
