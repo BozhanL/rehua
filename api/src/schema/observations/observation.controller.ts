@@ -57,7 +57,12 @@ export class ObservationsController {
     @Query('type') type: ObservationType,
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
-  ): Promise<Observation | null> {
-    return this.findObservationByDate(id, type, startDate, endDate);
+  ): Promise<Observation[] | null> {
+    return this.observationService.getObservationByDate(
+      id,
+      type,
+      startDate,
+      endDate,
+    );
   }
 }

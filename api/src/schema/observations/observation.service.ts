@@ -48,7 +48,7 @@ export class ObservationService {
     type: ObservationType,
     startDateStr: string,
     endDateStr: string,
-  ): Promise<Observation[]> {
+  ): Promise<Observation[] | null> {
     //convert provided date to Date object and set 24 hour period
     const start = new Date(startDateStr);
     const end = new Date(endDateStr);

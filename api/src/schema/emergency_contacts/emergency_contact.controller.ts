@@ -64,5 +64,5 @@ export class EmergencyContactController {
     return this.emergencyContactService.update(id, updateEmergencyContactDto);
   }
 
-  //to-do: API for editing prirority of emergency contacts and check priorities have no duplicates
+  //TODO: API for editing prirority of emergency contacts and check priorities have no duplicates
 }

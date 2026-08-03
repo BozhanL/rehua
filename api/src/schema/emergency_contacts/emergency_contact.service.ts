@@ -46,5 +46,5 @@ export class EmergencyContactService {
       .exec();
   }
 
-  //to-do: API for editing prirority of emergency contacts and check priorities have no duplicates
+  //TODO: API for editing prirority of emergency contacts and check priorities have no duplicates
 }
