@@ -16,7 +16,7 @@ interface AddNoteModalProps {
    * TODO backend (remove this comment when backend is implemented):
    * - create note object
    * - set the noteId, authorName, createdAt
-   * - plaintext is given by frontend, intialise html from that plaintext
+   * - plaintext and html are given by frontend
    * - lastFormattedBy, lastFormattedAt and auditHistory = empty at first
    */
   onAdd: (noteInput: { plainText: string; html: string }) => void; // callback function to add a new note
@@ -62,6 +62,7 @@ function AddNoteModal({
   function handleAdd(): void {
     const plainText = text.trim();
 
+    // if there are no changes, do not call onAdd (TODO: pop up should be displayed to inform user that note cannot be empty)
     if (!plainText) {
       return;
     }
