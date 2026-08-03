@@ -105,4 +105,4 @@ function NotesList({
 }
 
 export default NotesList;
-export type { Note };
+export type { Note, NoteAuditEntry, NoteListProps };

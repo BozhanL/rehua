@@ -118,6 +118,15 @@ function Toolbar(): JSX.Element {
   );
 }
 
+// normalise Lexical html for comparison with original note html
+function normaliseHtml(html: string): string {
+  return html
+    .replace(/<span[^>]*>/g, '')
+    .replaceAll('</span>', '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 // React component that renders a modal for editing the formatting of a note
 export default function EditFormattingModal({
   open,
@@ -128,6 +137,8 @@ export default function EditFormattingModal({
 }: Readonly<EditFormattingModalProps>): JSX.Element {
   // current formatted html that will be saved
   const [html, setHtml] = useState(note.html);
+  // check if there are any changes to the note's html formatting
+  const hasChanges = normaliseHtml(html) !== normaliseHtml(note.html);
 
   // Lexical editor configuration, setup runs only once on initial render
   const initialConfig = useMemo(
@@ -151,6 +162,11 @@ export default function EditFormattingModal({
 
   // saves formatted changes to note and closes modal
   function handleSave(): void {
+    // if there are no changes, do not call onSave (TODO: pop up should be displayed to inform user that there are no changes to save)
+    if (!hasChanges) {
+      return;
+    }
+
     onSave({
       noteId: note.noteId,
       formattedBy: currentUser,
