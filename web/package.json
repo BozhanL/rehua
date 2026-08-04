@@ -35,12 +35,15 @@
     "normalise-icons": "ts-node app/assets/scripts/normalise-icons.ts"
   },
   "dependencies": {
+    "@lexical/html": "0.48.0",
+    "@lexical/react": "0.48.0",
     "@rehua/sdk": "*",
     "@rjsf/core": "6.6.2",
     "@rjsf/utils": "6.6.2",
     "@rjsf/validator-ajv8": "6.6.2",
     "@tanstack/react-query": "5.101.4",
     "@tanstack/react-query-devtools": "5.101.4",
+    "lexical": "0.48.0",
     "next": "16.2.12",
     "qrcode.react": "4.2.0",
     "react": "19.2.8",

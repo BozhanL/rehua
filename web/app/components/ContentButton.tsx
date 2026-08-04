@@ -39,6 +39,7 @@ function ContentButton({
   verticalPadding,
   lineHeight = 1,
   style,
+  className,
   onClick,
   ...props
 }: ContentButtonProps): JSX.Element {
@@ -104,6 +105,7 @@ function ContentButton({
             ${textAlignment}
             ${foregroundColor}
             font-semibold
+            ${String(className) || ''}
           `}
           style={{ lineHeight: lineHeight }}
         >
