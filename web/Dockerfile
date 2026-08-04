@@ -1,4 +1,4 @@
-FROM node:24-trixie-slim@sha256:ac39e4b5fcb2b1b34b20364fd58b2e898f3bb80731ee6f62a7536f9df3d6aadc AS builder
+FROM node:24-trixie-slim@sha256:85498d7fd8e2bc0b02abb1792ef27341559836236dd0b1af160fa66bb85148df AS builder
 
 
 COPY --chown=node:node ./package-lock.json ./package.json ./.npmrc /app/
