@@ -1,4 +1,4 @@
-FROM node:24-trixie-slim@sha256:ac39e4b5fcb2b1b34b20364fd58b2e898f3bb80731ee6f62a7536f9df3d6aadc AS builder
+FROM node:24-trixie-slim@sha256:0711b541c1c33a8a530ac4f0d391baa9a15b3d804695b1b24a47daa5fb60e74d AS builder
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ RUN npm ci --no-audit && \
   npm run build -w api && \
   rm ./api/dist/tsconfig.build.tsbuildinfo
 
-FROM node:24-trixie-slim@sha256:ac39e4b5fcb2b1b34b20364fd58b2e898f3bb80731ee6f62a7536f9df3d6aadc AS dependencies
+FROM node:24-trixie-slim@sha256:0711b541c1c33a8a530ac4f0d391baa9a15b3d804695b1b24a47daa5fb60e74d AS dependencies
 
 WORKDIR /app
 
@@ -24,7 +24,7 @@ RUN mkdir -p ./node_modules ./api/node_modules && \
   -w api \
   --include-workspace-root
 
-FROM node:24-trixie-slim@sha256:ac39e4b5fcb2b1b34b20364fd58b2e898f3bb80731ee6f62a7536f9df3d6aadc AS app
+FROM node:24-trixie-slim@sha256:0711b541c1c33a8a530ac4f0d391baa9a15b3d804695b1b24a47daa5fb60e74d AS app
 
 WORKDIR /app
 
