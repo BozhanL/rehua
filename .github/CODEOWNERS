@@ -5,3 +5,6 @@
 # Code style configuration files
 eslint.config.* @BozhanL @waniven
 .prettierrc @BozhanL @waniven
+
+# Commitlint configuration files
+commitlint.config.* @BozhanL @waniven
