@@ -5,14 +5,17 @@ import React, { type JSX } from 'react';
 
 interface DropdownProps<T extends string = string> {
   options: T[]; // list of options to select
-  selectedValues: T[]; // Either one or multiple element array depending on multiple flag
-  onChange: (newValues: T[]) => void; // Callback function to handle new list of selected values
+  selectedValues: T[]; // either one or multiple element array depending on multiple flag
+  onChange: (newValues: T[]) => void; // callback function to handle new list of selected values
   multiple?: boolean;
-  search?: boolean; // Render a search bar
-  defaultText?: string; // Default text in the expand dropdown button
-  width?: number; // Width in pixels
+  search?: boolean; // render a search bar
+  defaultText?: string; // default text in the expand dropdown button
+  labelMode?: 'replace' | 'prefix'; // replace: selected values replace defaultText prefix: defaultText stays, selected values appended after it
+  width?: number; // width in pixels
+  size?: number; // controls overall scale (button height, font, icon), fallback 16
   lengthOfDropdown?: number; // argument for maxHeight style for dropdown
-  selectedColor?: string; // Tailwind CSS string for the colour of the selected option, applies to checkbox tick colour too
+  selectedColor?: string; // tailwind CSS string for the colour of the selected option, applies to checkbox tick colour too
+  checkboxColor?: string; // tailwind CSS accent class for the checkbox tick colour (multi-select), fallback 'accent-rehua-blue'
   textAlign?: 'left' | 'right' | 'center'; // fallback to 'left'
   style?: React.CSSProperties;
 }
@@ -21,12 +24,15 @@ function DropdownBar<T extends string = string>({
   selectedValues,
   multiple = false,
   defaultText = 'Select',
+  labelMode = 'replace',
   search = false,
   onChange,
-  width = 124,
+  width = 200,
   lengthOfDropdown,
   selectedColor = 'bg-rehua-blue',
+  checkboxColor = 'accent-rehua-blue',
   textAlign = 'left',
+  size = 16,
   style,
 }: Readonly<DropdownProps<T>>): JSX.Element {
   // Calls custom useDropdown hook to handle state and logic
@@ -50,26 +56,48 @@ function DropdownBar<T extends string = string>({
     search,
   });
 
+  const fontSize = size;
+  const iconSize = Math.round(size * 0.6);
+  const checkBoxSize = Math.round(size * 0.8);
+  const paddingY = Math.round(size * 0.25);
+
+  // Label shown on the dropdown bar button
+  let label = defaultText;
+  if (selectedValues.length) {
+    label =
+      labelMode === 'prefix' && defaultText
+        ? `${defaultText} ${selectedValues.join(', ')}`
+        : selectedValues.join(', ');
+  }
+
   // Render the dropdown
   return (
     <div className="relative inline-block" style={style} ref={wrapperRef}>
+      {/* Render the dropdown bar button */}
       <button
         className={`
           flex items-center justify-between gap-2 rounded-sm border
           border-rehua-gray p-1
         `}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
-        aria-controls="dropdown-listbox"
+        style={{
+          width,
+          paddingBlock: paddingY,
+          paddingInline: paddingY,
+        }}
         type="button"
-        style={{ width }}
         onClick={toggleOpen}
       >
-        {/* Display the selected values or default text on dropdown bar */}
-        <span className="block min-w-0 truncate">
-          {!selectedValues.length ? defaultText : selectedValues.join(', ')}
+        {/* Render the dropdown bar label */}
+        <span className="block min-w-0 truncate" style={{ fontSize: fontSize }}>
+          {label}
         </span>
-        <Icon name="simple-arrow" rotation={90} width={10} />
+        {/* Render the dropdown bar arrow */}
+        <Icon
+          name="simple-arrow"
+          rotation={90}
+          width={iconSize}
+          className="mr-1"
+        />
       </button>
 
       {/* Render options in dropdown bar  (list of buttons) */}
@@ -77,9 +105,6 @@ function DropdownBar<T extends string = string>({
         <div
           tabIndex={0}
           ref={listBoxRef}
-          id="dropdown-listbox"
-          role="listbox"
-          aria-multiselectable={multiple}
           onKeyDown={(e) => {
             handleKeyPress(e);
           }}
@@ -102,6 +127,7 @@ function DropdownBar<T extends string = string>({
               }}
               style={{
                 width: width,
+                fontSize: fontSize,
               }}
               placeholder="Search..."
               className="w-full p-2 outline-none"
@@ -109,7 +135,12 @@ function DropdownBar<T extends string = string>({
           )}
           {/* Render buttons (dropdown options) */}
           {filteredOptions.length === 0 ? (
-            <div className="px-2 py-1 text-gray-400">No results</div>
+            <div
+              className="px-2 text-gray-400"
+              style={{ paddingBlock: paddingY }}
+            >
+              No results
+            </div>
           ) : (
             // Render each option as a button
             filteredOptions.map((option, index) => {
@@ -117,8 +148,6 @@ function DropdownBar<T extends string = string>({
               return (
                 <button
                   key={option}
-                  role="option"
-                  aria-selected={isSelected}
                   type="button"
                   className={`
                     flex w-full items-center gap-2 outline-none
@@ -139,41 +168,28 @@ function DropdownBar<T extends string = string>({
                 >
                   {/* Render checkboxes to denote selection (only for multiple dropdowns) */}
                   {multiple && (
-                    <span
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      readOnly // selection is driven by the parent button's onClick, not this input directly
+                      tabIndex={-1} // keep it out of tab order; keyboard nav already handled by handleKeyPress
                       className={`
-                        flex size-4 shrink-0 items-center justify-center
-                        rounded-sm border border-rehua-gray
-                        ${
-                          isSelected
-                            ? `
-                              ${selectedColor}
-                              border-transparent
-                            `
-                            : 'bg-white'
-                        }
+                        shrink-0
+                        ${checkboxColor}
                       `}
-                    >
-                      {isSelected && (
-                        <svg
-                          viewBox="0 0 16 16"
-                          width="10"
-                          height="10"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M3 8l3.5 3.5L13 5" />
-                        </svg>
-                      )}
-                    </span>
+                      style={{
+                        width: checkBoxSize,
+                        height: checkBoxSize,
+                        margin: 0,
+                      }}
+                    />
                   )}
                   {/* Render option text inside button, with padding if single input*/}
                   <span
+                    style={{ fontSize: fontSize }}
                     className={`
                       truncate
-                      ${!multiple ? 'pl-1' : ''}
+                      ${!multiple ? 'pl-2' : ''}
                     `}
                   >
                     {option}
