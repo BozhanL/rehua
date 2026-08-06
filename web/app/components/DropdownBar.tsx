@@ -70,10 +70,9 @@ function DropdownBar<T extends string = string>({
         : selectedValues.join(', ');
   }
 
-  // Render the dropdown
   return (
     <div className="relative inline-block" style={style} ref={wrapperRef}>
-      {/* Render the dropdown bar button */}
+      {/* dropdown bar button */}
       <button
         className={`
           flex items-center justify-between gap-2 rounded-sm border
@@ -87,11 +86,11 @@ function DropdownBar<T extends string = string>({
         type="button"
         onClick={toggleOpen}
       >
-        {/* Render the dropdown bar label */}
+        {/* dropdown bar label */}
         <span className="block min-w-0 truncate" style={{ fontSize: fontSize }}>
           {label}
         </span>
-        {/* Render the dropdown bar arrow */}
+        {/* dropdown bar arrow */}
         <Icon
           name="simple-arrow"
           rotation={90}
@@ -100,7 +99,7 @@ function DropdownBar<T extends string = string>({
         />
       </button>
 
-      {/* Render options in dropdown bar  (list of buttons) */}
+      {/* options in dropdown bar  (list of buttons) */}
       {isOpen && (
         <div
           tabIndex={0}
@@ -133,7 +132,7 @@ function DropdownBar<T extends string = string>({
               className="w-full p-2 outline-none"
             />
           )}
-          {/* Render buttons (dropdown options) */}
+          {/* buttons (dropdown options) */}
           {filteredOptions.length === 0 ? (
             <div
               className="px-2 text-gray-400"
@@ -142,7 +141,7 @@ function DropdownBar<T extends string = string>({
               No results
             </div>
           ) : (
-            // Render each option as a button
+            // each option as a button
             filteredOptions.map((option, index) => {
               const isSelected = selectedValues.includes(option);
               return (
@@ -154,7 +153,7 @@ function DropdownBar<T extends string = string>({
                     ${isSelected && !multiple ? selectedColor : ''}
                     ${(multiple || !isSelected) && activeIndex === index ? 'bg-rehua-light-gray' : ''}
                   `}
-                  // Set logical reference to each new button for keyboard interaction
+                  // set logical reference to each new button for keyboard interaction
                   ref={(e) => {
                     buttonRefs.current[index] = e;
                   }}
@@ -166,7 +165,7 @@ function DropdownBar<T extends string = string>({
                     handleOptionClick(option);
                   }}
                 >
-                  {/* Render checkboxes to denote selection (only for multiple dropdowns) */}
+                  {/*  checkboxes to denote selection (only for multiple dropdowns) */}
                   {multiple && (
                     <input
                       type="checkbox"
@@ -184,7 +183,7 @@ function DropdownBar<T extends string = string>({
                       }}
                     />
                   )}
-                  {/* Render option text inside button, with padding if single input*/}
+                  {/* option text inside button, with padding if single input*/}
                   <span
                     style={{ fontSize: fontSize }}
                     className={`
