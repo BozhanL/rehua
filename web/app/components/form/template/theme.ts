@@ -1,8 +1,10 @@
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate';
+import BaseInputTemplate from './BaseInputTemplate';
 import { generateButtonTemplates } from './ButtonTemplates';
 import CheckboxesWidget from './CheckboxesWidget';
 import RadioWidget from './RadioWidget';
+import TextareaWidget from './TextareaWidget';
 import type { ThemeProps as DefaultThemeProps } from '@rjsf/core';
 import type {
   StrictRJSFSchema,
@@ -28,8 +30,10 @@ export function generateTheme<
     widgets: {
       RadioWidget,
       CheckboxesWidget,
+      TextareaWidget,
     },
     templates: {
+      BaseInputTemplate,
       ArrayFieldTemplate,
       ArrayFieldItemTemplate,
       ButtonTemplates,
