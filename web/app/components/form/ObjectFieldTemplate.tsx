@@ -181,12 +181,35 @@ export default function ObjectFieldTemplate(
           />
         </div>
       ))}
+
       {props.properties.length === 0 && (
-        <AddSectionButton
-          flip="vertical"
-          index={0}
-          setAddPosition={setAddPosition}
-        />
+        <div
+          className={`
+            mx-auto flex min-h-full max-w-3xl flex-1 flex-col items-center
+            justify-center gap-8 px-6 py-24 text-center
+          `}
+        >
+          <span
+            className={`text-[50px] leading-tight font-bold text-rehua-navy`}
+          >
+            Click the button below to get started on your new template:
+          </span>
+
+          <ContentButton
+            type="button"
+            text1="Add"
+            text2="Section"
+            iconProps={{ name: 'section-plus' }}
+            iconPosition="left"
+            textAlign="right"
+            height={56}
+            foregroundColor="text-rehua-white"
+            backgroundColor="bg-rehua-blue"
+            onClick={() => {
+              setAddPosition(0);
+            }}
+          />
+        </div>
       )}
     </>
   );
