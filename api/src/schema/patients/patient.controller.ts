@@ -29,8 +29,14 @@ export class PatientController {
   }
 
   @TypedRoute.Get()
-  async findAll(): Promise<Patient[]> {
-    return this.patientService.findAll();
+  async findAll(): Promise<(Patient & { _id: string })[]> {
+    const docs = await this.patientService.findAll();
+
+    return docs.map((doc) => ({
+       
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
   }
 
   @TypedRoute.Get(':id')
@@ -38,10 +44,10 @@ export class PatientController {
     value: new Patient(
       'John',
       'Doe',
-      new Date('1990-07-21'),
+      '1990-07-21',
       '123 street, city, suburb',
       1234567,
-      new Date('2026-06-20'),
+      '2026-06-20',
       'David at Main Hospital',
       'Sarah Smith',
       123,

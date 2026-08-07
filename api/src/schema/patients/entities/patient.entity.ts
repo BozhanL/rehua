@@ -5,73 +5,73 @@ export type PatientDocument = HydratedDocument<Patient>;
 
 @Schema()
 export class Patient {
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   firstName: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   lastName: string;
 
-  @Prop({ required: true })
-  dob: Date;
+  @Prop({ type: String, required: true })
+  dob: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   address: string;
 
-  @Prop({ required: true })
+  @Prop({ type: Number, required: true })
   nhi: number;
 
-  @Prop({ required: true })
-  dateAdmitted: Date;
+  @Prop({ type: String, required: true })
+  dateAdmitted: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   gpNameAndMedicalCenter: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   nurse: string;
 
-  @Prop({ required: true })
+  @Prop({ type: Number, required: true })
   roomNumber: number;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   status: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   homePhoneNumber: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   gender: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   primaryLanguage: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   maritalStatus: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   ethnicity: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   allergies: string;
 
-  @Prop()
+  @Prop({ type: String, required: false })
   pfp?: string | undefined; //not required
 
-  @Prop()
+  @Prop({ type: String, required: false })
   funding: string | undefined; //not required, admin only
 
-  @Prop()
+  @Prop({ type: String, required: false })
   tod: string | undefined; //not required, admin only
 
   constructor(
     firstName: string,
     lastName: string,
-    dob: Date,
+    dob: string,
     address: string,
     nhi: number,
-    dateAdmitted: Date,
+    dateAdmitted: string,
     gpNameAndMedicalCenter: string,
     nurse: string,
     roomNumber: number,

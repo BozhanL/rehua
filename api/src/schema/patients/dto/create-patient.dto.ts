@@ -2,10 +2,10 @@ export class CreatePatientDto {
   constructor(
     public firstName: string,
     public lastName: string,
-    public dob: Date,
+    public dob: string,
     public address: string,
     public nhi: number,
-    public dateAdmitted: Date,
+    public dateAdmitted: string,
     public gpNameAndMedicalCenter: string,
     public nurse: string,
     public roomNumber: number,
@@ -22,5 +22,6 @@ export class CreatePatientDto {
     public pfp?: string,
     public funding?: string, //Admin only
     public tod?: string, //Admin only
+    public id?: string, //for returns
   ) {}
 }
