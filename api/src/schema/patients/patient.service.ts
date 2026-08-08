@@ -30,7 +30,7 @@ export class PatientService {
   ): Promise<Patient[] | null> {
     return this.patientModel
       .find()
-      .skip(pageNumber * pageSize)
+      .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .exec();
   }
@@ -41,7 +41,7 @@ export class PatientService {
   ): Promise<UpdateWriteOpResult> {
     return this.patientModel
       .updateOne(
-        { id },
+        { _id: id },
         {
           $set: updatePatientDto,
         },
