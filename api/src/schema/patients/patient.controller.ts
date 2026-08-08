@@ -33,7 +33,7 @@ export class PatientController {
     const docs = await this.patientService.findAll();
 
     return docs.map((doc) => ({
-       
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...doc.toJSON(),
       _id: doc._id.toString(),
     }));
