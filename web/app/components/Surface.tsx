@@ -34,6 +34,8 @@ function Surface({
         opacity: opacity,
         boxShadow: boxShadow,
         borderRadius: borderRadius,
+        display: 'flex',
+        flexDirection: 'column',
       }}
       className={`bg-rehua-white`}
     >

@@ -11,6 +11,7 @@ import typia from 'typia';
 
 export * as hello from './hello/index';
 export * as auth from './auth/index';
+export * as templates from './templates/index';
 
 /**
  * @controller AppController.getHello

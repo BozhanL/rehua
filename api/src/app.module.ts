@@ -2,6 +2,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { HelloModule } from './hello/hello.module';
+import { TemplatesModule } from './templates/templates.module';
 import { UsersModule } from './users/users.module';
 import { Config, https } from './utils/config';
 import { DynamicModule, Module } from '@nestjs/common';
@@ -74,7 +75,13 @@ function requiredReadableFilePath(
 }
 
 @Module({
-  imports: [configModule, HelloModule, AuthModule, UsersModule],
+  imports: [
+    configModule,
+    HelloModule,
+    AuthModule,
+    UsersModule,
+    TemplatesModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
