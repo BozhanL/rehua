@@ -5,16 +5,41 @@ import Icon from '../Icon';
 import Modal from '../Modal';
 import type { Note } from './NoteList';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
-import {
-  LexicalComposer,
-  type InitialConfigType,
-} from '@lexical/react/LexicalComposer';
+import { LexicalComposer, type InitialConfigType } from '@lexical/react/LexicalComposer';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, FORMAT_TEXT_COMMAND } from 'lexical';
 import { type JSX, type ReactNode, useMemo, useState } from 'react';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // interface for EditFormattingModal
 interface EditFormattingModalProps {
@@ -140,7 +165,7 @@ export default function EditFormattingModal({
       editorState: (editor): void => {
         editor.update(() => {
           const parser = new DOMParser();
-          const dom = parser.parseFromString(html, 'text/html');
+          const dom = parser.parseFromString(note.html, 'text/html');
           const nodes = $generateNodesFromDOM(editor, dom);
           const root = $getRoot();
           root.clear();
@@ -151,7 +176,7 @@ export default function EditFormattingModal({
         console.error(error);
       },
     }),
-    [],
+    [note.html],
   );
 
   // saves formatted changes to note and closes modal
