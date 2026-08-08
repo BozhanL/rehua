@@ -5,13 +5,16 @@ import Icon from '../Icon';
 import Modal from '../Modal';
 import type { Note } from './NoteList';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import {
+  LexicalComposer,
+  type InitialConfigType,
+} from '@lexical/react/LexicalComposer';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, FORMAT_TEXT_COMMAND } from 'lexical';
-import { type JSX, type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type JSX, type ReactNode, useMemo, useState } from 'react';
 
 // interface for EditFormattingModal
 interface EditFormattingModalProps {
@@ -37,25 +40,6 @@ interface EditFormattingModalProps {
     beforeHtml: string; // html content of note before formatting changes were made
     afterHtml: string; // html content of note after formatting changes were made
   }) => void;
-}
-
-// React component that loads provided HTML into Lexical editor
-function LoadHtmlPlugin({
-  html,
-}: Readonly<{ html: string }>): JSX.Element | null {
-  const [editor] = useLexicalComposerContext();
-  // load provided HTML into the Lexical editor when component mounts or when html prop changes
-  useEffect(() => {
-    editor.update(() => {
-      const parser = new DOMParser();
-      const dom = parser.parseFromString(html, 'text/html');
-      const nodes = $generateNodesFromDOM(editor, dom);
-      const root = $getRoot();
-      root.clear();
-      root.append(...nodes);
-    });
-  }, [editor, html]);
-  return null;
 }
 
 // error boundary for RichTextPlugin, required by Lexical
@@ -141,7 +125,7 @@ export default function EditFormattingModal({
   const hasChanges = normaliseHtml(html) !== normaliseHtml(note.html);
 
   // Lexical editor configuration, setup runs only once on initial render
-  const initialConfig = useMemo(
+  const initialConfig = useMemo<InitialConfigType>(
     () => ({
       namespace: 'NotesFormatting',
       editable: false,
@@ -152,6 +136,16 @@ export default function EditFormattingModal({
           bold: 'font-bold',
           italic: 'italic',
         },
+      },
+      editorState: (editor): void => {
+        editor.update(() => {
+          const parser = new DOMParser();
+          const dom = parser.parseFromString(html, 'text/html');
+          const nodes = $generateNodesFromDOM(editor, dom);
+          const root = $getRoot();
+          root.clear();
+          root.append(...nodes);
+        });
       },
       onError: (error: Error): void => {
         console.error(error);
@@ -196,7 +190,6 @@ export default function EditFormattingModal({
 
         {/* Lexical editor */}
         <LexicalComposer key={note.noteId} initialConfig={initialConfig}>
-          <LoadHtmlPlugin html={note.html} />
           <div
             className="flex h-full flex-col overflow-hidden rounded-md border"
             style={{ boxShadow: 'inset 0 1px 3px rgb(0 0 0 / 0.3)' }}
