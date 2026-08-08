@@ -20,8 +20,8 @@ export class PatientService {
     return this.patientModel.find().exec();
   }
 
-  async findOne(id: string): Promise<Patient | null> {
-    return this.patientModel.findOne({ id }).exec();
+  async findOne(id: string): Promise<PatientDocument | null> {
+    return this.patientModel.findOne({ _id: id }).exec();
   }
 
   async findPage(

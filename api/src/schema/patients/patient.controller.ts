@@ -39,7 +39,6 @@ export class PatientController {
     }));
   }
 
-  @TypedRoute.Get(':id')
   @SwaggerExample.Response('Found', {
     value: new Patient(
       'John',
@@ -63,8 +62,20 @@ export class PatientController {
   })
   @SwaggerExample.Response('Not found', { value: null })
   @TypedRoute.Get(':id')
-  async findOne(@TypedParam('id') id: string): Promise<Patient | null> {
-    return this.patientService.findOne(id);
+  async findOne(
+    @TypedParam('id') id: string,
+  ): Promise<(Patient & { _id: string }) | null> {
+    const doc = await this.patientService.findOne(id);
+
+    const formattedDoc = doc
+      ? {
+          // eslint-disable-next-line @typescript-eslint/no-misused-spread
+          ...doc.toJSON(),
+          _id: doc._id.toString(),
+        }
+      : null;
+
+    return formattedDoc;
   }
 
   //returns patients like in a the list view (number of results shown, page number)
