@@ -31,6 +31,18 @@ interface NoteListProps {
   onViewAuditHistory: (note: Note) => void;
 }
 
+// utility function to format ISO date strings into readable format
+function formatDate(isoDate: string): string {
+  return new Intl.DateTimeFormat('en-NZ', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(new Date(isoDate));
+}
+
 // React component that renders a list of notes, each with its metadata, content, and an edit button
 function NotesList({
   notes,
@@ -52,7 +64,7 @@ function NotesList({
             <div className="text-xl font-bold">
               {note.authorName}
               <br />
-              {note.createdAt}
+              {formatDate(note.createdAt)}
             </div>
           </div>
 
@@ -95,7 +107,7 @@ function NotesList({
           {/* footer of each note */}
           <div className="border-b text-base font-semibold text-rehua-maroon">
             {note.lastFormattedAt && note.lastFormattedBy
-              ? `Last updated by ${note.lastFormattedBy} on ${note.lastFormattedAt}`
+              ? `Last updated by ${note.lastFormattedBy} on ${formatDate(note.lastFormattedAt)}`
               : 'No audits have been made to this note yet.'}
           </div>
         </div>
