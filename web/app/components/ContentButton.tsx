@@ -42,6 +42,7 @@ function ContentButton({
   style,
   className,
   onClick,
+  type,
   ...props
 }: ContentButtonProps): JSX.Element {
   const borderRadius = Math.round(height * 0.35);
@@ -77,6 +78,7 @@ function ContentButton({
   return (
     <button
       {...props}
+      type={type ?? 'button'}
       style={{
         minHeight: height,
         borderRadius: borderRadius,
