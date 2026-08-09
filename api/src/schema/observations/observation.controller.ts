@@ -9,7 +9,7 @@ import {
   TypedQuery,
   TypedRoute,
 } from '@nestia/core';
-import { Controller, Query } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 
 @Controller('/observations')
 export class ObservationsController {
