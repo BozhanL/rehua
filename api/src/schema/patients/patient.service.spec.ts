@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, type TestingModule } from '@nestjs/testing';
 
-describe('PatientService', () => {
+describe('patientService', () => {
   let service: PatientService;
 
   const mockPatientModel = {

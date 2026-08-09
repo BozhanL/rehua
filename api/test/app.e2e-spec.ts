@@ -10,12 +10,8 @@ import {
   expect,
   it,
 } from '@jest/globals';
-<<<<<<< HEAD
 import type { DynamicModule, INestApplication } from '@nestjs/common';
-=======
-import type { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
->>>>>>> origin/main
 import { MongooseModule } from '@nestjs/mongoose';
 import { Test, type TestingModule } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
@@ -42,15 +38,12 @@ describe('appController (e2e)', () => {
     process.env['MONGODB_URI'] = mongod.getUri();
   }, 30 * 1000);
 
-<<<<<<< HEAD
   afterAll(async () => {
     if (mongod) {
       await mongod.stop();
     }
   });
 
-=======
->>>>>>> origin/main
   beforeEach(async () => {
     let mongooseModule: DynamicModule | undefined;
     if (mongod) {

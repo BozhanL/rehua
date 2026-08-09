@@ -2,14 +2,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { HelloModule } from './hello/hello.module';
-<<<<<<< HEAD
 import { EmergencyContactModule } from './schema/emergency_contacts/emergency_contact.module';
 import { ObservationModule } from './schema/observations/observation.module';
 import { PatientModule } from './schema/patients/patient.module';
 import { UserModule } from './schema/users/user.module';
-=======
 import { UsersModule } from './users/users.module';
->>>>>>> origin/main
 import { Config, https } from './utils/config';
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -90,7 +87,6 @@ export class AppModule {
   static forRoot(mongo: DynamicModule | undefined): DynamicModule {
     return {
       module: AppModule,
-<<<<<<< HEAD
       imports: [
         configModule,
         HelloModule,
@@ -102,9 +98,6 @@ export class AppModule {
       ],
       controllers: [AppController],
       providers: [AppService],
-=======
-      imports: [mongo ?? mongoModule],
->>>>>>> origin/main
     };
   }
 }
