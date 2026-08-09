@@ -183,7 +183,7 @@ export default function EditFormattingModal({
       <div className="flex h-full flex-col gap-5 p-6">
         {/* top row with back button, icon, and title */}
         <div className="flex items-center gap-6">
-          <button onClick={onClose} style={{ cursor: 'pointer' }}>
+          <button type="button" onClick={onClose} style={{ cursor: 'pointer' }}>
             <Icon name="circle-arrow" width={65} className="text-rehua-navy" />
           </button>
 
