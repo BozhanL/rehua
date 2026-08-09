@@ -27,7 +27,7 @@ export class PatientService {
   async findPage(
     pageSize: number,
     pageNumber: number,
-  ): Promise<Patient[] | null> {
+  ): Promise<PatientDocument[]> {
     return this.patientModel
       .find()
       .skip((pageNumber - 1) * pageSize)

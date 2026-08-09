@@ -16,18 +16,21 @@ export class UserService {
     return createdUser.save();
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserDocument[]> {
     return this.userModel.find().exec();
   }
 
-  async findOne(id: string): Promise<User | null> {
-    return this.userModel.findOne({ id }).exec();
+  async findOne(id: string): Promise<UserDocument | null> {
+    return this.userModel.findOne({ _id: id }).exec();
   }
 
-  async findPage(pageSize: number, pageNumber: number): Promise<User[] | null> {
+  async findPage(
+    pageSize: number,
+    pageNumber: number,
+  ): Promise<UserDocument[]> {
     return this.userModel
       .find()
-      .skip(pageNumber * pageSize)
+      .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .exec();
   }
@@ -38,7 +41,7 @@ export class UserService {
   ): Promise<UpdateWriteOpResult> {
     return this.userModel
       .updateOne(
-        { id },
+        { _id: id },
         {
           $set: updateUserDto,
         },

@@ -83,8 +83,14 @@ export class PatientController {
   async findPage(
     @TypedParam('pageSize') pageSize: number,
     @TypedParam('pageNumber') pageNumber: number,
-  ): Promise<Patient[] | null> {
-    return this.patientService.findPage(pageSize, pageNumber);
+  ): Promise<(Patient & { _id: string })[]> {
+    const docs = await this.patientService.findPage(pageSize, pageNumber);
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
   }
 
   @TypedRoute.Patch(':id')

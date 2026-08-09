@@ -29,11 +29,16 @@ export class UserController {
   }
 
   @TypedRoute.Get()
-  async findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  async findAll(): Promise<(User & { _id: string })[]> {
+    const docs = await this.userService.findAll();
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
   }
 
-  @TypedRoute.Get(':id')
   @SwaggerExample.Response('Found', {
     value: new User(
       'ACB123',
@@ -47,19 +52,38 @@ export class UserController {
     ),
   })
   @SwaggerExample.Response('Not found', { value: null })
-  async findOne(@TypedParam('id') id: string): Promise<User | null> {
-    return this.userService.findOne(id);
+  @TypedRoute.Get(':id')
+  async findOne(
+    @TypedParam('id') id: string,
+  ): Promise<(User & { _id: string }) | null> {
+    const doc = await this.userService.findOne(id);
+
+    const formattedDoc = doc
+      ? {
+          // eslint-disable-next-line @typescript-eslint/no-misused-spread
+          ...doc.toJSON(),
+          _id: doc._id.toString(),
+        }
+      : null;
+
+    return formattedDoc;
   }
 
   @TypedRoute.Get('page/:pageNumber/:pageSize')
   async findPage(
-    @TypedParam('pageSize') pageSize: number,
     @TypedParam('pageNumber') pageNumber: number,
-  ): Promise<User[] | null> {
-    return this.userService.findPage(pageSize, pageNumber);
+    @TypedParam('pageSize') pageSize: number,
+  ): Promise<(User & { _id: string })[]> {
+    const docs = await this.userService.findPage(pageSize, pageNumber);
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
   }
 
-  @TypedRoute.Patch('id')
+  @TypedRoute.Patch(':id')
   async update(
     @Param('id') id: string,
     @TypedBody() updateUserDto: UpdateUserDto,
