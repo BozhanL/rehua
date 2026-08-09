@@ -2,7 +2,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HelloModule } from './hello/hello.module';
 import { ObservationModule } from './schema/observations/observation.module';
-//import { PatientModule } from './schema/patients/patient.module';
+import { PatientModule } from './schema/patients/patient.module';
 import { UserModule } from './schema/users/user.module';
 import { Config, https } from './utils/config';
 import { DynamicModule, Module } from '@nestjs/common';
@@ -84,7 +84,7 @@ export class AppModule {
         configModule,
         HelloModule,
         ObservationModule,
-        //PatientModule,
+        PatientModule,
         UserModule,
         mongo ?? mongoModule,
       ],
