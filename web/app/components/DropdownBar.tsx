@@ -109,7 +109,7 @@ function DropdownBar<T extends string = string>({
           }}
           className="
             absolute top-full left-0 z-10 overflow-x-hidden overflow-y-auto
-            bg-white shadow-md outline-none
+            bg-rehua-white shadow-md outline-none
           "
           style={{
             maxHeight: lengthOfDropdown,
@@ -135,7 +135,7 @@ function DropdownBar<T extends string = string>({
           {/* buttons (dropdown options) */}
           {filteredOptions.length === 0 ? (
             <div
-              className="px-2 text-gray-400"
+              className="px-2 text-rehua-dark-gray"
               style={{ paddingBlock: paddingY }}
             >
               No results
