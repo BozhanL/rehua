@@ -1,6 +1,7 @@
 'use client';
 
 import ContentButton from '../ContentButton';
+import DOMPurify from 'dompurify';
 import type { JSX } from 'react';
 
 // interface representing data for audit of a note (version history)
@@ -75,7 +76,7 @@ function NotesList({
               minHeight: 'auto',
               boxShadow: 'inset 0 1px 3px rgb(0 0 0 / 0.3)',
             }}
-            dangerouslySetInnerHTML={{ __html: note.html }} // render html content to see formatting changes
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.html) }} // render sanitised html content to see formatting changes
           />
 
           {/* edit button & version history button */}
