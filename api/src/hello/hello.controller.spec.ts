@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, type TestingModule } from '@nestjs/testing';
 
-describe('HelloController', () => {
+describe('helloController', () => {
   let controller: HelloController;
 
   const mockHelloModel = {
@@ -28,6 +28,8 @@ describe('HelloController', () => {
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect.assertions(1);
+
+    expect(controller).toBeInstanceOf(HelloController);
   });
 });

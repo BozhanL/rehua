@@ -3,6 +3,7 @@ import pluginQuery from '@tanstack/eslint-plugin-query';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
+import jest from 'eslint-plugin-jest';
 import { configs as sonarjs } from 'eslint-plugin-sonarjs';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
@@ -10,7 +11,11 @@ import tseslint from 'typescript-eslint';
 const eslintConfig = defineConfig([
   nextVitals,
   js.configs.recommended,
+
   sonarjs.recommended,
+  {
+    rules: { 'sonarjs/todo-tag': 'off' },
+  },
 
   pluginQuery.configs['flat/recommended-strict'],
 
@@ -69,16 +74,45 @@ const eslintConfig = defineConfig([
   },
   {
     rules: {
-      curly: ['error', 'all'],
+      // Duplicate of @typescript-eslint/no-unused-vars
+      'sonarjs/no-unused-vars': 'off',
+      'no-unused-vars': 'off',
+
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+
+          args: 'all',
+          argsIgnorePattern: '^_',
+
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+
+          destructuredArrayIgnorePattern: '^_',
+
+          reportUsedIgnorePattern: true,
+        },
+      ],
+    },
+  },
+  {
+    rules: {
       eqeqeq: ['error', 'always'],
-      'prefer-arrow-callback': 'error',
       'func-style': ['error', 'declaration'],
     },
   },
 
   {
-    files: ['commitlint.config.js'],
-    ...tseslint.configs.disableTypeChecked,
+    files: ['**/*.test.tsx', '**/*.test.ts', '**/*.spec.tsx', '**/*.spec.ts'],
+    ...jest.configs['flat/all'],
+  },
+  {
+    rules: {
+      'jest/no-hooks': 'off',
+      'jest/prefer-mock-return-shorthand': 'off',
+    },
   },
 
   // Override default ignores of eslint-config-next.
@@ -107,6 +141,15 @@ const eslintConfig = defineConfig([
   },
 
   eslintConfigPrettier,
+  {
+    // These configs are disabled by eslint-config-prettier, but we want to enable them.
+    rules: {
+      // https://github.com/prettier/eslint-config-prettier#curly
+      curly: ['error', 'all'],
+      // https://github.com/prettier/eslint-config-prettier#arrow-body-style-and-prefer-arrow-callback
+      'prefer-arrow-callback': 'error',
+    },
+  },
 ]);
 
 export default eslintConfig;

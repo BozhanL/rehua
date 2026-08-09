@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Page renders homepage unchanged 1`] = `
+exports[`page renders homepage unchanged 1`] = `
 <div>
   <h1>
     Hello world -- 
