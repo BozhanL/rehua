@@ -10,7 +10,7 @@ import {
 } from '@nestia/core';
 import { Controller, Query } from '@nestjs/common';
 
-@Controller('patients/:id/observations')
+@Controller('/observations')
 export class ObservationsController {
   constructor(private readonly observationService: ObservationService) {}
 
@@ -29,49 +29,78 @@ export class ObservationsController {
 
   @TypedRoute.Get(':id')
   @SwaggerExample.Response('Found', {
-    value: new Observation(
-      '1',
-      new Date('2026-01-01'),
-      ObservationType.HEART_RATE,
-      80,
-    ),
+    value: new Observation('1', '2026-01-01', ObservationType.HEART_RATE, 80),
   })
   @SwaggerExample.Response('Not Found', { value: null })
   async findAllObservations(
     @TypedParam('id') id: string,
-  ): Promise<Observation[] | null> {
-    return this.observationService.getAllObservations(id);
+  ): Promise<(Observation & { _id: string })[]> {
+    const docs = await this.observationService.getAllObservations(id);
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
   }
 
-  @TypedRoute.Get(':id/:type')
+  @TypedRoute.Get(':id/type')
   async findByType(
     @TypedParam('id') id: string,
     @Query('type') type: ObservationType,
-  ): Promise<Observation[] | null> {
-    return this.observationService.getAllSpecificObservationType(id, type);
+  ): Promise<(Observation & { _id: string })[]> {
+    const docs = await this.observationService.getAllSpecificObservationType(
+      id,
+      type,
+    );
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
   }
 
-  @TypedRoute.Get(':id/:type/:date')
+  /*
+  @TypedRoute.Get(':id/type/date')
   async findObservationByDate(
     @TypedParam('id') id: string,
     @Query('type') type: ObservationType,
     @Query('startDate') date: string,
-  ): Promise<Observation[] | null> {
-    return this.observationService.getObservationByDate(id, type, date, date);
+  ): Promise<(Observation & { _id: string })[]> {
+    const docs = await this.observationService.getObservationByDate(
+      id,
+      type,
+      date,
+      date,
+    );
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
   }
 
-  @TypedRoute.Get(':id/:type/:startDate/:endDate')
+  @TypedRoute.Get(':id/type/startDate/endDate')
   async findObservationByDateRange(
     @TypedParam('id') id: string,
     @Query('type') type: ObservationType,
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
-  ): Promise<Observation[] | null> {
-    return this.observationService.getObservationByDate(
+  ): Promise<(Observation & { _id: string })[]> {
+    const docs = await this.observationService.getObservationByDate(
       id,
       type,
       startDate,
       endDate,
     );
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
   }
+    */
 }

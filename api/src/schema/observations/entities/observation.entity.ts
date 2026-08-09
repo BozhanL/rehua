@@ -14,8 +14,8 @@ export class Observation {
   })
   patientId: string;
 
-  @Prop({ required: true, type: Date })
-  dateTime: Date;
+  @Prop({ required: true, type: String })
+  dateTime: string;
 
   @Prop({ required: true, type: String, enum: ObservationType })
   type: ObservationType;
@@ -30,7 +30,7 @@ export class Observation {
 
   constructor(
     patientId: string,
-    dateTime: Date,
+    dateTime: string,
     type: ObservationType,
     measurementValue?: number,
     notes?: string,

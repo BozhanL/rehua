@@ -1,6 +1,6 @@
-import { PatientController } from '../patients/patient.controller';
-import { PatientService } from '../patients/patient.service';
 import { Observation, ObservationSchema } from './entities/observation.entity';
+import { ObservationsController } from './observation.controller';
+import { ObservationService } from './observation.service';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
@@ -10,7 +10,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       { name: Observation.name, schema: ObservationSchema },
     ]),
   ],
-  controllers: [PatientController],
-  providers: [PatientService],
+  controllers: [ObservationsController],
+  providers: [ObservationService],
 })
 export class ObservationModule {}

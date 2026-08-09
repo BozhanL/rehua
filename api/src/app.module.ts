@@ -1,7 +1,8 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HelloModule } from './hello/hello.module';
-import { PatientModule } from './schema/patients/patient.module';
+import { ObservationModule } from './schema/observations/observation.module';
+//import { PatientModule } from './schema/patients/patient.module';
 import { UserModule } from './schema/users/user.module';
 import { Config, https } from './utils/config';
 import { DynamicModule, Module } from '@nestjs/common';
@@ -82,7 +83,8 @@ export class AppModule {
       imports: [
         configModule,
         HelloModule,
-        PatientModule,
+        ObservationModule,
+        //PatientModule,
         UserModule,
         mongo ?? mongoModule,
       ],

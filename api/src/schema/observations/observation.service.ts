@@ -24,7 +24,7 @@ export class ObservationService {
   }
 
   //Get all observations for a patient
-  async getAllObservations(patientId: string): Promise<Observation[]> {
+  async getAllObservations(patientId: string): Promise<ObservationDocument[]> {
     return this.observationModel
       .find({ patientId })
       .sort({ dateTime: -1 })
@@ -35,26 +35,28 @@ export class ObservationService {
   async getAllSpecificObservationType(
     patientId: string,
     type: ObservationType,
-  ): Promise<Observation[]> {
+  ): Promise<ObservationDocument[]> {
     return this.observationModel
       .find({ patientId, type })
       .sort({ dateTime: -1 })
       .exec();
   }
 
-  //Return custom period
+  //Return custom period, but date value is needed
+  /*
   async getObservationByDate(
     patientId: string,
     type: ObservationType,
     startDateStr: string,
     endDateStr: string,
-  ): Promise<Observation[] | null> {
+  ): Promise<ObservationDocument[]> {
     //convert provided date to Date object and set 24 hour period
     const start = new Date(startDateStr);
     const end = new Date(endDateStr);
     start.setUTCHours(0, 0, 0, 0);
     end.setUTCHours(23, 59, 59, 999);
 
+    
     return this.observationModel
       .find({
         patientId,
@@ -67,4 +69,5 @@ export class ObservationService {
       .sort({ dateTime: -1 })
       .exec();
   }
+  */
 }
