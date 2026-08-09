@@ -8,7 +8,7 @@ import {
   expect,
   it,
 } from '@jest/globals';
-import type { INestApplication } from '@nestjs/common';
+import type { DynamicModule, INestApplication } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -19,29 +19,37 @@ import { assert, json, TypeGuardError } from 'typia';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
-  let mongod: MongoMemoryServer;
+  let mongod: MongoMemoryServer | undefined;
 
   // Set timeout to 30s to allow MongoMemoryServer to download binary
   beforeAll(async () => {
     const arch = os.arch();
-    mongod = await MongoMemoryServer.create({
-      // Use x64 binary for arm64 architecture to avoid download issues on Mac ARM chips
-      binary: { arch: arch === 'arm64' ? 'x64' : arch },
-    });
+
+    // Skip MongoMemoryServer on arm64 architecture to avoid download issues on Mac ARM chips
+    if (arch === 'arm64') {
+      return;
+    }
+
+    mongod = await MongoMemoryServer.create();
     process.env['MONGODB_URI'] = mongod.getUri();
   }, 30 * 1000);
 
   afterAll(async () => {
-    await mongod.stop();
+    if (mongod) {
+      await mongod.stop();
+    }
   });
 
   beforeEach(async () => {
+    let mongooseModule: DynamicModule | undefined;
+    if (mongod) {
+      mongooseModule = MongooseModule.forRoot(mongod.getUri(), {
+        dbName: 'rehua',
+      });
+    }
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule.forRoot(
-          MongooseModule.forRoot(mongod.getUri(), { dbName: 'rehua' }),
-        ),
-      ],
+      imports: [AppModule.forRoot(mongooseModule)],
     }).compile();
 
     app = moduleFixture.createNestApplication();

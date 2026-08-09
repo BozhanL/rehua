@@ -7,16 +7,17 @@ import os from 'node:os';
 const NESTIA_CONFIG: INestiaConfig = {
   input: async () => {
     const arch = os.arch();
-    const mongod = await MongoMemoryServer.create({
-      // Use x64 binary for arm64 architecture to avoid download issues on Mac ARM chips
-      binary: { arch: arch === 'arm64' ? 'x64' : arch },
-    });
 
-    const app = createApp(
+    // Skip MongoMemoryServer on arm64 architecture to avoid download issues on ARM chips
+    if (arch === 'arm64') {
+      return createApp();
+    }
+
+    const mongod = await MongoMemoryServer.create();
+
+    return createApp(
       MongooseModule.forRoot(mongod.getUri(), { dbName: 'rehua' }),
     );
-
-    return app;
   },
   output: '../sdk/src',
   distribute: '../sdk',
