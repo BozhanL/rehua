@@ -6,6 +6,7 @@ import {
   SwaggerExample,
   TypedBody,
   TypedParam,
+  TypedQuery,
   TypedRoute,
 } from '@nestia/core';
 import { Controller, Query } from '@nestjs/common';
@@ -47,11 +48,11 @@ export class ObservationsController {
   @TypedRoute.Get(':id/type')
   async findByType(
     @TypedParam('id') id: string,
-    @Query('type') type: ObservationType,
+    @TypedQuery() query: { observationType: ObservationType },
   ): Promise<(Observation & { _id: string })[]> {
     const docs = await this.observationService.getAllSpecificObservationType(
       id,
-      type,
+      query.observationType,
     );
 
     return docs.map((doc) => ({

@@ -34,10 +34,10 @@ export class ObservationService {
   //Return a specific type of observation found in observation-type.enum
   async getAllSpecificObservationType(
     patientId: string,
-    type: ObservationType,
+    observationType: ObservationType,
   ): Promise<ObservationDocument[]> {
     return this.observationModel
-      .find({ patientId, type })
+      .find({ patientId, observationType })
       .sort({ dateTime: -1 })
       .exec();
   }
