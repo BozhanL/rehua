@@ -12,6 +12,7 @@ import type { INestApplication } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import os from 'node:os';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { assert, json, TypeGuardError } from 'typia';
@@ -22,7 +23,11 @@ describe('AppController (e2e)', () => {
 
   // Set timeout to 30s to allow MongoMemoryServer to download binary
   beforeAll(async () => {
-    mongod = await MongoMemoryServer.create();
+    const arch = os.arch();
+    mongod = await MongoMemoryServer.create({
+      // Use x64 binary for arm64 architecture to avoid download issues on Mac ARM chips
+      binary: { arch: arch === 'arm64' ? 'x64' : arch },
+    });
     process.env['MONGODB_URI'] = mongod.getUri();
   }, 30 * 1000);
 

@@ -2,10 +2,15 @@ import { createApp, swaggerConfig } from '@/helpers';
 import type { INestiaConfig } from '@nestia/sdk';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import os from 'node:os';
 
 const NESTIA_CONFIG: INestiaConfig = {
   input: async () => {
-    const mongod = await MongoMemoryServer.create();
+    const arch = os.arch();
+    const mongod = await MongoMemoryServer.create({
+      // Use x64 binary for arm64 architecture to avoid download issues on Mac ARM chips
+      binary: { arch: arch === 'arm64' ? 'x64' : arch },
+    });
 
     const app = createApp(
       MongooseModule.forRoot(mongod.getUri(), { dbName: 'rehua' }),
