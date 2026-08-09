@@ -91,12 +91,7 @@ function DropdownBar<T extends string = string>({
           {label}
         </span>
         {/* dropdown bar arrow */}
-        <Icon
-          name="simple-arrow"
-          rotation={90}
-          width={iconSize}
-          className="mr-1"
-        />
+        <Icon name="dropdown-arrow" width={iconSize} className="mr-1" />
       </button>
 
       {/* options in dropdown bar  (list of buttons) */}

@@ -10,6 +10,7 @@ import CheckedBox from '../assets/icons/checked-box.svg';
 import CircleArrow from '../assets/icons/circle-arrow.svg';
 import Clipboard from '../assets/icons/clipboard.svg';
 import CrossedEye from '../assets/icons/crossed-eye.svg';
+import DropdownArrow from '../assets/icons/dropdown-arrow.svg';
 import Eye from '../assets/icons/eye.svg';
 import FileUpload from '../assets/icons/file-upload.svg';
 import File from '../assets/icons/file.svg';
@@ -56,6 +57,7 @@ export const icons = {
   'circle-arrow': CircleArrow,
   clipboard: Clipboard,
   'crossed-eye': CrossedEye,
+  'dropdown-arrow': DropdownArrow,
   eye: Eye,
   'file-upload': FileUpload,
   file: File,
