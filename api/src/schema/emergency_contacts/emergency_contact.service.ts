@@ -27,7 +27,7 @@ export class EmergencyContactService {
   //Get all emergency contacts for a patient
   async getPatientEmergencyContacts(
     patientId: string,
-  ): Promise<EmergencyContact[]> {
+  ): Promise<EmergencyContactDocument[]> {
     return this.emergencyContactModel.find({ patientId }).exec();
   }
 
@@ -38,7 +38,7 @@ export class EmergencyContactService {
   ): Promise<UpdateWriteOpResult> {
     return this.emergencyContactModel
       .updateOne(
-        { id },
+        { _id: id },
         {
           $set: updateEmergencyContactDto,
         },

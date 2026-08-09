@@ -14,7 +14,7 @@ export class EmergencyContact {
   })
   patientId: string;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: true, type: Number })
   priority: number;
 
   @Prop({ required: true, type: String })

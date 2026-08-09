@@ -1,6 +1,7 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HelloModule } from './hello/hello.module';
+import { EmergencyContactModule } from './schema/emergency_contacts/emergency_contact.module';
 import { ObservationModule } from './schema/observations/observation.module';
 import { PatientModule } from './schema/patients/patient.module';
 import { UserModule } from './schema/users/user.module';
@@ -83,6 +84,7 @@ export class AppModule {
       imports: [
         configModule,
         HelloModule,
+        EmergencyContactModule,
         ObservationModule,
         PatientModule,
         UserModule,

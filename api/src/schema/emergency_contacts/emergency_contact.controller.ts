@@ -11,7 +11,7 @@ import {
 import { Controller, Param } from '@nestjs/common';
 import { UpdateWriteOpResult } from 'mongoose';
 
-@Controller('patients/:id/emergency-contacts')
+@Controller('emergency-contacts')
 export class EmergencyContactController {
   constructor(
     private readonly emergencyContactService: EmergencyContactService,
@@ -51,8 +51,15 @@ export class EmergencyContactController {
   @TypedRoute.Get(':id')
   async findPatientEmergncyContacts(
     @TypedParam('id') id: string,
-  ): Promise<EmergencyContact[]> {
-    return this.emergencyContactService.getPatientEmergencyContacts(id);
+  ): Promise<(EmergencyContact & { _id: string })[]> {
+    const docs =
+      await this.emergencyContactService.getPatientEmergencyContacts(id);
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
   }
 
   //update an emergency contact by their id
