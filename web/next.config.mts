@@ -1,3 +1,4 @@
+import analyzer from '@next/bundle-analyzer';
 import type { Options } from '@typia/unplugin/api';
 import unTypiaNext from '@typia/unplugin/next';
 import type { NextConfig } from 'next';
@@ -39,8 +40,14 @@ const nextConfig: NextConfig = {
   /* eslint-enable */
 };
 
+const withBundleAnalyzer = analyzer({
+  enabled: env['ANALYZE'] === 'true',
+});
+
 const unpluginTypiaOptions: Options = {
   log: false,
 };
 
-export default unTypiaNext(nextConfig, unpluginTypiaOptions);
+export default withBundleAnalyzer(
+  unTypiaNext(nextConfig, unpluginTypiaOptions),
+);

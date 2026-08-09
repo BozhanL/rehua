@@ -38,6 +38,9 @@
     "@lexical/html": "0.48.0",
     "@lexical/react": "0.48.0",
     "@rehua/sdk": "*",
+    "@rjsf/core": "6.6.2",
+    "@rjsf/utils": "6.6.2",
+    "@rjsf/validator-ajv8": "6.6.2",
     "@tanstack/react-query": "5.101.4",
     "@tanstack/react-query-devtools": "5.101.4",
     "lexical": "0.48.0",
@@ -50,6 +53,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
+    "@next/bundle-analyzer": "16.2.10",
     "@svgr/webpack": "8.1.0",
     "@tailwindcss/postcss": "4.3.3",
     "@tanstack/eslint-plugin-query": "5.101.4",
@@ -78,6 +82,7 @@
     "ts-jest": "29.4.12",
     "ts-node": "10.9.2",
     "ts-patch": "3.3.0",
+    "type-fest": "4.41.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.65.0"
   }

@@ -8,8 +8,8 @@ import type { ExpressUser } from '../../structures/ExpressUser';
 import type { LoginBody } from '../../structures/LoginBody';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
-import type { Resolved } from 'typia';
 import typia from 'typia';
+import type { Resolved } from 'typia';
 
 export * as totp from './totp/index';
 
@@ -23,6 +23,7 @@ export async function login(
   connection: IConnection,
   _body: login.Body,
 ): Promise<login.Output> {
+  typia.assert<typeof _body>(_body);
   return true === connection.simulate
     ? login.simulate(connection, _body)
     : PlainFetcher.fetch(

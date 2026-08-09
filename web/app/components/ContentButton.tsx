@@ -4,12 +4,12 @@ import Icon, { type IconProps } from './Icon';
 import type { ButtonHTMLAttributes, JSX } from 'react';
 
 // type that is a subset of ButtonHTMLAttributes, omitting 'disabled' as buttons will always be enabled
-type ContentButtonProps = Omit<
+export type ContentButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
   'disabled'
 > & {
-  text1?: string; // bottom and top lines within button, up to 2 lines allowed
-  text2?: string;
+  text1?: string | undefined; // bottom and top lines within button, up to 2 lines allowed
+  text2?: string | undefined;
   // colour for icons is set via foregroundColor
   // width should be set as a scale value based on button height (e.g. 0.7 = 70% of button height)
   iconProps?: Omit<IconProps, 'className'>;
@@ -22,7 +22,6 @@ type ContentButtonProps = Omit<
   horizontalPadding?: number; // padding on left and right, in proportion to button height
   verticalPadding?: number; // padding on top and bottom, in proportion to button height
   lineHeight?: number; // line height for text, "vertical text spacing", fallback to 1 (single line spacing)
-  onClick?: () => void; // callback function when button is clicked
 };
 
 // React component that renders button with text and/or icon, with consistent aspect ratio and styling

@@ -20,7 +20,7 @@ const instrumentSans = Instrument_Sans({
 export const metadata: Metadata = {
   title: 'Rehua',
   description: 'Digital Patient File Storage Enhancement',
-  icons: 'temporary-favicon.jpg',
+  icons: '/temporary-favicon.jpg',
 };
 
 export const dynamic = 'error';
