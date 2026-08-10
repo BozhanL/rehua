@@ -76,3 +76,4 @@ function Modal({
 }
 
 export default Modal;
+export type { ModalProps };
