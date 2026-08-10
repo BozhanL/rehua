@@ -131,7 +131,7 @@ function DropdownBar<T extends string = string>({
           {filteredOptions.length === 0 ? (
             <div
               className="px-2 text-rehua-dark-gray"
-              style={{ paddingBlock: paddingY }}
+              style={{ paddingBlock: paddingY, fontSize: fontSize }}
             >
               No results
             </div>
