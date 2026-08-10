@@ -19,27 +19,30 @@ import typia from 'typia';
 export async function findByType(
   connection: IConnection,
   id: string,
-  type:
-    | 'OXYGEN_RATE'
-    | 'RESPIRATION_RATE'
-    | 'BLOOD_PRESSURE'
-    | 'HEART_RATE'
-    | 'TEMPERATURE'
-    | 'WEIGHT'
-    | 'BLOOD_GLUCOSE_LEVELS'
-    | 'NEUROLOGICAL_OBSERVATION_CHART'
-    | 'BOWEL_OUTPUT'
-    | 'URINE_OUTPUT',
+  query: findByType.Query,
 ): Promise<findByType.Output> {
   return true === connection.simulate
-    ? findByType.simulate(connection, id, type)
+    ? findByType.simulate(connection, id, query)
     : PlainFetcher.fetch(connection, {
         ...findByType.METADATA,
         template: findByType.METADATA.path,
-        path: findByType.path(id, type),
+        path: findByType.path(id, query),
       });
 }
 export namespace findByType {
+  export type Query = {
+    observationType:
+      | 'OXYGEN_RATE'
+      | 'RESPIRATION_RATE'
+      | 'BLOOD_PRESSURE'
+      | 'HEART_RATE'
+      | 'TEMPERATURE'
+      | 'WEIGHT'
+      | 'BLOOD_GLUCOSE_LEVELS'
+      | 'NEUROLOGICAL_OBSERVATION_CHART'
+      | 'BOWEL_OUTPUT'
+      | 'URINE_OUTPUT';
+  };
   export type Output = Observation_idstring.o2[];
 
   export const METADATA = {
@@ -53,24 +56,9 @@ export namespace findByType {
     status: 200,
   } as const;
 
-  export const path = (
-    id: string,
-    type:
-      | 'OXYGEN_RATE'
-      | 'RESPIRATION_RATE'
-      | 'BLOOD_PRESSURE'
-      | 'HEART_RATE'
-      | 'TEMPERATURE'
-      | 'WEIGHT'
-      | 'BLOOD_GLUCOSE_LEVELS'
-      | 'NEUROLOGICAL_OBSERVATION_CHART'
-      | 'BOWEL_OUTPUT'
-      | 'URINE_OUTPUT',
-  ) => {
+  export const path = (id: string, query: Query) => {
     const variables: URLSearchParams = new URLSearchParams();
-    for (const [key, value] of Object.entries({
-      type: type,
-    } as any))
+    for (const [key, value] of Object.entries(query as any))
       if (undefined === value) continue;
       else if (Array.isArray(value))
         value.forEach((elem: any) => variables.append(key, String(elem)));
@@ -85,26 +73,16 @@ export namespace findByType {
   export const simulate = (
     connection: IConnection,
     id: string,
-    type:
-      | 'OXYGEN_RATE'
-      | 'RESPIRATION_RATE'
-      | 'BLOOD_PRESSURE'
-      | 'HEART_RATE'
-      | 'TEMPERATURE'
-      | 'WEIGHT'
-      | 'BLOOD_GLUCOSE_LEVELS'
-      | 'NEUROLOGICAL_OBSERVATION_CHART'
-      | 'BOWEL_OUTPUT'
-      | 'URINE_OUTPUT',
+    query: Query,
   ): Output => {
     const assert = NestiaSimulator.assert({
       method: METADATA.method,
       host: connection.host,
-      path: path(id, type),
+      path: path(id, query),
       contentType: 'application/json',
     });
     assert.param('id')(() => typia.assert(id));
-    assert.query(() => typia.assert(type));
+    assert.query(() => typia.assert(query));
     return random();
   };
 }
