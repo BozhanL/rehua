@@ -3,21 +3,20 @@
 import ContentButton, { type ContentButtonProps } from './ContentButton';
 import Icon from './Icon';
 import Modal, { type ModalProps } from './Modal';
-import type { CSSProperties, JSX } from 'react';
+import type { CSSProperties, JSX, ReactNode } from 'react';
 
 interface PopUpProps {
   isAlertPopup?: boolean;
-
-  text1: string;
+  text1: ReactNode;
   text1Style?: CSSProperties;
-
-  text2?: string;
+  text1ClassName?: string;
+  text2?: ReactNode;
   text2Style?: CSSProperties;
-
+  text2ClassName?: string;
   button1Props: ContentButtonProps;
   button2Props?: ContentButtonProps;
   buttonsStyle?: CSSProperties;
-
+  defaultButtonHeight?: number;
   modalProps: ModalProps;
 }
 
@@ -25,11 +24,14 @@ function PopUp({
   isAlertPopup = false,
   text1,
   text1Style,
+  text1ClassName,
   text2,
   text2Style,
+  text2ClassName,
   button1Props,
   button2Props,
   buttonsStyle,
+  defaultButtonHeight = 75,
   modalProps,
 }: Readonly<PopUpProps>): JSX.Element {
   const [popupColor, iconColor, iconName] = isAlertPopup
@@ -41,9 +43,8 @@ function PopUp({
     fontSize: 30,
     fontWeight: 'bold',
     lineHeight: 1.1,
+    padding: 8,
   };
-
-  const defaultButtonHeight = 75;
 
   return (
     <Modal {...modalProps}>
@@ -62,35 +63,41 @@ function PopUp({
           name={iconName}
           className={iconColor}
           width={170}
-          style={{ marginBottom: 10 }}
+          style={{ marginBottom: 15 }}
         />
-        <span
+        <div
           style={{
             ...defaultTextStyles,
             ...text1Style,
           }}
-          className={popupColor}
+          className={`
+            ${popupColor}
+            ${text1ClassName ?? ''}
+          `}
         >
           {text1}
-        </span>
+        </div>
         {text2 && (
-          <span
+          <div
             style={{
               ...defaultTextStyles,
               ...text2Style,
             }}
-            className={popupColor}
+            className={`
+              ${popupColor}
+              ${text2ClassName ?? ''}
+            `}
           >
             {text2}
-          </span>
+          </div>
         )}
 
         <div
           style={{
             display: 'flex',
             justifyContent: button2Props ? 'space-between' : 'center',
-            width: '70%',
-            marginTop: 25,
+            width: '80%',
+            marginTop: 35,
             ...buttonsStyle,
           }}
         >
