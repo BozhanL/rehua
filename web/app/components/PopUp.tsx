@@ -6,7 +6,7 @@ import Modal, { type ModalProps } from './Modal';
 import type { CSSProperties, JSX } from 'react';
 
 interface PopUpProps {
-  isAlertPopup: boolean;
+  isAlertPopup?: boolean;
 
   text1: string;
   text1Style?: CSSProperties;
@@ -16,25 +16,34 @@ interface PopUpProps {
 
   button1Props: ContentButtonProps;
   button2Props?: ContentButtonProps;
+  buttonsStyle?: CSSProperties;
 
   modalProps: ModalProps;
 }
 
 function PopUp({
-  isAlertPopup,
+  isAlertPopup = false,
   text1,
   text1Style,
   text2,
   text2Style,
   button1Props,
   button2Props,
+  buttonsStyle,
   modalProps,
 }: Readonly<PopUpProps>): JSX.Element {
-  const icon = isAlertPopup ? (
-    <Icon name="alert" className="text-rehua-red" width={40} />
-  ) : (
-    <Icon name="info-circle" className="text-rehua-navy" width={40} />
-  );
+  const [popupColor, iconColor, iconName] = isAlertPopup
+    ? ['text-rehua-red', 'text-rehua-ruby', 'alert' as const]
+    : ['text-rehua-navy', 'text-rehua-navy', 'info-circle' as const];
+
+  const defaultTextStyles: CSSProperties = {
+    whiteSpace: 'pre-line',
+    fontSize: 30,
+    fontWeight: 'bold',
+    lineHeight: 1.1,
+  };
+
+  const defaultButtonHeight = 75;
 
   return (
     <Modal {...modalProps}>
@@ -45,24 +54,50 @@ function PopUp({
           alignItems: 'center',
           justifyContent: 'center',
           textAlign: 'center',
-          //gap: 16,
+          gap: 20,
           minHeight: '100%',
         }}
       >
-        {icon}
-        <span style={text1Style}>{text1}</span>
-        {text2 && <span style={text2Style}>{text2}</span>}
+        <Icon
+          name={iconName}
+          className={iconColor}
+          width={170}
+          style={{ marginBottom: 10 }}
+        />
+        <span
+          style={{
+            ...defaultTextStyles,
+            ...text1Style,
+          }}
+          className={popupColor}
+        >
+          {text1}
+        </span>
+        {text2 && (
+          <span
+            style={{
+              ...defaultTextStyles,
+              ...text2Style,
+            }}
+            className={popupColor}
+          >
+            {text2}
+          </span>
+        )}
 
         <div
           style={{
             display: 'flex',
             justifyContent: button2Props ? 'space-between' : 'center',
-            //gap: 16,
-            width: '100%',
+            width: '70%',
+            marginTop: 25,
+            ...buttonsStyle,
           }}
         >
-          <ContentButton {...button1Props} />
-          {button2Props && <ContentButton {...button2Props} />}
+          <ContentButton height={defaultButtonHeight} {...button1Props} />
+          {button2Props && (
+            <ContentButton height={defaultButtonHeight} {...button2Props} />
+          )}
         </div>
       </div>
     </Modal>
