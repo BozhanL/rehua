@@ -121,3 +121,4 @@ function ContentButton({
 }
 
 export default ContentButton;
+export type { ContentButtonProps };
