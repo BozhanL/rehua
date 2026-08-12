@@ -1,9 +1,9 @@
 'use client';
 
-import ContentButton from '../ContentButton';
-import Icon from '../Icon';
-import Modal from '../Modal';
-import MultiLineInput from '../MultiLineInput';
+import ContentButton from '../common/ContentButton';
+import Icon from '../common/Icon';
+import Modal from '../common/Modal';
+import MultiLineInput from '../common/MultiLineInput';
 import { useState, type JSX } from 'react';
 
 // interface for AddNoteModal, defines props for controlling modal visibility, closing modal, and adding a new note
