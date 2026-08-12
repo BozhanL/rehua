@@ -3,7 +3,9 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ICONS_DR = path.resolve('app/assets/icons');
-const OUTPUT_FILE = path.resolve('app/components/auto-generated-icons.ts');
+const OUTPUT_FILE = path.resolve(
+  'app/components/common/auto-generated-icons.ts',
+);
 
 /*
   remove .svg extension of file name, split name with hyphens + underscores into word parts,
