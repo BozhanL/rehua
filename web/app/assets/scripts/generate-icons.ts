@@ -30,7 +30,7 @@ async function generateIcons(): Promise<void> {
   const imports = files
     .map((file) => {
       const iconName = toPascalCase(file);
-      return `import ${iconName} from '../assets/icons/${file}';`;
+      return `import ${iconName} from '../../assets/icons/${file}';`;
     })
     .join('\n');
 
