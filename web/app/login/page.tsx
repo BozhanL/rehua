@@ -4,6 +4,7 @@ import ContentButton from '../components/ContentButton';
 import Icon from '../components/Icon';
 import Logo from '../components/Logo';
 import SingleLineInput from '../components/SingleLineInput';
+import MFAModal from '../components/mfa/MFAModal';
 import React, { useState, type JSX } from 'react';
 import { functional } from 'typia';
 
@@ -11,6 +12,8 @@ function Home(): JSX.Element {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  const [isMFAOpen, setisMFAOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-7">
@@ -26,6 +29,9 @@ function Home(): JSX.Element {
           e.preventDefault();
           //TODO:
           // Auth logic
+
+          //Then :
+          setisMFAOpen(true);
         }}
       >
         {/* username */}
@@ -85,6 +91,12 @@ function Home(): JSX.Element {
           />
         </div>
       </form>
+      <MFAModal
+        open={isMFAOpen}
+        onBack={() => {
+          setisMFAOpen(false);
+        }}
+      />
     </div>
   );
 }
