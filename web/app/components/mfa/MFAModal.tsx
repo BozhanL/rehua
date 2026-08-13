@@ -111,7 +111,7 @@ function AddMFAModal({ open, onBack }: Readonly<MFAModalProps>): JSX.Element {
               maxLength={1}
               inputMode="numeric"
               className="
-                size-20 rounded-3xl bg-rehua-light-gray text-center shadow-xl
+                size-20 rounded-3xl bg-rehua-light-gray text-center shadow-md
                 shadow-rehua-dark-gray
                 focus:border-rehua-maroon
               "
