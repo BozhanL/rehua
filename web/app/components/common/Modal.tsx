@@ -4,6 +4,7 @@ import type { SurfaceProps } from './Surface';
 import Surface from './Surface';
 import type { CSSProperties, JSX, ReactNode } from 'react';
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalProps {
   open: boolean; // whether modal is open or closed
@@ -47,7 +48,8 @@ function Modal({
   }
 
   // otherwise, render modal
-  return (
+  // https://react.dev/reference/react-dom/createPortal#rendering-a-modal-dialog-with-a-portal
+  return createPortal(
     // div acts as a background overlay, centres surface by default
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center`}
@@ -71,8 +73,10 @@ function Modal({
       >
         {children}
       </Surface>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
 export default Modal;
+export type { ModalProps };

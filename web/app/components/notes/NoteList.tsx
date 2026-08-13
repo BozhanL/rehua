@@ -1,6 +1,6 @@
 'use client';
 
-import ContentButton from '../ContentButton';
+import ContentButton from '../common/ContentButton';
 import DOMPurify from 'dompurify';
 import type { JSX } from 'react';
 

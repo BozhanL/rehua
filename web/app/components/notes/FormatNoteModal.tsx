@@ -1,8 +1,8 @@
 'use client';
 
-import ContentButton from '../ContentButton';
-import Icon from '../Icon';
-import Modal from '../Modal';
+import ContentButton from '../common/ContentButton';
+import Icon from '../common/Icon';
+import Modal from '../common/Modal';
 import type { Note } from './NoteList';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
 import {

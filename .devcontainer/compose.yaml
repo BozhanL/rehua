@@ -7,7 +7,7 @@ services:
     command: sleep infinity
 
   db:
-    image: mongo:8.3@sha256:2f02e2184c6d91c3208e5ab75a0707d1386a05377b20fdaf49a314815774d863
+    image: mongo:8.3@sha256:44dce4b1688969ff3fdbfc438fd6113f734140ad96e3639ef17ee26a162dfb58
     restart: unless-stopped
     environment:
       # Work around MongoDB 8.0+ startup crashes on Linux kernel 6.19
