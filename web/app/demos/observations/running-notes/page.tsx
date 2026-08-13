@@ -1,6 +1,6 @@
 'use client';
 
-import ContentButton from '@/app/components/ContentButton';
+import ContentButton from '@/app/components/common/ContentButton';
 import AddNoteModal from '@/app/components/notes/AddNoteModal';
 import FormatNoteModal from '@/app/components/notes/FormatNoteModal';
 import NoteList, {
