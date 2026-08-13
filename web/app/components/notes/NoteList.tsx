@@ -1,6 +1,6 @@
 'use client';
 
-import ContentButton from '../ContentButton';
+import ContentButton from '../common/ContentButton';
 import type { JSX } from 'react';
 
 // interface representing data for audit of a note (version history)
