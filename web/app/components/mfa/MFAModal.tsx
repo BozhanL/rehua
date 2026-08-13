@@ -1,5 +1,5 @@
-import ContentButton from '../ContentButton';
-import Modal from '../Modal';
+import ContentButton from '../common/ContentButton';
+import Modal from '../common/Modal';
 import { useEffect, useRef } from 'react';
 import type { JSX } from 'react/jsx-runtime';
 
