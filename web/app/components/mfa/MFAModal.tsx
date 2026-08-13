@@ -1,20 +1,26 @@
 import ContentButton from '../ContentButton';
 import Modal from '../Modal';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import type { JSX } from 'react/jsx-runtime';
 
 interface MFAModalProps {
-  open: boolean;
-  onBack: () => void; // call back function
+  open: boolean; // whether the modal is open or closed
+  onBack: () => void; // call back function to let the parent handle the back button
 }
 
 function AddMFAModal({ open, onBack }: Readonly<MFAModalProps>): JSX.Element {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  //focus the input box when modal opens
+  useEffect(() => {
+    if (open) {
+      inputRefs.current[0]?.focus();
+    }
+  }, [open]);
+
   function handleLogin(): void {
     const code = inputRefs.current.map((el) => el?.value ?? '').join(''); // 1,2,3,4 = '1234'
     // validate length
-    console.log(code.length);
     if (code.length !== 6) {
       return;
     } else {
@@ -25,13 +31,11 @@ function AddMFAModal({ open, onBack }: Readonly<MFAModalProps>): JSX.Element {
 
   function handlePaste(e: React.ClipboardEvent, index: number): void {
     e.preventDefault();
-
     const pasted = e.clipboardData.getData('text').replace(/\D/g, ''); // strip non-digits
     if (!pasted) {
       return;
     }
-
-    // Fill starting from the box that was pasted into
+    // fill starting from the box that was pasted into
     const chars = pasted.slice(0, 6 - index).split('');
 
     chars.forEach((char, offset) => {
@@ -41,8 +45,7 @@ function AddMFAModal({ open, onBack }: Readonly<MFAModalProps>): JSX.Element {
         input.value = char;
       }
     });
-
-    // Focus the next empty box, or the last filled one if the code is complete
+    // focus the next empty box, or the last filled one if the code is complete
     const nextIndex = Math.min(index + chars.length, 5);
     inputRefs.current[nextIndex]?.focus();
   }
@@ -83,9 +86,6 @@ function AddMFAModal({ open, onBack }: Readonly<MFAModalProps>): JSX.Element {
     }
   }
 
-  //TODO:
-  // auth + popups
-  //
   return (
     <Modal surfaceProps={{ width: 700, height: 300 }} open={open}>
       {/* content div */}
@@ -112,7 +112,7 @@ function AddMFAModal({ open, onBack }: Readonly<MFAModalProps>): JSX.Element {
               inputMode="numeric"
               className="
                 size-20 rounded-3xl bg-rehua-light-gray text-center shadow-md
-                shadow-rehua-dark-gray
+                shadow-rehua-dark-gray outline-none
                 focus:border-rehua-maroon
               "
               style={{
@@ -136,7 +136,7 @@ function AddMFAModal({ open, onBack }: Readonly<MFAModalProps>): JSX.Element {
           ))}
         </div>
 
-        {/* buttons go back and login */}
+        {/* buttons: go back and login */}
         <div className="mt-3 flex gap-60">
           <ContentButton
             text1="Go Back"
