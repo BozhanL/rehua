@@ -1,9 +1,9 @@
 'use client';
 
-import ContentButton from '../components/ContentButton';
-import Icon from '../components/Icon';
-import Logo from '../components/Logo';
-import SingleLineInput from '../components/SingleLineInput';
+import ContentButton from '../components/common/ContentButton';
+import Icon from '../components/common/Icon';
+import Logo from '../components/common/Logo';
+import SingleLineInput from '../components/common/SingleLineInput';
 import MFAModal from '../components/mfa/MFAModal';
 import React, { useState, type JSX } from 'react';
 import { functional } from 'typia';
