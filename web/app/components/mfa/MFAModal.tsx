@@ -25,7 +25,7 @@ function AddMFAModal({ open, onBack }: Readonly<MFAModalProps>): JSX.Element {
       return;
     } else {
       //TODO
-      // API call
+      // API call ?
     }
   }
 
