@@ -45,24 +45,25 @@ function Table<T extends TableRow>({
                   textAlign: contentAlignments[columns.indexOf(column)],
                 }}
               >
-                {column.header}
+                {column.header /* display column header text */}
               </th>
             ))}
           </tr>
         </thead>
 
-        {/* table body */}
         <tbody>
+          {/* if there are no rows to display */}
           {rows.length === 0 ? (
             <tr>
               <td
-                colSpan={columns.length}
+                colSpan={columns.length} // stretch a single cell across all columns
                 className="px-4 py-10 text-center text-sm"
               >
-                {emptyMessage}
+                {emptyMessage /* display empty message across all columns */}
               </td>
             </tr>
           ) : (
+            // otherwise display table body; rows
             rows.map((row, rowIndex) => (
               <tr
                 key={String(row.id)}
