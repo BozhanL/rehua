@@ -31,15 +31,15 @@ function Table<T extends TableRow>({
 
   return (
     <div className="w-full overflow-x-auto">
-      <table className="w-full border-collapse">
+      <table className="w-full table-fixed border-collapse">
         {/* table headers */}
-        <thead className="bg-rehua-dark-gray">
+        <thead className="bg-rehua-gray">
           {/* table header row */}
           <tr>
             {columns.map((column) => (
               <th
                 key={String(column.rowKey)}
-                className="px-4 py-3 text-sm font-bold"
+                className="px-4 py-3 text-lg font-bold"
                 style={{
                   width: columnWidths[columns.indexOf(column)],
                   textAlign: contentAlignments[columns.indexOf(column)],
@@ -57,7 +57,7 @@ function Table<T extends TableRow>({
             <tr>
               <td
                 colSpan={columns.length} // stretch a single cell across all columns
-                className="px-4 py-10 text-center text-sm"
+                className="px-4 py-10 text-center text-xl"
               >
                 {emptyMessage /* display empty message across all columns */}
               </td>
@@ -77,7 +77,7 @@ function Table<T extends TableRow>({
                   columns.map((column) => (
                     <td
                       key={String(column.rowKey)}
-                      className="px-4 py-3 align-middle text-sm"
+                      className="px-4 py-3 align-middle text-lg"
                       style={{
                         width: columnWidths[columns.indexOf(column)],
                         textAlign: contentAlignments[columns.indexOf(column)],
@@ -97,3 +97,4 @@ function Table<T extends TableRow>({
 }
 
 export default Table;
+export type { TableRow, TableColumn, TableProps };
