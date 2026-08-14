@@ -33,16 +33,13 @@ function Table<T extends TableRow>({
     <div className="w-full overflow-x-auto">
       <table className="w-full border-collapse">
         {/* table header */}
-        <thead className="bg-rehua-white">
+        <thead className="bg-rehua-dark-gray">
           {/* table header row */}
           <tr>
             {columns.map((column) => (
               <th
                 key={String(column.rowKey)}
-                className="
-                  border-b border-gray-200 px-4 py-3 text-sm font-bold
-                  text-gray-900
-                "
+                className="px-4 py-3 text-sm font-bold"
                 style={{
                   width: columnWidths[columns.indexOf(column)],
                   textAlign: contentAlignments[columns.indexOf(column)],
@@ -60,7 +57,7 @@ function Table<T extends TableRow>({
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-4 py-10 text-center text-sm text-gray-500"
+                className="px-4 py-10 text-center text-sm"
               >
                 {emptyMessage}
               </td>
@@ -69,15 +66,14 @@ function Table<T extends TableRow>({
             rows.map((row, rowIndex) => (
               <tr
                 key={String(row.id)}
-                className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                className={
+                  rowIndex % 2 === 0 ? 'bg-rehua-white' : 'bg-rehua-light-gray'
+                }
               >
                 {columns.map((column) => (
                   <td
                     key={String(column.rowKey)}
-                    className="
-                      border-b border-gray-100 px-4 py-3 align-middle text-sm
-                      text-gray-900
-                    "
+                    className="px-4 py-3 align-middle text-sm"
                     style={{
                       width: columnWidths[columns.indexOf(column)],
                       textAlign: contentAlignments[columns.indexOf(column)],
