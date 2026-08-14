@@ -6,7 +6,7 @@ interface TableRow {
 }
 
 interface TableColumn<T extends TableRow = TableRow> {
-  key: keyof T | string; // which part of row to display in this column, | string allows custom columns that do not exist in row
+  rowKey: keyof T | string; // which part of row to display in this column, | string allows custom columns that do not exist in row
   header: string;
   width?: number; // optional width of column in pixels, fallback to 120px
   contentAlignment?: 'left' | 'center' | 'right'; // optional alignment of column content, fallback to 'left'
@@ -38,11 +38,7 @@ function Table<T extends TableRow>({
           <tr>
             {columns.map((column) => (
               <th
-                key={
-                  typeof column.key === 'string'
-                    ? column.key
-                    : String(column.key)
-                }
+                key={String(column.rowKey)}
                 className="
                   border-b border-gray-200 px-4 py-3 text-sm font-bold
                   text-gray-900
@@ -72,16 +68,12 @@ function Table<T extends TableRow>({
           ) : (
             rows.map((row, rowIndex) => (
               <tr
-                key={typeof row.id === 'string' ? row.id : String(row.id)}
+                key={String(row.id)}
                 className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
               >
                 {columns.map((column) => (
                   <td
-                    key={
-                      typeof column.key === 'string'
-                        ? column.key
-                        : String(column.key)
-                    }
+                    key={String(column.rowKey)}
                     className="
                       border-b border-gray-100 px-4 py-3 align-middle text-sm
                       text-gray-900
@@ -91,7 +83,7 @@ function Table<T extends TableRow>({
                       textAlign: contentAlignments[columns.indexOf(column)],
                     }}
                   >
-                    {row[column.key as keyof T]}
+                    {row[column.rowKey as keyof T]}
                   </td>
                 ))}
               </tr>
