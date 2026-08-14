@@ -32,7 +32,7 @@ function Table<T extends TableRow>({
   return (
     <div className="w-full overflow-x-auto">
       <table className="w-full border-collapse">
-        {/* table header */}
+        {/* table headers */}
         <thead className="bg-rehua-dark-gray">
           {/* table header row */}
           <tr>
@@ -63,26 +63,30 @@ function Table<T extends TableRow>({
               </td>
             </tr>
           ) : (
-            // otherwise display table body; rows
+            // otherwise display table body
             rows.map((row, rowIndex) => (
+              // make row
               <tr
                 key={String(row.id)}
                 className={
                   rowIndex % 2 === 0 ? 'bg-rehua-white' : 'bg-rehua-light-gray'
                 }
               >
-                {columns.map((column) => (
-                  <td
-                    key={String(column.rowKey)}
-                    className="px-4 py-3 align-middle text-sm"
-                    style={{
-                      width: columnWidths[columns.indexOf(column)],
-                      textAlign: contentAlignments[columns.indexOf(column)],
-                    }}
-                  >
-                    {row[column.rowKey as keyof T]}
-                  </td>
-                ))}
+                {
+                  // make cells for each column in the row
+                  columns.map((column) => (
+                    <td
+                      key={String(column.rowKey)}
+                      className="px-4 py-3 align-middle text-sm"
+                      style={{
+                        width: columnWidths[columns.indexOf(column)],
+                        textAlign: contentAlignments[columns.indexOf(column)],
+                      }}
+                    >
+                      {row[column.rowKey as keyof T]}
+                    </td>
+                  ))
+                }
               </tr>
             ))
           )}
