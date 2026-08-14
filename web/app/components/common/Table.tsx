@@ -6,7 +6,7 @@ interface TableRow {
 }
 
 interface TableColumn<T extends TableRow = TableRow> {
-  rowKey: keyof T | string; // which part of row to display in this column, | string allows custom columns that do not exist in row
+  rowKey: keyof T; // which part of row to display in this column
   header: string;
   width?: number; // optional width of column in pixels, fallback to 120px
   contentAlignment?: 'left' | 'center' | 'right'; // optional alignment of column content, fallback to 'left'
@@ -83,7 +83,7 @@ function Table<T extends TableRow>({
                         textAlign: contentAlignments[columns.indexOf(column)],
                       }}
                     >
-                      {row[column.rowKey as keyof T]}
+                      {row[column.rowKey]}
                     </td>
                   ))
                 }
