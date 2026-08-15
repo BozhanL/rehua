@@ -13,6 +13,15 @@ interface PaginationProps {
   onRowsPerPageChange: (rows: number) => void; // handled by parent, updates rowsPerPage state, e.g. reset to page 1 and request 15 rows
 }
 
+// functions for determining buttons colours depending on whether they are clicked or not
+function foregroundColorPicker(selectedCondition: boolean): string {
+  return selectedCondition ? 'text-rehua-white' : 'text-rehua-black';
+}
+
+function backgroundColorPicker(selectedCondition: boolean): string {
+  return selectedCondition ? 'bg-rehua-navy' : 'bg-rehua-gray';
+}
+
 // React component that renders pagination controls for a table
 function Pagination({
   totalRows,
@@ -73,6 +82,8 @@ function Pagination({
               <ContentButton
                 text1="5"
                 horizontalPadding={0.4}
+                foregroundColor={foregroundColorPicker(rowsPerPage === 5)}
+                backgroundColor={backgroundColorPicker(rowsPerPage === 5)}
                 onClick={() => {
                   onRowsPerPageChange(5);
                 }}
@@ -81,6 +92,8 @@ function Pagination({
               <ContentButton
                 text1="10"
                 horizontalPadding={0.3}
+                foregroundColor={foregroundColorPicker(rowsPerPage === 10)}
+                backgroundColor={backgroundColorPicker(rowsPerPage === 10)}
                 onClick={() => {
                   onRowsPerPageChange(10);
                 }}
@@ -89,6 +102,8 @@ function Pagination({
               <ContentButton
                 text1="15"
                 horizontalPadding={0.3}
+                foregroundColor={foregroundColorPicker(rowsPerPage === 15)}
+                backgroundColor={backgroundColorPicker(rowsPerPage === 15)}
                 onClick={() => {
                   onRowsPerPageChange(15);
                 }}
@@ -114,6 +129,7 @@ function Pagination({
                     flip: 'horizontal',
                   }}
                   horizontalPadding={0.4}
+                  backgroundColor="bg-rehua-navy"
                   onClick={() => {
                     goToPage(currentPage - 1);
                   }}
@@ -129,6 +145,12 @@ function Pagination({
                       key={page}
                       text1={String(page)}
                       horizontalPadding={0.4}
+                      foregroundColor={foregroundColorPicker(
+                        currentPage === page,
+                      )}
+                      backgroundColor={backgroundColorPicker(
+                        currentPage === page,
+                      )}
                       onClick={() => {
                         goToPage(page);
                       }}
@@ -143,6 +165,12 @@ function Pagination({
                       key={page}
                       text1={String(page)}
                       horizontalPadding={0.4}
+                      foregroundColor={foregroundColorPicker(
+                        currentPage === page,
+                      )}
+                      backgroundColor={backgroundColorPicker(
+                        currentPage === page,
+                      )}
                       onClick={() => {
                         goToPage(page);
                       }}
@@ -173,6 +201,12 @@ function Pagination({
                       horizontalPadding={
                         enteredPage !== null && enteredPage > 9 ? 0.3 : 0.4
                       }
+                      foregroundColor={foregroundColorPicker(
+                        currentPage === enteredPage,
+                      )}
+                      backgroundColor={backgroundColorPicker(
+                        currentPage === enteredPage,
+                      )}
                       onClick={openPageInput}
                     />
                   )}
@@ -181,6 +215,13 @@ function Pagination({
                   <ContentButton
                     text1={String(totalPages)}
                     horizontalPadding={totalPages > 9 ? 0.3 : 0.4}
+                    foregroundColor={foregroundColorPicker(
+                      currentPage === totalPages,
+                    )}
+                    backgroundColor={backgroundColorPicker(
+                      currentPage === totalPages,
+                    )}
+
                     onClick={() => {
                       goToPage(totalPages);
                     }}
@@ -193,6 +234,7 @@ function Pagination({
                 <ContentButton
                   iconProps={{ name: 'simple-arrow', width: 0.3 }}
                   horizontalPadding={0.4}
+                  backgroundColor="bg-rehua-navy"
                   onClick={() => {
                     goToPage(currentPage + 1);
                   }}
