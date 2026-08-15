@@ -30,10 +30,10 @@ function Table<T extends TableRow>({
   );
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-x-auto">
       <table className="w-full table-fixed border-collapse">
         {/* table headers */}
-        <thead className="sticky top-0 z-10 bg-rehua-gray">
+        <thead className="bg-rehua-gray">
           {/* table header row */}
           <tr>
             {columns.map((column) => (
