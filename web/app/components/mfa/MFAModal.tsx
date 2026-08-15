@@ -1,4 +1,5 @@
 import ContentButton from '../common/ContentButton';
+import type { IconProps } from '../common/Icon';
 import Modal from '../common/Modal';
 import { useEffect, useRef } from 'react';
 import type { JSX } from 'react/jsx-runtime';
@@ -6,9 +7,18 @@ import type { JSX } from 'react/jsx-runtime';
 interface MFAModalProps {
   open: boolean; // whether the modal is open or closed
   onBack: () => void; // call back function to let the parent handle the back button
+  confirmButtonText1?: string;
+  confirmButtonText2?: string;
+  confirmButtonIcon?: IconProps['name'];
 }
 
-function AddMFAModal({ open, onBack }: Readonly<MFAModalProps>): JSX.Element {
+function AddMFAModal({
+  open,
+  onBack,
+  confirmButtonText1 = 'Login',
+  confirmButtonText2,
+  confirmButtonIcon = 'key',
+}: Readonly<MFAModalProps>): JSX.Element {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   //focus the input box when modal opens
@@ -150,16 +160,15 @@ function AddMFAModal({ open, onBack }: Readonly<MFAModalProps>): JSX.Element {
           />
 
           <ContentButton
-            text1="Login"
+            text1={confirmButtonText1}
+            text2={confirmButtonText2 ?? ''}
             backgroundColor="bg-rehua-green"
             onClick={() => {
-              //TO DO
-              //login logic
               handleLogin();
             }}
             horizontalPadding={0.5}
             height={45}
-            iconProps={{ name: 'key' }}
+            iconProps={{ name: confirmButtonIcon }}
           />
         </div>
       </div>
