@@ -7,7 +7,7 @@ interface TableRow {
 
 interface TableColumn<T extends TableRow = TableRow> {
   rowKey: keyof T; // which part of row to display in this column
-  header: string;
+  header: ReactNode;
   width?: number; // optional width of column in pixels, fallback to 120px
   contentAlignment?: 'left' | 'center' | 'right'; // optional alignment of column content, fallback to 'left'
 }
