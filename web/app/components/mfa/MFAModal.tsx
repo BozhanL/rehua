@@ -1,7 +1,8 @@
 import ContentButton from '../common/ContentButton';
 import type { IconProps } from '../common/Icon';
 import Modal from '../common/Modal';
-import { useEffect, useRef } from 'react';
+import PopUp from '../common/PopUp';
+import { useEffect, useRef, useState } from 'react';
 import type { JSX } from 'react/jsx-runtime';
 
 interface MFAModalProps {
@@ -10,6 +11,8 @@ interface MFAModalProps {
   confirmButtonText1?: string;
   confirmButtonText2?: string;
   confirmButtonIcon?: IconProps['name'];
+  onSubmitCode: (code: string) => void; // let parent component handle full /auth/login with username,password, and totpcode
+  isSubmitting?: boolean;
 }
 
 function AddMFAModal({
@@ -18,8 +21,11 @@ function AddMFAModal({
   confirmButtonText1 = 'Login',
   confirmButtonText2,
   confirmButtonIcon = 'key',
+  onSubmitCode,
+  isSubmitting = false,
 }: Readonly<MFAModalProps>): JSX.Element {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [errorOpen, setErrorOpen] = useState(false);
 
   //focus the input box when modal opens
   useEffect(() => {
@@ -28,15 +34,14 @@ function AddMFAModal({
     }
   }, [open]);
 
-  function handleLogin(): void {
+  function handleSubmit(): void {
     const code = inputRefs.current.map((el) => el?.value ?? '').join(''); // 1,2,3,4 = '1234'
     // validate length
     if (code.length !== 6) {
+      setErrorOpen(true);
       return;
-    } else {
-      //TODO
-      // API call ?
     }
+    onSubmitCode(code);
   }
 
   function handlePaste(e: React.ClipboardEvent, index: number): void {
@@ -89,7 +94,7 @@ function AddMFAModal({
         break;
       case 'Enter':
         e.preventDefault();
-        handleLogin();
+        handleSubmit();
         return;
       default:
         return;
@@ -120,6 +125,7 @@ function AddMFAModal({
               }}
               maxLength={1}
               inputMode="numeric"
+              disabled={isSubmitting}
               className="
                 size-20 rounded-3xl bg-rehua-light-gray text-center shadow-md
                 shadow-rehua-dark-gray outline-none
@@ -146,7 +152,7 @@ function AddMFAModal({
           ))}
         </div>
 
-        {/* buttons: go back and login */}
+        {/* buttons: go back and login/confirm */}
         <div className="mt-3 flex gap-60">
           <ContentButton
             text1="Go Back"
@@ -160,11 +166,11 @@ function AddMFAModal({
           />
 
           <ContentButton
-            text1={confirmButtonText1}
+            text1={isSubmitting ? 'Checking...' : confirmButtonText1}
             text2={confirmButtonText2 ?? ''}
             backgroundColor="bg-rehua-green"
             onClick={() => {
-              handleLogin();
+              handleSubmit();
             }}
             horizontalPadding={0.5}
             height={45}
@@ -172,6 +178,20 @@ function AddMFAModal({
           />
         </div>
       </div>
+      <PopUp
+        isAlertPopup
+        text1={'Please enter all 6 digits'}
+        modalProps={{
+          open: errorOpen,
+        }}
+        button1Props={{
+          text1: 'Ok',
+          backgroundColor: 'bg-rehua-green',
+          onClick: () => {
+            setErrorOpen(false);
+          },
+        }}
+      />
     </Modal>
   );
 }
