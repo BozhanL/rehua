@@ -1,17 +1,12 @@
 import { ObservationType } from './observation-type.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type ObservationDocument = HydratedDocument<Observation>;
 
 @Schema()
 export class Observation {
-  @Prop({
-    type: mongoose.Types.ObjectId,
-    ref: 'Patient',
-    required: true,
-    index: true,
-  })
+  @Prop({ required: true, type: String })
   patientId: string;
 
   @Prop({ required: true, type: String })

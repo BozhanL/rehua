@@ -1,17 +1,12 @@
 import { ObservationSchema } from '@/schema/observations/entities/observation.entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type EmergencyContactDocument = HydratedDocument<EmergencyContact>;
 
 @Schema()
 export class EmergencyContact {
-  @Prop({
-    type: mongoose.Types.ObjectId,
-    ref: 'Patient',
-    required: true,
-    index: true,
-  })
+  @Prop({ required: true, type: String })
   patientId: string;
 
   @Prop({ required: true, type: Number })
