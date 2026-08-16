@@ -3,17 +3,36 @@
 import ContentButton from '../components/common/ContentButton';
 import Icon from '../components/common/Icon';
 import Logo from '../components/common/Logo';
+import PopUp from '../components/common/PopUp';
 import SingleLineInput from '../components/common/SingleLineInput';
 import MFAModal from '../components/mfa/MFAModal';
+import useApiUrl from '../hooks/useApiUrl';
+import { isTesting } from '@/app/utils/env';
+import { login as loginSdk } from '@rehua/sdk/functional/auth';
+import { useMutation } from '@tanstack/react-query';
 import React, { useState, type JSX } from 'react';
 import { functional } from 'typia';
 
 function Home(): JSX.Element {
+  const host = useApiUrl();
+
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
   const [isMFAOpen, setisMFAOpen] = useState(false);
+
+  const loginMutation = useMutation({
+    mutationFn: async (totpCode: string) =>
+      loginSdk(
+        { host, simulate: isTesting, options: { credentials: 'include' } },
+        { userId: Number(username), password, totpCode },
+      ),
+    onSuccess: () => {
+      setisMFAOpen(false);
+      // TODO
+      // navigated to main page
+    },
+  });
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-7">
@@ -27,10 +46,6 @@ function Home(): JSX.Element {
         className="flex w-full max-w-md flex-col gap-6 text-xl"
         onSubmit={(e) => {
           e.preventDefault();
-          //TODO:
-          // Auth logic
-
-          //Then :
           setisMFAOpen(true);
         }}
       >
@@ -95,7 +110,12 @@ function Home(): JSX.Element {
         open={isMFAOpen}
         onBack={() => {
           setisMFAOpen(false);
+          loginMutation.reset();
         }}
+        onSubmitCode={(code) => {
+          loginMutation.mutate(code);
+        }}
+        isSubmitting={loginMutation.isPending}
       />
     </div>
   );
