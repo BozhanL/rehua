@@ -11,7 +11,7 @@ import {
 import { Controller, Param } from '@nestjs/common';
 import { UpdateWriteOpResult } from 'mongoose';
 
-@Controller('Patient')
+@Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 

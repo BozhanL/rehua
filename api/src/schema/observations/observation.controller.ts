@@ -11,7 +11,7 @@ import {
 } from '@nestia/core';
 import { Controller } from '@nestjs/common';
 
-@Controller('/observations')
+@Controller('observations')
 export class ObservationsController {
   constructor(private readonly observationService: ObservationService) {}
 
