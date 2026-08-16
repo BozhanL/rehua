@@ -8,7 +8,7 @@ import {
   TypedParam,
   TypedRoute,
 } from '@nestia/core';
-import { Controller, Param } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { UpdateWriteOpResult } from 'mongoose';
 
 @Controller('patient')
@@ -95,7 +95,7 @@ export class PatientController {
 
   @TypedRoute.Patch(':id')
   async update(
-    @Param('id') id: string,
+    @TypedParam('id') id: string,
     @TypedBody() updatePatientDto: UpdatePatientDto,
   ): Promise<UpdateWriteOpResult> {
     return this.patientService.update(id, updatePatientDto);
