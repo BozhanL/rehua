@@ -37,10 +37,14 @@ function Pagination({
   // calculate how many pages there are based on totalRows and rowsPerPage
   const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
 
+  // clamp page number to be within valid range (1 to totalPages)
+  function clamp(page: number): number {
+    return Math.min(Math.max(page, 1), totalPages);
+  }
+
   // go to a specific page, clamping page number to be within valid range
   function goToPage(page: number): void {
-    const clamped = Math.min(Math.max(page, 1), totalPages);
-    onPageChange(clamped);
+    onPageChange(clamp(page));
   }
 
   // handle when user submits page number in input field
@@ -50,14 +54,13 @@ function Pagination({
 
     // if page is a valid number, go to that page
     if (!Number.isNaN(page)) {
-      const clamped = Math.min(Math.max(page, 1), totalPages);
-      setEnteredPage(clamped);
-      goToPage(clamped);
+      const clampedPage = clamp(page);
+      setEnteredPage(clampedPage);
+      goToPage(clampedPage);
     }
 
-    // reset typing state and clear input field
+    // reset typing state
     setIsTypingPage(false);
-    setPageInput('');
   }
 
   // open page input field for user to type a page number
@@ -221,7 +224,6 @@ function Pagination({
                     backgroundColor={backgroundColorPicker(
                       currentPage === totalPages,
                     )}
-
                     onClick={() => {
                       goToPage(totalPages);
                     }}
