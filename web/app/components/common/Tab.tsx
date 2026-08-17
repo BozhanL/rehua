@@ -9,6 +9,7 @@ interface Tab {
   label: string; // tab title
   iconProps?: IconProps; // optional icon for tab
   content: ReactNode; // tab content to be displayed when tab is active
+  horizontalPadding?: string; // optional horizontal padding, fallback to '50px'
 }
 
 interface TabsProps {
@@ -33,9 +34,9 @@ function Tabs({ tabs, textClassName }: Readonly<TabsProps>): JSX.Element {
   }
 
   return (
-    <div className="w-full">
+    <div className="flex h-dvh flex-col">
       {/* tabs bar, iterate through array and render each tab */}
-      <div className="flex w-full">
+      <div className="flex w-full shrink-0">
         {tabs.map((tab, index) => {
           // determine if tab is active, first, or last for styling purposes
           const isActive = index === activeTab;
@@ -50,7 +51,7 @@ function Tabs({ tabs, textClassName }: Readonly<TabsProps>): JSX.Element {
                 setActiveTab(index);
               }}
               className={`
-                flex flex-1 items-center justify-center gap-2 px-4 py-3
+                flex flex-none items-center justify-center gap-3 py-3
                 transition-colors
                 ${
                   isActive
@@ -60,16 +61,30 @@ function Tabs({ tabs, textClassName }: Readonly<TabsProps>): JSX.Element {
                 ${isFirst ? 'rounded-tl-xl' : ''}
                 ${isLast ? 'rounded-tr-xl' : ''}
               `}
+              style={{
+                paddingLeft: tab.horizontalPadding ?? '40px',
+                paddingRight: tab.horizontalPadding ?? '40px',
+              }}
             >
               {tab.iconProps && <Icon {...tab.iconProps} />}
-              <span className={textClassName}>{tab.label}</span>
+              <span
+                className={`
+                  text-2xl font-bold
+                  ${textClassName ?? ''}
+                `}
+              >
+                {tab.label}
+              </span>
             </button>
           );
         })}
       </div>
-
       {/* tab content */}
-      <Surface>{validatedActiveTab.content}</Surface>
+      <div className="min-h-0 flex-1">
+        <Surface width={'100%'} height={'100%'} style={{ borderRadius: 0 }}>
+          {validatedActiveTab.content}
+        </Surface>
+      </div>
     </div>
   );
 }
