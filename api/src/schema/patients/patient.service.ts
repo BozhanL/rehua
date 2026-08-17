@@ -25,13 +25,13 @@ export class PatientService {
   }
 
   async findPage(
-    pageSize: number,
+    numberOfRows: number,
     pageNumber: number,
   ): Promise<PatientDocument[]> {
     return this.patientModel
       .find()
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
+      .skip((pageNumber - 1) * numberOfRows)
+      .limit(numberOfRows)
       .exec();
   }
 

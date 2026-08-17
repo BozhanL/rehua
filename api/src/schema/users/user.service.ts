@@ -25,13 +25,13 @@ export class UserService {
   }
 
   async findPage(
-    pageSize: number,
+    numberOfRows: number,
     pageNumber: number,
   ): Promise<UserDocument[]> {
     return this.userModel
       .find()
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
+      .skip((pageNumber - 1) * numberOfRows)
+      .limit(numberOfRows)
       .exec();
   }
 

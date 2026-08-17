@@ -79,12 +79,12 @@ export class PatientController {
   }
 
   //returns patients like in a the list view (number of results shown, page number)
-  @TypedRoute.Get('page/:pageNumber/:pageSize')
+  @TypedRoute.Get('page/:pageNumber/:numberOfRows')
   async findPage(
-    @TypedParam('pageSize') pageSize: number,
+    @TypedParam('numberOfRows') numberOfRows: number,
     @TypedParam('pageNumber') pageNumber: number,
   ): Promise<(Patient & { _id: string })[]> {
-    const docs = await this.patientService.findPage(pageSize, pageNumber);
+    const docs = await this.patientService.findPage(numberOfRows, pageNumber);
 
     return docs.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread

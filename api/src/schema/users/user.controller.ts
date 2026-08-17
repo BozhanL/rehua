@@ -69,12 +69,12 @@ export class UserController {
     return formattedDoc;
   }
 
-  @TypedRoute.Get('page/:pageNumber/:pageSize')
+  @TypedRoute.Get('page/:pageNumber/:numberOfRows')
   async findPage(
     @TypedParam('pageNumber') pageNumber: number,
-    @TypedParam('pageSize') pageSize: number,
+    @TypedParam('numberOfRows') numberOfRows: number,
   ): Promise<(User & { _id: string })[]> {
-    const docs = await this.userService.findPage(pageSize, pageNumber);
+    const docs = await this.userService.findPage(numberOfRows, pageNumber);
 
     return docs.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
