@@ -1,7 +1,6 @@
 'use client';
 
-import type { IconProps } from './Icon';
-import Icon from './Icon';
+import Icon, { type IconProps } from './Icon';
 import Surface from './Surface';
 import { useState, type JSX, type ReactNode } from 'react';
 
