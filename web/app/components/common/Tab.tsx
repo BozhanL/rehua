@@ -36,7 +36,7 @@ function Tabs({ tabs, textClassName }: Readonly<TabsProps>): JSX.Element {
   return (
     <div className="flex h-dvh flex-col">
       {/* tabs bar, iterate through array and render each tab */}
-      <div className="flex w-full shrink-0">
+      <div className="relative z-10 flex w-full shrink-0">
         {tabs.map((tab, index) => {
           // determine if tab is active, first, or last for styling purposes
           const isActive = index === activeTab;
@@ -81,7 +81,11 @@ function Tabs({ tabs, textClassName }: Readonly<TabsProps>): JSX.Element {
       </div>
       {/* tab content */}
       <div className="min-h-0 flex-1">
-        <Surface width={'100%'} height={'100%'} style={{ borderRadius: 0 }}>
+        <Surface
+          width={'100%'}
+          height={'100%'}
+          style={{ borderRadius: 0, boxShadow: '0 0 15px rgb(0 0 0 / 0.27)' }}
+        >
           {validatedActiveTab.content}
         </Surface>
       </div>
