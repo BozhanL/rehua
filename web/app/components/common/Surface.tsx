@@ -31,12 +31,12 @@ function Surface({
     <div
       {...props}
       style={{
-        ...style,
         height: height,
         width: width,
         opacity: opacity,
         boxShadow: boxShadow,
         borderRadius: borderRadius,
+        ...style,
       }}
       className={`bg-rehua-white`}
     >
