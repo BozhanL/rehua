@@ -1,5 +1,5 @@
-// TODO: remove TotpPayload type and only return the totpSecret
 // Generate the TOTP uri on the client side
+// TODO: add user type (admin or nurse)
 export class TotpResponse {
   constructor(
     public totpSecret: string,

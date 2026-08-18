@@ -5,8 +5,8 @@ import { JwtAuthGuard } from './jwt.guard';
 import { JWT_COOKIE_NAME } from './jwt.strategy';
 import { LocalAuthGuard } from './local.guard';
 import { TOTPAuthGuard } from './totp.guard';
-import { User } from '@/users/users.decorator';
-import type { ExpressUser } from '@/utils/types';
+import { User } from '@/schema/users/entities/user.entity';
+import { CurrentUser } from '@/schema/users/users.decorator';
 import { TypedBody, TypedRoute } from '@nestia/core';
 import { Controller, UseGuards, Res } from '@nestjs/common';
 import type { Response } from 'express';
@@ -18,13 +18,12 @@ export class AuthController {
   @UseGuards(LocalAuthGuard, TOTPAuthGuard)
   @TypedRoute.Post('login')
   login(
-    @User() user: ExpressUser,
+    @CurrentUser() user: User,
     @Res({ passthrough: true }) response: Response,
-
     // This is a workaround for the issue where Nestia SDK does not include the body in the generated client.
     // The content will be accessed in the LocalAuthGuard and TOTPAuthGuard
     @TypedBody() _body: LoginBody,
-  ): ExpressUser {
+  ): User {
     const token = this.authService.signJwt(user);
 
     response.cookie(JWT_COOKIE_NAME, token, {
@@ -45,7 +44,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @TypedRoute.Get('totp')
   getTotpSecret(
-    @User() user: ExpressUser,
+    @CurrentUser() user: User,
   ): // TODO: remove TotpPayload type and only return the totpSecret
   // Generate the TOTP uri on the client side
   TotpResponse | null {

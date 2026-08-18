@@ -1,5 +1,5 @@
 import type { JwtContent } from './entities/jwt-content.entity';
-import { UsersService } from '@/users/users.service';
+import { UserService } from '@/schema/users/user.service';
 import type { ExpressUser } from '@/utils/types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -25,7 +25,7 @@ function cookieExtractor(req: Request): string | null {
 // This strategy is used to authenticate users using their JWT token.
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
-  constructor(private readonly usersService: UsersService) {
+  constructor(private readonly usersService: UserService) {
     super({
       jwtFromRequest: cookieExtractor,
       ignoreExpiration: false,
@@ -33,11 +33,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
     });
   }
 
-  validate(payload: JwtContent): ExpressUser {
+  async validate(payload: JwtContent): Promise<ExpressUser> {
     typia.assertGuard<typeof payload>(payload);
 
     // May have performance issues
-    const user = this.usersService.findOne(payload.userId);
+    const user = await this.usersService.findOne(payload.userId);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }

@@ -1,7 +1,7 @@
 import type { TotpResponse } from './dto/totp-response.dto';
 import { JwtContent } from './entities/jwt-content.entity';
-import { UsersService } from '@/users/users.service';
-import type { ExpressUser } from '@/utils/types';
+import { User, UserDocument } from '@/schema/users/entities/user.entity';
+import { UserService } from '@/schema/users/user.service';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { generateURI, verify } from 'otplib';
@@ -10,21 +10,21 @@ import { misc } from 'typia';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
-  validateUser(userId: number, pass: string): ExpressUser | null {
-    const user = this.usersService.findOne(userId);
+  async validateUser(userName: string, password: string): Promise<User | null> {
+    const user = await this.userService.findOneUserNameForAuth(userName);
 
-    if (user?.password === pass) {
-      return misc.assertPrune<ExpressUser>(misc.clone(user));
+    if (user?.password === password) {
+      return misc.assertPrune<User>(misc.clone(user));
     }
     return null;
   }
 
-  async validateTotp(userId: number, totpCode: string): Promise<boolean> {
-    const user = this.usersService.findOne(userId);
+  async validateTotp(userName: string, totpCode: string): Promise<boolean> {
+    const user = await this.userService.findOneUserNameForAuth(userName);
     if (!user) {
       return false;
     }
@@ -41,14 +41,14 @@ export class AuthService {
     return result.valid;
   }
 
-  signJwt(user: ExpressUser): string {
-    const payload: JwtContent = { userId: user.userId };
+  signJwt(user: UserDocument): string {
+    const payload: JwtContent = { userId: user._id.toString() };
 
     return this.jwtService.sign(payload);
   }
 
-  getTotpSecretUri(user: ExpressUser): TotpResponse | null {
-    const userData = this.usersService.findOne(user.userId);
+  async getTotpSecretUri(user: UserDocument): Promise<TotpResponse | null> {
+    const userData = await this.userService.findOne(user._id.toString());
     if (!userData) {
       return null;
     }
