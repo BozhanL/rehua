@@ -15,6 +15,12 @@ export class User {
   lastName: string;
 
   @Prop({ required: true })
+  password: string;
+
+  @Prop({ required: true })
+  totpSecret: string;
+
+  @Prop({ required: true })
   email: string;
 
   @Prop({ required: true })
@@ -33,6 +39,8 @@ export class User {
     username: string,
     firstName: string,
     lastName: string,
+    password: string,
+    totpSecret: string,
     email: string,
     status: 'active' | 'disabled',
     homePhoneNumber: string,
@@ -42,6 +50,8 @@ export class User {
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
+    this.password = password;
+    this.totpSecret = totpSecret;
     this.email = email;
     this.status = status;
     this.homePhoneNumber = homePhoneNumber;
