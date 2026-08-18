@@ -21,7 +21,9 @@ export class UserService {
   }
 
   async findOne(id: string): Promise<UserDocument | null> {
-    return this.userModel.findOne({ _id: id }).exec();
+    return this.userModel
+      .findOne({ _id: id }, { password: 0, totpSecret: 0 })
+      .exec();
   }
 
   async findPage(
