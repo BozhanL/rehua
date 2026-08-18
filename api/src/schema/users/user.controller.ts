@@ -44,6 +44,8 @@ export class UserController {
       'ACB123',
       'John',
       'Doe',
+      'password123',
+      'QIG6JDKQ5KQTCPNHYP7TAPI56LHZXGED',
       'jd@hospital.com',
       'active',
       '0123456789',

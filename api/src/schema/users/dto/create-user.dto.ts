@@ -3,6 +3,8 @@ export class CreateUserDto {
     public username: string,
     public firstName: string,
     public lastName: string,
+    public password: string,
+    public totpSecret: string,
     public email: string,
     public status: 'active' | 'disabled',
     public homePhoneNumber: string,
