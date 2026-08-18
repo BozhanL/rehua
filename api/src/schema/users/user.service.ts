@@ -26,6 +26,10 @@ export class UserService {
       .exec();
   }
 
+  async findOneUserNameForAuth(userName: string): Promise<UserDocument | null> {
+    return this.userModel.findOne({ username: userName }).exec();
+  }
+
   async findPage(
     numberOfRows: number,
     pageNumber: number,
