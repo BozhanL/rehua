@@ -1,31 +1,35 @@
 import { AuthService } from './auth.service';
 import type { LoginBody } from './dto/login-body.dto';
-import * as loginResponseDto from './dto/login-response.dto';
-import type { TotpResponse } from './dto/totp-response.dto';
+import type { LoginResponseDto } from './dto/login-response.dto';
 import { JwtAuthGuard } from './jwt.guard';
 import { JWT_COOKIE_NAME } from './jwt.strategy';
 import { LocalAuthGuard } from './local.guard';
 import { TOTPAuthGuard } from './totp.guard';
-import * as userEntity from '@/schema/users/entities/user.entity';
+import { UserService } from '@/schema/users/user.service';
 import { CurrentUser } from '@/schema/users/users.decorator';
+import type { ExpressUser } from '@/utils/types';
 import { TypedBody, TypedRoute } from '@nestia/core';
 import { Controller, UseGuards, Res } from '@nestjs/common';
 import type { Response } from 'express';
+import { misc } from 'typia';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   @UseGuards(LocalAuthGuard, TOTPAuthGuard)
   @TypedRoute.Post('login')
-  login(
-    @CurrentUser() user: loginResponseDto.LoginResponseDto,
+  async login(
+    @CurrentUser() expressUser: ExpressUser,
     @Res({ passthrough: true }) response: Response,
     // This is a workaround for the issue where Nestia SDK does not include the body in the generated client.
     // The content will be accessed in the LocalAuthGuard and TOTPAuthGuard
     @TypedBody() _body: LoginBody,
-  ): loginResponseDto.LoginResponseDto {
-    const token = this.authService.signJwt(user);
+  ): Promise<LoginResponseDto> {
+    const token = this.authService.signJwt(expressUser);
 
     response.cookie(JWT_COOKIE_NAME, token, {
       // TODO: replace with a proper expiration time
@@ -39,6 +43,16 @@ export class AuthController {
       sameSite: 'strict',
     });
 
+    const user = await this.userService.findOneUserNameForAuth(
+      expressUser.username,
+    );
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    misc.assertPrune<LoginResponseDto>(user);
+
     return user;
   }
 
@@ -47,8 +61,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @TypedRoute.Get('totp')
   async getTotpSecret(
-    @CurrentUser() user: userEntity.UserDocument,
-  ): Promise<TotpResponse | null> {
-    return this.authService.getTotpSecretUri(user);
+    @CurrentUser() user: ExpressUser,
+  ): Promise<string | null> {
+    return this.authService.getTotpSecret(user);
   }
 }

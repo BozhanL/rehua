@@ -20,12 +20,6 @@ export class UserService {
     return this.userModel.find().sort({ _id: 1 }).exec();
   }
 
-  async findOne(id: string): Promise<UserDocument | null> {
-    return this.userModel
-      .findOne({ _id: id }, { password: 0, totpSecret: 0 })
-      .exec();
-  }
-
   async findOneUserNameForAuth(userName: string): Promise<UserDocument | null> {
     return this.userModel.findOne({ username: userName }).exec();
   }
