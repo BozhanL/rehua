@@ -3,34 +3,56 @@
 import ContentButton from '../components/common/ContentButton';
 import Icon from '../components/common/Icon';
 import Logo from '../components/common/Logo';
-import PopUp from '../components/common/PopUp';
 import SingleLineInput from '../components/common/SingleLineInput';
 import MFAModal from '../components/mfa/MFAModal';
 import useApiUrl from '../hooks/useApiUrl';
 import { isTesting } from '@/app/utils/env';
 import { login as loginSdk } from '@rehua/sdk/functional/auth';
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import React, { useState, type JSX } from 'react';
 import { functional } from 'typia';
 
 function Home(): JSX.Element {
   const host = useApiUrl();
+  const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isMFAOpen, setisMFAOpen] = useState(false);
 
+  interface PendingCredentials {
+    userName: string;
+    password: string;
+  }
+
+  const [pendingCreds, setPendingCreds] = useState<PendingCredentials | null>(
+    null,
+  );
+  const [mfaError, setMfaError] = useState<string | null>(null);
+
   const loginMutation = useMutation({
-    mutationFn: async (totpCode: string) =>
+    mutationFn: async ({
+      creds,
+      totpCode,
+    }: {
+      creds: PendingCredentials;
+      totpCode: string;
+    }) =>
       loginSdk(
         { host, simulate: isTesting, options: { credentials: 'include' } },
-        { userId: Number(username), password, totpCode },
+        { userName: creds.userName, password: creds.password, totpCode }, // error  with username because sdk not updated
       ),
+    onError: () => {
+      setMfaError('Login failed, try again');
+    },
     onSuccess: () => {
       setisMFAOpen(false);
-      // TODO
-      // navigated to main page
+      setPendingCreds(null); // clear creds out of memory asap
+      setPassword('');
+      router.push('/landing'); // mock landing page for demo
+      setMfaError(null);
     },
   });
 
@@ -46,6 +68,7 @@ function Home(): JSX.Element {
         className="flex w-full max-w-md flex-col gap-6 text-xl"
         onSubmit={(e) => {
           e.preventDefault();
+          setPendingCreds({ userName: username, password: password }); // set pending credentials from state
           setisMFAOpen(true);
         }}
       >
@@ -110,12 +133,22 @@ function Home(): JSX.Element {
         open={isMFAOpen}
         onBack={() => {
           setisMFAOpen(false);
+          setPendingCreds(null);
+          setMfaError(null);
           loginMutation.reset();
         }}
         onSubmitCode={(code) => {
-          loginMutation.mutate(code);
+          if (!pendingCreds) {
+            return;
+          }
+          setMfaError(null);
+          loginMutation.mutate({ creds: pendingCreds, totpCode: code });
         }}
         isSubmitting={loginMutation.isPending}
+        mfaError={mfaError}
+        onDismissError={() => {
+          setMfaError(null);
+        }}
       />
     </div>
   );
