@@ -68,7 +68,7 @@ function Home(): JSX.Element {
         className="flex w-full max-w-md flex-col gap-6 text-xl"
         onSubmit={(e) => {
           e.preventDefault();
-          setPendingCreds({ userName: username, password: password }); // set pending credentials from state
+          setPendingCreds({ userName: username, password: password }); // lock in credentials at time of submit for submission after mfa code
           setisMFAOpen(true);
         }}
       >
