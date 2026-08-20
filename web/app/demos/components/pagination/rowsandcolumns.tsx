@@ -1,4 +1,3 @@
-import DropdownBar from '@/app/components/common/DropdownBar';
 import Icon from '@/app/components/common/Icon';
 import MiniLabel from '@/app/components/common/MiniLabel';
 import type { TableColumn, TableRow } from '@/app/components/common/Table';
@@ -6,57 +5,31 @@ import type { ReactNode } from 'react';
 
 interface ExampleRow extends TableRow {
   id: number;
+  roomNo: ReactNode;
   name: ReactNode;
-  age: ReactNode;
-  joined: ReactNode;
+  dob: ReactNode;
+  gender: ReactNode;
+  nhi: ReactNode;
+  dateAdmitted: ReactNode;
+  nurse: ReactNode;
   status: ReactNode;
-  priority: ReactNode;
-  actions: ReactNode;
+  funding: ReactNode;
+  view: ReactNode;
 }
 
-// comment the rows out to trigger the "No results found" message
 export const rows: ExampleRow[] = [
   {
     id: 1,
-    name: 'John Smith',
-    age: 25,
-    joined: '14/08/2026',
-    status: <MiniLabel name="active" />,
-    priority: (
-      <DropdownBar
-        options={['High', 'Medium', 'Low']}
-        selectedValues={['Medium']}
-        onChange={() => {
-          console.log('John priority changed');
-        }}
-        multiple={false}
-        defaultText="Select Priority"
-        labelMode="replace"
-        search={false}
-        width={400}
-      />
-    ),
-    actions: (
-      <button
-        type="button"
-        onClick={() => {
-          console.log('John clicked');
-        }}
-        style={{ cursor: 'pointer' }}
-      >
-        <Icon name="access" className="text-rehua-navy" width={35} />
-      </button>
-    ),
-    test3: 'insert more text here',
-  },
-  {
-    id: 2,
+    roomNo: '101',
     name: 'Jane Doe',
-    age: 30,
-    joined: '22/03/2025',
-    status: <MiniLabel name="disabled" />,
-    priority: <MiniLabel name="palliative" />,
-    actions: (
+    dob: '02/10/1990',
+    gender: 'M',
+    nhi: 'ABC1234',
+    dateAdmitted: '15/06/2023',
+    nurse: 'Noah Brown',
+    status: <MiniLabel name="longTerm" />,
+    funding: 'ACC Hospital',
+    view: (
       <button
         type="button"
         onClick={() => {
@@ -64,461 +37,598 @@ export const rows: ExampleRow[] = [
         }}
         style={{ cursor: 'pointer' }}
       >
-        <Icon name="trash" className="text-rehua-ruby" />
+        <Icon name="access" className="text-rehua-navy" />
+      </button>
+    ),
+  },
+  {
+    id: 2,
+    roomNo: '102',
+    name: 'Michael Smith',
+    dob: '14/07/1985',
+    gender: 'M',
+    nhi: 'DEF5678',
+    dateAdmitted: '21/03/2024',
+    nurse: 'Olivia Wilson',
+    status: <MiniLabel name="active" />,
+    funding: 'CHC Hospital',
+    view: (
+      <button
+        type="button"
+        onClick={() => {
+          console.log('Michael clicked');
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 3,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '103',
+    name: 'Sarah Williams',
+    dob: '28/11/1978',
+    gender: 'F',
+    nhi: 'GHI9012',
+    dateAdmitted: '09/01/2025',
+    nurse: 'Liam Taylor',
+    status: <MiniLabel name="shortTerm" />,
+    funding: 'Funded',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Alice clicked');
+          console.log('Sarah clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 4,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '104',
+    name: 'Robert Johnson',
+    dob: '05/03/1969',
+    gender: 'M',
+    nhi: 'JKL3456',
+    dateAdmitted: '17/08/2022',
+    nurse: 'Emma Davis',
+    status: <MiniLabel name="disabled" />,
+    funding: 'ACC',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Robert clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 5,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '105',
+    name: 'Emily Thompson',
+    dob: '19/05/1992',
+    gender: 'F',
+    nhi: 'MNO7890',
+    dateAdmitted: '12/02/2026',
+    nurse: 'Noah Brown',
+    status: <MiniLabel name="daycare" />,
+    funding: 'YPD',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Emily clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 6,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
+    roomNo: '106',
+    name: 'William Anderson',
+    dob: '11/09/1956',
+    gender: 'M',
+    nhi: 'PQR2345',
+    dateAdmitted: '03/11/2021',
+    nurse: 'Sophie Martin',
     status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    funding: '',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('William clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 7,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '107',
+    name: 'Sophia Martinez',
+    dob: '23/01/1988',
+    gender: 'F',
+    nhi: 'STU6789',
+    dateAdmitted: '25/05/2024',
+    nurse: 'Oliver Wilson',
+    status: <MiniLabel name="active" />,
+    funding: 'CHC Hospital',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Sophia clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 8,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '108',
+    name: 'James Taylor',
+    dob: '07/12/1948',
+    gender: 'M',
+    nhi: 'VWX0123',
+    dateAdmitted: '14/04/2020',
+    nurse: 'Charlotte Moore',
+    status: <MiniLabel name="discharged" />,
+    funding: 'ACC Hospital',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('James clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 9,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '109',
+    name: 'Olivia Harris',
+    dob: '16/06/1995',
+    gender: 'F',
+    nhi: 'YZA4567',
+    dateAdmitted: '08/09/2025',
+    nurse: 'Noah Brown',
+    status: <MiniLabel name="shortTerm" />,
+    funding: 'Funded',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Olivia clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 10,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '110',
+    name: 'Daniel Clark',
+    dob: '30/04/1972',
+    gender: 'M',
+    nhi: 'BCD8901',
+    dateAdmitted: '19/07/2023',
+    nurse: 'Amelia Taylor',
+    status: <MiniLabel name="deceased" />,
+    funding: '',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Daniel clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 11,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '111',
+    name: 'Charlotte Lewis',
+    dob: '09/02/1981',
+    gender: 'F',
+    nhi: 'EFG2345',
+    dateAdmitted: '11/10/2024',
+    nurse: 'Liam Taylor',
+    status: <MiniLabel name="active" />,
+    funding: 'ACC',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Charlotte clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 12,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
+    roomNo: '112',
+    name: 'George Walker',
+    dob: '17/08/1963',
+    gender: 'M',
+    nhi: 'HIJ6789',
+    dateAdmitted: '06/06/2022',
+    nurse: 'Emma Davis',
     status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    funding: 'YPD',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('George clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 13,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '113',
+    name: 'Amelia Hall',
+    dob: '25/10/1998',
+    gender: 'F',
+    nhi: 'KLM0123',
+    dateAdmitted: '22/01/2026',
+    nurse: 'Noah Brown',
+    status: <MiniLabel name="daycare" />,
+    funding: 'Funded',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Amelia clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 14,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '114',
+    name: 'Thomas Allen',
+    dob: '03/05/1959',
+    gender: 'M',
+    nhi: 'NOP4567',
+    dateAdmitted: '28/02/2023',
+    nurse: 'Sophie Martin',
+    status: <MiniLabel name="disabled" />,
+    funding: 'CHC Hospital',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Thomas clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 15,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '115',
+    name: 'Grace Young',
+    dob: '12/12/1987',
+    gender: 'F',
+    nhi: 'QRS8901',
+    dateAdmitted: '16/09/2025',
+    nurse: 'Oliver Wilson',
+    status: <MiniLabel name="active" />,
+    funding: 'ACC Hospital',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Grace clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 16,
-    name: 'Bob Johnson',
-    age: 28,
-    joined: '05/11/2024',
+    roomNo: '116',
+    name: 'Henry King',
+    dob: '21/06/1945',
+    gender: 'M',
+    nhi: 'TUV2345',
+    dateAdmitted: '07/03/2021',
+    nurse: 'Charlotte Moore',
     status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    funding: 'ACC',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Henry clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 17,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '117',
+    name: 'Ella Wright',
+    dob: '08/04/1993',
+    gender: 'F',
+    nhi: 'WXY6789',
+    dateAdmitted: '13/05/2026',
+    nurse: 'Amelia Taylor',
+    status: <MiniLabel name="shortTerm" />,
+    funding: 'YPD',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Ella clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 18,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '118',
+    name: 'Samuel Green',
+    dob: '15/01/1975',
+    gender: 'M',
+    nhi: 'ZAB0123',
+    dateAdmitted: '20/11/2024',
+    nurse: 'Liam Taylor',
+    status: <MiniLabel name="discharged" />,
+    funding: '',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Samuel clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 19,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '119',
+    name: 'Lucy Baker',
+    dob: '27/09/2000',
+    gender: 'F',
+    nhi: 'CDE4567',
+    dateAdmitted: '04/08/2026',
+    nurse: 'Emma Davis',
+    status: <MiniLabel name="active" />,
+    funding: 'Funded',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Lucy clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 20,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '120',
+    name: 'David Adams',
+    dob: '06/11/1967',
+    gender: 'M',
+    nhi: 'FGH8901',
+    dateAdmitted: '18/12/2022',
+    nurse: 'Noah Brown',
+    status: <MiniLabel name="deceased" />,
+    funding: 'CHC Hospital',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('David clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 21,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '121',
+    name: 'Isabella Nelson',
+    dob: '18/03/1989',
+    gender: 'F',
+    nhi: 'IJK2345',
+    dateAdmitted: '27/06/2025',
+    nurse: 'Sophie Martin',
+    status: <MiniLabel name="daycare" />,
+    funding: 'ACC Hospital',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Isabella clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 22,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '122',
+    name: 'Jack Mitchell',
+    dob: '22/07/1952',
+    gender: 'M',
+    nhi: 'KLM6789',
+    dateAdmitted: '10/04/2020',
+    nurse: 'Oliver Wilson',
+    status: <MiniLabel name="disabled" />,
+    funding: 'Funded',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Jack clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 23,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '123',
+    name: 'Mia Carter',
+    dob: '31/01/1996',
+    gender: 'F',
+    nhi: 'NOP0123',
+    dateAdmitted: '02/02/2026',
+    nurse: 'Charlotte Moore',
+    status: <MiniLabel name="active" />,
+    funding: 'YPD',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Mia clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 24,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
+    roomNo: '124',
+    name: 'Edward Roberts',
+    dob: '10/10/1940',
+    gender: 'M',
+    nhi: 'QRS4567',
+    dateAdmitted: '23/05/2019',
+    nurse: 'Amelia Taylor',
     status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    funding: 'CHC Hospital',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Edward clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
   {
     id: 25,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
+    roomNo: '125',
+    name: 'Ava Collins',
+    dob: '04/06/1991',
+    gender: 'F',
+    nhi: 'TUV8901',
+    dateAdmitted: '14/07/2026',
+    nurse: 'Emma Davis',
+    status: <MiniLabel name="upload" />,
+    funding: '',
+    view: (
       <button
         type="button"
         onClick={() => {
-          console.log('Bob clicked');
+          console.log('Ava clicked');
         }}
+        style={{ cursor: 'pointer' }}
       >
-        <Icon name="access" />
-      </button>
-    ),
-  },
-  {
-    id: 26,
-    name: 'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit',
-    age: 28,
-    joined: '05/11/2024',
-    status: <MiniLabel name="longTerm" />,
-    priority: <MiniLabel name="shortTerm" />,
-    actions: (
-      <button
-        type="button"
-        onClick={() => {
-          console.log('Bob clicked');
-        }}
-      >
-        <Icon name="access" />
+        <Icon name="access" className="text-rehua-navy" />
       </button>
     ),
   },
 ];
 
-const columnWidth = 230;
+const columnWidth = 200;
 
 export const columns: TableColumn[] = [
+  {
+    rowKey: 'roomNo',
+    header: 'Room #',
+  },
   {
     rowKey: 'name',
     header: 'Name',
     width: columnWidth,
-    contentAlignment: 'right',
   },
   {
-    rowKey: 'age',
-    header: 'Age',
+    rowKey: 'dob',
+    header: 'DOB',
+    width: 170,
+  },
+  {
+    rowKey: 'gender',
+    header: 'Gender',
+  },
+  {
+    rowKey: 'nhi',
+    header: 'NHI',
+    width: 170,
+  },
+  {
+    rowKey: 'dateAdmitted',
+    header: 'Date Admitted',
     width: columnWidth,
   },
   {
-    rowKey: 'joined',
-    header: 'Joined',
+    rowKey: 'nurse',
+    header: 'Nurse',
     width: columnWidth,
   },
   {
@@ -527,30 +637,13 @@ export const columns: TableColumn[] = [
     width: columnWidth,
   },
   {
-    rowKey: 'priority',
-    header: 'Priority',
-    width: 400,
-  },
-  {
-    rowKey: 'actions',
-    header: 'Actions',
-    width: columnWidth,
-    contentAlignment: 'center',
-  },
-  // additional columns testing, if too many are added horizontal scrolling is implemented
-  {
-    rowKey: 'test3',
-    header: 'Actions',
+    rowKey: 'funding',
+    header: 'Funding',
     width: columnWidth,
   },
   {
-    rowKey: 'test4',
-    header: 'Actions',
-    width: columnWidth,
-  },
-  {
-    rowKey: 'test5',
-    header: 'Actions',
+    rowKey: 'view',
+    header: 'View',
     width: columnWidth,
   },
 ];
