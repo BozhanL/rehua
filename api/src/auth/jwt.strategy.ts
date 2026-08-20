@@ -1,11 +1,11 @@
+import { LoginResponseDto } from './dto/login-response.dto';
 import type { JwtContent } from './entities/jwt-content.entity';
 import { UserService } from '@/schema/users/user.service';
-import type { ExpressUser } from '@/utils/types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Request } from 'express';
 import { Strategy } from 'passport-jwt';
-import typia, { misc } from 'typia';
+import typia from 'typia';
 
 export const JWT_COOKIE_NAME = 'token';
 export const JWT_STRATEGY_NAME = 'jwt';
@@ -33,7 +33,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
     });
   }
 
-  async validate(payload: JwtContent): Promise<ExpressUser> {
+  async validate(payload: JwtContent): Promise<LoginResponseDto> {
     typia.assertGuard<typeof payload>(payload);
 
     // May have performance issues
@@ -42,6 +42,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
       throw new UnauthorizedException('User not found');
     }
 
-    return misc.assertPrune<ExpressUser>(misc.clone(user));
+    return {
+      userId: user._id.toString(),
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      group: user.group,
+    };
   }
 }

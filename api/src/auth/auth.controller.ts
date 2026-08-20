@@ -19,7 +19,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard, TOTPAuthGuard)
   @TypedRoute.Post('login')
   login(
-    @CurrentUser() user: userEntity.UserDocument,
+    @CurrentUser() user: loginResponseDto.LoginResponseDto,
     @Res({ passthrough: true }) response: Response,
     // This is a workaround for the issue where Nestia SDK does not include the body in the generated client.
     // The content will be accessed in the LocalAuthGuard and TOTPAuthGuard
@@ -39,13 +39,7 @@ export class AuthController {
       sameSite: 'strict',
     });
 
-    return {
-      userId: user._id.toString(),
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      group: user.group,
-    };
+    return user;
   }
 
   // TODO: remove TotpPayload type and only return the totpSecret
