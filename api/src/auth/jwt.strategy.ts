@@ -44,7 +44,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
 
     return {
       userId: user._id.toString(),
-      username: user.username,
+      userName: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
       group: user.group,
