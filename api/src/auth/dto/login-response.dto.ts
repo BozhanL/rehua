@@ -1,7 +1,6 @@
-export interface LoginResponseDto {
-  userId: string;
-  userName: string;
-  firstName: string;
-  lastName: string;
-  group: 'admin' | 'nurse';
-}
+import type { User } from '@/schema/users/entities/user.entity';
+
+export type LoginResponseDto = Pick<
+  User,
+  'username' | 'group' | 'firstName' | 'lastName'
+>;
