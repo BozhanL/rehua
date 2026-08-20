@@ -1,5 +1,5 @@
 import { LoginResponseDto } from './dto/login-response.dto';
-import type { JwtContent } from './entities/jwt-content.entity';
+import { JwtContent } from './entities/jwt-content.entity';
 import { UserService } from '@/schema/users/user.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -43,8 +43,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
     }
 
     return {
-      userId: user._id.toString(),
-      userName: user.username,
+      username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
       group: user.group,
