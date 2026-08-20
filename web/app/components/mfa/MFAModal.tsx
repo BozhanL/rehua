@@ -13,6 +13,8 @@ interface MFAModalProps {
   confirmButtonIcon?: IconProps['name'];
   onSubmitCode: (code: string) => void; // let parent component handle full /auth/login with username,password, and totpcode
   isSubmitting?: boolean;
+  mfaError?: string | null; // pass in mfaError from parent component if auth fails
+  onDismissError?: () => void; // tell parent to clear error after user confirms error
 }
 
 function AddMFAModal({
@@ -23,9 +25,14 @@ function AddMFAModal({
   confirmButtonIcon = 'key',
   onSubmitCode,
   isSubmitting = false,
+  mfaError,
+  onDismissError,
 }: Readonly<MFAModalProps>): JSX.Element {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [errorOpen, setErrorOpen] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null); // "incomplete code"
+
+  // derive what to actually show — server error takes priority since it's more specific
+  const popupMessage = mfaError ?? localError;
 
   //focus the input box when modal opens
   useEffect(() => {
@@ -34,11 +41,23 @@ function AddMFAModal({
     }
   }, [open]);
 
+  //clear input boxes when mfa error
+  useEffect(() => {
+    if (mfaError) {
+      inputRefs.current.forEach((el) => {
+        if (el) {
+          el.value = '';
+        }
+      });
+      inputRefs.current[0]?.focus();
+    }
+  }, [mfaError]);
+
   function handleSubmit(): void {
     const code = inputRefs.current.map((el) => el?.value ?? '').join(''); // 1,2,3,4 = '1234'
     // validate length
     if (code.length !== 6) {
-      setErrorOpen(true);
+      setLocalError('Please enter all 6 digits');
       return;
     }
     onSubmitCode(code);
@@ -94,7 +113,9 @@ function AddMFAModal({
         break;
       case 'Enter':
         e.preventDefault();
-        handleSubmit();
+        if (!isSubmitting) {
+          handleSubmit();
+        }
         return;
       default:
         return;
@@ -170,6 +191,9 @@ function AddMFAModal({
             text2={confirmButtonText2 ?? ''}
             backgroundColor="bg-rehua-green"
             onClick={() => {
+              if (isSubmitting) {
+                return;
+              }
               handleSubmit();
             }}
             horizontalPadding={0.5}
@@ -180,15 +204,20 @@ function AddMFAModal({
       </div>
       <PopUp
         isAlertPopup
-        text1={'Please enter all 6 digits'}
+        text1={popupMessage ?? ''}
         modalProps={{
-          open: errorOpen,
+          open: !!popupMessage,
+          surfaceProps: {
+            width: 700,
+            height: 450,
+          },
         }}
         button1Props={{
           text1: 'Ok',
           backgroundColor: 'bg-rehua-green',
           onClick: () => {
-            setErrorOpen(false);
+            setLocalError(null);
+            onDismissError?.(); // tells parent to clear mfaError
           },
         }}
       />
