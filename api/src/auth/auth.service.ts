@@ -1,11 +1,9 @@
 import { LoginResponseDto } from './dto/login-response.dto';
-import type { TotpResponse } from './dto/totp-response.dto';
-import { JwtContent } from './entities/jwt-content.entity';
-import { UserDocument } from '@/schema/users/entities/user.entity';
 import { UserService } from '@/schema/users/user.service';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ExpressUser } from '@/utils/types';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { generateURI, verify } from 'otplib';
+import { verify } from 'otplib';
 
 @Injectable()
 export class AuthService {
@@ -22,8 +20,7 @@ export class AuthService {
 
     if (user?.password === password) {
       return {
-        userId: user._id.toString(),
-        userName: user.username,
+        username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
         group: user.group,
@@ -50,30 +47,18 @@ export class AuthService {
     return result.valid;
   }
 
-  signJwt(user: LoginResponseDto): string {
-    if (!user || !user.userId) {
-      throw new UnauthorizedException(
-        'singJwt failed: User identification failed',
-      );
-    }
-    const payload: JwtContent = { userId: user.userId };
-
-    return this.jwtService.sign(payload);
+  signJwt(user: ExpressUser): string {
+    return this.jwtService.sign(user);
   }
 
-  async getTotpSecretUri(user: UserDocument): Promise<TotpResponse | null> {
-    const userData = await this.userService.findOne(user._id.toString());
+  async getTotpSecret(user: ExpressUser): Promise<string | null> {
+    const userData = await this.userService.findOneUserNameForAuth(
+      user.username,
+    );
     if (!userData) {
       return null;
     }
 
-    return {
-      totpSecret: userData.totpSecret,
-      totpUri: generateURI({
-        issuer: 'Rehua',
-        label: userData.username,
-        secret: userData.totpSecret,
-      }),
-    };
+    return userData.totpSecret;
   }
 }
