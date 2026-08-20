@@ -3,7 +3,7 @@ import type { TotpResponse } from './dto/totp-response.dto';
 import { JwtContent } from './entities/jwt-content.entity';
 import { UserDocument } from '@/schema/users/entities/user.entity';
 import { UserService } from '@/schema/users/user.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { generateURI, verify } from 'otplib';
 
@@ -50,8 +50,13 @@ export class AuthService {
     return result.valid;
   }
 
-  signJwt(user: UserDocument): string {
-    const payload: JwtContent = { userId: user._id.toString() };
+  signJwt(user: LoginResponseDto): string {
+    if (!user || !user.userId) {
+      throw new UnauthorizedException(
+        'singJwt failed: User identification failed',
+      );
+    }
+    const payload: JwtContent = { userId: user.userId };
 
     return this.jwtService.sign(payload);
   }
