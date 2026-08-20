@@ -1,6 +1,6 @@
 import { AuthService } from './auth.service';
 import type { LoginBody } from './dto/login-body.dto';
-import { User } from '@/schema/users/entities/user.entity';
+import { LoginResponseDto } from './dto/login-response.dto';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
@@ -25,7 +25,10 @@ export class LocalStrategy extends PassportStrategy(
     });
   }
 
-  async validate(userName: string, password: string): Promise<User> {
+  async validate(
+    userName: string,
+    password: string,
+  ): Promise<LoginResponseDto> {
     typia.assertGuard<typeof userName>(userName);
     typia.assertGuard<typeof password>(password);
 
