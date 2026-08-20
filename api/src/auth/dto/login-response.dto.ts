@@ -1,6 +1,6 @@
 export interface LoginResponseDto {
   userId: string;
-  username: string;
+  userName: string;
   firstName: string;
   lastName: string;
   group: 'admin' | 'nurse';
