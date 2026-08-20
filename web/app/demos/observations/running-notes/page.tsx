@@ -7,6 +7,7 @@ import NoteList, {
   type Note,
   type NoteAuditEntry,
 } from '@/app/components/notes/NoteList';
+import dayjs from '@/app/utils/dayjs';
 import { useMemo, useState, type JSX } from 'react';
 
 /* -------------------------------------------------------------------------- */
@@ -92,10 +93,10 @@ function RunningNotes(): JSX.Element {
   /* ------------------------------------------------------------------------ */
 
   function handleAddNote(noteInput: { plainText: string; html: string }): void {
-    const createdAt = new Date().toISOString();
+    const createdAt = dayjs().toISOString();
 
     const newNote: Note = {
-      noteId: 'note-' + String(Date.now()),
+      noteId: 'note-' + String(Date.now()), // using date object as this is an example/demo id
 
       // In the real app, this would come from the authenticated user.
       authorName: DEMO_CURRENT_USER,

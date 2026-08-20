@@ -1,5 +1,6 @@
 'use client';
 
+import dayjs from '../../utils/dayjs';
 import ContentButton from '../common/ContentButton';
 import DOMPurify from 'dompurify';
 import type { JSX } from 'react';
@@ -34,14 +35,7 @@ interface NoteListProps {
 
 // utility function to format ISO date strings into readable format
 function formatDate(isoDate: string): string {
-  return new Intl.DateTimeFormat('en-NZ', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(new Date(isoDate));
+  return dayjs(isoDate).tz().format('DD MMMM YYYY, HH:mm');
 }
 
 // React component that renders a list of notes, each with its metadata, content, and an edit button

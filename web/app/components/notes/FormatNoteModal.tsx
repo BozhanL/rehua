@@ -1,5 +1,6 @@
 'use client';
 
+import dayjs from '../../utils/dayjs';
 import ContentButton from '../common/ContentButton';
 import Icon from '../common/Icon';
 import Modal from '../common/Modal';
@@ -164,7 +165,7 @@ export default function EditFormattingModal({
     onSave({
       noteId: note.noteId,
       formattedBy: currentUser,
-      formattedAt: new Date().toISOString(),
+      formattedAt: dayjs().toISOString(),
       beforeHtml: note.html,
       afterHtml: html,
     });
