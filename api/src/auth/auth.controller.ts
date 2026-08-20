@@ -1,11 +1,12 @@
 import { AuthService } from './auth.service';
 import type { LoginBody } from './dto/login-body.dto';
+import * as loginResponseDto from './dto/login-response.dto';
 import type { TotpResponse } from './dto/totp-response.dto';
 import { JwtAuthGuard } from './jwt.guard';
 import { JWT_COOKIE_NAME } from './jwt.strategy';
 import { LocalAuthGuard } from './local.guard';
 import { TOTPAuthGuard } from './totp.guard';
-import { User } from '@/schema/users/entities/user.entity';
+import * as userEntity from '@/schema/users/entities/user.entity';
 import { CurrentUser } from '@/schema/users/users.decorator';
 import { TypedBody, TypedRoute } from '@nestia/core';
 import { Controller, UseGuards, Res } from '@nestjs/common';
@@ -18,12 +19,12 @@ export class AuthController {
   @UseGuards(LocalAuthGuard, TOTPAuthGuard)
   @TypedRoute.Post('login')
   login(
-    @CurrentUser() user: User,
+    @CurrentUser() user: userEntity.UserDocument,
     @Res({ passthrough: true }) response: Response,
     // This is a workaround for the issue where Nestia SDK does not include the body in the generated client.
     // The content will be accessed in the LocalAuthGuard and TOTPAuthGuard
     @TypedBody() _body: LoginBody,
-  ): User {
+  ): loginResponseDto.LoginResponseDto {
     const token = this.authService.signJwt(user);
 
     response.cookie(JWT_COOKIE_NAME, token, {
@@ -38,16 +39,22 @@ export class AuthController {
       sameSite: 'strict',
     });
 
-    return user;
+    return {
+      userId: user._id.toString(),
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      group: user.group,
+    };
   }
 
+  // TODO: remove TotpPayload type and only return the totpSecret
+  // Generate the TOTP uri on the client side
   @UseGuards(JwtAuthGuard)
   @TypedRoute.Get('totp')
-  getTotpSecret(
-    @CurrentUser() user: User,
-  ): // TODO: remove TotpPayload type and only return the totpSecret
-  // Generate the TOTP uri on the client side
-  TotpResponse | null {
+  async getTotpSecret(
+    @CurrentUser() user: userEntity.UserDocument,
+  ): Promise<TotpResponse | null> {
     return this.authService.getTotpSecretUri(user);
   }
 }
