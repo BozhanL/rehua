@@ -1,11 +1,11 @@
+import { LoginResponseDto } from './dto/login-response.dto';
 import type { TotpResponse } from './dto/totp-response.dto';
 import { JwtContent } from './entities/jwt-content.entity';
-import { User, UserDocument } from '@/schema/users/entities/user.entity';
+import { UserDocument } from '@/schema/users/entities/user.entity';
 import { UserService } from '@/schema/users/user.service';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { generateURI, verify } from 'otplib';
-import { misc } from 'typia';
 
 @Injectable()
 export class AuthService {
@@ -14,11 +14,20 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(userName: string, password: string): Promise<User | null> {
+  async validateUser(
+    userName: string,
+    password: string,
+  ): Promise<LoginResponseDto | null> {
     const user = await this.userService.findOneUserNameForAuth(userName);
 
     if (user?.password === password) {
-      return misc.assertPrune<User>(misc.clone(user));
+      return {
+        userId: user._id.toString(),
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        group: user.group,
+      };
     }
     return null;
   }
