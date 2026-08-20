@@ -1,6 +1,6 @@
 import { AuthService } from './auth.service';
 import type { LoginBody } from './dto/login-body.dto';
-import type { ExpressUser } from '@/utils/types';
+import { User } from '@/schema/users/entities/user.entity';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Request } from 'express';
@@ -30,7 +30,7 @@ export class TOTPStrategy extends PassportStrategy(
     req: Request,
     userName: string,
     totpCode: string,
-  ): Promise<ExpressUser | undefined> {
+  ): Promise<User | undefined> {
     typia.assertGuard<typeof userName>(userName);
     typia.assertGuard<typeof totpCode>(totpCode);
 
@@ -40,6 +40,6 @@ export class TOTPStrategy extends PassportStrategy(
       throw new UnauthorizedException();
     }
 
-    return req.user;
+    return req.user as User | undefined;
   }
 }
