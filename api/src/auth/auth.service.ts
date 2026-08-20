@@ -23,7 +23,7 @@ export class AuthService {
     if (user?.password === password) {
       return {
         userId: user._id.toString(),
-        username: user.username,
+        userName: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
         group: user.group,
