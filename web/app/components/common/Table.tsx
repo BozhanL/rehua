@@ -2,11 +2,11 @@ import type { JSX, ReactNode } from 'react';
 
 interface TableRow {
   id: number; // unique identifier for each row
-  [key: string]: ReactNode; // row contents, e.g. "status: <MiniLabel ... >" where "status" = key, and MiniLabel = ReactNode value
+  content: Record<string, ReactNode>; // row contents, e.g. "status: <MiniLabel ... >" where "status" = key, and MiniLabel = ReactNode value
 }
 
 interface TableColumn<T extends TableRow = TableRow> {
-  rowKey: keyof T; // which part of row to display in this column
+  rowKey: keyof T['content']; // which part of row to display in this column
   header: ReactNode;
   width?: number; // optional width of column in pixels, fallback to 120px
   contentAlignment?: 'left' | 'center' | 'right'; // optional alignment of column content, fallback to 'left'
@@ -83,7 +83,11 @@ function Table<T extends TableRow>({
                         textAlign: contentAlignments[columns.indexOf(column)],
                       }}
                     >
-                      {row[column.rowKey]}
+                      {
+                        row.content[
+                          column.rowKey
+                        ] /* display content for this cell */
+                      }
                     </td>
                   ))
                 }
