@@ -51,7 +51,7 @@ export class AuthController {
       throw new Error('User not found');
     }
 
-    misc.assertPrune<LoginResponseDto>(user);
+    misc.assertPrune<LoginResponseDto>(user.toJSON());
 
     return user;
   }
