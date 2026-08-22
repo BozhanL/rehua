@@ -42,7 +42,7 @@
     "typescript": "5.9.3"
   },
   "dependencies": {
-    "@nestia/fetcher": "11.3.4",
+    "@nestia/fetcher": "12.1.0",
     "typia": "12.1.1"
   }
 }
