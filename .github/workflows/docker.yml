@@ -45,12 +45,15 @@ jobs:
           labels: |
             org.opencontainers.image.licenses=GPL-3.0-or-later
             org.opencontainers.image.title=rehua-${{ matrix.workspace }}
+          annotations: |
+            org.opencontainers.image.licenses=GPL-3.0-or-later
+            org.opencontainers.image.title=rehua-${{ matrix.workspace }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
 
       - name: Build and push
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
@@ -59,13 +62,13 @@ jobs:
           context: .
           file: ./${{ matrix.workspace }}/Dockerfile
           push: true
-          sbom: true
-          provenance: mode=max
+          provenance: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
 
       - name: Generate artifact attestation
-        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-name: ghcr.io/BozhanL/rehua-${{ matrix.workspace }}
           subject-digest: ${{ steps.push.outputs.digest }}

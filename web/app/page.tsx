@@ -1,11 +1,11 @@
 'use client';
 
-import Icon from './components/Icon';
+import Icon from './components/common/Icon';
 import { APIUrlContext } from './providers';
 import {
   ShowManualButton,
   UploadManualButton,
-} from '@/app/components/ManualButtons';
+} from '@/app/components/navigation/ManualButtons';
 import { isTesting } from '@/app/utils/env';
 import { getHello } from '@rehua/sdk/functional';
 import { queryOptions, useQuery } from '@tanstack/react-query';

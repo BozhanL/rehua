@@ -64,7 +64,7 @@ jobs:
         run: npm run test:cov -w web | tee ./web/coverage.txt && exit ${PIPESTATUS[0]}
 
       - name: 🧪 Run Jest Coverage Comment
-        uses: MishaKav/jest-coverage-comment@30a48d70e2a76ff9cf0e0b348e487c865bfea4dc # v1.0.35
+        uses: MishaKav/jest-coverage-comment@642ef024cc554a34b7082cea12c7bf63575ae151 # v1.0.36
         if: ${{ success() || (failure() && steps.install.conclusion == 'success') }}
         with:
           create-new-comment: false
@@ -133,7 +133,7 @@ jobs:
           path: out
 
       - name: 📦 Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
+        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0
         with:
           folder: ${{ steps.download.outputs.download-path }}
           branch: gh-pages

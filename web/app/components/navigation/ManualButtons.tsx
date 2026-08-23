@@ -1,6 +1,6 @@
-import useApiUrl from '../hooks/useApiUrl';
-import { isTesting } from '../utils/env';
-import ContentButton from './ContentButton';
+import ContentButton from '../common/ContentButton';
+import useApiUrl from '@/app/hooks/useApiUrl';
+import { isTesting } from '@/app/utils/env';
 import { create } from '@rehua/sdk/functional/manual';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';

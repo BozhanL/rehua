@@ -24,7 +24,8 @@
         "mongodb.mongodb-vscode",
         "github.vscode-github-actions",
         "GitHub.vscode-pull-request-github",
-        "PKief.material-icon-theme"
+        "PKief.material-icon-theme",
+        "jasonnutter.vscode-codeowners"
       ]
     }
   },

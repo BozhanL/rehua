@@ -14,13 +14,13 @@ export const MANUAL_TYPE = 'application/pdf';
 
 @Injectable()
 export class ManualService {
-  private static multerInstance: Multer;
+  private static multerInstance?: Multer;
   public _filePath: string;
 
   constructor(private readonly configService: ConfigService<Config, true>) {
     this._filePath = this.configService.getOrThrow('DATA_PATH');
 
-    ManualService.multerInstance = multer({
+    ManualService.multerInstance ??= multer({
       storage: diskStorage({ destination: this._filePath }),
 
       // TODO: update this limit
@@ -29,6 +29,10 @@ export class ManualService {
   }
 
   static getMulter(): multer.Multer {
+    if (!ManualService.multerInstance) {
+      throw new Error('Multer instance is not initialized.');
+    }
+
     return ManualService.multerInstance;
   }
 

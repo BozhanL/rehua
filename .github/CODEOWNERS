@@ -1,0 +1,10 @@
+# All files under the .github directory except for the workflows directory
+.github/** @BozhanL
+.github/workflows
+
+# Code style configuration files
+eslint.config.* @BozhanL @waniven
+.prettierrc @BozhanL @waniven
+
+# Commitlint configuration files
+commitlint.config.* @BozhanL @waniven
