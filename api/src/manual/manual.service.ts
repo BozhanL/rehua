@@ -24,7 +24,7 @@ export class ManualService {
       storage: diskStorage({ destination: this._filePath }),
 
       // TODO: update this limit
-      limits: { fileSize: 7 * 1024 * 1024 },
+      limits: { fileSize: this.configService.getOrThrow('MAX_FILE_SIZE') },
     });
   }
 

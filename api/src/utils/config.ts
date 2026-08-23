@@ -6,6 +6,8 @@ import path from 'node:path';
 import type { tags } from 'typia';
 import typia from 'typia';
 
+const DEFAULT_MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
+
 export interface Config {
   PORT: number & tags.Type<'uint32'> & tags.Minimum<0> & tags.Maximum<65535>;
 
@@ -15,6 +17,8 @@ export interface Config {
 
   // The path to store user uploaded files. Including patient images, manual files, and other files.
   DATA_PATH?: string;
+
+  MAX_FILE_SIZE: number & tags.Type<'uint64'> & tags.ExclusiveMinimum<0>;
 
   https: {
     cert?: string;
@@ -45,6 +49,10 @@ export const configModule = ConfigModule.forRoot({
     )
       // TODO: remove this dir after the test is done
       .default(() => mkdtempSync(path.join(tmpdir(), 'rehua-'))),
+    MAX_FILE_SIZE: Joi.number()
+      .integer()
+      .greater(0)
+      .default(DEFAULT_MAX_FILE_SIZE),
   }),
   load: [https],
 });
