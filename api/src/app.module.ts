@@ -8,10 +8,10 @@ import { Config, https } from './utils/config';
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { accessSync, constants, mkdtempSync, readFile } from 'fs-extra';
 import Joi, { CustomHelpers, ErrorReport } from 'joi';
-import { accessSync, constants } from 'node:fs';
-import { readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
+import path from 'node:path';
 import typia from 'typia';
 
 // Allow e2e test to override this module
@@ -45,7 +45,9 @@ export const configModule = ConfigModule.forRoot({
     DATA_PATH: requiredReadableFilePath(
       ['test', 'nestia'],
       constants.W_OK | constants.R_OK,
-    ).default(tmpdir),
+    )
+      // TODO: remove this dir after the test is done
+      .default(() => mkdtempSync(path.join(tmpdir(), 'rehua-'))),
   }),
   load: [https],
 });
