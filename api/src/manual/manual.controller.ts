@@ -21,8 +21,8 @@ export class ManualController {
   async create(
     @Req() request: Request,
 
-    // This is a workaround for the issue where Nestia SDK does not include the body in the generated client.
-    // The content will be accessed in the LocalAuthGuard and TOTPAuthGuard
+    // This is a workaround for the issue where Nestia SDK does not support diskStorage in multer.
+    // multer.diskStorage will store the uploaded file into temporary location and put the path in the request.
     @TypedFormData.Body(ManualService.getMulter) _: CreateManualDto,
   ): Promise<true> {
     const files = getFilesFromRequest(request);

@@ -38,13 +38,14 @@ export function UploadManualButton(): JSX.Element {
         hidden
         onChange={(event) => {
           const file = event.target.files?.[0];
-
-          if (file) {
-            uploadManualMutation.mutate({
-              host: apiUrl,
-              body: { file },
-            });
+          if (!file) {
+            return;
           }
+
+          uploadManualMutation.mutate({
+            host: apiUrl,
+            body: { file },
+          });
         }}
       />
 
