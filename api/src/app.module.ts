@@ -11,6 +11,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import Joi, { CustomHelpers, ErrorReport } from 'joi';
 import { accessSync, constants } from 'node:fs';
 import { readFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import typia from 'typia';
 
 // Allow e2e test to override this module
@@ -42,9 +43,9 @@ export const configModule = ConfigModule.forRoot({
     API_CA: requiredReadableFilePath(['test', 'development', 'nestia']),
     MONGODB_URI_FILE: requiredReadableFilePath(['test', 'nestia']),
     DATA_PATH: requiredReadableFilePath(
-      ['nestia'],
+      ['test', 'nestia'],
       constants.W_OK | constants.R_OK,
-    ),
+    ).default(tmpdir),
   }),
   load: [https],
 });
@@ -71,18 +72,16 @@ function requiredReadableFilePath(
   skipEnvs: Config['NODE_ENV'][],
   accessMode: number = constants.R_OK,
 ): Joi.StringSchema {
-  return Joi.string()
-    .when('NODE_ENV', {
-      is: Joi.valid(...skipEnvs),
-      then: Joi.optional(),
-      otherwise: Joi.required(),
-    })
-    .custom(
+  return Joi.string().when('NODE_ENV', {
+    is: Joi.valid(...skipEnvs),
+    then: Joi.optional(),
+    otherwise: Joi.required().custom(
       (value: string, helpers: CustomHelpers) =>
         fileExistsValidator(value, helpers, accessMode),
 
       'file permission validation',
-    );
+    ),
+  });
 }
 
 @Module({
