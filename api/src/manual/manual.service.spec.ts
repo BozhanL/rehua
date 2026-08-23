@@ -1,6 +1,6 @@
 import { ManualService } from './manual.service';
+import { configModule } from '@/app.module';
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import { ConfigModule } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
 
 describe('manualService', () => {
@@ -8,7 +8,7 @@ describe('manualService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ConfigModule],
+      imports: [configModule],
       providers: [ManualService],
     }).compile();
 
