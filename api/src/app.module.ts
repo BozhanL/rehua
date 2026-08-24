@@ -85,7 +85,6 @@ function requiredReadableFilePath(
     PatientModule,
     UserModule,
     AuthModule,
-    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
