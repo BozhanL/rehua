@@ -5,20 +5,21 @@ import {
 import type { JSX } from 'react';
 
 export interface GraphDataPoint {
-  hour: number;
-  value: number;
-  dateTime: Date;
+  hour: number; // hour of day (0-23) the reading was taken, used for x-axis placement
+  value: number; // observation reading, used for y-axis placement
+  dateTime: Date; // full timestamp of the reading, kept for consumers (e.g. tooltips)
 }
-
 export interface GraphProps {
-  type: GraphableObservationType;
-  data: GraphDataPoint[];
-  // don't stray too far off the default width and height, x and y tick marks will become squashed
+  type: GraphableObservationType; // observation type, looked up in OBSERVATION_GRAPH_CONFIG for axis range/label/unit
+  data: GraphDataPoint[]; // readings to plot, sorted by hour before rendering
+  // don't stray too far off the default size settings otherwise graph will become squashed
   width?: number;
   height?: number;
+  padding?: { top?: number; right?: number; bottom?: number; left?: number }; // per-side overrides, merged with DEFAULT_PADDING
+  yTickCount?: number; // y axis tick marks - responsive
 }
-const PADDING = { top: 30, right: 20, bottom: 30, left: 60 };
-const Y_TICK_COUNT = 7; // y axis tick marks
+
+const DEFAULT_PADDING = { top: 30, right: 20, bottom: 30, left: 100 };
 
 function formatHourLabel(hour: number): string {
   if (hour === 23) {
@@ -28,8 +29,8 @@ function formatHourLabel(hour: number): string {
   return `${padded}:00`;
 }
 
-// y-axis: always show the unit, since this is the only place unit
-// context appears for the whole chart (for most observations)
+// y-axis: always show the unit, since this is the only place unit appears for
+//  the whole chart (except percentage unit)
 function formatAxisValue(value: number, unit: string): string {
   if (unit === '%') {
     return `${String(value)}%`;
@@ -48,28 +49,34 @@ function formatPointValue(value: number, unit: string): string {
   return String(value);
 }
 
-export function Graph({
+// React component that renders an observation as a line graph over 24 hours
+function Graph({
   type,
   data,
   width = 900,
   height = 320,
+  padding,
+  yTickCount = 7,
 }: Readonly<GraphProps>): JSX.Element {
+  const resolvedPadding = { ...DEFAULT_PADDING, ...padding };
   const config = OBSERVATION_GRAPH_CONFIG[type];
 
-  const plotWidth = width - PADDING.left - PADDING.right;
-  const plotHeight = height - PADDING.top - PADDING.bottom;
+  const plotWidth = width - resolvedPadding.left - resolvedPadding.right;
+  const plotHeight = height - resolvedPadding.top - resolvedPadding.bottom;
   const range = config.max - config.min;
 
   function xScale(hour: number): number {
-    return PADDING.left + (hour / 24) * plotWidth;
+    return resolvedPadding.left + (hour / 24) * plotWidth;
   }
 
   function yScale(value: number): number {
     if (range === 0) {
-      return PADDING.top + plotHeight / 2;
+      return resolvedPadding.top + plotHeight / 2;
     }
     return (
-      PADDING.top + plotHeight - ((value - config.min) / range) * plotHeight
+      resolvedPadding.top +
+      plotHeight -
+      ((value - config.min) / range) * plotHeight
     );
   }
 
@@ -84,9 +91,9 @@ export function Graph({
 
   const hourTicks = Array.from({ length: 24 }, (_, i) => i);
 
-  const yTicks = Array.from({ length: Y_TICK_COUNT }, (_, i) => ({
+  const yTicks = Array.from({ length: yTickCount }, (_, i) => ({
     index: i,
-    value: Math.round(config.min + (range / (Y_TICK_COUNT - 1)) * i),
+    value: Math.round(config.min + (range / (yTickCount - 1)) * i),
   }));
 
   return (
@@ -100,9 +107,9 @@ export function Graph({
       {yTicks.map(({ index, value }) => (
         <line
           key={`grid-y-${String(index)}`}
-          x1={PADDING.left}
+          x1={resolvedPadding.left}
           y1={yScale(value)}
-          x2={width - PADDING.right}
+          x2={width - resolvedPadding.right}
           y2={yScale(value)}
           stroke="var(--dark-gray)"
           strokeDasharray="2 2"
@@ -114,11 +121,10 @@ export function Graph({
         <line
           key={`grid-x-${String(hour)}`}
           x1={xScale(hour)}
-          y1={PADDING.top}
+          y1={resolvedPadding.top}
           x2={xScale(hour)}
-          y2={height - PADDING.bottom}
+          y2={height - resolvedPadding.bottom}
           stroke="var(--dark-gray)"
-
           strokeDasharray="2 2"
         />
       ))}
@@ -127,7 +133,7 @@ export function Graph({
       {yTicks.map(({ index, value }) => (
         <text
           key={`label-y-${String(index)}`}
-          x={PADDING.left - 8}
+          x={resolvedPadding.left - 8}
           y={yScale(value)}
           fontSize={11}
           fill="var(--rehua-navy)"
@@ -143,7 +149,7 @@ export function Graph({
         <text
           key={`label-x-${String(hour)}`}
           x={xScale(hour)}
-          y={height - PADDING.bottom + 16}
+          y={height - resolvedPadding.bottom + 16}
           fontSize={10}
           fill="var(--rehua-navy)"
           textAnchor="middle"
@@ -192,3 +198,5 @@ export function Graph({
     </svg>
   );
 }
+
+export default Graph;
