@@ -66,7 +66,7 @@ function Graph({
   const range = config.max - config.min;
 
   function xScale(hour: number): number {
-    return resolvedPadding.left + (hour / 24) * plotWidth;
+    return resolvedPadding.left + (hour / 23) * plotWidth;
   }
 
   function yScale(value: number): number {

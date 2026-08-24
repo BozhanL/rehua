@@ -1,3 +1,5 @@
+// TODO:
+//import sdk type for observations once schema pr is merged
 export type GraphableObservationType =
   | 'OXYGEN_RATE'
   | 'RESPIRATION_RATE'
@@ -8,6 +10,7 @@ export type GraphableObservationType =
   | 'BLOOD_GLUCOSE_LEVELS'
   | 'NEUROLOGICAL_OBSERVATION_CHART';
 
+// this one is fine to keep
 export interface ObservationGraphConfig {
   shortCode: string;
   label: string;
@@ -15,7 +18,8 @@ export interface ObservationGraphConfig {
   min: number;
   max: number;
 }
-
+// TODO:
+//replace with sdk type for observations once schema pr is merged
 export const OBSERVATION_GRAPH_CONFIG: Record<
   GraphableObservationType,
   ObservationGraphConfig
