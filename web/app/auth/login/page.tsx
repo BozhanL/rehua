@@ -18,7 +18,7 @@ async function login({
   return loginSdk(
     { host, simulate: isTesting, options: { credentials: 'include' } },
     {
-      userId: typia.assert<number>(Number(formData.get('userId'))),
+      userName: typia.assert<string>(formData.get('userName')),
       password: typia.assert<string>(formData.get('password')),
       totpCode: typia.assert<string>(formData.get('totpCode')),
     },
@@ -39,7 +39,7 @@ function Home(): JSX.Element {
           loginMutation.mutate({ host, formData });
         }}
       >
-        <input name="userId" required />
+        <input name="userName" required />
         <input name="password" required />
         <input name="totpCode" required />
         <button type="submit">Login</button>
