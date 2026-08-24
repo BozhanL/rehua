@@ -1,17 +1,22 @@
 'use client';
 
+import dayjs from '../../utils/dayjs';
 import ContentButton from '../common/ContentButton';
 import Icon from '../common/Icon';
 import Modal from '../common/Modal';
+import PopUp from '../common/PopUp';
 import type { Note } from './NoteList';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import {
+  LexicalComposer,
+  type InitialConfigType,
+} from '@lexical/react/LexicalComposer';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, FORMAT_TEXT_COMMAND } from 'lexical';
-import { type JSX, type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type JSX, type ReactNode, useMemo, useState } from 'react';
 
 // interface for EditFormattingModal
 interface EditFormattingModalProps {
@@ -37,25 +42,6 @@ interface EditFormattingModalProps {
     beforeHtml: string; // html content of note before formatting changes were made
     afterHtml: string; // html content of note after formatting changes were made
   }) => void;
-}
-
-// React component that loads provided HTML into Lexical editor
-function LoadHtmlPlugin({
-  html,
-}: Readonly<{ html: string }>): JSX.Element | null {
-  const [editor] = useLexicalComposerContext();
-  // load provided HTML into the Lexical editor when component mounts or when html prop changes
-  useEffect(() => {
-    editor.update(() => {
-      const parser = new DOMParser();
-      const dom = parser.parseFromString(html, 'text/html');
-      const nodes = $generateNodesFromDOM(editor, dom);
-      const root = $getRoot();
-      root.clear();
-      root.append(...nodes);
-    });
-  }, [editor, html]);
-  return null;
 }
 
 // error boundary for RichTextPlugin, required by Lexical
@@ -139,9 +125,11 @@ export default function EditFormattingModal({
   const [html, setHtml] = useState(note.html);
   // check if there are any changes to the note's html formatting
   const hasChanges = normaliseHtml(html) !== normaliseHtml(note.html);
+  // state to control visibility of pop-up when there are no changes to save
+  const [showNoChangesPopUp, setShowNoChangesPopUp] = useState(false);
 
   // Lexical editor configuration, setup runs only once on initial render
-  const initialConfig = useMemo(
+  const initialConfig = useMemo<InitialConfigType>(
     () => ({
       namespace: 'NotesFormatting',
       editable: false,
@@ -153,24 +141,35 @@ export default function EditFormattingModal({
           italic: 'italic',
         },
       },
+      editorState: (editor): void => {
+        editor.update(() => {
+          const parser = new DOMParser();
+          const dom = parser.parseFromString(note.html, 'text/html');
+          const nodes = $generateNodesFromDOM(editor, dom);
+          const root = $getRoot();
+          root.clear();
+          root.append(...nodes);
+        });
+      },
       onError: (error: Error): void => {
         console.error(error);
       },
     }),
-    [],
+    [note.html],
   );
 
   // saves formatted changes to note and closes modal
   function handleSave(): void {
-    // if there are no changes, do not call onSave (TODO: pop up should be displayed to inform user that there are no changes to save)
+    // if there are no changes, do not call onSave & display pop-up to inform user
     if (!hasChanges) {
+      setShowNoChangesPopUp(true);
       return;
     }
 
     onSave({
       noteId: note.noteId,
       formattedBy: currentUser,
-      formattedAt: new Date().toISOString(),
+      formattedAt: dayjs().toISOString(),
       beforeHtml: note.html,
       afterHtml: html,
     });
@@ -178,74 +177,103 @@ export default function EditFormattingModal({
   }
 
   return (
-    <Modal open={open}>
-      {/* overall modal layout */}
-      <div className="flex h-full flex-col gap-5 p-6">
-        {/* top row with back button, icon, and title */}
-        <div className="flex items-center gap-6">
-          <button type="button" onClick={onClose} style={{ cursor: 'pointer' }}>
-            <Icon name="circle-arrow" width={65} className="text-rehua-navy" />
-          </button>
-
-          <Icon name="clipboard" width={45} className="text-rehua-maroon" />
-
-          <div className="font-bold text-rehua-maroon" style={{ fontSize: 45 }}>
-            Running Notes: Edit Entry
-          </div>
-        </div>
-
-        {/* Lexical editor */}
-        <LexicalComposer key={note.noteId} initialConfig={initialConfig}>
-          <LoadHtmlPlugin html={note.html} />
-          <div
-            className="flex h-full flex-col overflow-hidden rounded-md border"
-            style={{ boxShadow: 'inset 0 1px 3px rgb(0 0 0 / 0.3)' }}
-          >
-            {/* toolbar section for formatter buttons */}
-            <div
-              className="
-                flex shrink-0 gap-2 border-b border-rehua-mini-opaque-upload
-                bg-rehua-mini-translucent-upload p-3
-              "
+    <>
+      {/* pop-up for when there are no formatting changes to save */}
+      <PopUp
+        text1={
+          'No changes applied to the entry.\nPlease make a change before submitting the audit.'
+        }
+        text1Style={{ lineHeight: 1.3 }}
+        button1Props={{
+          text1: 'OK',
+          iconProps: { name: 'circle-arrow' },
+          backgroundColor: 'bg-rehua-green',
+          horizontalPadding: 0.3,
+          onClick: () => {
+            setShowNoChangesPopUp(false);
+          },
+        }}
+        modalProps={{ open: showNoChangesPopUp, surfaceProps: { height: 600 } }}
+      />
+      <Modal open={open}>
+        {/* overall modal layout */}
+        <div className="flex h-full flex-col gap-5 p-6">
+          {/* top row with back button, icon, and title */}
+          <div className="flex items-center gap-6">
+            <button
+              type="button"
+              onClick={onClose}
+              style={{ cursor: 'pointer' }}
             >
-              <Toolbar />
-            </div>
-
-            {/* scrollable note content section */}
-            <div className="min-h-0 flex-1 overflow-y-auto p-3 text-2xl">
-              <RichTextPlugin
-                contentEditable={
-                  <ContentEditable className="min-h-0 w-full outline-none" />
-                }
-                placeholder={null}
-                ErrorBoundary={RichTextErrorBoundary}
+              <Icon
+                name="circle-arrow"
+                width={65}
+                className="text-rehua-navy"
               />
+            </button>
 
-              {/* update html state when editor content changes */}
-              <OnChangePlugin
-                onChange={(editorState, editor) => {
-                  editorState.read(() => {
-                    setHtml($generateHtmlFromNodes(editor, null));
-                  });
-                }}
-              />
+            <Icon name="clipboard" width={45} className="text-rehua-maroon" />
+
+            <div
+              className="font-bold text-rehua-maroon"
+              style={{ fontSize: 45 }}
+            >
+              Running Notes: Edit Entry
             </div>
           </div>
-        </LexicalComposer>
 
-        {/* submit audit button */}
-        <div className="flex justify-end">
-          <ContentButton
-            text1="Submit Audit"
-            height={50}
-            iconProps={{ name: 'pencil' }}
-            backgroundColor="bg-rehua-orange"
-            textIconGap={0.3}
-            verticalPadding={0.2}
-            onClick={handleSave}
-          />
+          {/* Lexical editor */}
+          <LexicalComposer key={note.noteId} initialConfig={initialConfig}>
+            <div
+              className="flex h-full flex-col overflow-hidden rounded-md border"
+              style={{ boxShadow: 'inset 0 1px 3px rgb(0 0 0 / 0.3)' }}
+            >
+              {/* toolbar section for formatter buttons */}
+              <div
+                className="
+                  flex shrink-0 gap-2 border-b border-rehua-mini-opaque-upload
+                  bg-rehua-mini-translucent-upload p-3
+                "
+              >
+                <Toolbar />
+              </div>
+
+              {/* scrollable note content section */}
+              <div className="min-h-0 flex-1 overflow-y-auto p-3 text-2xl">
+                <RichTextPlugin
+                  contentEditable={
+                    <ContentEditable className="min-h-0 w-full outline-none" />
+                  }
+                  placeholder={null}
+                  ErrorBoundary={RichTextErrorBoundary}
+                />
+
+                {/* update html state when editor content changes */}
+                <OnChangePlugin
+                  onChange={(editorState, editor) => {
+                    editorState.read(() => {
+                      setHtml($generateHtmlFromNodes(editor, null));
+                    });
+                  }}
+                />
+              </div>
+            </div>
+          </LexicalComposer>
+
+          {/* submit audit button */}
+          <div className="flex justify-end">
+            <ContentButton
+              text1="Submit Audit"
+              height={50}
+              iconProps={{ name: 'pencil' }}
+              backgroundColor="bg-rehua-orange"
+              textIconGap={0.3}
+              verticalPadding={0.2}
+              onClick={handleSave}
+            />
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
+    </>
   );
 }
