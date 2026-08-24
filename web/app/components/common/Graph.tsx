@@ -64,6 +64,8 @@ function Graph({
   const plotWidth = width - resolvedPadding.left - resolvedPadding.right;
   const plotHeight = height - resolvedPadding.top - resolvedPadding.bottom;
   const range = config.max - config.min;
+  // reserves one tick-row at the bottom for an unlabeled gridline, so config.min doesn't sit flush against the x-axis
+  const usableHeight = (plotHeight * (yTickCount - 1)) / yTickCount;
 
   function xScale(hour: number): number {
     return resolvedPadding.left + (hour / 23) * plotWidth;
@@ -71,12 +73,12 @@ function Graph({
 
   function yScale(value: number): number {
     if (range === 0) {
-      return resolvedPadding.top + plotHeight / 2;
+      return resolvedPadding.top + usableHeight / 2;
     }
     return (
       resolvedPadding.top +
-      plotHeight -
-      ((value - config.min) / range) * plotHeight
+      usableHeight -
+      ((value - config.min) / range) * usableHeight
     );
   }
 
@@ -115,6 +117,16 @@ function Graph({
           strokeDasharray="2 2"
         />
       ))}
+
+      {/* Unlabeled spacer gridline, reserving a gap below config.min */}
+      <line
+        x1={resolvedPadding.left}
+        y1={resolvedPadding.top + plotHeight}
+        x2={width - resolvedPadding.right}
+        y2={resolvedPadding.top + plotHeight}
+        stroke="var(--dark-gray)"
+        strokeDasharray="2 2"
+      />
 
       {/* Gridlines - vertical */}
       {hourTicks.map((hour) => (
