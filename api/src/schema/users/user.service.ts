@@ -17,7 +17,7 @@ export class UserService {
   }
 
   async findAll(): Promise<UserDocument[]> {
-    return this.userModel.find().exec();
+    return this.userModel.find().sort({ _id: 1 }).exec();
   }
 
   async findOne(id: string): Promise<UserDocument | null> {
@@ -30,6 +30,7 @@ export class UserService {
   ): Promise<UserDocument[]> {
     return this.userModel
       .find()
+      .sort({ username: 'asc' })
       .skip((pageNumber - 1) * numberOfRows)
       .limit(numberOfRows)
       .exec();

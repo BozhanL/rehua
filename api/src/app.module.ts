@@ -1,12 +1,10 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
 import { HelloModule } from './hello/hello.module';
 import { EmergencyContactModule } from './schema/emergency_contacts/emergency_contact.module';
 import { ObservationModule } from './schema/observations/observation.module';
 import { PatientModule } from './schema/patients/patient.module';
 import { UserModule } from './schema/users/user.module';
-import { UsersModule } from './users/users.module';
 import { Config, https } from './utils/config';
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -78,7 +76,14 @@ function requiredReadableFilePath(
 }
 
 @Module({
-  imports: [configModule, HelloModule, AuthModule, UsersModule],
+  imports: [
+    configModule,
+    HelloModule,
+    EmergencyContactModule,
+    ObservationModule,
+    PatientModule,
+    UserModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
@@ -87,17 +92,7 @@ export class AppModule {
   static forRoot(mongo: DynamicModule | undefined): DynamicModule {
     return {
       module: AppModule,
-      imports: [
-        configModule,
-        HelloModule,
-        EmergencyContactModule,
-        ObservationModule,
-        PatientModule,
-        UserModule,
-        mongo ?? mongoModule,
-      ],
-      controllers: [AppController],
-      providers: [AppService],
+      imports: [mongo ?? mongoModule],
     };
   }
 }

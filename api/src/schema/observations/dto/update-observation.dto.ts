@@ -1,4 +1,7 @@
 import { CreateObservationDto } from './create-observation.dto';
-import { PartialType } from '@nestjs/mapped-types';
+import { OmitType, PartialType } from '@nestjs/swagger';
 
-export class UpdateObservationDto extends PartialType(CreateObservationDto) {}
+export class UpdateObservationDto extends OmitType(
+  PartialType(CreateObservationDto),
+  ['patientId'],
+) {}

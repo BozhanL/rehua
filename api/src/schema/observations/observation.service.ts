@@ -36,8 +36,6 @@ export class ObservationService {
     patientId: string,
     observationType: ObservationType,
   ): Promise<ObservationDocument[]> {
-    console.log(patientId);
-    console.log(observationType);
     return this.observationModel
       .find({ patientId, type: observationType })
       .sort({ dateTime: -1 })

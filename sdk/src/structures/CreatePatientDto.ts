@@ -1,7 +1,7 @@
 export type CreatePatientDto = {
   firstName: string;
   lastName: string;
-  dob: string;
+  dateOfBirth: string;
   address: string;
   nhi: number;
   dateAdmitted: string;
@@ -16,8 +16,7 @@ export type CreatePatientDto = {
   maritalStatus: string;
   ethnicity: string;
   allergies: string;
-  pfp?: undefined | string;
+  profilePicture?: undefined | string;
   funding?: undefined | string;
-  tod?: undefined | string;
-  id?: undefined | string;
+  timeOfDeath?: undefined | string;
 };

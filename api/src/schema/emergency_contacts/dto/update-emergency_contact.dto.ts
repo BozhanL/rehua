@@ -1,6 +1,7 @@
 import { CreateEmergencyContactDto } from './create-emergency_contact.dto';
-import { PartialType } from '@nestjs/mapped-types';
+import { OmitType, PartialType } from '@nestjs/swagger';
 
-export class UpdateEmergencyContactDto extends PartialType(
-  CreateEmergencyContactDto,
+export class UpdateEmergencyContactDto extends OmitType(
+  PartialType(CreateEmergencyContactDto),
+  ['patientId'],
 ) {}

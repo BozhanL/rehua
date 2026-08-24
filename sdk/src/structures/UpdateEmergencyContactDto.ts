@@ -1,5 +1,4 @@
 export type UpdateEmergencyContactDto = {
-  patientId?: undefined | string;
   priority?: undefined | number;
   firstName?: undefined | string;
   lastName?: undefined | string;
