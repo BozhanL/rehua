@@ -7,7 +7,7 @@ import type { JSX } from 'react';
 
 export interface GraphDataPoint {
   value: number; // observation reading, used for y-axis placement
-  dateTime: Date; // full timestamp of the reading (NZST wall-clock) - drives x-axis placement and kept for consumers (e.g. tooltips)
+  dateTime: Date; // full timestamp of the reading, use for x-axis placement
 }
 export interface GraphProps {
   type: GraphableObservationType; // observation type, looked up in OBSERVATION_GRAPH_CONFIG for axis range/label/unit
