@@ -35,6 +35,7 @@
     "data folder": "mkdir -p \"${DATA_PATH}\""
   },
   "features": {
+    "ghcr.io/devcontainers-extra/features/gh-cli:1": {},
     "ghcr.io/devcontainers-extra/features/nestjs-cli:2": {},
     "ghcr.io/devcontainers-extra/features/cz-cli:1": {},
     "ghcr.io/devcontainers-extra/features/npm-package:1": {

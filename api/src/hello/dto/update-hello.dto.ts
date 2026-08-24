@@ -1,4 +1,4 @@
 import { CreateHelloDto } from './create-hello.dto';
-import { PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/swagger';
 
 export class UpdateHelloDto extends PartialType(CreateHelloDto) {}

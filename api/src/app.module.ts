@@ -3,6 +3,10 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { HelloModule } from './hello/hello.module';
 import { ManualModule } from './manual/manual.module';
+import { EmergencyContactModule } from './schema/emergency_contacts/emergency_contact.module';
+import { ObservationModule } from './schema/observations/observation.module';
+import { PatientModule } from './schema/patients/patient.module';
+import { UserModule } from './schema/users/user.module';
 import { UsersModule } from './users/users.module';
 import { Config, configModule } from './utils/config';
 import { DynamicModule, Module } from '@nestjs/common';
@@ -28,7 +32,17 @@ export const mongoModule = MongooseModule.forRootAsync({
 });
 
 @Module({
-  imports: [configModule, HelloModule, AuthModule, UsersModule, ManualModule],
+  imports: [
+    configModule,
+    HelloModule,
+    AuthModule,
+    UsersModule,
+    EmergencyContactModule,
+    ObservationModule,
+    PatientModule,
+    UserModule,
+    ManualModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
