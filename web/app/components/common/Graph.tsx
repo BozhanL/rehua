@@ -51,7 +51,7 @@ function formatPointValue(value: number, unit: string): string {
 }
 
 // drops readings that are malformed or fall outside the observation's
-// clinically valid range, so backend data can never plot a misleading point
+// valid range, so backend data can never plot a misleading point
 function isValidDataPoint(
   point: GraphDataPoint,
   config: ObservationGraphConfig,
