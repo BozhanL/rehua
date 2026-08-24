@@ -1,6 +1,7 @@
 import {
   OBSERVATION_GRAPH_CONFIG,
   type GraphableObservationType,
+  type ObservationGraphConfig,
 } from './observation-graph.config';
 import type { JSX } from 'react';
 
@@ -49,6 +50,22 @@ function formatPointValue(value: number, unit: string): string {
   return String(value);
 }
 
+// drops readings that are malformed or fall outside the observation's
+// clinically valid range, so backend data can never plot a misleading point
+function isValidDataPoint(
+  point: GraphDataPoint,
+  config: ObservationGraphConfig,
+): boolean {
+  return (
+    Number.isInteger(point.hour) &&
+    point.hour >= 0 &&
+    point.hour <= 23 &&
+    Number.isFinite(point.value) &&
+    point.value >= config.min &&
+    point.value <= config.max
+  );
+}
+
 // React component that renders an observation as a line graph over 24 hours
 function Graph({
   type,
@@ -82,7 +99,9 @@ function Graph({
     );
   }
 
-  const sortedData = [...data].sort((a, b) => a.hour - b.hour);
+  const sortedData = data
+    .filter((point) => isValidDataPoint(point, config))
+    .sort((a, b) => a.hour - b.hour);
 
   const linePath = sortedData
     .map(
