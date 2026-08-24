@@ -28,5 +28,6 @@
       "rootPath": "web"
     }
   ],
+  "remote.localPortHost": "allInterfaces",
   "js/ts.tsdk.path": "node_modules/typescript/lib"
 }
