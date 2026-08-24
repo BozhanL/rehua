@@ -21,98 +21,166 @@ const TYPE_BY_LABEL = new Map<string, GraphableObservationType>(
 );
 
 /* -------------------------------------------------------------------------- */
-/* Demo-only hardcoded data                                                   */
-/* In the real app, GraphDataPoint[] would come from the backend per patient. */
-/* Each series includes one intentionally out-of-range reading at hour 12,    */
-/* to demonstrate Graph silently dropping invalid/out-of-range points.        */
+/* Demo-only mock API data                                                    */
+/*                                                                            */
+/* Mirrors the backend's CreateObservationDto (api/.../create-observation.dto */
+/* - schema PR not yet merged into this workspace, so it's re-declared here   */
+/* as a stand-in rather than imported). Shaped exactly like the wire format:  */
+/* dateTime as an ISO string, measurementValue optional. `type` is typed as   */
+/* GraphableObservationType rather than the backend's ObservationType enum -  */
+/* TODO: swap for the real enum/DTO once the schema PR merges, and confirm    */
+/* its values line up 1:1 with GraphableObservationType.                     */
+/*                                                                            */
+/* toObservationGraphDataPoint below is the adapter a real fetch layer would  */
+/* use to turn CreateObservationDto[] into GraphDataPoint[] for Graph.        */
 /* -------------------------------------------------------------------------- */
 
+interface MockObservationDto {
+  patientId: string;
+  dateTime: string;
+  type: GraphableObservationType;
+  measurementValue?: number;
+  notes?: string;
+}
+
+const DEMO_PATIENT_ID = 'demo-patient-0001';
 const DEMO_DATE = '2026-08-24';
 
-function hourlyPoint(hour: number, value: number): GraphDataPoint {
+function isoDateTime(hour: number, minute: number): string {
+  return `${DEMO_DATE}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00`;
+}
+
+// readings land at scattered, non-whole-hour times on purpose, to exercise
+// Graph's continuous x-axis placement rather than snapping to the hour
+type TimedReading = [hour: number, minute: number, measurementValue?: number];
+
+function buildDtoSeries(
+  type: GraphableObservationType,
+  readings: TimedReading[],
+): MockObservationDto[] {
+  return readings.map(([hour, minute, measurementValue]) => ({
+    patientId: DEMO_PATIENT_ID,
+    dateTime: isoDateTime(hour, minute),
+    type,
+    // exactOptionalPropertyTypes forbids an explicit `undefined` - omit the
+    // key entirely for notes-only readings rather than setting it to undefined
+    ...(measurementValue === undefined ? {} : { measurementValue }),
+  }));
+}
+
+// adapter a real fetch layer would use to turn a CreateObservationDto into a
+// GraphDataPoint. Returns null for readings with no measurementValue (e.g.
+// notes-only observations) since Graph has nothing to plot for them - these
+// are filtered out before Graph ever sees them, distinct from the
+// out-of-range values Graph itself drops in isValidDataPoint.
+function toObservationGraphDataPoint(
+  dto: MockObservationDto,
+): GraphDataPoint | null {
+  if (dto.measurementValue === undefined) {
+    return null;
+  }
   return {
-    hour,
-    value,
-    dateTime: new Date(
-      `${DEMO_DATE}T${String(hour).padStart(2, '0')}:00:00.000Z`,
-    ),
+    value: dto.measurementValue,
+    dateTime: new Date(dto.dateTime),
   };
 }
 
-const DEMO_DATA: Record<GraphableObservationType, GraphDataPoint[]> = {
-  OXYGEN_RATE: [
-    hourlyPoint(0, 97),
-    hourlyPoint(4, 96),
-    hourlyPoint(8, 95),
-    hourlyPoint(12, 999), // out of range (max 100) - dropped
-    hourlyPoint(16, 94),
-    hourlyPoint(20, 96),
-    hourlyPoint(23, 97),
-  ],
-  RESPIRATION_RATE: [
-    hourlyPoint(0, 16),
-    hourlyPoint(4, 15),
-    hourlyPoint(8, 18),
-    hourlyPoint(12, -5), // out of range (min 10) - dropped
-    hourlyPoint(16, 17),
-    hourlyPoint(20, 16),
-    hourlyPoint(23, 15),
-  ],
-  BLOOD_PRESSURE: [
-    hourlyPoint(0, 120),
-    hourlyPoint(4, 118),
-    hourlyPoint(8, 125),
-    hourlyPoint(12, 400), // out of range (max 250) - dropped
-    hourlyPoint(16, 130),
-    hourlyPoint(20, 122),
-    hourlyPoint(23, 119),
-  ],
-  HEART_RATE: [
-    hourlyPoint(0, 72),
-    hourlyPoint(4, 68),
-    hourlyPoint(8, 75),
-    hourlyPoint(12, 150), // out of range (max 100) - dropped
-    hourlyPoint(16, 80),
-    hourlyPoint(20, 74),
-    hourlyPoint(23, 70),
-  ],
-  TEMPERATURE: [
-    hourlyPoint(0, 36.8),
-    hourlyPoint(4, 36.5),
-    hourlyPoint(8, 37.0),
-    hourlyPoint(12, 50), // out of range (max 45) - dropped
-    hourlyPoint(16, 37.2),
-    hourlyPoint(20, 36.9),
-    hourlyPoint(23, 36.7),
-  ],
-  WEIGHT: [
-    hourlyPoint(0, 70),
-    hourlyPoint(4, 70),
-    hourlyPoint(8, 70),
-    hourlyPoint(12, -10), // out of range (min 20) - dropped
-    hourlyPoint(16, 70),
-    hourlyPoint(20, 70),
-    hourlyPoint(23, 70),
-  ],
-  BLOOD_GLUCOSE_LEVELS: [
-    hourlyPoint(0, 5.5),
-    hourlyPoint(4, 4.8),
-    hourlyPoint(8, 7.2),
-    hourlyPoint(12, 99), // out of range (max 50) - dropped
-    hourlyPoint(16, 6.5),
-    hourlyPoint(20, 5.9),
-    hourlyPoint(23, 5.2),
-  ],
-  NEUROLOGICAL_OBSERVATION_CHART: [
-    hourlyPoint(0, 15),
-    hourlyPoint(4, 15),
-    hourlyPoint(8, 14),
-    hourlyPoint(12, 20), // out of range (max 15) - dropped
-    hourlyPoint(16, 15),
-    hourlyPoint(20, 15),
-    hourlyPoint(23, 15),
-  ],
+const DEMO_DTOS: Record<GraphableObservationType, MockObservationDto[]> = {
+  OXYGEN_RATE: buildDtoSeries('OXYGEN_RATE', [
+    [0, 47, 97],
+    [4, 22, 96],
+    [8, 14, 95],
+    [11, 47, 999], // out of range (max 100) - dropped by Graph
+    [13, 36, 94.5],
+    [16, 9, 94],
+    [19, 52, 96],
+    [22, 38, 97],
+  ]),
+  RESPIRATION_RATE: buildDtoSeries('RESPIRATION_RATE', [
+    [0, 47, 16],
+    [4, 22, 15],
+    [8, 14, 18],
+    [11, 47, -5], // out of range (min 10) - dropped by Graph
+    [13, 36, 17.5],
+    [16, 9, 17],
+    [19, 52, 16],
+    [22, 38, 15],
+  ]),
+  BLOOD_PRESSURE: buildDtoSeries('BLOOD_PRESSURE', [
+    [0, 47, 120],
+    [4, 22, 118],
+    [8, 14, 125],
+    [11, 47, 400], // out of range (max 250) - dropped by Graph
+    [13, 36, 128],
+    [16, 9, 130],
+    [19, 52, 122],
+    [22, 38, 119],
+  ]),
+  HEART_RATE: buildDtoSeries('HEART_RATE', [
+    [0, 47, 72],
+    [4, 22, 68],
+    [8, 14, 75],
+    [11, 47, 150], // out of range (max 100) - dropped by Graph
+    [13, 36, 78],
+    [15, 30], // no measurementValue (notes-only observation) - dropped by the adapter, before Graph
+    [16, 9, 80],
+    [19, 52, 74],
+    [22, 38, 70],
+  ]),
+  TEMPERATURE: buildDtoSeries('TEMPERATURE', [
+    [0, 47, 36.8],
+    [4, 22, 36.5],
+    [8, 14, 37.0],
+    [11, 47, 50], // out of range (max 45) - dropped by Graph
+    [13, 36, 37.1],
+    [16, 9, 37.2],
+    [19, 52, 36.9],
+    [22, 38, 36.7],
+  ]),
+  WEIGHT: buildDtoSeries('WEIGHT', [
+    [0, 47, 70],
+    [4, 22, 70],
+    [8, 14, 70],
+    [11, 47, -10], // out of range (min 20) - dropped by Graph
+    [13, 36, 70],
+    [16, 9, 70],
+    [19, 52, 70],
+    [22, 38, 70],
+  ]),
+  BLOOD_GLUCOSE_LEVELS: buildDtoSeries('BLOOD_GLUCOSE_LEVELS', [
+    [0, 47, 5.5],
+    [4, 22, 4.8],
+    [8, 14, 7.2],
+    [11, 47, 99], // out of range (max 50) - dropped by Graph
+    [13, 36, 6.1],
+    [16, 9, 6.5],
+    [19, 52, 5.9],
+    [22, 38, 5.2],
+  ]),
+  NEUROLOGICAL_OBSERVATION_CHART: buildDtoSeries(
+    'NEUROLOGICAL_OBSERVATION_CHART',
+    [
+      [0, 47, 15],
+      [4, 22, 15],
+      [8, 14, 14],
+      [11, 47, 20], // out of range (max 15) - dropped by Graph
+      [13, 36, 15],
+      [16, 9, 15],
+      [19, 52, 15],
+      [22, 38, 15],
+    ],
+  ),
 };
+
+const DEMO_DATA: Record<GraphableObservationType, GraphDataPoint[]> =
+  Object.fromEntries(
+    OBSERVATION_TYPES.map((type) => [
+      type,
+      DEMO_DTOS[type]
+        .map(toObservationGraphDataPoint)
+        .filter((point): point is GraphDataPoint => point !== null),
+    ]),
+  ) as Record<GraphableObservationType, GraphDataPoint[]>;
 
 function GraphDemo(): JSX.Element {
   const [selectedType, setSelectedType] =
@@ -156,9 +224,8 @@ function GraphDemo(): JSX.Element {
         </h3>
         <Graph type={selectedType} data={DEMO_DATA[selectedType]} />
         <p className="mt-2 text-xs text-rehua-dark-gray">
-          The hour-12 reading in this demo&apos;s hardcoded data is
-          intentionally out of range ({config.min}-{config.max} {config.unit})
-          to show that Graph drops invalid readings instead of plotting them.
+          Graph example using mock observation schema. Component drops
+          value-less observations before Graph ever sees them.
         </p>
       </div>
     </section>

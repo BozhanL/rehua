@@ -6,9 +6,8 @@ import {
 import type { JSX } from 'react';
 
 export interface GraphDataPoint {
-  hour: number; // hour of day (0-23) the reading was taken, used for x-axis placement
   value: number; // observation reading, used for y-axis placement
-  dateTime: Date; // full timestamp of the reading, kept for consumers (e.g. tooltips)
+  dateTime: Date; // full timestamp of the reading (NZST wall-clock) - drives x-axis placement and kept for consumers (e.g. tooltips)
 }
 export interface GraphProps {
   type: GraphableObservationType; // observation type, looked up in OBSERVATION_GRAPH_CONFIG for axis range/label/unit
@@ -23,7 +22,7 @@ export interface GraphProps {
 const DEFAULT_PADDING = { top: 30, right: 20, bottom: 30, left: 100 };
 
 function formatHourLabel(hour: number): string {
-  if (hour === 23) {
+  if (hour === 24) {
     return '23:59';
   }
   const padded = hour.toString().padStart(2, '0');
@@ -51,19 +50,22 @@ function formatPointValue(value: number, unit: string): string {
 }
 
 // drops readings that are malformed or fall outside the observation's
-// valid range, so backend data can never plot a misleading point
+// clinically valid range, so backend data can never plot a misleading point
 function isValidDataPoint(
   point: GraphDataPoint,
   config: ObservationGraphConfig,
 ): boolean {
   return (
-    Number.isInteger(point.hour) &&
-    point.hour >= 0 &&
-    point.hour <= 23 &&
+    point.dateTime instanceof Date &&
+    !Number.isNaN(point.dateTime.getTime()) &&
     Number.isFinite(point.value) &&
     point.value >= config.min &&
     point.value <= config.max
   );
+}
+
+function hourOfDay(dateTime: Date): number {
+  return dateTime.getHours() + dateTime.getMinutes() / 60;
 }
 
 // React component that renders an observation as a line graph over 24 hours
@@ -85,7 +87,7 @@ function Graph({
   const usableHeight = (plotHeight * (yTickCount - 1)) / yTickCount;
 
   function xScale(hour: number): number {
-    return resolvedPadding.left + (hour / 23) * plotWidth;
+    return resolvedPadding.left + (hour / 24) * plotWidth;
   }
 
   function yScale(value: number): number {
@@ -101,6 +103,7 @@ function Graph({
 
   const sortedData = data
     .filter((point) => isValidDataPoint(point, config))
+    .map((point) => ({ ...point, hour: hourOfDay(point.dateTime) }))
     .sort((a, b) => a.hour - b.hour);
 
   const linePath = sortedData
@@ -110,7 +113,7 @@ function Graph({
     )
     .join(' ');
 
-  const hourTicks = Array.from({ length: 24 }, (_, i) => i);
+  const hourTicks = Array.from({ length: 25 }, (_, i) => i);
 
   const yTicks = Array.from({ length: yTickCount }, (_, i) => ({
     index: i,
