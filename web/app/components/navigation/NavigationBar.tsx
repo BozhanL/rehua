@@ -22,13 +22,13 @@ function NavigationBar({
   return (
     <nav
       className="
-        flex min-h-22.5 w-full flex-wrap items-center justify-between gap-x-6
-        gap-y-3 border-b bg-rehua-white px-6 py-4
+        flex min-h-22.5 w-full items-center justify-between gap-6
+        overflow-x-auto border-b bg-rehua-white px-6 py-4 whitespace-nowrap
       "
     >
       {/* left side: logo + user information */}
-      <div className="flex min-w-0 flex-1 items-center gap-10">
-        {/* Logo */}
+      <div className="flex shrink-0 items-center gap-10">
+        {/* logo */}
         <div className="shrink-0">
           <Logo width={200} />
         </div>
@@ -55,7 +55,7 @@ function NavigationBar({
         </div>
       </div>
       {/* right side: navigation actions */}
-      <div className="flex shrink-0 flex-wrap items-center justify-end gap-6">
+      <div className="flex shrink-0 items-center gap-6">
         {/* admin only actions */}
         {group === 'admin' && (
           <>
@@ -75,7 +75,6 @@ function NavigationBar({
             <UploadManualButton />
           </>
         )}
-
         {/* available to all users */}
         <ShowManualButton />
         {/* TODO: backend to implement logout button and use this snippet within <LogoutButton />  */}
