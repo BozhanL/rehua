@@ -123,6 +123,11 @@ export function UploadManualButton(): JSX.Element {
         text2="Manual"
         iconProps={{ name: 'manual-tick' }}
         backgroundColor="bg-rehua-mustard"
+        verticalPadding={0.2}
+        horizontalPadding={0.4}
+        lineHeight={1.1}
+        textIconGap={0.4}
+        className="text-base"
         onClick={() => {
           fileInputRef.current?.click();
         }}
@@ -176,6 +181,11 @@ export function ShowManualButton(): JSX.Element {
         text2="Manual"
         iconProps={{ name: 'manual' }}
         backgroundColor="bg-rehua-blue"
+        verticalPadding={0.2}
+        horizontalPadding={0.4}
+        lineHeight={1.1}
+        textIconGap={0.4}
+        className="text-base"
 
         onClick={() =>
           void (async (): Promise<void> => {
