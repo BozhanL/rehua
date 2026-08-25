@@ -1,12 +1,14 @@
 import ContentButton from '../common/ContentButton';
 import PopUp from '../common/PopUp';
 import useApiUrl from '@/app/hooks/useApiUrl';
+import { APIUrlContext } from '@/app/providers';
 import { isTesting } from '@/app/utils/env';
 import type { HttpError } from '@rehua/sdk';
 import { create } from '@rehua/sdk/functional/manual';
-import { useMutation } from '@tanstack/react-query';
-import Link from 'next/link';
-import { useRef, useState, type JSX } from 'react';
+import { hasManual } from '@rehua/sdk/functional/manual/exists';
+import { queryOptions, useMutation, useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useContext, useRef, useState, type JSX } from 'react';
 import typia, { json } from 'typia';
 
 async function uploadManual({
@@ -30,6 +32,7 @@ export function UploadManualButton(): JSX.Element {
   const [showUploadSuccessPopup, setShowUploadSuccessPopup] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
 
+  const router = useRouter();
   const apiUrl = useApiUrl();
   const uploadManualMutation = useMutation({
     mutationFn: uploadManual,
@@ -52,7 +55,7 @@ export function UploadManualButton(): JSX.Element {
         button2Props={{
           onClick: () => {
             setShowUploadSuccessPopup(false);
-            window.open(`${apiUrl}${create.path()}`, '_blank', 'noopener');
+            router.push(`${apiUrl}${create.path()}`);
           },
           text1: 'Open',
           backgroundColor: 'bg-rehua-green',
@@ -128,19 +131,65 @@ export function UploadManualButton(): JSX.Element {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function useHasManualOptions() {
+  const host = useContext(APIUrlContext);
+
+  return queryOptions({
+    queryKey: [hasManual.path(), host],
+    queryFn: async () =>
+      hasManual({
+        host: host,
+        simulate: isTesting,
+        options: { credentials: 'include' },
+      }),
+    enabled: false,
+  });
+}
+
 export function ShowManualButton(): JSX.Element {
+  const [showNoManualFoundPopup, setShowNoManualFoundPopup] = useState(false);
+
+  const router = useRouter();
   const apiUrl = useApiUrl();
+
+  const options = useHasManualOptions();
+  const hasManualQuery = useQuery(options);
 
   return (
     <div>
-      <Link href={`${apiUrl}${create.path()}`} target="_blank">
-        <ContentButton
-          text1="View"
-          text2="Manual"
-          iconProps={{ name: 'manual' }}
-          backgroundColor="bg-rehua-blue"
-        />
-      </Link>
+      <PopUp
+        text1="No manual available."
+        button1Props={{
+          onClick: () => {
+            setShowNoManualFoundPopup(false);
+          },
+          text1: 'OK',
+          backgroundColor: 'bg-rehua-green',
+          iconProps: { name: 'circle-arrow' },
+        }}
+        modalProps={{ open: showNoManualFoundPopup }}
+      />
+
+      <ContentButton
+        text1="View"
+        text2="Manual"
+        iconProps={{ name: 'manual' }}
+        backgroundColor="bg-rehua-blue"
+
+        onClick={() =>
+          void (async (): Promise<void> => {
+            const result = await hasManualQuery.refetch();
+
+            if (!result.data) {
+              setShowNoManualFoundPopup(true);
+              return;
+            }
+
+            router.push(`${apiUrl}${create.path()}`);
+          })()
+        }
+      />
     </div>
   );
 }

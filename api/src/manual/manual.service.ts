@@ -59,18 +59,26 @@ export class ManualService {
   }
 
   // This method retrieves the manual as a StreamableFile for viewing or downloading.
-  async find(): Promise<StreamableFile> {
+  async hasManual(): Promise<true | NodeJS.ErrnoException> {
     const manualPath = join(this._filePath, MANUAL_NAME);
 
     // Ensure that the manual file exists and is readable before attempting to create a StreamableFile.
     try {
       await access(manualPath, constants.R_OK);
+      return true;
     } catch (e: unknown) {
       typia.assertGuard<NodeJS.ErrnoException>(e);
 
+      return e;
+    }
+  }
+
+  // This method retrieves the manual as a StreamableFile for viewing or downloading.
+  async getManual(): Promise<StreamableFile> {
+    // Ensure that the manual file exists and is readable before attempting to create a StreamableFile.
+    if ((await this.hasManual()) !== true) {
       throw new NotFoundException(
         'Manual not found. Please upload a manual first.',
-        e,
       );
     }
 

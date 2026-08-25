@@ -47,12 +47,20 @@ export class ManualController {
   }
 
   /**
+   * @description This endpoint is used to check if a manual exists.
+   */
+  @Get('exists')
+  async hasManual(): Promise<boolean> {
+    return (await this.manualService.hasManual()) === true;
+  }
+
+  /**
    * @ignore
    * @description This endpoint is used to view the manual and the SDK does not support it.
    */
   @Get()
   @Header('Content-Type', MANUAL_TYPE)
   async find(): Promise<StreamableFile> {
-    return this.manualService.find();
+    return this.manualService.getManual();
   }
 }
