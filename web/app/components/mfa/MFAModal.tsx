@@ -121,6 +121,12 @@ function AddMFAModal({
         return;
     }
   }
+  //helper function to refocus the next empty input box after local error popup
+  function focusFirstEmpty(): void {
+    const emptyIndex = inputRefs.current.findIndex((el) => !el?.value);
+    const targetIndex = emptyIndex === -1 ? 5 : emptyIndex;
+    inputRefs.current[targetIndex]?.focus();
+  }
 
   return (
     <Modal surfaceProps={{ width: 700, height: 300 }} open={open}>
@@ -216,8 +222,16 @@ function AddMFAModal({
           text1: 'Ok',
           backgroundColor: 'bg-rehua-green',
           onClick: () => {
+            const wasServerError = !!mfaError;
             setLocalError(null);
             onDismissError?.(); // tells parent to clear mfaError
+            if (wasServerError) {
+              // refocus first box if server rejected code
+              inputRefs.current[0]?.focus();
+            } else {
+              // focus the next available empty box if local error
+              focusFirstEmpty();
+            }
           },
         }}
       />
