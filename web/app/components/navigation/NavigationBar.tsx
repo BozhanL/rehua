@@ -23,7 +23,7 @@ function NavigationBar({
     <nav
       className="
         flex min-h-22.5 w-full items-center justify-between gap-6
-        overflow-x-auto border-b bg-rehua-white px-6 py-4 whitespace-nowrap
+        overflow-x-auto bg-rehua-white px-6 py-4 whitespace-nowrap
       "
     >
       {/* left side: logo + user information */}
