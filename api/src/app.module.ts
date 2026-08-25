@@ -77,7 +77,15 @@ function requiredReadableFilePath(
 }
 
 @Module({
-  imports: [configModule, HelloModule, AuthModule],
+  imports: [
+    configModule,
+    HelloModule,
+    EmergencyContactModule,
+    ObservationModule,
+    PatientModule,
+    UserModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

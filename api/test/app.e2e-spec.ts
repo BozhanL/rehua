@@ -1,6 +1,7 @@
 import { AppModule } from '@/app.module.js';
 import type { JwtContent } from '@/auth/entities/jwt-content.entity';
 import { JWT_COOKIE_NAME } from '@/auth/jwt.strategy';
+import { User } from '@/schema/users/entities/user.entity';
 import {
   afterAll,
   afterEach,
@@ -12,10 +13,11 @@ import {
 } from '@jest/globals';
 import type { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { MongooseModule } from '@nestjs/mongoose';
+import { getModelToken, MongooseModule } from '@nestjs/mongoose';
 import { Test, type TestingModule } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import type { Model } from 'mongoose';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { assert, json, TypeGuardError } from 'typia';
@@ -44,9 +46,28 @@ describe('appController (e2e)', () => {
     app.use(cookieParser());
 
     await app.init();
+
+    const userModel = app.get<Model<User>>(getModelToken(User.name));
+    await userModel.create(
+      new User(
+        'ACB123',
+        'John',
+        'Doe',
+        'password123',
+        'QIG6JDKQ5KQTCPNHYP7TAPI56LHZXGED',
+        'jd@hospital.com',
+        'active',
+        '0123456789',
+        '123 magic street',
+        'nurse',
+      ),
+    );
   });
 
   afterEach(async () => {
+    const userModel = app.get<Model<User>>(getModelToken(User.name));
+    await userModel.deleteMany({}).exec();
+
     await app.close();
   });
 
@@ -66,8 +87,11 @@ describe('appController (e2e)', () => {
   it('/hello (POST)', async () => {
     expect.assertions(3);
 
+    const userModel = app.get<Model<User>>(getModelToken(User.name));
+    const user = await userModel.findOne().orFail().exec();
+
     const payload: JwtContent = {
-      userId: 1,
+      userId: user._id.toString(),
     };
 
     const jwtService = app.get(JwtService);
