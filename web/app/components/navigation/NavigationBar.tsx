@@ -22,7 +22,7 @@ function NavigationBar({
     <nav
       className="
         flex min-h-22.5 w-full flex-wrap items-center justify-between gap-x-6
-        gap-y-3 border-b border-gray-200 bg-white px-6 py-4
+        gap-y-3 border-b bg-rehua-white px-6 py-3
       "
     >
       {/* left side: logo + user information */}
@@ -36,18 +36,18 @@ function NavigationBar({
         <div className="flex min-w-0 flex-col justify-center gap-2">
           {/* logged-in user */}
           <div className="flex min-w-0 items-center gap-3">
-            <Icon name="users" width={28} className="text-rehua-maroon" />
+            <Icon name="users" width={26} className="text-rehua-maroon" />
 
-            <span className="truncate text-xl font-medium text-gray-800">
+            <span className="truncate text-lg font-medium">
               <b>Logged in as:</b> {firstName} {lastName}
             </span>
           </div>
 
           {/* current date */}
           <div className="flex min-w-0 items-center gap-3">
-            <Icon name="calendar" width={28} className="text-rehua-maroon" />
+            <Icon name="calendar" width={26} className="text-rehua-maroon" />
 
-            <span className="truncate text-xl font-medium text-gray-800">
+            <span className="truncate text-lg font-medium">
               <b>Date:</b> {todaysDate}
             </span>
           </div>
