@@ -13,6 +13,7 @@ exports[`page renders homepage unchanged 1`] = `
   />
   <div>
     <input
+      accept="application/pdf"
       hidden=""
       type="file"
     />
@@ -24,7 +25,7 @@ exports[`page renders homepage unchanged 1`] = `
         transition-all duration-100
         active:brightness-80
       "
-      style="min-height: 40px; border-radius: 14px; font-size: 18px; padding-inline: 12px; gap: 8px; box-shadow: inset 0 4px 10px rgb(0 0 0 / 0.3);"
+      style="min-height: 40px; border-radius: 14px; font-size: 18px; padding-inline: 16px; padding-block: 8px; gap: 16px; box-shadow: inset 0 4px 10px rgb(0 0 0 / 0.3);"
       type="button"
     >
       <svg
@@ -39,9 +40,9 @@ exports[`page renders homepage unchanged 1`] = `
             text-center
             text-rehua-white
             font-semibold
-            undefined
+            text-base
           "
-        style="line-height: 1;"
+        style="line-height: 1.1;"
       >
         <span>
           Upload
@@ -53,46 +54,41 @@ exports[`page renders homepage unchanged 1`] = `
     </button>
   </div>
   <div>
-    <a
-      href="http://localhost/api/manual"
-      target="_blank"
-    >
-      <button
-        class="
+    <button
+      class="
         inline-flex w-fit cursor-pointer items-center justify-center
         flex-row
         bg-rehua-blue
         transition-all duration-100
         active:brightness-80
       "
-        style="min-height: 40px; border-radius: 14px; font-size: 18px; padding-inline: 12px; gap: 8px; box-shadow: inset 0 4px 10px rgb(0 0 0 / 0.3);"
-        type="button"
-      >
-        <svg
-          class="text-rehua-white"
-          preserveAspectRatio="xMidYMid meet"
-          style="transform-origin: center; transform-box: fill-box;"
-          width="28"
-        />
-        <span
-          class="
+      style="min-height: 40px; border-radius: 14px; font-size: 18px; padding-inline: 16px; padding-block: 8px; gap: 16px; box-shadow: inset 0 4px 10px rgb(0 0 0 / 0.3);"
+      type="button"
+    >
+      <svg
+        class="text-rehua-white"
+        preserveAspectRatio="xMidYMid meet"
+        style="transform-origin: center; transform-box: fill-box;"
+        width="28"
+      />
+      <span
+        class="
             inline-flex flex-col
             text-center
             text-rehua-white
             font-semibold
-            undefined
+            text-base
           "
-          style="line-height: 1;"
-        >
-          <span>
-            View
-          </span>
-          <span>
-            Manual
-          </span>
+        style="line-height: 1.1;"
+      >
+        <span>
+          View
         </span>
-      </button>
-    </a>
+        <span>
+          Manual
+        </span>
+      </span>
+    </button>
   </div>
 </div>
 `;
