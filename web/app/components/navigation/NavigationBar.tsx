@@ -8,9 +8,10 @@ import type { JSX } from 'react';
 interface NavigationBarProps {
   firstName: string;
   lastName: string;
-  group: 'admin' | 'nurse';
+  group: 'admin' | 'nurse'; // different navbar will be rendered based on user group
 }
 
+// React component that renders the navbar for the whole program
 function NavigationBar({
   firstName,
   lastName,
@@ -22,14 +23,14 @@ function NavigationBar({
     <nav
       className="
         flex min-h-22.5 w-full flex-wrap items-center justify-between gap-x-6
-        gap-y-3 border-b bg-rehua-white px-6 py-3
+        gap-y-3 border-b bg-rehua-white px-6 py-4
       "
     >
       {/* left side: logo + user information */}
-      <div className="flex min-w-0 flex-1 items-center gap-6">
+      <div className="flex min-w-0 flex-1 items-center gap-10">
         {/* Logo */}
         <div className="shrink-0">
-          <Logo width={220} />
+          <Logo width={200} />
         </div>
 
         {/* user information */}
@@ -52,38 +53,43 @@ function NavigationBar({
             </span>
           </div>
         </div>
-        {/* right side: navigation actions */}
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-          {/* admin only actions */}
-          {group === 'admin' && (
-            <>
-              <ContentButton
-                text1="View"
-                text2="Logs"
-                iconProps={{ name: 'clipboard' }}
-                backgroundColor="bg-rehua-navy"
-                iconPosition="left"
-                height={70}
-                verticalPadding={0.2}
-                horizontalPadding={0.5}
-                lineHeight={1.1}
-                textIconGap={0.4}
-              />
-              <UploadManualButton />
-            </>
-          )}
+      </div>
+      {/* right side: navigation actions */}
+      <div className="flex shrink-0 flex-wrap items-center justify-end gap-6">
+        {/* admin only actions */}
+        {group === 'admin' && (
+          <>
+            {/* TODO: backend to implement view logs button and use this snippet within <ViewLogsButton />  */}
+            <ContentButton
+              text1="View"
+              text2="Logs"
+              iconProps={{ name: 'clipboard' }}
+              backgroundColor="bg-rehua-navy"
+              iconPosition="left"
+              verticalPadding={0.2}
+              horizontalPadding={0.5}
+              lineHeight={1.1}
+              textIconGap={0.4}
+              className="text-base"
+            />
+            <UploadManualButton />
+          </>
+        )}
 
-          {/* available to all users */}
-          <ShowManualButton />
-          <ContentButton
-            text1="Logout"
-            iconProps={{ name: 'access', flip: 'horizontal' }}
-            backgroundColor="bg-rehua-red"
-            iconPosition="left"
-            height={70}
-            horizontalPadding={0.4}
-          />
-        </div>
+        {/* available to all users */}
+        <ShowManualButton />
+        {/* TODO: backend to implement logout button and use this snippet within <LogoutButton />  */}
+        <ContentButton
+          text1="Logout"
+          iconProps={{ name: 'access', flip: 'horizontal' }}
+          backgroundColor="bg-rehua-red"
+          iconPosition="left"
+          verticalPadding={0.3}
+          horizontalPadding={0.4}
+          lineHeight={1.1}
+          textIconGap={0.3}
+          className="text-lg"
+        />
       </div>
     </nav>
   );
