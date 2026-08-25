@@ -67,7 +67,6 @@ export function UploadManualButton(): JSX.Element {
       <PopUp
         isAlertPopup
         text1={'Unable to upload the new manual.\nPlease try again.'}
-        text2={errorText}
         button1Props={{
           onClick: () => {
             setErrorText(null);
