@@ -5,6 +5,10 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { verify } from 'otplib';
 
+// 5 min for the token to be valid
+// if you update TOKEN_TTL_SEC update the client side too
+export const TOKEN_TTL_SEC = 5 * 60;
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -48,7 +52,7 @@ export class AuthService {
   }
 
   signJwt(user: ExpressUser): string {
-    return this.jwtService.sign(user);
+    return this.jwtService.sign(user, { expiresIn: TOKEN_TTL_SEC });
   }
 
   async getTotpSecret(user: ExpressUser): Promise<string | null> {

@@ -1,4 +1,4 @@
-import { AuthService } from './auth.service';
+import { AuthService, TOKEN_TTL_SEC } from './auth.service';
 import type { LoginBody } from './dto/login-body.dto';
 import type { LoginResponseDto } from './dto/login-response.dto';
 import { JwtAuthGuard } from './jwt.guard';
@@ -32,10 +32,9 @@ export class AuthController {
     const token = this.authService.signJwt(expressUser);
 
     response.cookie(JWT_COOKIE_NAME, token, {
-      // TODO: replace with a proper expiration time
       // Browser may keep session cookies even after the browser is closed, so we need to set an expiration time for the cookie
       // Maybe we can set the expiration time to a few minutes, and refresh the token when the user sends a request to the server.
-      expires: undefined,
+      maxAge: TOKEN_TTL_SEC * 1000, // 5 min
 
       // Secure cookie settings
       httpOnly: true,
@@ -54,6 +53,25 @@ export class AuthController {
     misc.assertPrune<LoginResponseDto>(user.toJSON());
 
     return user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @TypedRoute.Post('refresh')
+  refresh(
+    @CurrentUser() expressUser: ExpressUser,
+    @Res({ passthrough: true }) response: Response,
+  ): void {
+    const token = this.authService.signJwt(expressUser);
+    response.cookie(JWT_COOKIE_NAME, token, {
+      // Browser may keep session cookies even after the browser is closed, so we need to set an expiration time for the cookie
+      // Maybe we can set the expiration time to a few minutes, and refresh the token when the user sends a request to the server.
+      maxAge: TOKEN_TTL_SEC * 1000, // 5 min
+
+      // Secure cookie settings
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
   }
 
   // TODO: remove TotpPayload type and only return the totpSecret
