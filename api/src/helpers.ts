@@ -1,4 +1,5 @@
-import { configModule, AppModule } from './app.module';
+import { AppModule } from './app.module';
+import { configModule } from './utils/config';
 import type { Config } from './utils/config';
 import type { INestiaConfig } from '@nestia/sdk';
 import type { DynamicModule, INestApplication } from '@nestjs/common';

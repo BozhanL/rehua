@@ -38,6 +38,8 @@ const eslintConfig = defineConfig([
 
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/promise-function-async': 'error',
+
+      '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
     },
   },
   {

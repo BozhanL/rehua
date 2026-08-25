@@ -28,7 +28,8 @@
     "postinstall": "patch-package",
     "prettier": "prettier --ignore-path .gitignore --ignore-path .prettierignore --ignore-path sdk/.gitignore --ignore-path web/.gitignore --ignore-path api/.gitignore",
     "format": "npm run prettier -- --check .",
-    "format:fix": "npm run prettier -- --write . "
+    "format:fix": "npm run prettier -- --write . ",
+    "check-all": "concurrently --kill-others-on-fail -m 1 'npm:check-all:par -w api' 'npm:build:sdk -w sdk' 'npm:check-all:par -w web'"
   },
   "config": {
     "commitizen": {
@@ -42,6 +43,7 @@
     "@commitlint/cli": "21.2.2",
     "@commitlint/config-conventional": "21.2.2",
     "@trivago/prettier-plugin-sort-imports": "6.0.2",
+    "concurrently": "10.0.5",
     "husky": "9.1.7",
     "prettier": "3.9.6"
   }

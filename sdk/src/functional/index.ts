@@ -10,11 +10,12 @@ import type { Resolved } from 'typia';
 import typia from 'typia';
 
 export * as hello from './hello/index';
+export * as auth from './auth/index';
 export * as emergency_contacts from './emergency_contacts/index';
 export * as observations from './observations/index';
 export * as patient from './patient/index';
 export * as user from './user/index';
-export * as auth from './auth/index';
+export * as manual from './manual/index';
 
 /**
  * @controller AppController.getHello
