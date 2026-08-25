@@ -2,12 +2,14 @@ import { Config } from '@/utils/config';
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   StreamableFile,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { move, createReadStream } from 'fs-extra';
+import { move, createReadStream, access, constants } from 'fs-extra';
 import multer, { diskStorage, Multer } from 'multer';
 import { join } from 'node:path';
+import typia from 'typia';
 
 export const MANUAL_NAME = 'manual.pdf';
 export const MANUAL_TYPE = 'application/pdf';
@@ -50,7 +52,20 @@ export class ManualService {
     return true;
   }
 
-  find(): StreamableFile {
+  async find(): Promise<StreamableFile> {
+    const manualPath = join(this._filePath, MANUAL_NAME);
+
+    try {
+      await access(manualPath, constants.R_OK);
+    } catch (e: unknown) {
+      typia.assertGuard<NodeJS.ErrnoException>(e);
+
+      throw new NotFoundException(
+        'Manual not found. Please upload a manual first.',
+        e,
+      );
+    }
+
     const file = createReadStream(join(this._filePath, MANUAL_NAME));
     return new StreamableFile(file, {
       type: MANUAL_TYPE,

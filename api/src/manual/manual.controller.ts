@@ -45,7 +45,7 @@ export class ManualController {
    */
   @Get()
   @Header('Content-Type', MANUAL_TYPE)
-  find(): StreamableFile {
+  async find(): Promise<StreamableFile> {
     return this.manualService.find();
   }
 }
