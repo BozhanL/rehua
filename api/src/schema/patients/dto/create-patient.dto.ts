@@ -2,7 +2,7 @@ export class CreatePatientDto {
   constructor(
     public firstName: string,
     public lastName: string,
-    public dateOfBirth: string,
+    public dob: string,
     public address: string,
     public nhi: number,
     public dateAdmitted: string,
@@ -19,8 +19,9 @@ export class CreatePatientDto {
     public allergies: string,
 
     //Not required
-    public profilePicture?: string,
+    public pfp?: string,
     public funding?: string, //Admin only
-    public timeOfDeath?: string, //Admin only
+    public tod?: string, //Admin only
+    public id?: string, //for returns
   ) {}
 }

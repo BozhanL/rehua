@@ -1,7 +1,7 @@
 export type UpdatePatientDto = {
   firstName?: undefined | string;
   lastName?: undefined | string;
-  dateOfBirth?: undefined | string;
+  dob?: undefined | string;
   address?: undefined | string;
   nhi?: undefined | number;
   dateAdmitted?: undefined | string;
@@ -16,7 +16,8 @@ export type UpdatePatientDto = {
   maritalStatus?: undefined | string;
   ethnicity?: undefined | string;
   allergies?: undefined | string;
-  profilePicture?: undefined | string;
+  pfp?: undefined | string;
   funding?: undefined | string;
-  timeOfDeath?: undefined | string;
+  tod?: undefined | string;
+  id?: undefined | string;
 };

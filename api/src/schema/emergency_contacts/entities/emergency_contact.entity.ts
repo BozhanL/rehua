@@ -1,3 +1,4 @@
+import { ObservationSchema } from '@/schema/observations/entities/observation.entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
@@ -8,7 +9,7 @@ export class EmergencyContact {
   @Prop({ required: true, type: String })
   patientId: string;
 
-  @Prop({ required: true, type: Number, unique: true })
+  @Prop({ required: true, type: Number })
   priority: number;
 
   @Prop({ required: true, type: String })
@@ -57,3 +58,5 @@ export class EmergencyContact {
 
 export const EmergencyContactSchema =
   SchemaFactory.createForClass(EmergencyContact);
+
+ObservationSchema.index({ PatientId: 1 });

@@ -17,7 +17,7 @@ export class PatientService {
   }
 
   async findAll(): Promise<PatientDocument[]> {
-    return this.patientModel.find().sort({ _id: 1 }).exec();
+    return this.patientModel.find().exec();
   }
 
   async findOne(id: string): Promise<PatientDocument | null> {
@@ -30,7 +30,6 @@ export class PatientService {
   ): Promise<PatientDocument[]> {
     return this.patientModel
       .find()
-      .sort({ dateAdmitted: 'desc' })
       .skip((pageNumber - 1) * numberOfRows)
       .limit(numberOfRows)
       .exec();

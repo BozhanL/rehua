@@ -48,12 +48,12 @@ export class EmergencyContactController {
   })
 
   //Get all emergency contacts for a patient
-  @TypedRoute.Get(':patientId')
-  async findPatientEmergencyContacts(
-    @TypedParam('patientId') patientId: string,
+  @TypedRoute.Get(':id')
+  async findPatientEmergncyContacts(
+    @TypedParam('id') id: string,
   ): Promise<(EmergencyContact & { _id: string })[]> {
     const docs =
-      await this.emergencyContactService.getPatientEmergencyContacts(patientId);
+      await this.emergencyContactService.getPatientEmergencyContacts(id);
 
     return docs.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread

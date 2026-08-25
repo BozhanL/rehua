@@ -1,7 +1,7 @@
 export type Patient_idstring = {
   firstName: string;
   lastName: string;
-  dateOfBirth: string;
+  dob: string;
   address: string;
   nhi: number;
   dateAdmitted: string;
@@ -16,16 +16,16 @@ export type Patient_idstring = {
   maritalStatus: string;
   ethnicity: string;
   allergies: string;
-  profilePicture?: undefined | string;
+  pfp?: undefined | string;
   funding?: undefined | string;
-  timeOfDeath?: undefined | string;
+  tod?: undefined | string;
   _id: string;
 };
 export namespace Patient_idstring {
   export type o1 = {
     firstName: string;
     lastName: string;
-    dateOfBirth: string;
+    dob: string;
     address: string;
     nhi: number;
     dateAdmitted: string;
@@ -40,15 +40,15 @@ export namespace Patient_idstring {
     maritalStatus: string;
     ethnicity: string;
     allergies: string;
-    profilePicture?: undefined | string;
+    pfp?: undefined | string;
     funding?: undefined | string;
-    timeOfDeath?: undefined | string;
+    tod?: undefined | string;
     _id: string;
   };
   export type o2 = {
     firstName: string;
     lastName: string;
-    dateOfBirth: string;
+    dob: string;
     address: string;
     nhi: number;
     dateAdmitted: string;
@@ -63,15 +63,15 @@ export namespace Patient_idstring {
     maritalStatus: string;
     ethnicity: string;
     allergies: string;
-    profilePicture?: undefined | string;
+    pfp?: undefined | string;
     funding?: undefined | string;
-    timeOfDeath?: undefined | string;
+    tod?: undefined | string;
     _id: string;
   };
   export type o3 = {
     firstName: string;
     lastName: string;
-    dateOfBirth: string;
+    dob: string;
     address: string;
     nhi: number;
     dateAdmitted: string;
@@ -86,9 +86,9 @@ export namespace Patient_idstring {
     maritalStatus: string;
     ethnicity: string;
     allergies: string;
-    profilePicture?: undefined | string;
+    pfp?: undefined | string;
     funding?: undefined | string;
-    timeOfDeath?: undefined | string;
+    tod?: undefined | string;
     _id: string;
   };
 }

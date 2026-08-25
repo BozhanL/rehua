@@ -12,7 +12,7 @@ export class Patient {
   lastName: string;
 
   @Prop({ type: String, required: true })
-  dateOfBirth: string;
+  dob: string;
 
   @Prop({ type: String, required: true })
   address: string;
@@ -57,18 +57,18 @@ export class Patient {
   allergies: string;
 
   @Prop({ type: String, required: false })
-  profilePicture?: string | undefined; //not required
+  pfp?: string | undefined; //not required
 
   @Prop({ type: String, required: false })
   funding: string | undefined; //not required, admin only
 
   @Prop({ type: String, required: false })
-  timeOfDeath: string | undefined; //not required, admin only
+  tod: string | undefined; //not required, admin only
 
   constructor(
     firstName: string,
     lastName: string,
-    dateOfBirth: string,
+    dob: string,
     address: string,
     nhi: number,
     dateAdmitted: string,
@@ -85,15 +85,15 @@ export class Patient {
     allergies: string,
 
     //Not required
-    profilePicture?: string,
+    pfp?: string,
     funding?: string, //Admin only
-    timeOfDeath?: string, //Admin only
+    tod?: string, //Admin only
   ) {
-    this.profilePicture = profilePicture;
+    this.pfp = pfp;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.dateOfBirth = dateOfBirth;
-    this.timeOfDeath = timeOfDeath;
+    this.dob = dob;
+    this.tod = tod;
     this.address = address;
     this.nhi = nhi;
     this.dateAdmitted = dateAdmitted;
