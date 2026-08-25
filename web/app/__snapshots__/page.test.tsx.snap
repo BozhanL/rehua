@@ -13,6 +13,7 @@ exports[`page renders homepage unchanged 1`] = `
   />
   <div>
     <input
+      accept="application/pdf"
       hidden=""
       type="file"
     />
