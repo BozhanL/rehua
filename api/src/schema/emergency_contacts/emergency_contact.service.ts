@@ -28,7 +28,10 @@ export class EmergencyContactService {
   async getPatientEmergencyContacts(
     patientId: string,
   ): Promise<EmergencyContactDocument[]> {
-    return this.emergencyContactModel.find({ patientId }).exec();
+    return this.emergencyContactModel
+      .find({ patientId })
+      .sort({ priority: 1 })
+      .exec();
   }
 
   //Update an emergency contact

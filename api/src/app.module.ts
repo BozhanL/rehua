@@ -77,7 +77,16 @@ function requiredReadableFilePath(
 }
 
 @Module({
-  imports: [configModule, HelloModule, AuthModule],
+  imports: [
+    configModule,
+    HelloModule,
+    EmergencyContactModule,
+    ObservationModule,
+    PatientModule,
+    UserModule,
+    AuthModule,
+    UsersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
@@ -86,17 +95,7 @@ export class AppModule {
   static forRoot(mongo: DynamicModule | undefined): DynamicModule {
     return {
       module: AppModule,
-      imports: [
-        configModule,
-        HelloModule,
-        EmergencyContactModule,
-        ObservationModule,
-        PatientModule,
-        UserModule,
-        mongo ?? mongoModule,
-      ],
-      controllers: [AppController],
-      providers: [AppService],
+      imports: [mongo ?? mongoModule],
     };
   }
 }

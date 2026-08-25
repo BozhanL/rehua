@@ -28,15 +28,15 @@ export class ObservationsController {
     };
   }
 
-  @TypedRoute.Get(':id')
+  @TypedRoute.Get(':patientId')
   @SwaggerExample.Response('Found', {
     value: new Observation('1', '2026-01-01', ObservationType.HEART_RATE, 80),
   })
   @SwaggerExample.Response('Not Found', { value: null })
   async findAllObservations(
-    @TypedParam('id') id: string,
+    @TypedParam('patientId') patientId: string,
   ): Promise<(Observation & { _id: string })[]> {
-    const docs = await this.observationService.getAllObservations(id);
+    const docs = await this.observationService.getAllObservations(patientId);
 
     return docs.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
@@ -45,13 +45,13 @@ export class ObservationsController {
     }));
   }
 
-  @TypedRoute.Get(':id/type')
+  @TypedRoute.Get(':patientId/type')
   async findByType(
-    @TypedParam('id') id: string,
+    @TypedParam('patientId') patientId: string,
     @TypedQuery() query: { observationType: ObservationType },
   ): Promise<(Observation & { _id: string })[]> {
     const docs = await this.observationService.getAllSpecificObservationType(
-      id,
+      patientId,
       query.observationType,
     );
 
