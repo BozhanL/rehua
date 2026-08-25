@@ -11,6 +11,7 @@ import type { Resolved } from 'typia';
 import typia from 'typia';
 
 /**
+ * @description This endpoint is used to upload a new PDF manual.
  * @controller ManualController.create
  * @path POST /manual
  * @accessor api.functional.manual.create
