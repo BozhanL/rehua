@@ -1,6 +1,6 @@
 import ContentButton, {
   type ContentButtonProps,
-} from '@/app/components/ContentButton';
+} from '@/app/components/common/ContentButton';
 import type {
   FormContextType,
   IconButtonProps,

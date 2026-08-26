@@ -2,8 +2,8 @@
   This template is not included in the default theme, but is used in the CreateTemplate page to allow users to add and remove sections from the form.
  */
 import AddSectionModal from './AddSectionModal';
-import ContentButton from '@/app/components/ContentButton';
-import type { IconProps } from '@/app/components/Icon';
+import ContentButton from '@/app/components/common/ContentButton';
+import type { IconProps } from '@/app/components/common/Icon';
 import type {
   ObjectFieldTemplateProps,
   RJSFSchema,

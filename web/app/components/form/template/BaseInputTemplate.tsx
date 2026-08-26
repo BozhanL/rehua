@@ -1,10 +1,11 @@
-import SingleLineInput from '@/app/components/SingleLineInput';
+import SingleLineInput from '@/app/components/common/SingleLineInput';
 import {
   type StrictRJSFSchema,
   type RJSFSchema,
   type FormContextType,
   type BaseInputTemplateProps,
   getInputProps,
+  ariaDescribedByIds,
 } from '@rjsf/utils';
 import type { JSX } from 'react';
 import typia from 'typia';
@@ -21,16 +22,19 @@ export default function BaseInputTemplate<
   onChange,
   options,
   schema,
+  id,
+  htmlName,
 
   // Discarded props that are not used in this template
   onFocus: _onFocus,
   onBlur: _onBlur,
   uiSchema: _uiSchema,
-  htmlName: _htmlName,
+  name: _name,
   rawErrors: _rawErrors,
   autofocus: _autofocus,
   hideError: _hideError,
   hideLabel: _hideLabel,
+  registry: _registry,
 
   ...textFieldProps
 }: Readonly<BaseInputTemplateProps<T, S, F>>): JSX.Element {
@@ -47,6 +51,9 @@ export default function BaseInputTemplate<
         onChange(event.target.value);
       }}
       value={String(value ?? '')}
+      id={id}
+      name={htmlName ?? id}
+      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       {...p}
       {...textFieldProps}
     />

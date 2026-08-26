@@ -4,7 +4,7 @@ import Icon, { type IconProps } from './Icon';
 import type { ButtonHTMLAttributes, JSX } from 'react';
 
 // type that is a subset of ButtonHTMLAttributes, omitting 'disabled' as buttons will always be enabled
-export type ContentButtonProps = Omit<
+type ContentButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
   'disabled'
 > & {
@@ -120,3 +120,4 @@ function ContentButton({
 }
 
 export default ContentButton;
+export type { ContentButtonProps };

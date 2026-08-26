@@ -1,5 +1,5 @@
 'use client';
-import { useDropdown } from '../hooks/useDropdown';
+import { useDropdown } from '../../hooks/useDropdown';
 import Icon from './Icon';
 import React, { type JSX } from 'react';
 
@@ -91,12 +91,7 @@ function DropdownBar<T extends string = string>({
           {label}
         </span>
         {/* dropdown bar arrow */}
-        <Icon
-          name="simple-arrow"
-          rotation={90}
-          width={iconSize}
-          className="mr-1"
-        />
+        <Icon name="dropdown-arrow" width={iconSize} className="mr-1" />
       </button>
 
       {/* options in dropdown bar  (list of buttons) */}
@@ -109,7 +104,7 @@ function DropdownBar<T extends string = string>({
           }}
           className="
             absolute top-full left-0 z-10 overflow-x-hidden overflow-y-auto
-            bg-white shadow-md outline-none
+            bg-rehua-white shadow-md outline-none
           "
           style={{
             maxHeight: lengthOfDropdown,
@@ -135,8 +130,8 @@ function DropdownBar<T extends string = string>({
           {/* buttons (dropdown options) */}
           {filteredOptions.length === 0 ? (
             <div
-              className="px-2 text-gray-400"
-              style={{ paddingBlock: paddingY }}
+              className="px-2 text-rehua-dark-gray"
+              style={{ paddingBlock: paddingY, fontSize: fontSize }}
             >
               No results
             </div>

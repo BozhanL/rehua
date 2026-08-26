@@ -1,13 +1,13 @@
 services:
   app:
-    image: mcr.microsoft.com/devcontainers/typescript-node:24-trixie@sha256:b55b444f6658dd2370d430c12d4bc9540c8ed0d3d5b05e4c247161173666954f
+    image: mcr.microsoft.com/devcontainers/typescript-node:24-trixie@sha256:fb4652b1a9bca94d31eaa4d8446176e96350a7644b4633675612ce6b2c1e2b1f
     volumes:
       - ../..:/workspaces:cached
     network_mode: service:db
     command: sleep infinity
 
   db:
-    image: mongo:8.3@sha256:2f02e2184c6d91c3208e5ab75a0707d1386a05377b20fdaf49a314815774d863
+    image: mongo:8.3@sha256:5211c51171f57ae60842b11664bb244628971b3d35325762a97888337b9bb0db
     restart: unless-stopped
     environment:
       # Work around MongoDB 8.0+ startup crashes on Linux kernel 6.19

@@ -1,9 +1,9 @@
 'use client';
 
-import ContentButton from '@/app/components/ContentButton';
-import DropdownBar from '@/app/components/DropdownBar';
-import Icon from '@/app/components/Icon';
-import SingleLineInput from '@/app/components/SingleLineInput';
+import ContentButton from '@/app/components/common/ContentButton';
+import DropdownBar from '@/app/components/common/DropdownBar';
+import Icon from '@/app/components/common/Icon';
+import SingleLineInput from '@/app/components/common/SingleLineInput';
 import FormTemplate, {
   ObjectFieldTemplate,
   type ObjectFieldTemplateContext,

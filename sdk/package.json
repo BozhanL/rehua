@@ -22,6 +22,9 @@
     "./functional/*": {
       "default": "./src/functional/*/index.ts"
     },
+    "./structures/*": {
+      "default": "./src/structures/*.ts"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -43,6 +46,6 @@
   },
   "dependencies": {
     "@nestia/fetcher": "11.3.4",
-    "typia": "12.1.1"
+    "typia": "12.2.0"
   }
 }

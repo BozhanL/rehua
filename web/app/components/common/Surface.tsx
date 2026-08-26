@@ -5,8 +5,8 @@ type SurfaceProps = Omit<
   HTMLAttributes<HTMLDivElement>,
   'color' | 'borderRadius'
 > & {
-  height?: number; // height of surface in pixels, fallback to 650px
-  width?: number; // width of surface in pixels, fallback to 1100px
+  height?: number | string; // height of surface, fallback to 650px
+  width?: number | string; // width of surface, fallback to 1100px
   opacity?: number; // opacity of surface in %, fallback to 0.95
   boxShadow?: string; // box shadow for surface, fallback to 20px blur with 35% opacity black shadow
   children?: ReactNode; // content to be displayed on the surface
@@ -22,20 +22,21 @@ function Surface({
   style,
   ...props
 }: SurfaceProps): JSX.Element {
-  const borderRadius = Math.round(Math.min(height, width) * 0.06); // 6% of the smaller dimension
+  const borderRadius =
+    typeof height === 'number' && typeof width === 'number'
+      ? Math.round(Math.min(height, width) * 0.06)
+      : 30;
 
   return (
     <div
       {...props}
       style={{
-        ...style,
         height: height,
         width: width,
         opacity: opacity,
         boxShadow: boxShadow,
         borderRadius: borderRadius,
-        display: 'flex',
-        flexDirection: 'column',
+        ...style,
       }}
       className={`bg-rehua-white`}
     >

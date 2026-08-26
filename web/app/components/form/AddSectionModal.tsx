@@ -1,7 +1,7 @@
 import FormTemplate from './FormTemplate';
-import ContentButton from '@/app/components/ContentButton';
-import Icon from '@/app/components/Icon';
-import Modal from '@/app/components/Modal';
+import ContentButton from '@/app/components/common/ContentButton';
+import Icon from '@/app/components/common/Icon';
+import Modal from '@/app/components/common/Modal';
 import type { IChangeEvent } from '@rjsf/core';
 import {
   mergeObjects,

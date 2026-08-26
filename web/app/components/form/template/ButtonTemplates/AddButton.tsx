@@ -1,4 +1,4 @@
-import ContentButton from '@/app/components/ContentButton';
+import ContentButton from '@/app/components/common/ContentButton';
 import {
   TranslatableString,
   type FormContextType,

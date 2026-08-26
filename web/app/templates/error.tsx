@@ -1,6 +1,6 @@
 'use client';
 
-import ContentButton from '@/app/components/ContentButton';
+import ContentButton from '@/app/components/common/ContentButton';
 import { useEffect, type JSX } from 'react';
 
 export default function ErrorPage({

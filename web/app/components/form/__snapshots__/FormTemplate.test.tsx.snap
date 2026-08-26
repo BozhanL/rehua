@@ -63,12 +63,13 @@ exports[`formTemplate renders FormTemplate unchanged 1`] = `
           <input
             aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
             autocomplete="family-name"
-            class="form-control"
+            class="bg-rehua-white"
             id="root_firstName"
             label="First name"
             name="root_firstName"
             placeholder="ui:emptyValue causes this field to always be valid despite being required"
             required=""
+            style="width: 100%; font-size: 20px; padding: 0px 10px; border: 1px solid; border-radius: 6px; box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.3); outline: none;"
             type="text"
             value=""
           />
@@ -112,12 +113,13 @@ exports[`formTemplate renders FormTemplate unchanged 1`] = `
           <input
             aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
             autocomplete="given-name"
-            class="form-control"
+            class="bg-rehua-white"
             id="root_lastName"
             label="Last name"
             name="root_lastName"
             placeholder=""
             required=""
+            style="width: 100%; font-size: 20px; padding: 0px 10px; border: 1px solid; border-radius: 6px; box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.3); outline: none;"
             type="text"
             value=""
           />
@@ -139,11 +141,12 @@ exports[`formTemplate renders FormTemplate unchanged 1`] = `
           </div>
           <input
             aria-describedby="root_age__error root_age__description root_age__help"
-            class="form-control"
+            class="bg-rehua-white"
             id="root_age"
             label="Age of person"
             name="root_age"
             placeholder=""
+            style="width: 100%; font-size: 20px; padding: 0px 10px; border: 1px solid; border-radius: 6px; box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.3); outline: none;"
             type="number"
             value=""
           />
@@ -159,10 +162,11 @@ exports[`formTemplate renders FormTemplate unchanged 1`] = `
           </label>
           <textarea
             aria-describedby="root_bio__error root_bio__description root_bio__help"
-            class="form-control"
+            class="bg-rehua-white"
             id="root_bio"
             name="root_bio"
-            placeholder=""
+            rows="5"
+            style="width: 100%; font-size: 20px; padding: 0px 10px; border: 1px solid; border-radius: 6px; box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.3); outline: none; resize: none;"
           />
         </div>
         <div
@@ -176,11 +180,12 @@ exports[`formTemplate renders FormTemplate unchanged 1`] = `
           </label>
           <input
             aria-describedby="root_password__error root_password__description root_password__help"
-            class="form-control"
+            class="bg-rehua-white"
             id="root_password"
             label="Password"
             name="root_password"
             placeholder=""
+            style="width: 100%; font-size: 20px; padding: 0px 10px; border: 1px solid; border-radius: 6px; box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.3); outline: none;"
             type="password"
             value=""
           />
@@ -202,11 +207,12 @@ exports[`formTemplate renders FormTemplate unchanged 1`] = `
           </label>
           <input
             aria-describedby="root_telephone__error root_telephone__description root_telephone__help"
-            class="form-control"
+            class="bg-rehua-white"
             id="root_telephone"
             label="Telephone"
             name="root_telephone"
             placeholder=""
+            style="width: 100%; font-size: 20px; padding: 0px 10px; border: 1px solid; border-radius: 6px; box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.3); outline: none;"
             type="tel"
             value=""
           />

@@ -1,4 +1,4 @@
-import RadioGroup from '@/app/components/RadioGroup';
+import RadioGroup from '@/app/components/common/RadioGroup';
 import type {
   StrictRJSFSchema,
   RJSFSchema,

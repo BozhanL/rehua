@@ -1,9 +1,10 @@
-import MultiLineInput from '@/app/components/MultiLineInput';
-import type {
-  StrictRJSFSchema,
-  RJSFSchema,
-  FormContextType,
-  WidgetProps,
+import MultiLineInput from '@/app/components/common/MultiLineInput';
+import {
+  type StrictRJSFSchema,
+  type RJSFSchema,
+  type FormContextType,
+  type WidgetProps,
+  ariaDescribedByIds,
 } from '@rjsf/utils';
 import type { JSX } from 'react';
 
@@ -12,6 +13,9 @@ export default function TextareaWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >({
+  id,
+  schema,
+  htmlName,
   options,
   readonly,
   disabled,
@@ -31,6 +35,9 @@ export default function TextareaWidget<
       }}
       value={String(value ?? '')}
       rows={rows}
+      id={id}
+      name={htmlName ?? id}
+      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
     />
   );
 }

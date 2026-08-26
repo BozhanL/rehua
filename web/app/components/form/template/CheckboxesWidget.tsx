@@ -1,4 +1,4 @@
-import CheckboxGroup from '@/app/components/CheckboxGroup';
+import CheckboxGroup from '@/app/components/common/CheckboxGroup';
 import type {
   StrictRJSFSchema,
   RJSFSchema,
