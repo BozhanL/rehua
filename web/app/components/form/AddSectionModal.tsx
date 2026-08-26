@@ -4,14 +4,15 @@ import Icon from '@/app/components/common/Icon';
 import Modal from '@/app/components/common/Modal';
 import type { IChangeEvent } from '@rjsf/core';
 import {
+  getUiOptions,
   mergeObjects,
   mergeSchemas,
   type RJSFSchema,
   type UiSchema,
 } from '@rjsf/utils';
 import type { JSONSchema7Definition } from 'json-schema';
-import { useMemo, useState, type JSX } from 'react';
-import type { ReadonlyDeep, StructuredCloneable } from 'type-fest';
+import { useState, type JSX } from 'react';
+import type { StructuredCloneable } from 'type-fest';
 import typia from 'typia';
 
 interface AddSectionModalProps {
@@ -64,7 +65,7 @@ const defaultDisplaySchema = {
   },
 } as const satisfies RJSFSchema;
 
-const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = Object.freeze([
+const sectionSchema = Object.freeze([
   {
     id: 'normal-string',
     displaySchema: defaultDisplaySchema,
@@ -206,10 +207,9 @@ const defaultSectionSchema: ReadonlyDeep<SectionSchema[]> = Object.freeze([
     },
     sectionUiSchema: {
       'ui:disabled': true,
-      'ui:options': {},
     },
   },
-] as const) satisfies StructuredCloneable;
+] as const) satisfies StructuredCloneable | SectionSchema;
 
 export default function AddSectionModal({
   open,
@@ -225,11 +225,6 @@ export default function AddSectionModal({
       }
     >
   >({});
-
-  const sectionSchema = useMemo(
-    () => structuredClone(defaultSectionSchema) as unknown as SectionSchema[],
-    [],
-  );
 
   return (
     <Modal open={open}>
@@ -257,24 +252,10 @@ export default function AddSectionModal({
         <ol className="divide-y overflow-y-auto">
           {sectionSchema.map((section) => (
             <li key={section.id}>
+              <h2>{section.id}</h2>
               <FormTemplate
-                schema={mergeSchemas(section.displaySchema, {
-                  properties: {
-                    preview: mergeSchemas(
-                      section.sectionSchema,
-                      formData[section.id]?.json ?? {},
-                    ),
-                  },
-                })}
-                uiSchema={mergeObjects(section.displayUiSchema, {
-                  preview: {
-                    ...section.sectionUiSchema,
-                    'ui:options': mergeObjects(
-                      section.sectionUiSchema['ui:options'] ?? {},
-                      formData[section.id]?.ui ?? {},
-                    ),
-                  },
-                })}
+                schema={section.displaySchema}
+                uiSchema={section.displayUiSchema}
                 formData={formData[section.id] ?? {}}
                 onChange={({ formData: newFormData }: IChangeEvent) => {
                   setFormData((prevFormData) => ({
@@ -291,7 +272,7 @@ export default function AddSectionModal({
                   const uiSchema: UiSchema = {
                     ...section.sectionUiSchema,
                     'ui:options': mergeObjects(
-                      section.sectionUiSchema['ui:options'] ?? {},
+                      getUiOptions(section.sectionUiSchema),
                       formData[section.id]?.ui ?? {},
                     ),
                   };
@@ -299,6 +280,31 @@ export default function AddSectionModal({
                   onSubmit(crypto.randomUUID(), schema, uiSchema);
 
                   setFormData({});
+                }}
+              />
+
+              <FormTemplate
+                readonly
+                schema={{
+                  type: 'object',
+                  properties: {
+                    preview: mergeSchemas(
+                      section.sectionSchema,
+                      formData[section.id]?.json ?? {},
+                    ),
+                  },
+                }}
+                uiSchema={{
+                  preview: {
+                    ...section.sectionUiSchema,
+                    'ui:options': mergeObjects(
+                      getUiOptions(section.sectionUiSchema),
+                      formData[section.id]?.ui ?? {},
+                    ),
+                  },
+                  'ui:submitButtonOptions': {
+                    norender: true,
+                  },
                 }}
               />
             </li>
