@@ -26,6 +26,8 @@ const columnWidth = 200;
 // TODO: backend modify the onClick; button to be used in the "View" column of the patient table
 // another const might have to be made for status: <MiniLabel name="insert minilabel name here" />
 // full list of names available in MiniLabel.tsx
+
+// TODO: frontend modify the onClick; navigate to patient profile page
 const patientViewButton: ReactNode = (
   <button
     type="button"

@@ -12,7 +12,7 @@ import { patientColumns, patientRows } from './rowsandcolumns';
 import ContentButton from '@/app/components/common/ContentButton';
 import { useState, type ChangeEvent, type JSX } from 'react';
 
-// TODO: for frontend - route to add patient page
+// TODO: frontend - route to add patient page
 function handleAddPatient(): void {
   console.log('add patient clicked');
 }
@@ -117,6 +117,19 @@ export default function PatientsPage(): JSX.Element {
             onClick={handleSearch}
           />
 
+          {/* all users
+              for admin only - will eventually make this change into following depending on the dashboard:
+              patients = Add Patient
+              templates = Add Template
+              users = Add User */}
+          <ContentButton
+            text1="Add Patient"
+            iconProps={{ name: 'plus' }}
+            backgroundColor="bg-rehua-green"
+            verticalPadding={0.2}
+            onClick={handleAddPatient}
+          />
+
           {/* admin only - TODO: frontend will make this eventually navigate to the respective dashboards */}
           {group === 'admin' && (
             <DropdownBar
@@ -133,45 +146,13 @@ export default function PatientsPage(): JSX.Element {
               }}
             />
           )}
-
-          {/* nurses only */}
-          {group === 'nurse' && (
-            <ContentButton
-              text1="Add Patient"
-              height={50}
-              iconProps={{ name: 'plus' }}
-              backgroundColor="bg-rehua-green"
-              verticalPadding={0.2}
-              onClick={handleAddPatient}
-            />
-          )}
         </div>
 
         {/* table */}
-        <div className="mt-6">
-          <Table columns={patientColumns} rows={patientRows} />
-        </div>
+        <Table columns={patientColumns} rows={patientRows} />
 
-        {/* pagination + floating button */}
+        {/* pagination */}
         <div className="pb-35">
-          {/* admin only - will eventually make this change into following depending on the dashboard:
-              patients = Add Patient
-              templates = Add Template
-              users = Add User */}
-          {group === 'admin' && (
-            <div className="flex justify-end">
-              <ContentButton
-                text1="Add Patient"
-                height={50}
-                iconProps={{ name: 'plus' }}
-                backgroundColor="bg-rehua-green"
-                verticalPadding={0.2}
-                onClick={handleAddPatient}
-              />
-            </div>
-          )}
-
-          {/* pagination */}
           <Pagination
             currentPage={currentPage}
             rowsPerPage={rowsPerPage}
