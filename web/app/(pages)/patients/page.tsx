@@ -65,49 +65,43 @@ export default function PatientsPage(): JSX.Element {
     <div className="flex h-dvh flex-col">
       <Surface width="100%" height="100%">
         {/* page toolbar */}
-        <div
-          className="
-            mx-5 mt-5 mb-4 flex items-center gap-6 overflow-x-auto
-            whitespace-nowrap
-          "
-        >
+        <div className="mx-5 mt-5 mb-4 flex items-center gap-6 overflow-x-auto">
           {/* page title - TODO: frontend to change this depending on dashboard selected by admin */}
           <span className="text-3xl font-bold">Patients</span>
-
           {/* all users */}
           {/* search filter; 1 option may be selected at a time */}
-          <DropdownBar
-            selectedValues={searchFilter}
-            options={[
-              'Room #',
-              'Name',
-              'DOB',
-              'Gender',
-              'NHI',
-              'Date Admitted',
-              'Nurse',
-              'Status',
-              'Funding',
-            ]}
-            size={17}
-            labelMode="prefix"
-            defaultText="Search by: "
-            width={300}
-            onChange={(value: string[]) => {
-              setSearchFilter(value);
-            }}
-          />
-
+          <div className="shrink-0">
+            <DropdownBar
+              selectedValues={searchFilter}
+              options={[
+                'Room #',
+                'Name',
+                'DOB',
+                'Gender',
+                'NHI',
+                'Date Admitted',
+                'Nurse',
+                'Status',
+                'Funding',
+              ]}
+              size={17}
+              labelMode="prefix"
+              defaultText="Search by: "
+              width={300}
+              onChange={(value: string[]) => {
+                setSearchFilter(value);
+              }}
+            />
+          </div>
           {/* search input */}
           <SingleLineInput
             value={searchValue}
             placeholder="Search Patients"
-            width={120}
+            style={{ width: 300 }}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               setSearchValue(event.currentTarget.value);
             }}
           />
-
           {/* search button */}
           <ContentButton
             text1="Search"
@@ -116,19 +110,20 @@ export default function PatientsPage(): JSX.Element {
             verticalPadding={0.2}
             onClick={handleSearch}
           />
-
           {/* all users
               for admin only - will eventually make this change into following depending on the dashboard:
               patients = Add Patient
               templates = Add Template
               users = Add User */}
-          <ContentButton
-            text1="Add Patient"
-            iconProps={{ name: 'plus' }}
-            backgroundColor="bg-rehua-green"
-            verticalPadding={0.2}
-            onClick={handleAddPatient}
-          />
+          <div className="shrink-0">
+            <ContentButton
+              text1="Add Patient"
+              iconProps={{ name: 'plus' }}
+              backgroundColor="bg-rehua-green"
+              verticalPadding={0.2}
+              onClick={handleAddPatient}
+            />
+          </div>
 
           {/* admin only - TODO: frontend will make this eventually navigate to the respective dashboards */}
           {group === 'admin' && (
