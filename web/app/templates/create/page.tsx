@@ -3,6 +3,7 @@
 import ContentButton from '@/app/components/common/ContentButton';
 import DropdownBar from '@/app/components/common/DropdownBar';
 import Icon from '@/app/components/common/Icon';
+import PopUp from '@/app/components/common/PopUp';
 import SingleLineInput from '@/app/components/common/SingleLineInput';
 import FormTemplate, {
   ObjectFieldTemplate,
@@ -33,23 +34,29 @@ const defaultUiSchema: UiSchema = {
 
 async function createTemplate({
   host,
+  templateName,
+  templateType,
   schema,
   uiSchema,
 }: {
   host: string;
+  templateName: string;
+  templateType: TemplateDocumentType[];
   schema: RJSFSchema;
   uiSchema: UiSchema;
 }): Promise<createTemplateSDK.Output> {
   return createTemplateSDK(
     { host, simulate: isTesting },
-    {
-      schema,
-      uiSchema,
-    },
+    { templateName, templateType, schema, uiSchema },
   );
 }
 
 export default function Home(): JSX.Element {
+  const [savePopupOpen, setSavePopupOpen] = useState<boolean>(false);
+  const [exitPopupOpen, setExitPopupOpen] = useState<boolean>(false);
+  const [saveEmptyFieldsPopupOpen, setSaveEmptyFieldsPopupOpen] =
+    useState<boolean>(false);
+
   const [formData, setFormData] = useState<unknown>(undefined);
   const [templateName, setTemplateName] = useState('');
   const [templateType, setTemplateType] = useState<TemplateDocumentType[]>([]);
@@ -70,6 +77,80 @@ export default function Home(): JSX.Element {
         flex min-h-screen flex-col overflow-hidden border bg-rehua-white
       `}
     >
+      {/* Save Template PopUp */}
+      <PopUp
+        isAlertPopup
+        text1={`Are you sure you want to create\nthe following document template:\n“${templateName}”, type “${templateType.join(', ')}”`}
+        button1Props={{
+          onClick: () => {
+            createTemplateMutation.mutate(
+              { host, templateName, templateType, schema, uiSchema },
+              {
+                onSuccess: (resp) => {
+                  const searchParams = new URLSearchParams();
+                  searchParams.append('id', resp._id);
+                  router.push(`/templates?${searchParams.toString()}`);
+                },
+              },
+            );
+            setSavePopupOpen(false);
+          },
+          text1: 'CREATE',
+          text2: 'TEMPLATE',
+          backgroundColor: 'bg-rehua-green',
+          iconProps: { name: 'save' },
+        }}
+        button2Props={{
+          onClick: () => {
+            setSavePopupOpen(false);
+          },
+          text1: 'GO BACK',
+          backgroundColor: 'bg-rehua-red',
+          iconProps: { name: 'circle-arrow' },
+        }}
+        modalProps={{ open: savePopupOpen }}
+      />
+
+      {/* Exit without saving PopUp */}
+      <PopUp
+        isAlertPopup
+        text1={'Are you sure you\nwant to leave this page?'}
+        button1Props={{
+          onClick: () => {
+            setExitPopupOpen(false);
+          },
+          text1: 'STAY',
+          backgroundColor: 'bg-rehua-green',
+          iconProps: { name: 'circle-arrow' },
+        }}
+        button2Props={{
+          onClick: () => {
+            router.back();
+          },
+          text1: 'LEAVE',
+          backgroundColor: 'bg-rehua-red',
+          iconProps: { name: 'circle-arrow' },
+        }}
+        modalProps={{ open: exitPopupOpen }}
+      />
+
+      {/* Save with empty fields PopUp */}
+      <PopUp
+        isAlertPopup
+        text1={
+          'Please fill in the template name and select at least one template type before saving.'
+        }
+        button1Props={{
+          onClick: () => {
+            setSaveEmptyFieldsPopupOpen(false);
+          },
+          text1: 'OK',
+          backgroundColor: 'bg-rehua-green',
+          iconProps: { name: 'circle-arrow' },
+        }}
+        modalProps={{ open: saveEmptyFieldsPopupOpen }}
+      />
+
       <div className={`flex flex-wrap items-center gap-3 border-b px-4 py-3`}>
         <ContentButton
           type="button"
@@ -82,7 +163,7 @@ export default function Home(): JSX.Element {
           }}
 
           onClick={() => {
-            router.back();
+            setExitPopupOpen(true);
           }}
         />
 
@@ -137,16 +218,12 @@ export default function Home(): JSX.Element {
             backgroundColor="bg-rehua-green"
             height={50}
             onClick={() => {
-              createTemplateMutation.mutate(
-                { host, schema, uiSchema },
-                {
-                  onSuccess: (resp) => {
-                    const searchParams = new URLSearchParams();
-                    searchParams.append('id', resp._id);
-                    router.push(`/templates?${searchParams.toString()}`);
-                  },
-                },
-              );
+              if (templateName === '' || templateType.length === 0) {
+                setSaveEmptyFieldsPopupOpen(true);
+                return;
+              }
+
+              setSavePopupOpen(true);
             }}
           />
         </div>

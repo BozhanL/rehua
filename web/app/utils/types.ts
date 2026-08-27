@@ -1,3 +1,5 @@
+import type { create as createTemplateSDK } from '@rehua/sdk/functional/templates';
+
 export enum TemplateDocumentType {
   LoneTerm = 'Lone Term',
   ShortTerm = 'Short Term',
@@ -6,3 +8,5 @@ export enum TemplateDocumentType {
 }
 
 export const TemplateDocumentTypeValues = Object.values(TemplateDocumentType);
+
+TemplateDocumentTypeValues satisfies createTemplateSDK.Body['templateType'];

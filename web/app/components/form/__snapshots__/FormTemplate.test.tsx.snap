@@ -236,6 +236,20 @@ exports[`formTemplate renders FormTemplate unchanged 1`] = `
         style="transform-origin: center; transform-box: fill-box;"
         width="28"
       />
+      <span
+        class="
+            inline-flex flex-col
+            text-center
+            text-rehua-dark-green
+            font-semibold
+            undefined
+          "
+        style="line-height: 1;"
+      >
+        <span>
+          Add Section
+        </span>
+      </span>
     </button>
   </form>
 </div>

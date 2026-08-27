@@ -1,4 +1,5 @@
 import type { CreateTemplateDto } from './dto/create-template.dto';
+import { TemplateType } from './entities/template-type.enum';
 import { Template } from './entities/template.entity';
 import { TemplatesController } from './templates.controller';
 import { TemplatesService } from './templates.service';
@@ -60,10 +61,21 @@ describe('templatesController', () => {
   it('should be able to create a template', async () => {
     expect.assertions(2);
 
-    const argument = { schema: {}, uiSchema: {} };
+    const argument: CreateTemplateDto = {
+      templateName: 'testtest',
+      templateType: [TemplateType.LoneTerm],
+      schema: {},
+      uiSchema: {},
+    };
     const result = await controller.create(argument);
 
     expect(templateModelMock.create).toHaveBeenCalledWith(argument);
-    expect(result).toStrictEqual({ ...argument, _id: 'mockedId' });
+    expect(result).toStrictEqual({
+      templateName: argument.templateName,
+      templateType: argument.templateType,
+      schema: argument.schema,
+      uiSchema: argument.uiSchema,
+      _id: 'mockedId',
+    });
   });
 });

@@ -90,5 +90,41 @@ exports[`page renders homepage unchanged 1`] = `
       </span>
     </button>
   </div>
+  <a
+    href="/templates/create"
+  >
+    <button
+      class="
+        inline-flex w-fit cursor-pointer items-center justify-center
+        flex-row
+        bg-rehua-green
+        transition-all duration-100
+        active:brightness-80
+      "
+      style="min-height: 40px; border-radius: 14px; font-size: 18px; padding-inline: 12px; gap: 8px; box-shadow: inset 0 4px 10px rgb(0 0 0 / 0.3);"
+      type="button"
+    >
+      <svg
+        class="text-rehua-white"
+        preserveAspectRatio="xMidYMid meet"
+        style="transform-origin: center; transform-box: fill-box;"
+        width="28"
+      />
+      <span
+        class="
+            inline-flex flex-col
+            text-center
+            text-rehua-white
+            font-semibold
+            undefined
+          "
+        style="line-height: 1;"
+      >
+        <span>
+          Create Template
+        </span>
+      </span>
+    </button>
+  </a>
 </div>
 `;

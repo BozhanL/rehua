@@ -1,4 +1,5 @@
 import type { CreateTemplateDto } from './dto/create-template.dto';
+import { TemplateType } from './entities/template-type.enum';
 import { Template } from './entities/template.entity';
 import { TemplatesService } from './templates.service';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
@@ -58,7 +59,12 @@ describe('templatesService', () => {
   it('should be able to create a template', async () => {
     expect.assertions(1);
 
-    const argument = { schema: {}, uiSchema: {} };
+    const argument: CreateTemplateDto = {
+      templateName: 'testtest',
+      templateType: [TemplateType.LoneTerm],
+      schema: {},
+      uiSchema: {},
+    };
     await service.create(argument);
 
     expect(templateModelMock.create).toHaveBeenCalledWith(argument);
