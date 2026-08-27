@@ -20,7 +20,7 @@
   "scripts": {
     "dev": "next dev -p 3000 --webpack",
     "build": "next build --webpack",
-    "start": "npx serve@latest out -l 3000",
+    "start": "serve out -l 3000",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint": "eslint --max-warnings 0 .",
@@ -41,7 +41,7 @@
     "@tanstack/react-query": "5.101.4",
     "@tanstack/react-query-devtools": "5.101.4",
     "dayjs": "1.11.23",
-    "dompurify": "3.4.13",
+    "dompurify": "3.4.14",
     "lexical": "0.49.0",
     "next": "16.3.1",
     "qrcode.react": "4.2.0",
