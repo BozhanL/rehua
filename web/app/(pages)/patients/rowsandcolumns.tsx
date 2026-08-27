@@ -77,7 +77,7 @@ export const patientColumns: TableColumn[] = [
 ];
 
 // TODO: backend implement the PatientViewButton below within the "View" column of the patient table,
-// the button already routes to patients/[patientId] page, patientId has to be passed in
+// the button already routes to /patients/profile?id=<patientId> page, patientId has to be passed in
 
 // other notes:
 // - another const might have to be made for status: <MiniLabel name="insert minilabel name here" />
@@ -93,7 +93,7 @@ function PatientViewButton({
     <button
       type="button"
       onClick={() => {
-        router.push(`/patients/${String(patientId)}`);
+        router.push(`/patients/profile?id=${String(patientId)}`);
       }}
       style={{ cursor: 'pointer' }}
     >
