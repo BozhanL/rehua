@@ -39,6 +39,16 @@ function Home(): JSX.Element {
       <Icon name={'eye'} />
       <UploadManualButton />
       <ShowManualButton />
+
+      {/* dispaly logged in user's name from sessionStorage*/}
+      <div style={{ marginTop: '1rem', color: 'green' }}>
+        <h3>Stored login information</h3>
+        <pre>
+          full name:
+          {sessionStorage.getItem('firstName')}
+          {sessionStorage.getItem('lastName')}
+        </pre>
+      </div>
     </>
   );
 }
