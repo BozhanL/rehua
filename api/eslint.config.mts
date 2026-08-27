@@ -6,15 +6,6 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-
-
-
-
-
-
-
-
-
 const eslintConfig = defineConfig([
   eslint.configs.recommended,
 
