@@ -30,6 +30,7 @@ export default function SubmitButton<
       foregroundColor="text-rehua-dark-green"
       backgroundColor="bg-transparent"
       style={{ boxShadow: 'none' }}
+      text1="Add Section"
       {...submitButtonProps}
     />
   );

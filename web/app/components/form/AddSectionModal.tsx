@@ -67,7 +67,8 @@ const defaultDisplaySchema = {
 
 const sectionSchema = Object.freeze([
   {
-    id: 'normal-string',
+    id: 'Single line text',
+
     displaySchema: defaultDisplaySchema,
     displayUiSchema: {
       ...defaultDisplayUiSchema,
@@ -80,7 +81,8 @@ const sectionSchema = Object.freeze([
   },
 
   {
-    id: 'textarea-string',
+    id: 'Multi line text',
+
     displaySchema: mergeSchemas(defaultDisplaySchema, {
       properties: {
         ui: {
@@ -110,7 +112,8 @@ const sectionSchema = Object.freeze([
   },
 
   {
-    id: 'radio',
+    id: 'Radio buttons',
+
     displaySchema: mergeSchemas(defaultDisplaySchema, {
       properties: {
         json: {
@@ -118,6 +121,7 @@ const sectionSchema = Object.freeze([
           properties: {
             enum: {
               type: 'array',
+              title: 'option',
               items: {
                 type: 'string',
               },
@@ -139,7 +143,8 @@ const sectionSchema = Object.freeze([
   },
 
   {
-    id: 'checkboxes',
+    id: 'Checkbox',
+
     displaySchema: mergeSchemas(defaultDisplaySchema, {
       properties: {
         json: {
@@ -152,7 +157,7 @@ const sectionSchema = Object.freeze([
                 enum: {
                   type: 'array',
                   uniqueItems: true,
-                  title: 'items',
+                  title: 'option',
                   items: {
                     type: 'string',
                   },
@@ -186,7 +191,8 @@ const sectionSchema = Object.freeze([
   },
 
   {
-    id: 'description-text',
+    id: 'Description text',
+
     displaySchema: mergeSchemas(defaultDisplaySchema, {
       properties: {
         json: {
@@ -228,9 +234,9 @@ export default function AddSectionModal({
 
   return (
     <Modal open={open}>
-      <div className="flex h-full flex-col gap-4 p-4">
+      <div className="flex h-full flex-col gap-6 p-4">
         {/* Modal Header */}
-        <div className="flex text-rehua-maroon">
+        <div className="flex items-center gap-4 text-rehua-maroon">
           <ContentButton
             type="button"
             iconProps={{ name: 'circle-arrow' }}
@@ -239,21 +245,36 @@ export default function AddSectionModal({
             backgroundColor="bg-transparent"
             style={{ boxShadow: 'none' }}
 
+            height={60}
+
             onClick={() => {
               onClose();
 
               setFormData({});
             }}
           />
-          <Icon name="file" />
-          <h2>Add New Section to Template</h2>
+          <Icon name="file" width={40} />
+          <h2 className="text-[32px] leading-none font-bold">
+            Add New Section to Template
+          </h2>
         </div>
 
-        <ol className="divide-y overflow-y-auto">
+        <ol className={`divide-y overflow-y-auto pl-6`}>
           {sectionSchema.map((section) => (
-            <li key={section.id}>
-              <h2>{section.id}</h2>
+            <li key={section.id} className="py-8">
+              <h3
+                className={`text-[26px] leading-none font-bold text-rehua-black`}
+              >
+                {section.id}
+              </h3>
+
+              {/* the form is a flex row so that its submit button (the green plus) is rendered on the right side of the section content */}
               <FormTemplate
+                className={`
+                  mt-4 flex items-start gap-6
+                  [&>fieldset]:min-w-0 [&>fieldset]:flex-1
+                `}
+                showErrorList={false}
                 schema={section.displaySchema}
                 uiSchema={section.displayUiSchema}
                 formData={formData[section.id] ?? {}}
@@ -282,6 +303,9 @@ export default function AddSectionModal({
                   setFormData({});
                 }}
               />
+
+              {/* dashed line separating the section configuration from its preview */}
+              <hr className="my-4 border-t-2 border-dashed border-rehua-dark-gray" />
 
               <FormTemplate
                 readonly

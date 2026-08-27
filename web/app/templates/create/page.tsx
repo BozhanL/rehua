@@ -135,7 +135,7 @@ export default function Home(): JSX.Element {
             textAlign="right"
             foregroundColor="text-rehua-white"
             backgroundColor="bg-rehua-green"
-            height={82}
+            height={50}
             onClick={() => {
               createTemplateMutation.mutate(
                 { host, schema, uiSchema },
