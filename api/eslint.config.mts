@@ -6,6 +6,15 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+
+
+
+
+
+
+
+
+
 const eslintConfig = defineConfig([
   eslint.configs.recommended,
 
@@ -40,6 +49,15 @@ const eslintConfig = defineConfig([
       '@typescript-eslint/promise-function-async': 'error',
 
       '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
+      '@typescript-eslint/prefer-nullish-coalescing': [
+        'error',
+        {
+          ignorePrimitives: {
+            // ignores null or undefined unions with boolean
+            boolean: true,
+          },
+        },
+      ],
     },
   },
   {
