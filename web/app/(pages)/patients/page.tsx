@@ -7,19 +7,12 @@ import Surface from '../../components/common/Surface';
 import Table from '../../components/common/Table';
 import DashboardToolbar from '../../components/dashboard/DashboardToolbar';
 import { patientColumns, patientRows } from './rowsandcolumns';
+import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';
 
-// TODO: frontend - route to add patient page
-function handleAddPatient(): void {
-  console.log('add patient clicked');
-}
-
-// TODO: frontend - route to selected dashboard page /templates or /users
-function handleDashboardChange(value: string[]): void {
-  console.log('Dashboard changed:', value);
-}
-
 export default function PatientsPage(): JSX.Element {
+  const router = useRouter();
+
   // TODO: backend replace this info with currently logged in user's group (nurse or admin)
   const group: 'nurse' | 'admin' = 'admin';
 
@@ -61,6 +54,26 @@ export default function PatientsPage(): JSX.Element {
     //   page: 1,
     //   rowsPerPage: newRowsPerPage
     // }
+  }
+
+  // route to add patient page
+  function handleAddPatient(): void {
+    router.push('/patients/add');
+  }
+
+  // route to selected dashboard page /templates or /users
+  function handleDashboardChange(value: string[]): void {
+    const selectedDashboard = value[0];
+
+    if (selectedDashboard === 'Users Dashboard') {
+      router.push('/users');
+    }
+
+    if (selectedDashboard === 'Templates Dashboard') {
+      router.push('/templates');
+    }
+
+    // do nothing if already on patients dashboard
   }
 
   return (
