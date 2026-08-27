@@ -2,17 +2,12 @@ import ContentButton from '../common/ContentButton';
 import Icon from '../common/Icon';
 import Modal from '../common/Modal';
 import SingleLineInput from '../common/SingleLineInput';
-import { useState, type JSX } from 'react';
+import { useState, type ChangeEvent, type JSX } from 'react';
 
 interface AddDocumentModalProps {
   isOpen: boolean;
   onBack: () => void; // let the parent handle the back button, matches AddMFAModal
-  onSelectCategory: (
-    category: 'long-term' | 'palliative' | 'short-term' | 'daycare',
-  ) => void;
-  onUpload: () => void;
 }
-
 function AddDocumentModal({
   isOpen,
   onBack,
@@ -21,7 +16,8 @@ function AddDocumentModal({
   const [label, setLabel] = useState<string | null>(
     'Add a New Patient Document',
   );
-  const [searchQuery, setSearchQuery] = useState<string | null>(null);
+  const [query, setQuery] = useState<string | null>(null);
+  const [appliedQuery, setAppliedQuery] = useState<string | null>(null);
 
   function handleSwitch(category: string | null): void {
     const label = category ? 'Pick a Template' : 'Add a New Patient Document';
@@ -29,10 +25,25 @@ function AddDocumentModal({
     setLabel(label);
   }
 
+  //TODO:
+  // Remove hardcoded templates
+  const templates = [
+    'Client Satisfactoin Questionnaire',
+    'Admission Checklist form',
+    'Admission Notifcation Form',
+    'Diabetes Form',
+  ];
+
+  const filteredTemplates = appliedQuery
+    ? templates.filter((template) =>
+        template.toLowerCase().includes(appliedQuery.toLowerCase()),
+      )
+    : templates;
+
   return (
-    <Modal open={isOpen} surfaceProps={{ width: 600, height: 500 }}>
+    <Modal open={isOpen} surfaceProps={{ width: 620, height: 560 }}>
       {/* content wrapper */}
-      <div className="flex flex-col gap-6 px-8 py-6">
+      <div className="flex flex-col gap-6 p-8">
         {/* header row */}
         <div className="flex items-center gap-5">
           <button
@@ -47,22 +58,28 @@ function AddDocumentModal({
             aria-label="Go back"
             className="shrink-0"
           >
-            <Icon name="circle-arrow" color="text-rehua-blue" width={37} />
+            <Icon name="circle-arrow" className="text-rehua-navy" width={50} />
           </button>
-          <Icon name="folder" color="bg-rehua-maroon" width={33} />
+          <Icon name="folder" className="text-rehua-maroon" width={43} />
           <span className="text-3xl font-bold text-rehua-maroon">{label}</span>
         </div>
         {/* category buttons */}
 
         <div className="flex">
           {category === null ? (
-            <div className="grid w-full grid-cols-2 gap-3">
+            <div
+              className="
+                grid w-full grid-cols-2 justify-items-center gap-10 pt-5
+              "
+            >
               <ContentButton
                 text1="Long"
                 text2="Term"
-                iconProps={{ name: 'plus' }}
+                iconProps={{ name: 'plus', width: 0.5 }}
                 iconPosition="right"
-                height={70}
+                height={80}
+                textIconGap={0.5}
+                style={{ width: 240 }}
                 backgroundColor="bg-rehua-green"
                 onClick={() => {
                   handleSwitch('long-term');
@@ -70,9 +87,10 @@ function AddDocumentModal({
               />
               <ContentButton
                 text1="Palliative"
-                iconProps={{ name: 'plus' }}
+                iconProps={{ name: 'plus', width: 0.5 }}
                 iconPosition="right"
-                height={70}
+                textIconGap={0.3}
+                height={80}
                 backgroundColor="bg-rehua-pastel-pink"
                 onClick={() => {
                   handleSwitch('palliative');
@@ -81,9 +99,11 @@ function AddDocumentModal({
               <ContentButton
                 text1="Short"
                 text2="Term"
-                iconProps={{ name: 'plus' }}
+                iconProps={{ name: 'plus', width: 0.5 }}
                 iconPosition="right"
-                height={70}
+                textIconGap={0.5}
+                height={80}
+                style={{ width: 240 }}
                 backgroundColor="bg-rehua-blue"
                 onClick={() => {
                   handleSwitch('short-term');
@@ -91,49 +111,70 @@ function AddDocumentModal({
               />
               <ContentButton
                 text1="Daycare"
-                iconProps={{ name: 'plus' }}
+                iconProps={{ name: 'plus', width: 0.5 }}
                 iconPosition="right"
-                height={70}
+                height={80}
                 backgroundColor="bg-rehua-orange"
                 onClick={() => {
                   handleSwitch('daycare');
                 }}
               />
-              <ContentButton
-                text1="Upload"
-                iconProps={{ name: 'file-upload' }}
-                iconPosition="right"
-                backgroundColor="bg-rehua-navy"
-                height={65}
-                onClick={() => {
-                  //handle upload document (pdf) similar to bozhan
-                }}
-                className="col-span-2 mx-auto w-1/2"
-              />
-            </div>
-          ) : (
-            // search bar and button
-            <div>
-              <div className="flex">
-                <SingleLineInput
-                  defaultValue={'Enter Template Name Here'}
-                  onKeyDown={(e) => {
-                    setSearchQuery(e);
-                  }}
-                  width={300}
-                />
+              <div className="col-span-2 flex justify-center">
                 <ContentButton
-                  backgroundColor="bg-rehua-navy"
-                  iconProps={{ name: 'search' }}
-                  text1="Search"
+                  text1="Upload"
+                  iconProps={{ name: 'file-upload', width: 0.5 }}
+                  iconPosition="right"
+                  backgroundColor="bg-rehua-jordy"
+                  height={90}
+                  textIconGap={0.3}
                   onClick={() => {
-                    // filter list of options with searchQuery
+                    //handle upload document (pdf) similar to bozhan
                   }}
                 />
               </div>
-              {/* list of options */}
-              {/* api call */}
-              {}
+            </div>
+          ) : (
+            // search bar and button
+            <div className="ml-6">
+              <div className="flex gap-3">
+                <SingleLineInput
+                  placeholder={'Enter Template Name Here'}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setQuery(e.target.value);
+                  }}
+                  style={{ width: 300 }}
+                />
+                <ContentButton
+                  backgroundColor="bg-rehua-jordy"
+                  iconProps={{ name: 'search' }}
+                  text1="Search"
+                  onClick={() => {
+                    setAppliedQuery(query);
+                  }}
+                />
+              </div>
+              {/* TODO: api call based on category or something (need to research) */}
+              {/* List of template options */}
+              <div className="mt-4 flex flex-col gap-2">
+                {filteredTemplates.length > 0 ? (
+                  filteredTemplates.map((template) => (
+                    <div key={template} className="flex items-center gap-3">
+                      <Icon name="folder-plus" color="#399740" />
+                      <ContentButton
+                        text1={template}
+                        backgroundColor="bg-rehua-green"
+                        onClick={() => {
+                          // handle template selection
+                        }}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <span className="px-4 py-3 text-lg text-rehua-navy/60">
+                    No templates found.
+                  </span>
+                )}
+              </div>
             </div>
           )}
         </div>
