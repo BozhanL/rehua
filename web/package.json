@@ -20,7 +20,7 @@
   "scripts": {
     "dev": "next dev -p 3000 --webpack",
     "build": "next build --webpack",
-    "start": "npx serve@latest out -l 3000",
+    "start": "serve out -l 3000",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint": "eslint --max-warnings 0 .",
