@@ -3,6 +3,7 @@
 import { columns, rows } from './rowsandcolumns';
 import Pagination from '@/app/components/common/Pagination';
 import Table from '@/app/components/common/Table';
+import NavigationBar from '@/app/components/navigation/NavigationBar';
 import { useState, type JSX } from 'react';
 
 export default function PaginationTestPage(): JSX.Element {
@@ -70,6 +71,7 @@ export default function PaginationTestPage(): JSX.Element {
 
   return (
     <div className="pb-35">
+      <NavigationBar firstName="John" lastName="Doe" group="admin" />
       <Table columns={columns} rows={displayedRows} />
 
       <Pagination
