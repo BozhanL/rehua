@@ -1,11 +1,12 @@
 'use client';
 
 import DropdownBar from '@/app/components/common/DropdownBar';
-import Graph, { type GraphDataPoint } from '@/app/components/common/Graph';
+import Graph from '@/app/components/common/Graph';
 import {
   OBSERVATION_GRAPH_CONFIG,
   type GraphableObservationType,
 } from '@/app/components/common/observation-graph.config';
+import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
 import { useState, type JSX } from 'react';
 
 // stable option order, derived from the config so a new observation type
@@ -21,27 +22,14 @@ const TYPE_BY_LABEL = new Map<string, GraphableObservationType>(
 );
 
 /* -------------------------------------------------------------------------- */
-/* Demo-only mock API data                                                    */
+/* Fake data, for the demo only.                                              */
 /*                                                                            */
-/* Mirrors the backend's CreateObservationDto (api/.../create-observation.dto */
-/* - schema PR not yet merged into this workspace, so it's re-declared here   */
-/* as a stand-in rather than imported). Shaped exactly like the wire format:  */
-/* dateTime as an ISO string, measurementValue optional. `type` is typed as   */
-/* GraphableObservationType rather than the backend's ObservationType enum -  */
-/* TODO: swap for the real enum/DTO once the schema PR merges, and confirm    */
-/* its values line up 1:1 with GraphableObservationType.                     */
-/*                                                                            */
-/* toObservationGraphDataPoint below is the adapter a real fetch layer would  */
-/* use to turn CreateObservationDto[] into GraphDataPoint[] for Graph.        */
+/* It's typed as the SDK's Observation_idstring, which is exactly what a real  */
+/* call to observations.findByType gives back - dates as ISO strings, and      */
+/* measurementValue optional. That means it can be handed to Graph untouched,  */
+/* the same way real data would be, so this page exercises the real path with  */
+/* fixed numbers instead of a live patient record.                            */
 /* -------------------------------------------------------------------------- */
-
-interface MockObservationDto {
-  patientId: string;
-  dateTime: string;
-  type: GraphableObservationType;
-  measurementValue?: number;
-  notes?: string;
-}
 
 const DEMO_PATIENT_ID = 'demo-patient-0001';
 const DEMO_DATE = '2026-08-24';
@@ -50,15 +38,16 @@ function isoDateTime(hour: number, minute: number): string {
   return `${DEMO_DATE}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00`;
 }
 
-// readings land at scattered, non-whole-hour times on purpose, to exercise
-// Graph's continuous x-axis placement rather than snapping to the hour
+// times are deliberately not on the hour (08:14, 13:36...) so the demo proves
+// Graph places readings anywhere along the x-axis, not just on hour marks.
 type TimedReading = [hour: number, minute: number, measurementValue?: number];
 
 function buildDtoSeries(
   type: GraphableObservationType,
   readings: TimedReading[],
-): MockObservationDto[] {
-  return readings.map(([hour, minute, measurementValue]) => ({
+): Observation_idstring[] {
+  return readings.map(([hour, minute, measurementValue], index) => ({
+    _id: `${DEMO_PATIENT_ID}-${type}-${String(index)}`,
     patientId: DEMO_PATIENT_ID,
     dateTime: isoDateTime(hour, minute),
     type,
@@ -68,24 +57,12 @@ function buildDtoSeries(
   }));
 }
 
-// adapter a real fetch layer would use to turn a CreateObservationDto into a
-// GraphDataPoint. Returns null for readings with no measurementValue (e.g.
-// notes-only observations) since Graph has nothing to plot for them - these
-// are filtered out before Graph ever sees them, distinct from the
-// out-of-range values Graph itself drops in isValidDataPoint.
-function toObservationGraphDataPoint(
-  dto: MockObservationDto,
-): GraphDataPoint | null {
-  if (dto.measurementValue === undefined) {
-    return null;
-  }
-  return {
-    value: dto.measurementValue,
-    dateTime: new Date(dto.dateTime),
-  };
-}
-
-const DEMO_DTOS: Record<GraphableObservationType, MockObservationDto[]> = {
+// one series of fake readings per observation type. Some entries are bad on
+// purpose - see the comments inline - to show what Graph filters out.
+const DEMO_OBSERVATIONS: Record<
+  GraphableObservationType,
+  Observation_idstring[]
+> = {
   OXYGEN_RATE: buildDtoSeries('OXYGEN_RATE', [
     [0, 47, 97],
     [4, 22, 96],
@@ -172,16 +149,6 @@ const DEMO_DTOS: Record<GraphableObservationType, MockObservationDto[]> = {
   ),
 };
 
-const DEMO_DATA: Record<GraphableObservationType, GraphDataPoint[]> =
-  Object.fromEntries(
-    OBSERVATION_TYPES.map((type) => [
-      type,
-      DEMO_DTOS[type]
-        .map(toObservationGraphDataPoint)
-        .filter((point): point is GraphDataPoint => point !== null),
-    ]),
-  ) as Record<GraphableObservationType, GraphDataPoint[]>;
-
 function GraphDemo(): JSX.Element {
   const [selectedType, setSelectedType] =
     useState<GraphableObservationType>('HEART_RATE');
@@ -222,7 +189,7 @@ function GraphDemo(): JSX.Element {
         <h3 className="mb-4 text-xl font-semibold text-rehua-navy">
           {config.label}
         </h3>
-        <Graph type={selectedType} data={DEMO_DATA[selectedType]} />
+        <Graph type={selectedType} data={DEMO_OBSERVATIONS[selectedType]} />
         <p className="mt-2 text-xs text-rehua-dark-gray">
           Graph example using mock observation schema. Component drops
           value-less observations before Graph ever sees them.

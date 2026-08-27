@@ -3,15 +3,39 @@ import {
   type GraphableObservationType,
   type ObservationGraphConfig,
 } from './observation-graph.config';
+import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
 import type { JSX } from 'react';
 
-export interface GraphDataPoint {
+export type ObservationReading = Pick<
+  Observation_idstring,
+  'type' | 'dateTime' | 'measurementValue'
+>;
+
+interface GraphDataPoint {
   value: number; // observation reading, used for y-axis placement
   dateTime: Date; // full timestamp of the reading, use for x-axis placement
 }
+function toGraphDataPoints(
+  observations: readonly ObservationReading[],
+  type: GraphableObservationType,
+): GraphDataPoint[] {
+  return observations
+    .filter((observation) => observation.type === type) // only this chart's type
+    .flatMap((observation) =>
+      observation.measurementValue === undefined // drop notes-only readings
+        ? []
+        : [
+            {
+              value: observation.measurementValue,
+              dateTime: new Date(observation.dateTime), // ISO string to date
+            },
+          ],
+    );
+}
+
 export interface GraphProps {
   type: GraphableObservationType; // observation type, looked up in OBSERVATION_GRAPH_CONFIG for axis range/label/unit
-  data: GraphDataPoint[]; // readings to plot, sorted by hour before rendering
+  data: readonly ObservationReading[]; // observations as the API returns them; non-numeric and mismatched-type readings are dropped, the rest sorted by hour
   // don't stray too far off the default size settings otherwise graph will become squashed
   width?: number;
   height?: number;
@@ -101,7 +125,7 @@ function Graph({
     );
   }
 
-  const sortedData = data
+  const sortedData = toGraphDataPoints(data, type)
     .filter((point) => isValidDataPoint(point, config))
     .map((point) => ({ ...point, hour: hourOfDay(point.dateTime) }))
     .sort((a, b) => a.hour - b.hour);

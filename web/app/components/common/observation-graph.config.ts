@@ -1,16 +1,19 @@
-// TODO:
-//import sdk type for observations once schema pr is merged
-export type GraphableObservationType =
-  | 'OXYGEN_RATE'
-  | 'RESPIRATION_RATE'
-  | 'BLOOD_PRESSURE'
-  | 'HEART_RATE'
-  | 'TEMPERATURE'
-  | 'WEIGHT'
-  | 'BLOOD_GLUCOSE_LEVELS'
-  | 'NEUROLOGICAL_OBSERVATION_CHART';
+import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
 
-// this one is fine to keep
+// the backend's ObservationType enum, as the SDK surfaces it: nestia inlines
+// the enum as a string union on each structure rather than exporting a named
+// type, so derive it from the observation structure to stay in sync
+export type ObservationType = Observation_idstring['type'];
+
+// BOWEL_OUTPUT and URINE_OUTPUT are the backend's text/notes-based
+// observations - they have no numeric measurementValue, so there is nothing to
+// plot. Excluding them here means a new numeric type added to the backend enum
+// shows up as a missing key in OBSERVATION_GRAPH_CONFIG at compile time.
+export type GraphableObservationType = Exclude<
+  ObservationType,
+  'BOWEL_OUTPUT' | 'URINE_OUTPUT'
+>;
+
 export interface ObservationGraphConfig {
   shortCode: string;
   label: string;
@@ -18,8 +21,9 @@ export interface ObservationGraphConfig {
   min: number;
   max: number;
 }
-// TODO:
-//replace with sdk type for observations once schema pr is merged
+
+// axis ranges/labels/units are presentation concerns the backend doesn't
+// model, so they live here - only the set of keys comes from the SDK
 export const OBSERVATION_GRAPH_CONFIG: Record<
   GraphableObservationType,
   ObservationGraphConfig
@@ -81,3 +85,10 @@ export const OBSERVATION_GRAPH_CONFIG: Record<
     max: 15,
   },
 } as const;
+
+// narrows an observation type off the wire to one this component can plot
+export function isGraphableObservationType(
+  type: ObservationType,
+): type is GraphableObservationType {
+  return Object.hasOwn(OBSERVATION_GRAPH_CONFIG, type);
+}
