@@ -1,7 +1,8 @@
 import Icon from '@/app/components/common/Icon';
 import MiniLabel from '@/app/components/common/MiniLabel';
 import type { TableColumn, TableRow } from '@/app/components/common/Table';
-import type { ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
+import type { JSX, ReactNode } from 'react';
 
 // interface for a patient row in the table
 interface PatientRow extends TableRow {
@@ -22,23 +23,6 @@ interface PatientRow extends TableRow {
 
 // general width for columns
 const columnWidth = 200;
-
-// TODO: backend modify the onClick; button to be used in the "View" column of the patient table
-// another const might have to be made for status: <MiniLabel name="insert minilabel name here" />
-// full list of names available in MiniLabel.tsx
-
-// TODO: frontend modify the onClick; navigate to patient profile page
-const patientViewButton: ReactNode = (
-  <button
-    type="button"
-    onClick={() => {
-      console.log('CHANGE ME');
-    }}
-    style={{ cursor: 'pointer' }}
-  >
-    <Icon name="access" width={30} className="translate-y-1 text-rehua-navy" />
-  </button>
-);
 
 // column definition for the patient table
 export const patientColumns: TableColumn[] = [
@@ -92,7 +76,37 @@ export const patientColumns: TableColumn[] = [
   },
 ];
 
-// TODO: backend load this data from the database + mind the pagination
+// TODO: backend implement the PatientViewButton below within the "View" column of the patient table,
+// the button already routes to patients/[patientId] page, patientId has to be passed in
+
+// other notes:
+// - another const might have to be made for status: <MiniLabel name="insert minilabel name here" />
+// full list of names available in MiniLabel.tsx)
+//
+// - for better clarity, feel free to rename this file from "rowsandcolumns.tsx" if it suits
+//
+function PatientViewButton({
+  patientId,
+}: Readonly<{ patientId: number }>): JSX.Element {
+  const router = useRouter();
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        router.push(`/patients/${String(patientId)}`);
+      }}
+      style={{ cursor: 'pointer' }}
+    >
+      <Icon
+        name="access"
+        width={30}
+        className="translate-y-1 text-rehua-navy"
+      />
+    </button>
+  );
+}
+
+// TODO: backend load this data from the database + mind the pagination, search filter and patient id for the "View" button
 export const patientRows: PatientRow[] = [
   {
     id: 1,
@@ -106,7 +120,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Noah Brown',
       status: <MiniLabel name="longTerm" />,
       funding: 'ACC Hospital',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={1} />,
     },
   },
   {
@@ -121,7 +135,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Olivia Wilson',
       status: <MiniLabel name="active" />,
       funding: 'CHC Hospital',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={2} />,
     },
   },
   {
@@ -136,7 +150,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Liam Taylor',
       status: <MiniLabel name="shortTerm" />,
       funding: 'Funded',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={3} />,
     },
   },
   {
@@ -151,7 +165,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Emma Davis',
       status: <MiniLabel name="disabled" />,
       funding: 'ACC',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={4} />,
     },
   },
   {
@@ -166,7 +180,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Noah Brown',
       status: <MiniLabel name="daycare" />,
       funding: 'YPD',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={5} />,
     },
   },
   {
@@ -181,7 +195,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Sophie Martin',
       status: <MiniLabel name="longTerm" />,
       funding: '',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={6} />,
     },
   },
   {
@@ -196,7 +210,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Oliver Wilson',
       status: <MiniLabel name="active" />,
       funding: 'CHC Hospital',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={7} />,
     },
   },
   {
@@ -211,7 +225,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Charlotte Moore',
       status: <MiniLabel name="discharged" />,
       funding: 'ACC Hospital',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={8} />,
     },
   },
   {
@@ -226,7 +240,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Noah Brown',
       status: <MiniLabel name="shortTerm" />,
       funding: 'Funded',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={9} />,
     },
   },
   {
@@ -241,7 +255,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Amelia Taylor',
       status: <MiniLabel name="deceased" />,
       funding: '',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={10} />,
     },
   },
   {
@@ -256,7 +270,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Liam Taylor',
       status: <MiniLabel name="active" />,
       funding: 'ACC',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={11} />,
     },
   },
   {
@@ -271,7 +285,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Emma Davis',
       status: <MiniLabel name="longTerm" />,
       funding: 'YPD',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={12} />,
     },
   },
   {
@@ -286,7 +300,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Noah Brown',
       status: <MiniLabel name="daycare" />,
       funding: 'Funded',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={13} />,
     },
   },
   {
@@ -301,7 +315,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Sophie Martin',
       status: <MiniLabel name="disabled" />,
       funding: 'CHC Hospital',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={14} />,
     },
   },
   {
@@ -316,7 +330,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Oliver Wilson',
       status: <MiniLabel name="active" />,
       funding: 'ACC Hospital',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={15} />,
     },
   },
   {
@@ -331,7 +345,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Charlotte Moore',
       status: <MiniLabel name="longTerm" />,
       funding: 'ACC',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={16} />,
     },
   },
   {
@@ -346,7 +360,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Amelia Taylor',
       status: <MiniLabel name="shortTerm" />,
       funding: 'YPD',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={17} />,
     },
   },
   {
@@ -361,7 +375,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Liam Taylor',
       status: <MiniLabel name="discharged" />,
       funding: '',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={18} />,
     },
   },
   {
@@ -376,7 +390,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Emma Davis',
       status: <MiniLabel name="active" />,
       funding: 'Funded',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={19} />,
     },
   },
   {
@@ -391,7 +405,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Noah Brown',
       status: <MiniLabel name="deceased" />,
       funding: 'CHC Hospital',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={20} />,
     },
   },
   {
@@ -406,7 +420,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Sophie Martin',
       status: <MiniLabel name="daycare" />,
       funding: 'ACC Hospital',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={21} />,
     },
   },
   {
@@ -421,7 +435,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Oliver Wilson',
       status: <MiniLabel name="disabled" />,
       funding: 'Funded',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={22} />,
     },
   },
   {
@@ -436,7 +450,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Charlotte Moore',
       status: <MiniLabel name="active" />,
       funding: 'YPD',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={23} />,
     },
   },
   {
@@ -451,7 +465,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Amelia Taylor',
       status: <MiniLabel name="longTerm" />,
       funding: 'CHC Hospital',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={24} />,
     },
   },
   {
@@ -466,7 +480,7 @@ export const patientRows: PatientRow[] = [
       nurse: 'Emma Davis',
       status: <MiniLabel name="upload" />,
       funding: '',
-      view: patientViewButton,
+      view: <PatientViewButton patientId={25} />,
     },
   },
 ];
