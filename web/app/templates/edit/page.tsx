@@ -1,37 +1,12 @@
 'use client';
 
+import { useTemplateOptions } from '../page';
 import EditFormPage from '@/app/components/form/EditFormPage';
-import useApiUrl from '@/app/hooks/useApiUrl';
-import { isTesting } from '@/app/utils/env';
 import type { TemplateDocumentType } from '@/app/utils/types';
-import { findOne as findOneTemplate } from '@rehua/sdk/functional/templates';
-import {
-  queryOptions,
-  useQuery,
-  type QueryFunctionContext,
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { notFound, useSearchParams } from 'next/navigation';
 import type { JSX } from 'react';
 import typia from 'typia';
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function useTemplateOptions(id: string) {
-  const host = useApiUrl();
-
-  return queryOptions({
-    queryKey: ['templates', host, id],
-    queryFn: async ({ signal }: QueryFunctionContext) => {
-      return findOneTemplate(
-        {
-          host: host,
-          simulate: isTesting,
-          options: { signal },
-        },
-        id,
-      );
-    },
-  });
-}
 
 export default function Home(): JSX.Element {
   const searchParams = useSearchParams();

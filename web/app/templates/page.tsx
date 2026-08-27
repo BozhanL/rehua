@@ -14,11 +14,11 @@ import { useState, type JSX } from 'react';
 import typia from 'typia';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function useTemplateOptions(id: string) {
+export function useTemplateOptions(id: string) {
   const host = useApiUrl();
 
   return queryOptions({
-    queryKey: ['templates', host, id],
+    queryKey: [findOneTemplate.path(id), host, id],
     queryFn: async ({ signal }: QueryFunctionContext) => {
       return findOneTemplate(
         {
