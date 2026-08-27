@@ -30,6 +30,12 @@ function Home(): JSX.Element {
 
   const loginMutation = useMutation({
     mutationFn: login,
+    onSuccess: (data) => {
+      sessionStorage.setItem('firstName', JSON.stringify(data.firstName));
+      sessionStorage.setItem('lastName', JSON.stringify(data.lastName));
+      sessionStorage.setItem('userName', JSON.stringify(data.username));
+      sessionStorage.setItem('group', JSON.stringify(data.group));
+    },
   });
 
   return (
@@ -44,6 +50,24 @@ function Home(): JSX.Element {
         <input name="totpCode" required />
         <button type="submit">Login</button>
       </Form>
+
+      {/* dispaly logged in user's name from sessionStorage*/}
+      <div style={{ marginTop: '1rem', color: 'green' }}>
+        <h3>Stored login information</h3>
+        <pre>
+          full name:
+          {sessionStorage.getItem('firstName')}
+          {sessionStorage.getItem('lastName')}
+        </pre>
+      </div>
+
+      {/* Display Error Message */}
+      {loginMutation.isError && (
+        <div style={{ marginTop: '1rem', color: 'red' }}>
+          <h3>Login Failed</h3>
+          <p>{loginMutation.error.message}</p>
+        </div>
+      )}
     </div>
   );
 }
