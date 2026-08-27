@@ -67,7 +67,7 @@ export default function PatientsPage(): JSX.Element {
         {/* page toolbar */}
         <div className="mx-5 mt-5 mb-4 overflow-x-auto">
           <div className="flex min-w-max items-center gap-6">
-            {/* page title - TODO: frontend mtn-w-max io change this depdashboard selected by admin */}
+            {/* page title - TODO: frontend to change this depending on dashboard selected by admin */}
             <span className="text-3xl font-bold">Patients</span>
 
             {/* all users */}
