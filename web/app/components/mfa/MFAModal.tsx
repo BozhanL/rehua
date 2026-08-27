@@ -1,5 +1,4 @@
 import ContentButton from '../common/ContentButton';
-import type { IconProps } from '../common/Icon';
 import Modal from '../common/Modal';
 import PopUp from '../common/PopUp';
 import { useEffect, useRef, useState } from 'react';
@@ -10,7 +9,6 @@ interface MFAModalProps {
   onBack: () => void; // call back function to let the parent handle the back button
   confirmButtonText1?: string;
   confirmButtonText2?: string;
-  confirmButtonIcon?: IconProps['name'];
   onSubmitCode: (code: string) => void; // let parent component handle full /auth/login with username,password, and totpcode
   isSubmitting?: boolean;
   mfaError?: string | null; // pass in mfaError from parent component if auth fails
@@ -22,7 +20,6 @@ function AddMFAModal({
   onBack,
   confirmButtonText1 = 'Login',
   confirmButtonText2,
-  confirmButtonIcon = 'key',
   onSubmitCode,
   isSubmitting = false,
   mfaError,
@@ -57,7 +54,7 @@ function AddMFAModal({
     const code = inputRefs.current.map((el) => el?.value ?? '').join(''); // 1,2,3,4 = '1234'
     // validate length
     if (code.length !== 6) {
-      setLocalError('Please enter all 6 digits');
+      setLocalError('Please enter all 6 digits.');
       return;
     }
     onSubmitCode(code);
@@ -129,7 +126,7 @@ function AddMFAModal({
   }
 
   return (
-    <Modal surfaceProps={{ width: 700, height: 300 }} open={open}>
+    <Modal surfaceProps={{ width: 700, height: 320 }} open={open}>
       {/* content div */}
       <div className="flex flex-col items-center justify-center gap-5">
         {/* headings */}
@@ -204,7 +201,7 @@ function AddMFAModal({
             }}
             horizontalPadding={0.5}
             height={45}
-            iconProps={{ name: confirmButtonIcon }}
+            iconProps={{ name: 'key' }}
           />
         </div>
       </div>
@@ -219,8 +216,10 @@ function AddMFAModal({
           },
         }}
         button1Props={{
-          text1: 'Ok',
+          text1: 'OK',
+          iconProps: { name: 'circle-arrow' },
           backgroundColor: 'bg-rehua-green',
+          height: 60,
           onClick: () => {
             const wasServerError = !!mfaError;
             setLocalError(null);

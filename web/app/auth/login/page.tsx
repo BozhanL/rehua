@@ -49,7 +49,7 @@ function Home(): JSX.Element {
         },
       ),
     onError: () => {
-      setMfaError('Login failed, try again');
+      setMfaError('Login failed, please try again.');
     },
     onSuccess: () => {
       setisMFAOpen(false);
