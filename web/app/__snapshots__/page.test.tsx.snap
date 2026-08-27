@@ -11,5 +11,84 @@ exports[`page renders homepage unchanged 1`] = `
     style="transform-origin: center; transform-box: fill-box;"
     width="24"
   />
+  <div>
+    <input
+      accept="application/pdf"
+      hidden=""
+      type="file"
+    />
+    <button
+      class="
+        inline-flex w-fit cursor-pointer items-center justify-center
+        flex-row
+        bg-rehua-mustard
+        transition-all duration-100
+        active:brightness-80
+      "
+      style="min-height: 40px; border-radius: 14px; font-size: 18px; padding-inline: 16px; padding-block: 8px; gap: 16px; box-shadow: inset 0 4px 10px rgb(0 0 0 / 0.3);"
+      type="button"
+    >
+      <svg
+        class="text-rehua-white"
+        preserveAspectRatio="xMidYMid meet"
+        style="transform-origin: center; transform-box: fill-box;"
+        width="28"
+      />
+      <span
+        class="
+            inline-flex flex-col
+            text-center
+            text-rehua-white
+            font-semibold
+            text-base
+          "
+        style="line-height: 1.1;"
+      >
+        <span>
+          Upload
+        </span>
+        <span>
+          Manual
+        </span>
+      </span>
+    </button>
+  </div>
+  <div>
+    <button
+      class="
+        inline-flex w-fit cursor-pointer items-center justify-center
+        flex-row
+        bg-rehua-blue
+        transition-all duration-100
+        active:brightness-80
+      "
+      style="min-height: 40px; border-radius: 14px; font-size: 18px; padding-inline: 16px; padding-block: 8px; gap: 16px; box-shadow: inset 0 4px 10px rgb(0 0 0 / 0.3);"
+      type="button"
+    >
+      <svg
+        class="text-rehua-white"
+        preserveAspectRatio="xMidYMid meet"
+        style="transform-origin: center; transform-box: fill-box;"
+        width="28"
+      />
+      <span
+        class="
+            inline-flex flex-col
+            text-center
+            text-rehua-white
+            font-semibold
+            text-base
+          "
+        style="line-height: 1.1;"
+      >
+        <span>
+          View
+        </span>
+        <span>
+          Manual
+        </span>
+      </span>
+    </button>
+  </div>
 </div>
 `;

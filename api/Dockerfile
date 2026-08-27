@@ -32,7 +32,12 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/api/node_modules ./api/node_modules
 COPY --from=builder /app/api/dist ./dist
 
-ENV NODE_ENV=production
+ENV NODE_ENV=production \
+  DATA_PATH=/data \
+  MAX_FILE_SIZE=104857600 \
+  PORT=3001
+VOLUME [ "/data" ]
+
 USER node
 
 CMD [ "node", "./dist/main.js" ]
