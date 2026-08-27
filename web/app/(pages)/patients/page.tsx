@@ -65,82 +65,88 @@ export default function PatientsPage(): JSX.Element {
     <div className="flex h-dvh flex-col">
       <Surface width="100%" height="100%">
         {/* page toolbar */}
-        <div className="mx-5 mt-5 mb-4 flex items-center gap-6 overflow-x-auto">
-          {/* page title - TODO: frontend to change this depending on dashboard selected by admin */}
-          <span className="text-3xl font-bold">Patients</span>
-          {/* all users */}
-          {/* search filter; 1 option may be selected at a time */}
-          <div className="shrink-0">
-            <DropdownBar
-              selectedValues={searchFilter}
-              options={[
-                'Room #',
-                'Name',
-                'DOB',
-                'Gender',
-                'NHI',
-                'Date Admitted',
-                'Nurse',
-                'Status',
-                'Funding',
-              ]}
-              size={17}
-              labelMode="prefix"
-              defaultText="Search by: "
-              width={300}
-              onChange={(value: string[]) => {
-                setSearchFilter(value);
+        <div className="mx-5 mt-5 mb-4 overflow-x-auto">
+          <div className="flex min-w-max items-center gap-6">
+            {/* page title - TODO: frontend mtn-w-max io change this depdashboard selected by admin */}
+            <span className="text-3xl font-bold">Patients</span>
+
+            {/* all users */}
+            {/* search filter; 1 option may be selected at a time */}
+            <div className="shrink-0">
+              <DropdownBar
+                selectedValues={searchFilter}
+                options={[
+                  'Room #',
+                  'Name',
+                  'DOB',
+                  'Gender',
+                  'NHI',
+                  'Date Admitted',
+                  'Nurse',
+                  'Status',
+                  'Funding',
+                ]}
+                size={17}
+                labelMode="prefix"
+                defaultText="Search by: "
+                width={300}
+                onChange={(value: string[]) => {
+                  setSearchFilter(value);
+                }}
+              />
+            </div>
+
+            {/* search input */}
+            <SingleLineInput
+              value={searchValue}
+              placeholder="Search Patients"
+              style={{ width: 300 }}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                setSearchValue(event.currentTarget.value);
               }}
             />
-          </div>
-          {/* search input */}
-          <SingleLineInput
-            value={searchValue}
-            placeholder="Search Patients"
-            style={{ width: 300 }}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              setSearchValue(event.currentTarget.value);
-            }}
-          />
-          {/* search button */}
-          <ContentButton
-            text1="Search"
-            iconProps={{ name: 'search' }}
-            backgroundColor="bg-rehua-jordy"
-            verticalPadding={0.2}
-            onClick={handleSearch}
-          />
-          {/* all users
+
+            {/* search button */}
+            <ContentButton
+              text1="Search"
+              iconProps={{ name: 'search' }}
+              backgroundColor="bg-rehua-jordy"
+              verticalPadding={0.2}
+              onClick={handleSearch}
+            />
+
+            <div className="ml-auto flex items-center gap-4">
+              {/* all users
               for admin only - will eventually make this change into following depending on the dashboard:
               patients = Add Patient
               templates = Add Template
               users = Add User */}
-          <div className="shrink-0">
-            <ContentButton
-              text1="Add Patient"
-              iconProps={{ name: 'plus' }}
-              backgroundColor="bg-rehua-green"
-              verticalPadding={0.2}
-              onClick={handleAddPatient}
-            />
-          </div>
+              <ContentButton
+                text1="Add Patient"
+                iconProps={{ name: 'plus' }}
+                backgroundColor="bg-rehua-green"
+                verticalPadding={0.2}
+                onClick={handleAddPatient}
+              />
 
-          {/* admin only - TODO: frontend will make this eventually navigate to the respective dashboards */}
-          {group === 'admin' && (
-            <DropdownBar
-              selectedValues={['Patients Dashboard']}
-              options={[
-                'Patients Dashboard',
-                'Users Dashboard',
-                'Templates Dashboard',
-              ]}
-              size={17}
-              width={250}
-              onChange={() => {
-                console.log('dashboard changed!');
-              }}
-            />
-          )}
+              {/* admin only - TODO: frontend will make this eventually navigate to the respective dashboards */}
+              {group === 'admin' && (
+                <DropdownBar
+                  selectedValues={['Patients Dashboard']}
+                  options={[
+                    'Patients Dashboard',
+                    'Users Dashboard',
+                    'Templates Dashboard',
+                  ]}
+                  size={17}
+                  width={250}
+                  onChange={() => {
+                    console.log('dashboard changed!');
+                  }}
+                />
+              )}
+            </div>
+          </div>
         </div>
 
         {/* table */}
