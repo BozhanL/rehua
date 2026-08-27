@@ -1,6 +1,6 @@
 'use client';
 
-import { useTemplateOptions } from '../page';
+import useFindOneTemplateOptions from '../useFindOneTemplateOptions';
 import EditFormPage from '@/app/components/form/EditFormPage';
 import type { TemplateDocumentType } from '@/app/utils/types';
 import { useQuery } from '@tanstack/react-query';
@@ -13,7 +13,7 @@ export default function Home(): JSX.Element {
   const id = searchParams.get('id');
   typia.assertGuard<string>(id);
 
-  const options = useTemplateOptions(id);
+  const options = useFindOneTemplateOptions(id);
   const findTemplate = useQuery(options);
 
   if (findTemplate.isError) {
