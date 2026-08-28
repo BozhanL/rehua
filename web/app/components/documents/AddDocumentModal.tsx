@@ -23,14 +23,19 @@ function AddDocumentModal({
     const label = category ? 'Pick a Template' : 'Add a New Patient Document';
     setCategory(category);
     setLabel(label);
+    setAppliedQuery(null);
   }
 
   //TODO:
-  // Remove hardcoded templates
+  // Remove hardcoded templates when api call is implemented
   const templates = [
     'Client Satisfactoin Questionnaire',
     'Admission Checklist form',
     'Admission Notifcation Form',
+    'Diabetes For',
+    'Client Satisfactoin Quesionnaire',
+    'Admission Checklist for',
+    'Admission Notifcation orm',
     'Diabetes Form',
   ];
 
@@ -41,11 +46,11 @@ function AddDocumentModal({
     : templates;
 
   return (
-    <Modal open={isOpen} surfaceProps={{ width: 620, height: 560 }}>
+    <Modal open={isOpen} surfaceProps={{ width: 650, height: 500 }}>
       {/* content wrapper */}
-      <div className="flex flex-col gap-6 p-8">
+      <div className="flex h-full flex-col gap-6 overflow-hidden p-8">
         {/* header row */}
-        <div className="flex items-center gap-5">
+        <div className="flex shrink-0 items-center gap-5">
           <button
             type="button"
             onClick={() => {
@@ -65,7 +70,7 @@ function AddDocumentModal({
         </div>
         {/* category buttons */}
 
-        <div className="flex">
+        <div className="flex min-h-0 flex-1">
           {category === null ? (
             <div
               className="
@@ -113,6 +118,7 @@ function AddDocumentModal({
                 text1="Daycare"
                 iconProps={{ name: 'plus', width: 0.5 }}
                 iconPosition="right"
+                textIconGap={0.5}
                 height={80}
                 backgroundColor="bg-rehua-orange"
                 onClick={() => {
@@ -122,7 +128,7 @@ function AddDocumentModal({
               <div className="col-span-2 flex justify-center">
                 <ContentButton
                   text1="Upload"
-                  iconProps={{ name: 'file-upload', width: 0.5 }}
+                  iconProps={{ name: 'file-upload', width: 0.4 }}
                   iconPosition="right"
                   backgroundColor="bg-rehua-jordy"
                   height={90}
@@ -135,14 +141,19 @@ function AddDocumentModal({
             </div>
           ) : (
             // search bar and button
-            <div className="ml-6">
-              <div className="flex gap-3">
+            <div className="flex min-h-0 flex-1 flex-col">
+              <div className="flex shrink-0 gap-3 pl-10">
                 <SingleLineInput
                   placeholder={'Enter Template Name Here'}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setQuery(e.target.value);
                   }}
-                  style={{ width: 300 }}
+                  onKeyDown={(e: React.KeyboardEvent) => {
+                    if (e.key === 'Enter') {
+                      setAppliedQuery(query);
+                    }
+                  }}
+                  style={{ width: 400, fontSize: '18px' }}
                 />
                 <ContentButton
                   backgroundColor="bg-rehua-jordy"
@@ -155,17 +166,29 @@ function AddDocumentModal({
               </div>
               {/* TODO: api call based on category or something (need to research) */}
               {/* List of template options */}
-              <div className="mt-4 flex flex-col gap-2">
+              <div
+                dir="rtl"
+                className="
+                  mt-4 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pl-10
+                "
+              >
                 {filteredTemplates.length > 0 ? (
                   filteredTemplates.map((template) => (
-                    <div key={template} className="flex items-center gap-3">
-                      <Icon name="folder-plus" color="#399740" />
+                    // TODO: change key to template.id so its unique
+                    <div
+                      key={template}
+                      dir="ltr"
+                      className="flex shrink-0 items-center gap-4 py-1"
+                    >
+                      <Icon name="folder-plus" color="#399740" width={45} />
                       <ContentButton
                         text1={template}
                         backgroundColor="bg-rehua-green"
                         onClick={() => {
                           // handle template selection
                         }}
+                        height={61}
+                        style={{ width: 470 }}
                       />
                     </div>
                   ))
