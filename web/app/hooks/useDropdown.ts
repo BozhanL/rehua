@@ -12,6 +12,7 @@ interface UseDropdownReturn<T extends string = string> {
   listBoxRef: RefObject<HTMLDivElement | null>;
   buttonRefs: RefObject<(HTMLButtonElement | null)[]>;
   wrapperRef: RefObject<HTMLDivElement | null>;
+  portalRef: RefObject<HTMLDivElement | null>;
   handleKeyPress: (e: React.KeyboardEvent) => void;
   handleOptionClick: (option: T) => void;
   toggleOpen: () => void;
@@ -41,6 +42,7 @@ export function useDropdown<T extends string = string>({
   const listBoxRef = useRef<HTMLDivElement>(null); // reference to dropdown box - to enable keyboard interaction (esc,up,down)
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]); // reference to an array of buttons (dropdown items)
   const wrapperRef = useRef<HTMLDivElement>(null); // reference to the whole dropdown
+  const portalRef = useRef<HTMLDivElement>(null); // reference to the dropdown portal
 
   // focus the inner dropdown box to handle keyboard interaction
   useEffect(() => {
@@ -58,7 +60,9 @@ export function useDropdown<T extends string = string>({
     function handleOutsideInteraction(e: PointerEvent): void {
       if (
         wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
+        portalRef.current &&
+        !wrapperRef.current.contains(e.target as Node) &&
+        !portalRef.current.contains(e.target as Node)
       ) {
         setIsOpen(false);
         setActiveIndex(-1);
@@ -160,6 +164,7 @@ export function useDropdown<T extends string = string>({
     listBoxRef: listBoxRef,
     buttonRefs: buttonRefs,
     wrapperRef: wrapperRef,
+    portalRef: portalRef,
     handleKeyPress: handleKeyPress,
     handleOptionClick: handleOptionClick,
     toggleOpen: toggleOpen,
