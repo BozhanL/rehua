@@ -1,9 +1,11 @@
 'use client';
-import { PatientListRows, patient } from './rowsandcolumns';
+import { PatientDocumentsList } from './documentstab';
+import { PatientListRows, patient } from './patientlistview';
 import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';
 import ListView from '@/app/components/common/ListView';
 import Surface from '@/app/components/common/Surface';
+import Tabs from '@/app/components/common/Tab';
 import dayjs from '@/app/utils/dayjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -124,6 +126,32 @@ export default function PatientProfilePage(): JSX.Element {
         {/* patient information list */}
         <div className="pt-4">
           <ListView rows={PatientListRows} insidePadding="px-8" />
+        </div>
+
+        {/* tabs: patient documents + observations */}
+        <div className="pt-4">
+          <Tabs
+            tabs={[
+              {
+                id: 'documents',
+                label: 'Patient Documents',
+                iconProps: {
+                  name: 'user-folder',
+                  width: 35,
+                },
+                content: PatientDocumentsList(),
+              },
+              {
+                id: 'observations',
+                label: 'Patient Observations',
+                iconProps: {
+                  name: 'heart-pulse',
+                  width: 35,
+                },
+                content: <p>Observations content goes here.</p>,
+              },
+            ]}
+          />
         </div>
       </Surface>
     </div>
