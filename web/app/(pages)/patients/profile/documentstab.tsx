@@ -98,7 +98,9 @@ const initialDocuments: PatientDocument[] = [
 export const documentColumns: TableColumn[] = [
   {
     rowKey: 'checkbox',
-    header: <Icon name="checked-box" />,
+    header: <Icon name="checked-box" width={30} />,
+    width: 50,
+    contentAlignment: 'center',
   },
   {
     rowKey: 'document',
@@ -107,10 +109,12 @@ export const documentColumns: TableColumn[] = [
   {
     rowKey: 'creationDate',
     header: 'Creation Date',
+    width: 100,
   },
   {
     rowKey: 'state',
     header: 'State',
+    width: 80,
   },
   {
     rowKey: 'documentType',
@@ -119,6 +123,7 @@ export const documentColumns: TableColumn[] = [
   {
     rowKey: 'tags',
     header: 'Tags',
+    width: 235,
   },
   {
     rowKey: 'editDate',
@@ -127,6 +132,7 @@ export const documentColumns: TableColumn[] = [
   {
     rowKey: 'open',
     header: 'Open',
+    width: 65,
   },
 ];
 
@@ -246,6 +252,12 @@ export function PatientDocumentsList(): JSX.Element {
           <input
             type="checkbox"
             checked={selectedDocumentIds.includes(document.id)}
+            style={{
+              width: 25,
+              height: 25,
+              margin: 0,
+              transform: 'translateY(3px)',
+            }}
             onChange={() => {
               toggleDocument(document.id);
             }}
@@ -262,6 +274,10 @@ export function PatientDocumentsList(): JSX.Element {
               (tagId) => tags.find((tag) => tag.id === tagId)?.name ?? tagId,
             )}
             multiple={true}
+            search={true}
+            size={18}
+            width={350}
+            lengthOfDropdown={200}
             defaultText="Select tags . . ."
             onChange={(selectedNames) => {
               const selectedIds = tags
@@ -283,8 +299,8 @@ export function PatientDocumentsList(): JSX.Element {
 
   return (
     <>
-      <div className="gap-3.5 overflow-x-auto px-6 py-5">
-        <div className="flex min-w-full items-center justify-between gap-4">
+      <div className="gap-3.5 overflow-x-auto">
+        <div className="flex min-w-full items-center justify-between gap-4 p-5">
           <DropdownBar
             options={tags.map((tag) => tag.name)}
             selectedValues={selectedFilterTags.map(
@@ -323,7 +339,7 @@ export function PatientDocumentsList(): JSX.Element {
               textAlign="left"
               lineHeight={1.1}
               textIconGap={0.4}
-              iconProps={{ name: 'pin' }}
+              iconProps={{ name: 'pin', width: 0.9 }}
               iconPosition="right"
               horizontalPadding={0.4}
               verticalPadding={0.25}
@@ -338,7 +354,7 @@ export function PatientDocumentsList(): JSX.Element {
               text2="Selected"
               textAlign="left"
               lineHeight={1.1}
-              iconProps={{ name: 'file' }}
+              iconProps={{ name: 'file', width: 0.8 }}
               iconPosition="right"
               horizontalPadding={0.35}
               verticalPadding={0.25}
@@ -354,8 +370,9 @@ export function PatientDocumentsList(): JSX.Element {
               text1="Add"
               text2="Document"
               textAlign="left"
-              iconProps={{ name: 'plus' }}
+              iconProps={{ name: 'plus', width: 0.9 }}
               iconPosition="right"
+              lineHeight={1.1}
               horizontalPadding={0.35}
               verticalPadding={0.25}
               textIconGap={0.4}
@@ -368,7 +385,11 @@ export function PatientDocumentsList(): JSX.Element {
           </div>
         </div>
       </div>
-      <Table columns={documentColumns} rows={documentRows} />
+      <div className="overflow-x-auto">
+        <div className="min-w-350">
+          <Table columns={documentColumns} rows={documentRows} />
+        </div>
+      </div>
     </>
   );
 }
