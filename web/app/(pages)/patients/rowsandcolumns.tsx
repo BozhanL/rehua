@@ -119,15 +119,17 @@ function PatientViewButton({
 }
 
 // function to create a patient row from a patient object that will be rendered within the table
-// TODO: backend to alter this if needed
 function createPatientRow(patient: Patient, rowIndex: number): PatientRow {
   return {
     id: rowIndex,
     content: {
-      roomNo: patient.roomNo,
+      roomNo: patient.roomNo ? patient.roomNo : '-',
       name: `${patient.firstName} ${patient.lastName}`,
       dob: dayjs(patient.dob).tz().format('DD/MM/YYYY'),
-      gender: patient.gender,
+      gender:
+        patient.gender === 'Male' || patient.gender === 'Female'
+          ? patient.gender.charAt(0).toUpperCase()
+          : 'O', // O for Other, TODO: backend let me know if gender is a dropdown or free text, change this logic accordingly
       nhi: patient.nhi,
       dateAdmitted: dayjs(patient.dateAdmitted).tz().format('DD/MM/YYYY'),
       nurse: patient.nurse,
@@ -138,7 +140,7 @@ function createPatientRow(patient: Patient, rowIndex: number): PatientRow {
   };
 }
 
-// sample patient data - TODO: backend replace this with actual data
+// sample patient data, what is expected from backend - TODO: backend replace this with actual data
 export const patients: Patient[] = [
   {
     id: '1',
@@ -146,7 +148,7 @@ export const patients: Patient[] = [
     firstName: 'Jane',
     lastName: 'Doe',
     dob: '1990-10-02T00:00:00.000Z',
-    gender: 'M',
+    gender: 'Female',
     nhi: 'ABC1234',
     dateAdmitted: '1990-10-02T00:00:00.000Z',
     nurse: 'Noah Brown',
@@ -155,11 +157,11 @@ export const patients: Patient[] = [
   },
   {
     id: '2',
-    roomNo: '102',
+    roomNo: '',
     firstName: 'John',
     lastName: 'Smith',
     dob: '1985-04-15T00:00:00.000Z',
-    gender: 'M',
+    gender: 'Male',
     nhi: 'XYZ5678',
     dateAdmitted: '2023-06-20T00:00:00.000Z',
     nurse: 'Jane Brown',
