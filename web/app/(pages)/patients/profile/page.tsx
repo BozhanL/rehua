@@ -130,7 +130,7 @@ export default function PatientProfilePage(): JSX.Element {
         </div>
 
         {/* tabs: patient documents + observations */}
-        <div className="pt-4">
+        <div className="overflow-x-auto pt-4">
           <Tabs
             tabs={[
               {
