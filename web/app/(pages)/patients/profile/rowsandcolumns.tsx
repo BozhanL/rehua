@@ -28,7 +28,10 @@ export interface PatientListInformation {
   allergies: string; // if empty = frontend will display "None"
 }
 
-// TODO backend - replace this with fetched data from the backend
+// TODO: backend replace this info with currently logged in user's group (nurse or admin)
+const group: 'nurse' | 'admin' = 'admin';
+
+// TODO: backend - replace this with fetched data from the backend
 export const patient: PatientListInformation = {
   firstName: 'Tama',
   lastName: 'Manaaki',
@@ -69,12 +72,18 @@ export const PatientListRows: ListRow[] = [
     heading: 'Status',
     content: <MiniLabel name={patient.status} height={34} />,
   },
-  {
-    heading: 'Time of Death',
-    content: patient.timeOfDeath
-      ? dayjs(patient.timeOfDeath).tz().format('DD/MM/YYYY, hh:mm A')
-      : '',
-  },
+  // TODO: backend remove this lint rule disabling once the backend is implemented
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  ...(group === 'admin' && patient.status === 'deceased'
+    ? [
+        {
+          heading: 'Time of Death',
+          content: patient.timeOfDeath
+            ? dayjs(patient.timeOfDeath).tz().format('DD/MM/YYYY, hh:mm A')
+            : '',
+        },
+      ]
+    : []),
   { heading: 'Address', content: patient.address },
   { heading: 'Funding', content: patient.funding },
   { heading: 'Email', content: patient.email },
