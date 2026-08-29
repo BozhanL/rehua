@@ -4,6 +4,9 @@ import MiniLabel, {
 } from '@/app/components/common/MiniLabel';
 import dayjs from '@/app/utils/dayjs';
 
+// TODO: backend replace this info with currently logged in user's group (nurse or admin)
+const group: 'nurse' | 'admin' = 'admin';
+
 // interface to enforce and define the structure of the patient information
 export interface PatientListInformation {
   firstName: string;
@@ -27,9 +30,6 @@ export interface PatientListInformation {
   ethnicity: string;
   allergies: string; // if empty = frontend will display "None"
 }
-
-// TODO: backend replace this info with currently logged in user's group (nurse or admin)
-const group: 'nurse' | 'admin' = 'admin';
 
 // TODO: backend - replace this with fetched data from the backend
 export const patient: PatientListInformation = {
