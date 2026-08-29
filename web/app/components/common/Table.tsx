@@ -43,6 +43,7 @@ function Table<T extends TableRow>({
                 style={{
                   width: columnWidths[columns.indexOf(column)],
                   textAlign: contentAlignments[columns.indexOf(column)],
+                  justifyItems: contentAlignments[columns.indexOf(column)],
                 }}
               >
                 {column.header /* display column header text */}
