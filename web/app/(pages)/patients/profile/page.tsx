@@ -1,27 +1,22 @@
 'use client';
+import { PatientListRows, patient } from './rowsandcolumns';
 import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';
+import ListView from '@/app/components/common/ListView';
 import Surface from '@/app/components/common/Surface';
+import dayjs from '@/app/utils/dayjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-// import { useSearchParams } from 'next/navigation';
 import type { JSX } from 'react';
 
-// TODO backend to replace this with fetched data
-const user = {
-  fullName: 'Tama Manaaki',
-  dateOfBirth: '02/10/1990',
-  address: '247 Whitaker Street, Some City 3320',
-  photoUrl: null, // should be string | null, path to the photo if available, otherwise null
-};
+// import { useSearchParams } from 'next/navigation';
+// TODO: backend - variables to get patientId from the URL query parameters, may be used by backend (?)
+// const searchParams = useSearchParams();
+// const patientId = searchParams.get('id');
 
 // TODO frontend - handle button clicks to edit patient info and view emergency contacts
 
 export default function PatientProfilePage(): JSX.Element {
-  // TODO: backend - variables to get patientId from the URL query parameters, may be used by backend (?)
-  // const searchParams = useSearchParams();
-  // const patientId = searchParams.get('id');
-
   const router = useRouter();
 
   return (
@@ -30,8 +25,7 @@ export default function PatientProfilePage(): JSX.Element {
         {/* page back button and title */}
         <div
           className="
-            sticky top-0 z-20 flex min-w-max items-center gap-6 bg-rehua-white
-            px-6 pt-6 pb-5
+            flex min-w-max items-center gap-6 bg-rehua-white px-6 pt-6 pb-5
           "
         >
           <button
@@ -51,7 +45,7 @@ export default function PatientProfilePage(): JSX.Element {
 
         {/* patient photo + important patient information */}
         <div className="mx-6 overflow-x-auto">
-          <div className="flex w-max min-w-full shrink-0 items-center gap-8">
+          <div className="flex min-w-full shrink-0 items-center gap-8">
             {/* patient photo, if no url is provided just show a default gray rectangle */}
             <div
               className="
@@ -62,10 +56,10 @@ export default function PatientProfilePage(): JSX.Element {
             >
               {
                 // TODO: backend - ignore this until backend is completed to provide a photoUrl for the patient
-                user.photoUrl ? (
+                patient.photoUrl ? (
                   <Image
-                    src={user.photoUrl}
-                    alt={`${user.fullName} profile photo`}
+                    src={patient.photoUrl}
+                    alt={`${patient.firstName} ${patient.lastName} profile photo`}
                     fill
                     className="object-cover"
                   />
@@ -82,19 +76,20 @@ export default function PatientProfilePage(): JSX.Element {
               <div className="flex flex-col gap-4 text-xl">
                 <div className="flex gap-3">
                   <span className="font-medium">
-                    <b>Full Name:</b> {user.fullName}
+                    <b>Full Name:</b> {patient.firstName} {patient.lastName}
                   </span>
                 </div>
 
                 <div className="flex gap-3">
                   <span className="font-medium">
-                    <b>Date of Birth:</b> {user.dateOfBirth}
+                    <b>Date of Birth: </b>
+                    {dayjs(patient.dateOfBirth).tz().format('DD/MM/YYYY')}
                   </span>
                 </div>
 
                 <div className="flex gap-3">
                   <span className="font-medium">
-                    <b>Address:</b> {user.address}
+                    <b>Address:</b> {patient.address}
                   </span>
                 </div>
               </div>
@@ -124,6 +119,11 @@ export default function PatientProfilePage(): JSX.Element {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* patient information list */}
+        <div className="pt-4">
+          <ListView rows={PatientListRows} insidePadding="px-8" />
         </div>
       </Surface>
     </div>
