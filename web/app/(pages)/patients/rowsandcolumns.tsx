@@ -126,10 +126,10 @@ function createPatientRow(patient: Patient, rowIndex: number): PatientRow {
     content: {
       roomNo: patient.roomNo,
       name: `${patient.firstName} ${patient.lastName}`,
-      dob: dayjs(patient.dob).format('DD/MM/YYYY'),
+      dob: dayjs(patient.dob).tz().format('DD/MM/YYYY'),
       gender: patient.gender,
       nhi: patient.nhi,
-      dateAdmitted: dayjs(patient.dateAdmitted).format('DD/MM/YYYY'),
+      dateAdmitted: dayjs(patient.dateAdmitted).tz().format('DD/MM/YYYY'),
       nurse: patient.nurse,
       status: <MiniLabel name={patient.status} />,
       funding: patient.funding,
