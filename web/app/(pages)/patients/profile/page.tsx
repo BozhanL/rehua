@@ -97,10 +97,10 @@ export default function PatientProfilePage(): JSX.Element {
               </div>
 
               {/* buttons */}
-              <div className="flex gap-4">
+              <div className="flex gap-6">
                 <ContentButton
                   text1="Edit Info"
-                  iconProps={{ name: 'pencil' }}
+                  iconProps={{ name: 'pencil', width: 0.8 }}
                   iconPosition="right"
                   horizontalPadding={0.5}
                   textIconGap={0.3}
@@ -112,6 +112,7 @@ export default function PatientProfilePage(): JSX.Element {
                   text1="Emergency"
                   text2="Contacts"
                   textAlign="left"
+                  lineHeight={1.2}
                   iconProps={{ name: 'access' }}
                   iconPosition="right"
                   verticalPadding={0.2}
