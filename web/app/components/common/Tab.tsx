@@ -51,8 +51,8 @@ function Tabs({ tabs, textClassName }: Readonly<TabsProps>): JSX.Element {
                 setActiveTab(index);
               }}
               className={`
-                flex flex-none items-center justify-center gap-3 py-3
-                transition-colors
+                flex flex-none cursor-pointer items-center justify-center gap-3
+                py-3 transition-colors
                 ${
                   isActive
                     ? 'bg-rehua-navy text-rehua-white'
