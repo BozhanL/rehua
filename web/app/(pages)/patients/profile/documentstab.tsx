@@ -58,6 +58,9 @@ const allTags: DocumentTag[] = [
   { id: 'mobility', name: 'Mobility' },
   { id: 'nutrition', name: 'Nutrition' },
   { id: 'wound-care', name: 'Wound Care' },
+  { id: 'medication', name: 'Medication' },
+  { id: 'mental-health', name: 'Mental Health' },
+  { id: 'hygiene', name: 'Hygiene' },
 ];
 
 // TODO: backend to return all documents for the current patient
@@ -279,17 +282,21 @@ export function PatientDocumentsList(): JSX.Element {
   );
 
   return (
-    <div className="flex flex-col gap-5">
-      {/* documents tab toolbar */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-65 flex-1">
+    <>
+      <div className="gap-3.5 overflow-x-auto px-6 py-5">
+        <div className="flex min-w-full items-center justify-between gap-4">
           <DropdownBar
             options={tags.map((tag) => tag.name)}
             selectedValues={selectedFilterTags.map(
               (tagId) => tags.find((tag) => tag.id === tagId)?.name ?? tagId,
             )}
             multiple={true}
+            search={true}
+            size={18}
+            width={450}
+            lengthOfDropdown={200}
             defaultText="Filter by tags . . ."
+            style={{ backgroundColor: 'bg-rehua-jordy' }}
             onChange={(selectedNames) => {
               const selectedIds = tags
                 .filter((tag) => selectedNames.includes(tag.name))
@@ -297,62 +304,71 @@ export function PatientDocumentsList(): JSX.Element {
               setSelectedFilterTags(selectedIds);
             }}
           />
+
+          <div className="shrink-0">
+            <SingleLineInput
+              type="text"
+              value={newTagName}
+              placeholder="Enter new tag label here . . ."
+              style={{ width: 450, height: 40, fontSize: 18 }}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                setNewTagName(event.currentTarget.value);
+              }}
+            />
+          </div>
+          <div className="shrink-0 gap-3">
+            <ContentButton
+              text1="Add"
+              text2="New Tag"
+              textAlign="left"
+              lineHeight={1.1}
+              textIconGap={0.4}
+              iconProps={{ name: 'pin' }}
+              iconPosition="right"
+              horizontalPadding={0.4}
+              verticalPadding={0.25}
+              backgroundColor="bg-rehua-jordy"
+              onClick={addTag}
+            />
+          </div>
+
+          <div className="ml-auto flex shrink-0 gap-5">
+            <ContentButton
+              text1="Export"
+              text2="Selected"
+              textAlign="left"
+              lineHeight={1.1}
+              iconProps={{ name: 'file' }}
+              iconPosition="right"
+              horizontalPadding={0.35}
+              verticalPadding={0.25}
+              textIconGap={0.4}
+              backgroundColor="bg-rehua-blue"
+              onClick={() => {
+                // TODO: backend export selected documents for patient
+                console.log('Export documents', selectedDocumentIds);
+              }}
+            />
+
+            <ContentButton
+              text1="Add"
+              text2="Document"
+              textAlign="left"
+              iconProps={{ name: 'plus' }}
+              iconPosition="right"
+              horizontalPadding={0.35}
+              verticalPadding={0.25}
+              textIconGap={0.4}
+              backgroundColor="bg-rehua-green"
+              onClick={() => {
+                // TODO: frontend - open modals for document creation
+                console.log('Open add document modal');
+              }}
+            />
+          </div>
         </div>
-
-        <div className="flex min-w-70 flex-1 gap-3">
-          <SingleLineInput
-            type="text"
-            value={newTagName}
-            placeholder="Enter new tag label here . . ."
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              setNewTagName(event.currentTarget.value);
-            }}
-          />
-
-          <ContentButton
-            text1="Add"
-            text2="New Tag"
-            textAlign="left"
-            iconProps={{ name: 'pin' }}
-            iconPosition="right"
-            horizontalPadding={0.4}
-            backgroundColor="bg-rehua-jordy"
-            onClick={addTag}
-          />
-        </div>
-
-        <div className="flex gap-3">
-          <ContentButton
-            text1="Export"
-            text2="Selected"
-            textAlign="left"
-            iconProps={{ name: 'file' }}
-            iconPosition="right"
-            horizontalPadding={0.4}
-            backgroundColor="bg-rehua-blue"
-            onClick={() => {
-              // TODO: backend export selected documents for patient
-              console.log('Export documents', selectedDocumentIds);
-            }}
-          />
-
-          <ContentButton
-            text1="Add"
-            text2="Document"
-            textAlign="left"
-            iconProps={{ name: 'plus' }}
-            iconPosition="right"
-            horizontalPadding={0.4}
-            backgroundColor="bg-rehua-green"
-            onClick={() => {
-              // TODO: frontend - open modal
-              console.log('Open add document modal');
-            }}
-          />
-        </div>
-
-        <Table columns={documentColumns} rows={documentRows} />
       </div>
-    </div>
+      <Table columns={documentColumns} rows={documentRows} />
+    </>
   );
 }
