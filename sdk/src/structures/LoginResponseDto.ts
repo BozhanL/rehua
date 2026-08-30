@@ -1,5 +1,5 @@
 export type LoginResponseDto = {
-  userName: string;
+  username: string;
   group: 'admin' | 'nurse';
   firstName: string;
   lastName: string;
