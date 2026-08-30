@@ -27,7 +27,7 @@ export default function PatientProfilePage(): JSX.Element {
         {/* page back button and title */}
         <div
           className="
-            flex min-w-max items-center gap-6 bg-rehua-white px-6 pt-6 pb-5
+            mx-6 mt-6 mb-5 flex min-w-max items-center gap-6 bg-rehua-white
           "
         >
           <button
