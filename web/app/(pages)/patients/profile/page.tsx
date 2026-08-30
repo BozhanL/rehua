@@ -1,5 +1,5 @@
 'use client';
-import { PatientDocumentsList } from './documentstab';
+import { PatientDocuments } from './documentstab';
 import { PatientListRows, patient } from './patientlistview';
 import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';
@@ -140,7 +140,7 @@ export default function PatientProfilePage(): JSX.Element {
                   name: 'user-folder',
                   width: 35,
                 },
-                content: PatientDocumentsList(),
+                content: PatientDocuments(),
               },
               {
                 id: 'observations',
