@@ -4,18 +4,23 @@ import Icon from '@/app/components/common/Icon';
 import MiniLabel, {
   type MiniPresetLabel,
 } from '@/app/components/common/MiniLabel';
-import type { TableColumn } from '@/app/components/common/Table';
+import type { TableColumn, TableRow } from '@/app/components/common/Table';
 import {
   TableToolbar,
-  type DocumentRow,
   type DocumentTag,
 } from '@/app/components/dashboard/TableToolbar';
 import dayjs from '@/app/utils/dayjs';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState, type ChangeEvent, type JSX } from 'react';
+import {
+  useMemo,
+  useState,
+  type ChangeEvent,
+  type JSX,
+  type ReactNode,
+} from 'react';
 
 // interface for patient documents
-export interface PatientDocument {
+interface PatientDocument {
   id: string;
   name: string;
   creationDate: string; // ISO string
@@ -66,6 +71,21 @@ const initialDocuments: PatientDocument[] = [
     editDate: '2025-03-08T00:00:00.000Z',
   },
 ];
+
+// interface for table rows representing documents
+interface DocumentRow extends TableRow {
+  id: number; // unique identifier for the row
+  content: {
+    checkbox: ReactNode;
+    document: string;
+    creationDate: string;
+    state: string;
+    documentType: ReactNode;
+    tags: ReactNode;
+    editDate: string;
+    open: ReactNode;
+  };
+}
 
 // table columns for the patient documents table
 export const documentColumns: TableColumn[] = [

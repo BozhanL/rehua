@@ -5,27 +5,12 @@ import Table, {
   type TableColumn,
   type TableRow,
 } from '@/app/components/common/Table';
-import type { ChangeEvent, JSX, ReactNode } from 'react';
+import type { ChangeEvent, JSX } from 'react';
 
 // interface for document tags
 export interface DocumentTag {
   id: string;
   name: string;
-}
-
-// interface for table rows representing documents
-export interface DocumentRow extends TableRow {
-  id: number; // unique identifier for the row
-  content: {
-    checkbox: ReactNode;
-    document: string;
-    creationDate: string;
-    state: string;
-    documentType: ReactNode;
-    tags: ReactNode;
-    editDate: string;
-    open: ReactNode;
-  };
 }
 
 interface TableToolbarProps {
@@ -49,7 +34,7 @@ interface TableToolbarProps {
 
   // table columns and rows
   documentColumns: TableColumn[];
-  documentRows: DocumentRow[];
+  documentRows: TableRow[];
 }
 
 // React component for toolbar and documents table
