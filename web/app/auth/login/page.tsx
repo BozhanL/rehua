@@ -53,9 +53,9 @@ function Home(): JSX.Element {
     },
     onSuccess: () => {
       setisMFAOpen(false);
-      setPendingCreds(null); // clear creds out of memory asap
+      setPendingCreds(null); // remove credentials from memory
       setPassword('');
-      router.push('/landing'); // mock landing page for demo
+      router.push('/patients');
       setMfaError(null);
     },
   });
