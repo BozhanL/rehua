@@ -121,7 +121,7 @@ const sectionSchema = Object.freeze([
           properties: {
             enum: {
               type: 'array',
-              title: 'option',
+              title: 'Options',
               items: {
                 type: 'string',
               },
@@ -157,7 +157,7 @@ const sectionSchema = Object.freeze([
                 enum: {
                   type: 'array',
                   uniqueItems: true,
-                  title: 'option',
+                  title: 'Options',
                   items: {
                     type: 'string',
                   },

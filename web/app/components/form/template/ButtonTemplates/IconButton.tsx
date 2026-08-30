@@ -28,7 +28,7 @@ function IconButton<
     <ContentButton
       foregroundColor={foregroundColor}
       backgroundColor="bg-transparent"
-      height={13}
+      height={25}
       style={{ boxShadow: 'none' }}
       {...props}
     />
