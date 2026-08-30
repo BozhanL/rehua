@@ -20,11 +20,13 @@ export default function Home(): JSX.Element {
   return (
     <div className="flex h-dvh flex-col">
       <Surface width="100%" height="100%">
-        <EditFormPage
-          title="Make a New Template"
-          defaultSchema={defaultSchema}
-          defaultUiSchema={defaultUiSchema}
-        />
+        <div className="bg-rehua-white">
+          <EditFormPage
+            title="Make a New Template"
+            defaultSchema={defaultSchema}
+            defaultUiSchema={defaultUiSchema}
+          />
+        </div>
       </Surface>
     </div>
   );
