@@ -1,7 +1,5 @@
-import { LoginResponseDto } from './dto/login-response.dto';
-import { JwtContent } from './entities/jwt-content.entity';
-import { UserService } from '@/schema/users/user.service';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ExpressUser } from '@/utils/types';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Request } from 'express';
 import { Strategy } from 'passport-jwt';
@@ -25,7 +23,7 @@ function cookieExtractor(req: Request): string | null {
 // This strategy is used to authenticate users using their JWT token.
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
-  constructor(private readonly usersService: UserService) {
+  constructor() {
     super({
       jwtFromRequest: cookieExtractor,
       ignoreExpiration: false,
@@ -33,20 +31,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
     });
   }
 
-  async validate(payload: JwtContent): Promise<LoginResponseDto> {
-    typia.assertGuard<typeof payload>(payload);
-
-    // May have performance issues
-    const user = await this.usersService.findOne(payload.userId);
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-
-    return {
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      group: user.group,
-    };
+  validate(user: ExpressUser): ExpressUser {
+    typia.misc.assertPrune<typeof user>(user);
+    return user;
   }
 }
