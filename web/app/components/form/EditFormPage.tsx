@@ -79,11 +79,7 @@ export default function EditFormPage({
   });
 
   return (
-    <div
-      className={`
-        flex min-h-screen flex-col overflow-hidden border bg-rehua-white
-      `}
-    >
+    <>
       {/* Save Template PopUp */}
       <PopUp
         isAlertPopup
@@ -158,7 +154,7 @@ export default function EditFormPage({
         modalProps={{ open: saveEmptyFieldsPopupOpen }}
       />
 
-      <div className={`flex flex-wrap items-center gap-3 border-b px-4 py-3`}>
+      <div className={`flex flex-wrap items-center gap-3 px-4 py-3`}>
         <ContentButton
           type="button"
           iconProps={{ name: 'circle-arrow' }}
@@ -236,7 +232,7 @@ export default function EditFormPage({
         </div>
       </div>
 
-      <div className="flex flex-1 overflow-auto px-4 py-10">
+      <div className="flex flex-1 px-4 py-10">
         <FormTemplate<
           unknown,
           RJSFSchema,
@@ -259,6 +255,6 @@ export default function EditFormPage({
           className="flex w-full flex-col"
         />
       </div>
-    </div>
+    </>
   );
 }
