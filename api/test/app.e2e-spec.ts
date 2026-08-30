@@ -1,7 +1,7 @@
 import { AppModule } from '@/app.module.js';
-import type { JwtContent } from '@/auth/entities/jwt-content.entity';
 import { JWT_COOKIE_NAME } from '@/auth/jwt.strategy';
 import { User } from '@/schema/users/entities/user.entity';
+import type { ExpressUser } from '@/utils/types';
 import {
   afterAll,
   afterEach,
@@ -102,8 +102,9 @@ describe('appController (e2e)', () => {
     const userModel = app.get<Model<User>>(getModelToken(User.name));
     const user = await userModel.findOne().orFail().exec();
 
-    const payload: JwtContent = {
-      userId: user._id.toString(),
+    const payload: ExpressUser = {
+      username: user.username,
+      group: 'admin',
     };
 
     const jwtService = app.get(JwtService);
