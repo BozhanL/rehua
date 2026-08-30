@@ -24,7 +24,7 @@ export class AuthService {
 
     if (user?.password === password) {
       return {
-        username: user.username,
+        userName: user.userName,
         firstName: user.firstName,
         lastName: user.lastName,
         group: user.group,
@@ -57,7 +57,7 @@ export class AuthService {
 
   async getTotpSecret(user: ExpressUser): Promise<string | null> {
     const userData = await this.userService.findOneUserNameForAuth(
-      user.username,
+      user.userName,
     );
     if (!userData) {
       return null;

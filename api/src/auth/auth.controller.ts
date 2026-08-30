@@ -43,7 +43,7 @@ export class AuthController {
     });
 
     const user = await this.userService.findOneUserNameForAuth(
-      expressUser.username,
+      expressUser.userName,
     );
 
     if (!user) {
