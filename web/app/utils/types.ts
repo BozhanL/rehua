@@ -1,7 +1,7 @@
 import type { create as createTemplateSDK } from '@rehua/sdk/functional/templates';
 
 export enum TemplateDocumentType {
-  LoneTerm = 'Lone Term',
+  LongTerm = 'Long Term',
   ShortTerm = 'Short Term',
   Palliative = 'Palliative',
   Daycare = 'Daycare',

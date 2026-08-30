@@ -61,7 +61,7 @@ describe('templatesService', () => {
 
     const argument: CreateTemplateDto = {
       templateName: 'testtest',
-      templateType: [TemplateType.LoneTerm],
+      templateType: [TemplateType.LongTerm],
       schema: {},
       uiSchema: {},
     };

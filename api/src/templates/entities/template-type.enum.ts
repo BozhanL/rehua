@@ -1,5 +1,5 @@
 export enum TemplateType {
-  LoneTerm = 'Lone Term',
+  LongTerm = 'Long Term',
   ShortTerm = 'Short Term',
   Palliative = 'Palliative',
   Daycare = 'Daycare',

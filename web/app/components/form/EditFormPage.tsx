@@ -141,7 +141,7 @@ export default function EditFormPage({
       <PopUp
         isAlertPopup
         text1={
-          'Please fill in the template name and select at least one template type before saving.'
+          'Please fill in the template name and \nselect at least one template type before saving.'
         }
         button1Props={{
           onClick: () => {
