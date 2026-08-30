@@ -163,7 +163,6 @@ function DropdownBar<T extends string = string>({
             {/* Render search box if specified */}
             {search && (
               <input
-                autoFocus // Auto focus search bar when dropdown opens
                 type="text"
                 value={query}
                 onChange={(e) => {
