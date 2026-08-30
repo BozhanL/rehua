@@ -1,5 +1,5 @@
 export type User_idstring = {
-  username: string;
+  userName: string;
   firstName: string;
   lastName: string;
   password: string;
@@ -13,7 +13,7 @@ export type User_idstring = {
 };
 export namespace User_idstring {
   export type o1 = {
-    username: string;
+    userName: string;
     firstName: string;
     lastName: string;
     password: string;
@@ -26,7 +26,7 @@ export namespace User_idstring {
     _id: string;
   };
   export type o2 = {
-    username: string;
+    userName: string;
     firstName: string;
     lastName: string;
     password: string;
@@ -39,7 +39,7 @@ export namespace User_idstring {
     _id: string;
   };
   export type o3 = {
-    username: string;
+    userName: string;
     firstName: string;
     lastName: string;
     password: string;

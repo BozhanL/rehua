@@ -6,7 +6,7 @@ export type UserDocument = HydratedDocument<User>;
 @Schema()
 export class User {
   @Prop({ required: true, unique: true })
-  username: string;
+  userName: string;
 
   @Prop({ required: true })
   firstName: string;
@@ -36,7 +36,7 @@ export class User {
   group: 'admin' | 'nurse';
 
   constructor(
-    username: string,
+    userName: string,
     firstName: string,
     lastName: string,
     password: string,
@@ -47,7 +47,7 @@ export class User {
     address: string,
     group: 'admin' | 'nurse',
   ) {
-    this.username = username;
+    this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
     this.password = password;

@@ -1,6 +1,6 @@
 import type { User } from '@/schema/users/entities/user.entity';
 
-export type ExpressUser = Pick<User, 'username' | 'group'>;
+export type ExpressUser = Pick<User, 'userName' | 'group'>;
 
 declare module 'express' {
   interface Request {
