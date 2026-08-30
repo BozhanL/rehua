@@ -1,5 +1,5 @@
 export type UpdateUserDto = {
-  username?: undefined | string;
+  userName?: undefined | string;
   firstName?: undefined | string;
   lastName?: undefined | string;
   password?: undefined | string;

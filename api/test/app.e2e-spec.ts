@@ -103,7 +103,7 @@ describe('appController (e2e)', () => {
     const user = await userModel.findOne().orFail().exec();
 
     const payload: ExpressUser = {
-      username: user.username,
+      userName: user.userName,
       group: 'admin',
     };
 
