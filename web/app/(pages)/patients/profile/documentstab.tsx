@@ -1,30 +1,18 @@
 'use client';
-import ContentButton from '@/app/components/common/ContentButton';
 import DropdownBar from '@/app/components/common/DropdownBar';
 import Icon from '@/app/components/common/Icon';
 import MiniLabel, {
   type MiniPresetLabel,
 } from '@/app/components/common/MiniLabel';
-import SingleLineInput from '@/app/components/common/SingleLineInput';
-import Table, {
-  type TableColumn,
-  type TableRow,
-} from '@/app/components/common/Table';
+import type { TableColumn } from '@/app/components/common/Table';
+import {
+  TableToolbar,
+  type DocumentRow,
+  type DocumentTag,
+} from '@/app/components/dashboard/TableToolbar';
 import dayjs from '@/app/utils/dayjs';
 import { useRouter } from 'next/navigation';
-import {
-  useMemo,
-  useState,
-  type ChangeEvent,
-  type JSX,
-  type ReactNode,
-} from 'react';
-
-// interface for document tags
-export interface DocumentTag {
-  id: string;
-  name: string;
-}
+import { useMemo, useState, type ChangeEvent, type JSX } from 'react';
 
 // interface for patient documents
 export interface PatientDocument {
@@ -35,21 +23,6 @@ export interface PatientDocument {
   documentType: MiniPresetLabel;
   tagIds: string[];
   editDate: string | null; // ISO string or null
-}
-
-// interface for table rows representing documents
-interface DocumentRow extends TableRow {
-  id: number; // unique identifier for the row
-  content: {
-    checkbox: ReactNode;
-    document: string;
-    creationDate: string;
-    state: string;
-    documentType: ReactNode;
-    tags: ReactNode;
-    editDate: string;
-    open: ReactNode;
-  };
 }
 
 // TODO: backend to return all tags in the system
@@ -167,7 +140,7 @@ function DocumentViewButton({
 }
 
 // React component to display the whole documents tab for a patient
-export function PatientDocumentsList(): JSX.Element {
+export function PatientDocuments(): JSX.Element {
   // TODO: backend replace patientId with current patient's id
   const patientId = '123';
 
@@ -298,98 +271,32 @@ export function PatientDocumentsList(): JSX.Element {
   );
 
   return (
-    <>
-      <div className="gap-3.5 overflow-x-auto">
-        <div className="flex min-w-full items-center justify-between gap-4 p-5">
-          <DropdownBar
-            options={tags.map((tag) => tag.name)}
-            selectedValues={selectedFilterTags.map(
-              (tagId) => tags.find((tag) => tag.id === tagId)?.name ?? tagId,
-            )}
-            multiple={true}
-            search={true}
-            size={18}
-            width={450}
-            lengthOfDropdown={200}
-            defaultText="Filter by tags . . ."
-            style={{ backgroundColor: 'bg-rehua-jordy' }}
-            onChange={(selectedNames) => {
-              const selectedIds = tags
-                .filter((tag) => selectedNames.includes(tag.name))
-                .map((tag) => tag.id);
-              setSelectedFilterTags(selectedIds);
-            }}
-          />
-
-          <div className="shrink-0">
-            <SingleLineInput
-              type="text"
-              value={newTagName}
-              placeholder="Enter new tag label here . . ."
-              style={{ width: 450, height: 40, fontSize: 18 }}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                setNewTagName(event.currentTarget.value);
-              }}
-            />
-          </div>
-          <div className="shrink-0 gap-3">
-            <ContentButton
-              text1="Add"
-              text2="New Tag"
-              textAlign="left"
-              lineHeight={1.1}
-              textIconGap={0.4}
-              iconProps={{ name: 'pin', width: 0.9 }}
-              iconPosition="right"
-              horizontalPadding={0.4}
-              verticalPadding={0.25}
-              backgroundColor="bg-rehua-jordy"
-              onClick={addTag}
-            />
-          </div>
-
-          <div className="ml-auto flex shrink-0 gap-5">
-            <ContentButton
-              text1="Export"
-              text2="Selected"
-              textAlign="left"
-              lineHeight={1.1}
-              iconProps={{ name: 'file', width: 0.8 }}
-              iconPosition="right"
-              horizontalPadding={0.35}
-              verticalPadding={0.25}
-              textIconGap={0.4}
-              backgroundColor="bg-rehua-blue"
-              onClick={() => {
-                // TODO: backend export selected documents for patient
-                console.log('Export documents', selectedDocumentIds);
-              }}
-            />
-
-            <ContentButton
-              text1="Add"
-              text2="Document"
-              textAlign="left"
-              iconProps={{ name: 'plus', width: 0.9 }}
-              iconPosition="right"
-              lineHeight={1.1}
-              horizontalPadding={0.35}
-              verticalPadding={0.25}
-              textIconGap={0.4}
-              backgroundColor="bg-rehua-green"
-              onClick={() => {
-                // TODO: frontend - open modals for document creation
-                console.log('Open add document modal');
-              }}
-            />
-          </div>
-        </div>
-      </div>
-      <div className="overflow-x-auto">
-        <div className="min-w-350">
-          <Table columns={documentColumns} rows={documentRows} />
-        </div>
-      </div>
-    </>
+    <TableToolbar
+      filterOptions={tags.map((tag) => tag.name)}
+      selectedFilterValues={selectedFilterTags.map(
+        (tagId) => tags.find((tag) => tag.id === tagId)?.name ?? tagId,
+      )}
+      onFilterChange={(selectedNames) => {
+        const selectedIds = tags
+          .filter((tag) => selectedNames.includes(tag.name))
+          .map((tag) => tag.id);
+        setSelectedFilterTags(selectedIds);
+      }}
+      inputValue={newTagName}
+      onInputChange={(event: ChangeEvent<HTMLInputElement>) => {
+        setNewTagName(event.currentTarget.value);
+      }}
+      onAddTag={addTag}
+      onExport={() => {
+        // TODO: backend export selected documents for patient
+        console.log('Export documents', selectedDocumentIds);
+      }}
+      onAddDocument={() => {
+        // TODO: frontend - open modals for document creation
+        console.log('Open add document modal');
+      }}
+      documentColumns={documentColumns}
+      documentRows={documentRows}
+    />
   );
 }
