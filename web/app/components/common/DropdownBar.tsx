@@ -1,7 +1,8 @@
 'use client';
 import { useDropdown } from '../../hooks/useDropdown';
 import Icon from './Icon';
-import React, { type JSX } from 'react';
+import React, { useEffect, useState, type JSX } from 'react';
+import { createPortal } from 'react-dom';
 
 interface DropdownProps<T extends string = string> {
   options: T[]; // list of options to select
@@ -44,6 +45,7 @@ function DropdownBar<T extends string = string>({
     listBoxRef,
     buttonRefs,
     wrapperRef,
+    portalRef,
     handleKeyPress,
     handleOptionClick,
     toggleOpen,
@@ -55,6 +57,44 @@ function DropdownBar<T extends string = string>({
     multiple,
     search,
   });
+
+  // position of the dropdown menu relative to the viewport
+  const [menuPosition, setMenuPosition] = useState({
+    top: 0,
+    left: 0,
+  });
+
+  // update the position of the dropdown menu when the dropdown is open and the wrapperRef is available
+  useEffect(() => {
+    if (!isOpen || !wrapperRef.current) {
+      return;
+    }
+
+    function updateMenuPosition(): void {
+      const rect = wrapperRef.current?.getBoundingClientRect();
+
+      if (!rect) {
+        return;
+      }
+
+      setMenuPosition({
+        top: rect.bottom,
+        left: rect.left,
+      });
+    }
+
+    // set initial position when dropdown opens
+    updateMenuPosition();
+
+    // keep the dropdown aligned through resizing and scrolling
+    window.addEventListener('scroll', updateMenuPosition, true);
+    window.addEventListener('resize', updateMenuPosition);
+
+    return (): void => {
+      window.removeEventListener('scroll', updateMenuPosition, true);
+      window.removeEventListener('resize', updateMenuPosition);
+    };
+  }, [isOpen, wrapperRef]);
 
   const fontSize = size;
   const iconSize = Math.round(size * 0.6);
@@ -95,105 +135,115 @@ function DropdownBar<T extends string = string>({
       </button>
 
       {/* options in dropdown bar  (list of buttons) */}
-      {isOpen && (
-        <div
-          tabIndex={0}
-          ref={listBoxRef}
-          onKeyDown={(e) => {
-            handleKeyPress(e);
-          }}
-          className="
-            absolute top-full left-0 z-10 overflow-x-hidden overflow-y-auto
-            bg-rehua-white shadow-md outline-none
-          "
-          style={{
-            maxHeight: lengthOfDropdown,
-          }}
-        >
-          {/* Render search box if specified */}
-          {search && (
-            <input
-              autoFocus // Auto focus search bar when dropdown opens
-              type="text"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-              }}
-              style={{
-                width: width,
-                fontSize: fontSize,
-              }}
-              placeholder="Search..."
-              className="w-full p-2 outline-none"
-            />
-          )}
-          {/* buttons (dropdown options) */}
-          {filteredOptions.length === 0 ? (
-            <div
-              className="px-2 text-rehua-dark-gray"
-              style={{ paddingBlock: paddingY, fontSize: fontSize }}
-            >
-              No results
-            </div>
-          ) : (
-            // each option as a button
-            filteredOptions.map((option, index) => {
-              const isSelected = selectedValues.includes(option);
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  className={`
-                    flex w-full items-center gap-2 outline-none
-                    ${isSelected && !multiple ? selectedColor : ''}
-                    ${(multiple || !isSelected) && activeIndex === index ? 'bg-rehua-light-gray' : ''}
-                  `}
-                  // set logical reference to each new button for keyboard interaction
-                  ref={(e) => {
-                    buttonRefs.current[index] = e;
-                  }}
-                  style={{
-                    width: width,
-                    textAlign: textAlign,
-                  }}
-                  onClick={() => {
-                    handleOptionClick(option);
-                  }}
-                >
-                  {/*  checkboxes to denote selection (only for multiple dropdowns) */}
-                  {multiple && (
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      readOnly // selection is driven by the parent button's onClick, not this input directly
-                      tabIndex={-1} // keep it out of tab order; keyboard nav already handled by handleKeyPress
-                      className={`
-                        shrink-0
-                        ${checkboxColor}
-                      `}
-                      style={{
-                        width: checkBoxSize,
-                        height: checkBoxSize,
-                        margin: 0,
-                      }}
-                    />
-                  )}
-                  {/* option text inside button, with padding if single input*/}
-                  <span
-                    style={{ fontSize: fontSize }}
+      {isOpen &&
+        createPortal(
+          <div
+            tabIndex={0}
+            ref={(element) => {
+              listBoxRef.current = element;
+              portalRef.current = element;
+            }}
+            onKeyDown={(e) => {
+              handleKeyPress(e);
+            }}
+            className="
+              fixed z-40 overflow-x-hidden overflow-y-auto bg-rehua-white
+              shadow-md outline-none
+            "
+            style={{
+              top: menuPosition.top,
+              left: menuPosition.left,
+              maxHeight: lengthOfDropdown,
+            }}
+          >
+            {/* Render search box if specified */}
+            {search && (
+              <input
+                autoFocus // Auto focus search bar when dropdown opens
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                }}
+                style={{
+                  width: width,
+                  fontSize: fontSize,
+                }}
+                placeholder="Search..."
+                className="w-full p-2 outline-none"
+              />
+            )}
+
+            {/* buttons (dropdown options) */}
+            {filteredOptions.length === 0 ? (
+              <div
+                className="px-2 text-rehua-dark-gray"
+                style={{ paddingBlock: paddingY, fontSize: fontSize }}
+              >
+                No results
+              </div>
+            ) : (
+              // each option as a button
+              filteredOptions.map((option, index) => {
+                const isSelected = selectedValues.includes(option);
+
+                return (
+                  <button
+                    key={option}
+                    type="button"
                     className={`
-                      truncate
-                      ${!multiple ? 'pl-2' : ''}
-                    `}
+                      flex w-full items-center gap-2 outline-none
+                      ${isSelected && !multiple ? selectedColor : ''}
+                      ${(multiple || !isSelected) && activeIndex === index ? 'bg-rehua-light-gray' : ''}
+              `}
+                    // set logical reference to each new button for keyboard interaction
+                    ref={(e) => {
+                      buttonRefs.current[index] = e;
+                    }}
+                    style={{
+                      width: width,
+                      textAlign: textAlign,
+                    }}
+                    onClick={() => {
+                      handleOptionClick(option);
+                    }}
                   >
-                    {option}
-                  </span>
-                </button>
-              );
-            })
-          )}
-        </div>
-      )}
+                    {/* checkboxes to denote selection (only for multiple dropdowns) */}
+                    {multiple && (
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        readOnly // selection is driven by the parent button's onClick, not this input directly
+                        tabIndex={-1} // keep it out of tab order; keyboard nav already handled by handleKeyPress
+                        className={`
+                          shrink-0
+                          ${checkboxColor}
+                        `}
+                        style={{
+                          width: checkBoxSize,
+                          height: checkBoxSize,
+                          margin: 0,
+                        }}
+                      />
+                    )}
+
+                    {/* option text inside button, with padding if single input */}
+                    <span
+                      style={{ fontSize: fontSize }}
+                      className={`
+                        truncate
+                        ${!multiple ? 'pl-2' : ''}
+                      `}
+                    >
+                      {option}
+                    </span>
+                  </button>
+                );
+              })
+            )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }
