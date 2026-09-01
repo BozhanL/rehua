@@ -30,13 +30,13 @@ function AddDocumentModal({
   //TODO:
   // Remove hardcoded templates when api call is implemented
   const templates = [
-    'Client Satisfactoin Questionnaire',
-    'Admission Checklist form',
+    'Client Satisfaction Questionnaire',
+    'Admission Checklist Form',
     'Admission Notifcation Form',
-    'Diabetes For',
-    'Client Satisfactoin Quesionnaire',
-    'Admission Checklist for',
-    'Admission Notifcation orm',
+    'Diabetes Test',
+    'Client Satisfactoin Questionnaire',
+    'Admission Checklist Test',
+    'Admission Notifcation Test',
     'Diabetes Form',
   ];
 
@@ -45,6 +45,15 @@ function AddDocumentModal({
         template.toLowerCase().includes(appliedQuery.toLowerCase()),
       )
     : templates;
+
+  const categoryColours = {
+    longterm: { background: 'bg-rehua-green', icon: '#399740' },
+    shortterm: { background: 'bg-rehua-blue', icon: '#2a93bd' },
+    palliative: { background: 'bg-rehua-pastel-pink', icon: '#c2515c' },
+    daycare: { background: 'bg-rehua-orange', icon: '#c25a37' },
+  } as const;
+
+  const colours = categoryColours[category as keyof typeof categoryColours];
 
   return (
     <Modal open={isOpen} surfaceProps={{ width: 650, height: 500 }}>
@@ -86,9 +95,9 @@ function AddDocumentModal({
                 height={80}
                 textIconGap={0.5}
                 style={{ width: 240 }}
-                backgroundColor="bg-rehua-green"
+                backgroundColor={categoryColours.longterm.background}
                 onClick={() => {
-                  handleSwitch('long-term');
+                  handleSwitch('longterm');
                 }}
               />
               <ContentButton
@@ -97,7 +106,7 @@ function AddDocumentModal({
                 iconPosition="right"
                 textIconGap={0.3}
                 height={80}
-                backgroundColor="bg-rehua-pastel-pink"
+                backgroundColor={categoryColours.palliative.background}
                 onClick={() => {
                   handleSwitch('palliative');
                 }}
@@ -110,9 +119,9 @@ function AddDocumentModal({
                 textIconGap={0.5}
                 height={80}
                 style={{ width: 240 }}
-                backgroundColor="bg-rehua-blue"
+                backgroundColor={categoryColours.shortterm.background}
                 onClick={() => {
-                  handleSwitch('short-term');
+                  handleSwitch('shortterm');
                 }}
               />
               <ContentButton
@@ -121,7 +130,7 @@ function AddDocumentModal({
                 iconPosition="right"
                 textIconGap={0.5}
                 height={80}
-                backgroundColor="bg-rehua-orange"
+                backgroundColor={categoryColours.daycare.background}
                 onClick={() => {
                   handleSwitch('daycare');
                 }}
@@ -181,10 +190,14 @@ function AddDocumentModal({
                       dir="ltr"
                       className="flex shrink-0 items-center gap-4 py-1"
                     >
-                      <Icon name="folder-plus" color="#399740" width={45} />
+                      <Icon
+                        name="folder-plus"
+                        color={colours.icon}
+                        width={45}
+                      />
                       <ContentButton
                         text1={template}
-                        backgroundColor="bg-rehua-green"
+                        backgroundColor={colours.background}
                         onClick={() => {
                           // handle template selection
                         }}
@@ -194,7 +207,10 @@ function AddDocumentModal({
                     </div>
                   ))
                 ) : (
-                  <span className="px-4 py-3 text-lg text-rehua-navy/60">
+                  <span
+                    dir="ltr"
+                    className="px-4 py-3 text-lg text-rehua-navy/60"
+                  >
                     No templates found.
                   </span>
                 )}
