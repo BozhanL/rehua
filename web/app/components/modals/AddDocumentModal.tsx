@@ -3,12 +3,14 @@ import ContentButton from '../common/ContentButton';
 import Icon from '../common/Icon';
 import Modal from '../common/Modal';
 import SingleLineInput from '../common/SingleLineInput';
+import { UploadDocumentButton } from './UploadDocumentButton';
 import { useState, type ChangeEvent, type JSX } from 'react';
 
 interface AddDocumentModalProps {
   isOpen: boolean;
   onBack: () => void; // let the parent handle the back button, matches AddMFAModal
 }
+
 function AddDocumentModal({
   isOpen,
   onBack,
@@ -17,6 +19,7 @@ function AddDocumentModal({
   const [label, setLabel] = useState<string | null>(
     'Add a New Patient Document',
   );
+  // filter templates
   const [query, setQuery] = useState<string | null>(null);
   const [appliedQuery, setAppliedQuery] = useState<string | null>(null);
 
@@ -25,6 +28,8 @@ function AddDocumentModal({
     setCategory(category);
     setLabel(label);
     setAppliedQuery(null);
+    // TODO:
+    // api call
   }
 
   //TODO:
@@ -135,18 +140,9 @@ function AddDocumentModal({
                   handleSwitch('daycare');
                 }}
               />
+              {/* file upload  */}
               <div className="col-span-2 flex justify-center">
-                <ContentButton
-                  text1="Upload"
-                  iconProps={{ name: 'file-upload', width: 0.4 }}
-                  iconPosition="right"
-                  backgroundColor="bg-rehua-jordy"
-                  height={90}
-                  textIconGap={0.3}
-                  onClick={() => {
-                    //handle upload document (pdf) similar to bozhan
-                  }}
-                />
+                <UploadDocumentButton />
               </div>
             </div>
           ) : (
