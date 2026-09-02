@@ -1,5 +1,8 @@
 import { isTesting } from '@/app/utils/env';
-import { login as loginSdk } from '@rehua/sdk/functional/auth';
+import {
+  login as loginSdk,
+  logout as logoutSdk,
+} from '@rehua/sdk/functional/auth';
 import typia from 'typia';
 
 export interface UserInfo {
@@ -24,6 +27,14 @@ export async function login({
       totpCode: typia.assert<string>(formData.get('totpCode')),
     },
   );
+}
+
+export async function logout({ host }: { host: string }): Promise<void> {
+  await logoutSdk({
+    host,
+    simulate: isTesting,
+    options: { credentials: 'include' },
+  });
 }
 
 export function sessionStorageAddUserInfo(data: loginSdk.Output): void {
