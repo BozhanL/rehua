@@ -159,7 +159,7 @@ function Graph({
           y1={yScale(value)}
           x2={width - resolvedPadding.right}
           y2={yScale(value)}
-          stroke="var(--dark-gray)"
+          className="stroke-rehua-dark-gray"
           strokeDasharray="2 2"
         />
       ))}
@@ -170,7 +170,7 @@ function Graph({
         y1={resolvedPadding.top + plotHeight}
         x2={width - resolvedPadding.right}
         y2={resolvedPadding.top + plotHeight}
-        stroke="var(--dark-gray)"
+        className="stroke-rehua-dark-gray"
         strokeDasharray="2 2"
       />
 
@@ -182,7 +182,7 @@ function Graph({
           y1={resolvedPadding.top}
           x2={xScale(hour)}
           y2={height - resolvedPadding.bottom}
-          stroke="var(--dark-gray)"
+          className="stroke-rehua-dark-gray"
           strokeDasharray="2 2"
         />
       ))}
@@ -194,7 +194,7 @@ function Graph({
           x={resolvedPadding.left - 8}
           y={yScale(value)}
           fontSize={11}
-          fill="var(--rehua-navy)"
+          className="fill-rehua-navy font-medium"
           textAnchor="end"
           dominantBaseline="middle"
         >
@@ -209,7 +209,7 @@ function Graph({
           x={xScale(hour)}
           y={height - resolvedPadding.bottom + 16}
           fontSize={10}
-          fill="var(--rehua-navy)"
+          className="fill-rehua-navy font-medium"
           textAnchor="middle"
         >
           {formatHourLabel(hour)}
@@ -221,7 +221,7 @@ function Graph({
         <path
           d={linePath}
           fill="none"
-          stroke="var(--rehua-navy)"
+          className="stroke-rehua-navy"
           strokeWidth={2}
           strokeLinejoin="round"
         />
@@ -236,8 +236,7 @@ function Graph({
               cx={xScale(point.hour)}
               cy={yScale(point.value)}
               r={5}
-              fill="#4F9AFF"
-              stroke="var(--rehua-white)"
+              className="fill-rehua-mini-opaque-navy stroke-rehua-white"
               strokeWidth={2}
             />
             <text
@@ -245,7 +244,7 @@ function Graph({
               y={yScale(point.value) - 12}
               fontSize={11}
               fontWeight={600}
-              fill="var(--rehua-navy)"
+              className="fill-rehua-navy font-medium"
               textAnchor="middle"
             >
               {formatPointValue(point.value, config.unit)}
