@@ -3,8 +3,9 @@ import PopUp from '../common/PopUp';
 import useApiUrl from '@/app/hooks/useApiUrl';
 import { isTesting } from '@/app/utils/env';
 import type { HttpError } from '@rehua/sdk';
+// TODO:
 // backend document module to be created
-import type { create } from '@rehua/sdk/functional/hello';
+import { create } from '@rehua/sdk/functional/document';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
@@ -42,7 +43,7 @@ export function UploadDocumentButton(): JSX.Element {
   return (
     <div>
       <PopUp
-        text1="The new manual has been successfully uploaded."
+        text1="The new document has been successfully uploaded."
         button1Props={{
           onClick: () => {
             setShowUploadSuccessPopup(false);
@@ -66,7 +67,7 @@ export function UploadDocumentButton(): JSX.Element {
 
       <PopUp
         isAlertPopup
-        text1={'Unable to upload the new manual.\nPlease try again.'}
+        text1={'Unable to upload the new document.\nPlease try again.'}
         button1Props={{
           onClick: () => {
             setErrorText(null);
@@ -95,7 +96,7 @@ export function UploadDocumentButton(): JSX.Element {
             },
             {
               onSuccess: () => {
-                // setShowUploadSuccessPopup(true);
+                setShowUploadSuccessPopup(true);
               },
               onError: (error: unknown) => {
                 typia.assertGuard<HttpError>(error);
