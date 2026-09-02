@@ -60,7 +60,7 @@ export class AuthController {
   refresh(
     @CurrentUser() expressUser: ExpressUser,
     @Res({ passthrough: true }) response: Response,
-  ): void {
+  ): { success: boolean } {
     const token = this.authService.signJwt(expressUser);
     response.cookie(JWT_COOKIE_NAME, token, {
       // Browser may keep session cookies even after the browser is closed, so we need to set an expiration time for the cookie
@@ -72,6 +72,22 @@ export class AuthController {
       secure: true,
       sameSite: 'strict',
     });
+
+    return { success: true };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @TypedRoute.Post('logout')
+  logout(@Res({ passthrough: true }) response: Response): { success: boolean } {
+    response.cookie(JWT_COOKIE_NAME, '', {
+      maxAge: 0,
+
+      // Secure cookie settings
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    return { success: true };
   }
 
   // TODO: remove TotpPayload type and only return the totpSecret
