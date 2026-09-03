@@ -6,6 +6,7 @@ import Table, {
   type TableColumn,
   type TableRow,
 } from '@/app/components/common/Table';
+import AddEntryModal from '@/app/components/observations/AddEntryModal';
 import Graph from '@/app/components/observations/Graph';
 import AddNoteModal from '@/app/components/observations/notes/AddNoteModal';
 import FormatNoteModal from '@/app/components/observations/notes/FormatNoteModal';
@@ -249,6 +250,9 @@ export function PatientObservations(): JSX.Element {
   // state for the new measurement input field, used for adding new numeric observations (graphable types only)
   const [newMeasurement, setNewMeasurement] = useState('');
 
+  // state for controlling the visibility of the modal for adding new non-graph observation entries (bowel/urine output)
+  const [isAddEntryModalOpen, setIsAddEntryModalOpen] = useState(false);
+
   // TODO: backend modify this and replace with the patient's observations for the selected observation type and date
   const [observations, setObservations] =
     useState<Observation_idstring[]>(DEMO_OBSERVATIONS);
@@ -297,11 +301,25 @@ export function PatientObservations(): JSX.Element {
     [notes, editingNoteId],
   );
 
-  // determine if the currently selected observation type is graphable or not, separately determine if it's running notes
+  // determine type of currently selected observation type
   const isGraphable =
     selectedObservation !== 'RUNNING_NOTES' &&
     isGraphableObservationType(selectedObservation);
   const isRunningNotes = selectedObservation === 'RUNNING_NOTES';
+  const isBowelOutput = selectedObservation === 'BOWEL_OUTPUT';
+
+  // filter the table columns to display based on the selected observation type
+  const displayedObservationColumns = observationColumns.filter((column) => {
+    if (isGraphable) {
+      return column.rowKey !== 'notes';
+    }
+
+    if (isBowelOutput) {
+      return column.rowKey !== 'measurement';
+    }
+
+    return true;
+  });
 
   // convert the filtered observations into table rows for display in the table component
   const observationRows: ObservationRow[] = useMemo(() => {
@@ -352,9 +370,18 @@ export function PatientObservations(): JSX.Element {
     setNewMeasurement('');
   }
 
-  // TODO: frontend implement this to open a modal for adding a new non-numeric observation (bowel/urine)
+  // open modal for adding a new non-numeric observation (bowel/urine)
   function handleAddNonGraphableEntry(): void {
-    // TODO: frontend implement bowel/urine entry modal opening logic
+    setIsAddEntryModalOpen(true);
+  }
+
+  // TODO: backend POST bowel/urine observation
+  function onAddNonGraphableEntry(entry: {
+    measurementValue?: number;
+    notes: string;
+  }): void {
+    console.log(entry);
+    setIsAddEntryModalOpen(false); // close modal
   }
 
   // handle dropdown change for selecting a different observation type
@@ -524,16 +551,18 @@ export function PatientObservations(): JSX.Element {
       <div className="overflow-x-auto">
         <div className="min-w-350 pb-10">
           {isRunningNotes ? (
-            <NoteList
-              notes={filteredNotes}
-              onEditFormatting={(note) => {
-                setEditingNoteId(note.noteId);
-              }}
-              onViewAuditHistory={(note) => {
-                // TODO: frontend open audit history modal
-                console.log(note.auditHistory);
-              }}
-            />
+            <div className="bg-rehua-white">
+              <NoteList
+                notes={filteredNotes}
+                onEditFormatting={(note) => {
+                  setEditingNoteId(note.noteId);
+                }}
+                onViewAuditHistory={(note) => {
+                  // TODO: frontend open audit history modal
+                  console.log(note.auditHistory);
+                }}
+              />
+            </div>
           ) : isGraphable && !showEntries ? (
             <div className="bg-rehua-white pl-10">
               <Graph
@@ -545,13 +574,7 @@ export function PatientObservations(): JSX.Element {
             </div>
           ) : (
             <Table
-              columns={
-                isGraphable
-                  ? observationColumns.filter(
-                      (column) => column.rowKey !== 'notes',
-                    )
-                  : observationColumns
-              }
+              columns={displayedObservationColumns}
               rows={observationRows}
             />
           )}
@@ -576,6 +599,18 @@ export function PatientObservations(): JSX.Element {
             setEditingNoteId(null);
           }}
           onSave={handleSaveFormatting}
+        />
+      )}
+
+      {/* modal for adding new non-graphable observation entries (bowel/urine output) */}
+      {!isGraphable && selectedObservation !== 'RUNNING_NOTES' && (
+        <AddEntryModal
+          open={isAddEntryModalOpen}
+          observationType={selectedObservation} // render slight changes depending on current observation type
+          onClose={() => {
+            setIsAddEntryModalOpen(false);
+          }}
+          onAdd={onAddNonGraphableEntry}
         />
       )}
     </>
