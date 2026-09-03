@@ -1,11 +1,11 @@
 'use client';
 
 import DropdownBar from '@/app/components/common/DropdownBar';
-import Graph from '@/app/components/common/Graph';
+import Graph from '@/app/components/observations/Graph';
 import {
   OBSERVATION_GRAPH_CONFIG,
   type GraphableObservationType,
-} from '@/app/components/common/observation-graph.config';
+} from '@/app/components/observations/observation-graph.config';
 import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
 import { useState, type JSX } from 'react';
 
