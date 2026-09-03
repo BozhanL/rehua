@@ -15,9 +15,9 @@ function VersionHistoryModal({
   historyEntries,
 }: Readonly<VersionHistoryModalProps>): JSX.Element {
   return (
-    <Modal open={isOpen} surfaceProps={{ width: 1500, height: 750 }}>
+    <Modal open={isOpen} surfaceProps={{ width: '80dvw', height: '90dvh' }}>
       {/* content wrapper */}
-      <div className="flex h-full flex-col gap-8 overflow-hidden p-10">
+      <div className="flex h-full shrink-0 flex-col gap-8 overflow-auto p-10">
         {/* header row */}
         <div className="flex shrink-0 items-center gap-6">
           <button
@@ -29,7 +29,7 @@ function VersionHistoryModal({
           >
             <Icon name="circle-arrow" className="text-rehua-navy" width={62} />
           </button>
-          <Icon name="time" className="text-rehua-maroon" width={54} />
+          <Icon name="time" className="shrink-0 text-rehua-maroon" width={54} />
           <span className="text-4xl font-bold text-rehua-maroon">
             Version History
           </span>
@@ -43,6 +43,7 @@ function VersionHistoryModal({
               dir="ltr"
               className="
                 ml-10 border-b border-gray-300 py-7
+                first:pt-0
                 last:border-b
               "
             >
@@ -52,22 +53,20 @@ function VersionHistoryModal({
               <span className="block text-2xl font-extrabold text-black">
                 {entry.userName}
               </span>
-              <div className="mt-3 flex flex-col gap-2 pl-8 text-xl">
-                {entry.details.map((detail) => (
-                  <ul
-                    key={detail}
-                    className="
-                      mt-3 flex list-outside list-disc flex-col gap-2 pl-8
-                      text-2xl
-                      marker:text-black
-                    "
-                  >
-                    {entry.details.map((detail) => (
-                      <li key={detail}>{detail}</li>
-                    ))}
-                  </ul>
-                ))}
-              </div>
+              {entry.details.map((detail) => (
+                <ul
+                  key={detail}
+                  className="
+                    mt-3 flex list-outside list-disc flex-col gap-2 pl-8
+                    text-2xl
+                    marker:text-black
+                  "
+                >
+                  {entry.details.map((detail) => (
+                    <li key={detail}>{detail}</li>
+                  ))}
+                </ul>
+              ))}
             </div>
           ))}
         </ol>
