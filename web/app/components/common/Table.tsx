@@ -10,6 +10,7 @@ interface TableColumn<T extends TableRow = TableRow> {
   header: ReactNode;
   width?: number; // optional width of column in pixels, fallback to 120px
   contentAlignment?: 'left' | 'center' | 'right'; // optional alignment of column content, fallback to 'left'
+  columnClassName?: string; // optional additional class name for table column, fallback to ''
 }
 
 interface TableProps<T extends TableRow = TableRow> {
@@ -39,7 +40,10 @@ function Table<T extends TableRow>({
             {columns.map((column) => (
               <th
                 key={String(column.rowKey)}
-                className="px-4 py-3 text-lg font-bold"
+                className={`
+                  px-4 py-3 text-lg font-bold
+                  ${column.columnClassName ?? ''}
+                `}
                 style={{
                   width: columnWidths[columns.indexOf(column)],
                   textAlign: contentAlignments[columns.indexOf(column)],
@@ -78,7 +82,10 @@ function Table<T extends TableRow>({
                   columns.map((column) => (
                     <td
                       key={String(column.rowKey)}
-                      className="px-4 py-3 align-middle text-lg"
+                      className={`
+                        px-4 py-3 align-middle text-lg
+                        ${column.columnClassName ?? ''}
+                      `}
                       style={{
                         width: columnWidths[columns.indexOf(column)],
                         textAlign: contentAlignments[columns.indexOf(column)],
