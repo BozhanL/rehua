@@ -1,6 +1,7 @@
 'use client';
 
 import useFindOneTemplateOptions from '../useFindOneTemplateOptions';
+import Surface from '@/app/components/common/Surface';
 import EditFormPage from '@/app/components/form/EditFormPage';
 import type { TemplateDocumentType } from '@/app/utils/types';
 import { useQuery } from '@tanstack/react-query';
@@ -27,15 +28,21 @@ export default function Home(): JSX.Element {
   const data = findTemplate.data;
 
   return (
-    <EditFormPage
-      title="Modify Template"
+    <div className="flex h-dvh flex-col">
+      <Surface width="100%" height="100%">
+        <div className="bg-rehua-white">
+          <EditFormPage
+            title="Modify Template"
 
-      defaultTemplateName={data.templateName}
-      defaultTemplateType={typia.assert<TemplateDocumentType[]>(
-        data.templateType,
-      )}
-      defaultSchema={data.schema}
-      defaultUiSchema={data.uiSchema}
-    />
+            defaultTemplateName={data.templateName}
+            defaultTemplateType={typia.assert<TemplateDocumentType[]>(
+              data.templateType,
+            )}
+            defaultSchema={data.schema}
+            defaultUiSchema={data.uiSchema}
+          />
+        </div>
+      </Surface>
+    </div>
   );
 }
