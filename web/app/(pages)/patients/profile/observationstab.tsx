@@ -65,15 +65,14 @@ const OBSERVATION_OPTIONS: ObservationType[] = [
   'URINE_OUTPUT',
 ] as ObservationType[];
 
-// mapping of observation types to their corresponding labels
+// mapping of observation types to their dropdown/display labels
 function getObservationLabel(type: ObservationType): string {
   if (isGraphableObservationType(type)) {
-    return OBSERVATION_GRAPH_CONFIG[type].label;
+    const config = OBSERVATION_GRAPH_CONFIG[type];
+    return `${config.shortCode} - ${config.label}`;
   }
-  if (type === 'BOWEL_OUTPUT') {
-    return 'Bowel Output';
-  }
-  return 'Urine Output';
+
+  return type === 'BOWEL_OUTPUT' ? 'BO - Bowel Output' : 'UO - Urine Output';
 }
 
 // TODO: backend delete this and replace with the patient ID
@@ -409,7 +408,7 @@ export function PatientObservations(): JSX.Element {
 
       {/* main observation content; either graph or table */}
       <div className="overflow-x-auto">
-        <div className="min-w-350">
+        <div className="min-w-350 bg-rehua-white pl-10">
           {isGraphable && !showEntries ? (
             <Graph
               type={selectedObservation}
