@@ -607,7 +607,7 @@ export function PatientObservations(): JSX.Element {
       )}
 
       {/* modal for adding new non-graphable observation entries (bowel/urine output) */}
-      {!isGraphable && selectedObservation !== 'RUNNING_NOTES' && (
+      {!isGraphable && !isRunningNotes && (
         <AddEntryModal
           open={isAddEntryModalOpen}
           observationType={selectedObservation} // render slight changes depending on current observation type
