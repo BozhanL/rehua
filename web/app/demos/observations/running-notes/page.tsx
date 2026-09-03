@@ -45,7 +45,7 @@ function createDemoNote(
 /* Demo-only initial data                                                     */
 /* -------------------------------------------------------------------------- */
 
-export const INITIAL_NOTES: Note[] = [
+const INITIAL_NOTES: Note[] = [
   createDemoNote(
     'note-1',
     'Jane Smith',
