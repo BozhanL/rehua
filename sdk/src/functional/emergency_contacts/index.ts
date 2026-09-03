@@ -10,8 +10,8 @@ import type { UpdateEmergencyContactDto } from '../../structures/UpdateEmergency
 import type { mongoose } from '../../structures/mongoose';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
-import type { Resolved } from 'typia';
 import typia from 'typia';
+import type { Resolved } from 'typia';
 
 /**
  * @controller EmergencyContactController.create
@@ -23,6 +23,7 @@ export async function create(
   connection: IConnection,
   createEmergencyContactDto: create.Body,
 ): Promise<create.Output> {
+  typia.assert<typeof createEmergencyContactDto>(createEmergencyContactDto);
   return true === connection.simulate
     ? create.simulate(connection, createEmergencyContactDto)
     : PlainFetcher.fetch(
@@ -87,6 +88,7 @@ export async function findPatientEmergencyContacts(
   connection: IConnection,
   patientId: string,
 ): Promise<findPatientEmergencyContacts.Output> {
+  typia.assert<typeof patientId>(patientId);
   return true === connection.simulate
     ? findPatientEmergencyContacts.simulate(connection, patientId)
     : PlainFetcher.fetch(connection, {
@@ -139,6 +141,8 @@ export async function update(
   id: string,
   updateEmergencyContactDto: update.Body,
 ): Promise<update.Output> {
+  typia.assert<typeof id>(id);
+  typia.assert<typeof updateEmergencyContactDto>(updateEmergencyContactDto);
   return true === connection.simulate
     ? update.simulate(connection, id, updateEmergencyContactDto)
     : PlainFetcher.fetch(

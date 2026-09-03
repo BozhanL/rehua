@@ -1,5 +1,6 @@
 'use client';
 
+import ContentButton from './components/common/ContentButton';
 import Icon from './components/common/Icon';
 import { APIUrlContext } from './providers';
 import {
@@ -9,6 +10,7 @@ import {
 import { isTesting } from '@/app/utils/env';
 import { getHello } from '@rehua/sdk/functional';
 import { queryOptions, useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 import { useContext, type JSX } from 'react';
 import { functional } from 'typia';
 
@@ -39,6 +41,14 @@ function Home(): JSX.Element {
       <Icon name={'eye'} />
       <UploadManualButton />
       <ShowManualButton />
+      <Link href="/templates/create">
+        <ContentButton
+          type="button"
+          iconProps={{ name: 'circle-arrow' }}
+          text1="Create Template"
+          backgroundColor="bg-rehua-green"
+        />
+      </Link>
     </>
   );
 }

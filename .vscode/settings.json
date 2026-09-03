@@ -4,7 +4,8 @@
   },
   "files.associations": {
     "renovate.json": "jsonc",
-    "**/.github/renovate/*.json": "jsonc"
+    "**/.github/renovate/*.json": "jsonc",
+    "*.css": "tailwindcss"
   },
   "eslint.format.enable": false,
   "editor.formatOnSave": false,

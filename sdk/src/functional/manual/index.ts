@@ -7,8 +7,8 @@
 import type { CreateManualDto } from '../../structures/CreateManualDto';
 import type { FormDataInput, IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
-import type { Resolved } from 'typia';
 import typia from 'typia';
+import type { Resolved } from 'typia';
 
 export * as exists from './exists/index';
 
@@ -23,6 +23,7 @@ export async function create(
   connection: IConnection,
   _: create.Body,
 ): Promise<create.Output> {
+  typia.assert<typeof _>(_);
   return true === connection.simulate
     ? create.simulate(connection, _)
     : PlainFetcher.fetch(
