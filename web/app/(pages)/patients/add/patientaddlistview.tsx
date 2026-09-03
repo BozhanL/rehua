@@ -1,21 +1,21 @@
+import DropdownBar from '@/app/components/common/DropdownBar';
 import type { ListRow } from '@/app/components/common/ListView';
-import MiniLabel, {
+import {
+  presetLabels,
   type MiniPresetLabel,
 } from '@/app/components/common/MiniLabel';
-import dayjs from '@/app/utils/dayjs';
+import SingleLineInput from '@/app/components/common/SingleLineInput';
+import type { ChangeEvent } from 'react';
 
-// TODO: backend replace this info with currently logged in user's group (nurse or admin)
-const group: 'nurse' | 'admin' = 'admin';
-
-// interface to enforce and define the structure of the patient information
-export interface PatientListInformation {
+// interface for form data used to create a new patient
+export interface NewPatient {
   firstName: string;
   lastName: string;
   dateOfBirth: string; // ISO string
   address: string;
   photoUrl: string | null;
   nhi: string;
-  dateAdmitted: string; // ISO string
+  // dateAdmitted: string; // ISO string, not included in the form
   gpNameAndMedicalCentre: string;
   nurse: string; // fullname of nurse
   roomNumber: string; // string in case we have room numbers like "101A" or "B12"
@@ -31,71 +31,251 @@ export interface PatientListInformation {
   allergies: string; // if empty = frontend will display "None"
 }
 
-// TODO: backend - replace this with fetched data from the backend
-export const patient: PatientListInformation = {
-  firstName: 'Tama',
-  lastName: 'Manaaki',
-  dateOfBirth: '1990-10-02T00:00:00.000Z',
-  address: '247 Whitaker Street, Some City 3320',
-  photoUrl: null,
-  nhi: 'ABC6789',
-  dateAdmitted: '2024-01-01T00:00:00.000Z',
-  gpNameAndMedicalCentre: 'Dr John Smith, Some Medical Centre',
-  nurse: 'Jane Doe',
-  roomNumber: '101',
-  status: 'longTerm',
-  timeOfDeath: null,
-  funding: 'Funded',
-  email: 'tama.manaaki@example.com',
-  homePhoneNumber: '0211234567',
-  gender: 'Male',
-  primaryLanguage: 'English',
-  maritalStatus: 'Single',
-  ethnicity: 'Māori',
-  allergies: '',
-};
+// function to build the rows for the add patient form
+export function buildAddPatientRows(
+  patient: NewPatient,
+  updateField: <K extends keyof NewPatient>(
+    field: K,
+    value: NewPatient[K],
+  ) => void,
+): ListRow[] {
+  // define iconProps for required fields (asterisk icon in red)
+  const iconProps = {
+    name: 'asterisk',
+    color: 'text-rehua-red',
+  } as const;
 
-// defined rows for the ListView component to display patient information
-export const AddPatientRows: ListRow[] = [
-  { heading: 'NHI', content: patient.nhi },
-  {
-    heading: 'Date Admitted',
-    content: dayjs(patient.dateAdmitted).tz().format('DD/MM/YYYY'),
-  },
-  {
-    heading: 'GP Name & Medical Centre',
-    content: patient.gpNameAndMedicalCentre,
-  },
-  { heading: 'Nurse', content: patient.nurse },
-  { heading: 'Room Number', content: patient.roomNumber },
-  {
-    heading: 'Status',
-    content: <MiniLabel name={patient.status} height={34} />,
-  },
-  // TODO: backend remove this lint rule disabling once the backend is implemented
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  ...(group === 'admin' && patient.status === 'deceased'
-    ? [
-        {
-          heading: 'Time of Death',
-          content: patient.timeOfDeath
-            ? dayjs(patient.timeOfDeath).tz().format('DD/MM/YYYY, hh:mm A')
-            : '',
-        },
-      ]
-    : []),
-  { heading: 'Address', content: patient.address },
-  { heading: 'Funding', content: patient.funding },
-  { heading: 'Email', content: patient.email },
-  { heading: 'Home Phone Number', content: patient.homePhoneNumber },
-  { heading: 'Gender', content: patient.gender },
-  { heading: 'Primary Language', content: patient.primaryLanguage },
-  { heading: 'Marital Status', content: patient.maritalStatus },
-  { heading: 'Ethnicity', content: patient.ethnicity },
-  {
-    heading: 'Allergies',
-    content: patient.allergies || 'None',
-    redRow: true,
-    iconProps: { name: 'info-square' },
-  },
-];
+  // define the list of patient statuses for the dropdown, using preset labels
+  const newPatientStatuses = [
+    presetLabels.longTerm,
+    presetLabels.shortTerm,
+    presetLabels.daycare,
+    presetLabels.palliative,
+  ];
+
+  function statusToText(status: MiniPresetLabel): string {
+    return presetLabels[status].text;
+  }
+
+  function textToStatus(text: string): MiniPresetLabel | undefined {
+    return (
+      Object.entries(presetLabels) as [MiniPresetLabel, { text: string }][]
+    ).find(([, label]) => label.text === text)?.[0];
+  }
+
+  return [
+    {
+      heading: 'First Name',
+      content: (
+        <SingleLineInput
+          value={patient.firstName}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('firstName', event.target.value);
+          }}
+          placeholder="Enter first name"
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'Last Name',
+      content: (
+        <SingleLineInput
+          value={patient.lastName}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('lastName', event.target.value);
+          }}
+          placeholder="Enter last name"
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'Date of Birth',
+      content: (
+        <SingleLineInput
+          type="date"
+          value={patient.dateOfBirth}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('dateOfBirth', event.target.value);
+          }}
+          placeholder="Enter date of birth"
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'Address',
+      content: (
+        <SingleLineInput
+          value={patient.address}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('address', event.target.value);
+          }}
+          placeholder="Enter address"
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'NHI',
+      content: (
+        <SingleLineInput
+          value={patient.nhi}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('nhi', event.target.value);
+          }}
+          placeholder="Enter NHI"
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'GP Name & Medical Centre',
+      content: (
+        <SingleLineInput
+          value={patient.gpNameAndMedicalCentre}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('gpNameAndMedicalCentre', event.target.value);
+          }}
+          placeholder="Enter GP name and medical centre"
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'Nurse',
+      content: (
+        <DropdownBar
+          options={['Nurse 1', 'Nurse 2', 'Nurse 3']} // TODO: backend replace with all nurses in the system
+          selectedValues={[patient.nurse]}
+          defaultText="Select designated nurse name"
+          onChange={(selectedNurse) => {
+            updateField('nurse', selectedNurse[0] ?? '');
+          }}
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'Room Number',
+      content: (
+        <SingleLineInput
+          value={patient.roomNumber}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('roomNumber', event.target.value);
+          }}
+          placeholder="Enter room number"
+        />
+      ),
+    },
+    {
+      heading: 'Status',
+      content: (
+        <DropdownBar
+          options={newPatientStatuses.map((label) => label.text)}
+          selectedValues={[statusToText(patient.status)]}
+          defaultText="Select patient status"
+          onChange={(selectedStatus) => {
+            if (selectedStatus[0]) {
+              const status = textToStatus(selectedStatus[0]);
+              if (status) {
+                updateField('status', status);
+              }
+            }
+          }}
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'Email',
+      content: (
+        <SingleLineInput
+          value={patient.email}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('email', event.target.value);
+          }}
+          placeholder="Enter email address"
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'Home Phone Number',
+      content: (
+        <SingleLineInput
+          value={patient.homePhoneNumber}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('homePhoneNumber', event.target.value);
+          }}
+          placeholder="Enter home phone number"
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'Gender',
+      content: (
+        <SingleLineInput
+          value={patient.gender}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('gender', event.target.value);
+          }}
+          placeholder="Enter gender"
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'Primary Language',
+      content: (
+        <SingleLineInput
+          value={patient.primaryLanguage}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('primaryLanguage', event.target.value);
+          }}
+          placeholder="Enter primary language"
+        />
+      ),
+    },
+    {
+      heading: 'Marital Status',
+      content: (
+        <SingleLineInput
+          value={patient.maritalStatus}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('maritalStatus', event.target.value);
+          }}
+          placeholder="Enter marital status"
+        />
+      ),
+    },
+    {
+      heading: 'Ethnicity',
+      content: (
+        <SingleLineInput
+          value={patient.ethnicity}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('ethnicity', event.target.value);
+          }}
+          placeholder="Enter ethnicity"
+        />
+      ),
+      iconProps: iconProps,
+    },
+    {
+      heading: 'Allergies',
+      content: (
+        <SingleLineInput
+          value={patient.allergies}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            updateField('allergies', event.target.value);
+          }}
+          placeholder="Enter allergies"
+        />
+      ),
+      iconProps: iconProps,
+    },
+  ];
+}
