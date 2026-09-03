@@ -2,7 +2,7 @@
 
 import ContentButton from '../../../components/common/ContentButton';
 import VersionHistoryModal from '../../../components/modals/VersionHistoryModal';
-import historyEntries from './versionhistory.config';
+import historyEntries from '../../../components/modals/versionhistory.config';
 import { useState } from 'react';
 import type { JSX } from 'react';
 

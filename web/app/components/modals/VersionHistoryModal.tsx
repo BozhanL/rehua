@@ -1,6 +1,6 @@
-import type { HistoryEntry } from '../../demos/components/versionhistory/versionhistory.config';
 import Icon from '../common/Icon';
 import Modal from '../common/Modal';
+import type { HistoryEntry } from './versionhistory.config';
 import type { JSX } from 'react';
 
 interface VersionHistoryModalProps {
