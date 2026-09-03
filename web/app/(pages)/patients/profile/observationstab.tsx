@@ -7,11 +7,19 @@ import Table, {
   type TableRow,
 } from '@/app/components/common/Table';
 import Graph from '@/app/components/observations/Graph';
+import AddNoteModal from '@/app/components/observations/notes/AddNoteModal';
+import FormatNoteModal from '@/app/components/observations/notes/FormatNoteModal';
+import type {
+  Note,
+  NoteAuditEntry,
+} from '@/app/components/observations/notes/NoteList';
+import NoteList from '@/app/components/observations/notes/NoteList';
 import {
   OBSERVATION_GRAPH_CONFIG,
   type ObservationType,
   isGraphableObservationType,
 } from '@/app/components/observations/observation-graph.config';
+import { INITIAL_NOTES } from '@/app/demos/observations/running-notes/page';
 import dayjs from '@/app/utils/dayjs';
 import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
 import { useMemo, useState, type ChangeEvent, type JSX } from 'react';
@@ -58,15 +66,23 @@ const observationColumns: TableColumn[] = [
   },
 ];
 
-// all observation types, including graphable and non-graphable (bowel/urine) types
-const OBSERVATION_OPTIONS: ObservationType[] = [
+// frontend-only observation type
+type ObservationViewType = ObservationType | 'RUNNING_NOTES';
+
+// all observation views shown in the dropdown
+const OBSERVATION_OPTIONS: ObservationViewType[] = [
+  'RUNNING_NOTES',
   ...Object.keys(OBSERVATION_GRAPH_CONFIG),
   'BOWEL_OUTPUT',
   'URINE_OUTPUT',
-] as ObservationType[];
+] as ObservationViewType[];
 
 // mapping of observation types to their dropdown/display labels
-function getObservationLabel(type: ObservationType): string {
+function getObservationLabel(type: ObservationViewType): string {
+  if (type === 'RUNNING_NOTES') {
+    return 'Running Notes';
+  }
+
   if (isGraphableObservationType(type)) {
     const config = OBSERVATION_GRAPH_CONFIG[type];
     return `${config.shortCode} - ${config.label}`;
@@ -183,12 +199,16 @@ function formatMeasurement(observation: Observation_idstring): string {
 
 // React component for displaying patient's observations
 export function PatientObservations(): JSX.Element {
-  // TODO: frontend running notes component/modal state
+  // TODO: backend replace demo notes with patient's running notes for selected date
+  const [notes, setNotes] = useState<Note[]>(INITIAL_NOTES);
 
-  // TODO: frontend to change this so that the first observation is running notes
+  // running notes modal states
+  const [isAddNoteOpen, setIsAddNoteOpen] = useState(false);
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+
   // selected observation type, defaulting to the first option in OBSERVATION_OPTIONS
   const [selectedObservation, setSelectedObservation] =
-    useState<ObservationType>('OXYGEN_RATE');
+    useState<ObservationViewType>('RUNNING_NOTES');
 
   // selected date for filtering observations, defaulting to today's date
   const [selectedDate, setSelectedDate] = useState(
@@ -224,7 +244,7 @@ export function PatientObservations(): JSX.Element {
   });
 
   // map each observation label back to its observation type
-  const observationTypeByLabel: Record<string, ObservationType> =
+  const observationTypeByLabel: Record<string, ObservationViewType> =
     Object.fromEntries(
       OBSERVATION_OPTIONS.map((type) => [getObservationLabel(type), type]),
     );
@@ -234,8 +254,26 @@ export function PatientObservations(): JSX.Element {
     return getObservationLabel(selectedObservation);
   }, [selectedObservation]);
 
-  // determine if the currently selected observation type is graphable or not
-  const isGraphable = isGraphableObservationType(selectedObservation);
+  // today's running notes by default, or whichever date is selected
+  const filteredNotes = useMemo(() => {
+    return notes.filter(
+      (note) =>
+        dayjs(note.createdAt).tz().format('YYYY-MM-DD') ===
+        dayjs(selectedDate).tz().format('YYYY-MM-DD'),
+    );
+  }, [notes, selectedDate]);
+
+  // currently selected note for formatting modal
+  const editingNote = useMemo(
+    () => notes.find((note) => note.noteId === editingNoteId) ?? null,
+    [notes, editingNoteId],
+  );
+
+  // determine if the currently selected observation type is graphable or not, separately determine if it's running notes
+  const isGraphable =
+    selectedObservation !== 'RUNNING_NOTES' &&
+    isGraphableObservationType(selectedObservation);
+  const isRunningNotes = selectedObservation === 'RUNNING_NOTES';
 
   // convert the filtered observations into table rows for display in the table component
   const observationRows: ObservationRow[] = useMemo(() => {
@@ -256,10 +294,7 @@ export function PatientObservations(): JSX.Element {
   // TODO: backend modify this to make a POST request to the backend to add a new observation for the patient
   // performs frontend validation and updates the local state with the new observation
   function handleAddGraphableEntry(): void {
-    if (
-      !isGraphableObservationType(selectedObservation) ||
-      newMeasurement.trim() === ''
-    ) {
+    if (!isGraphable || newMeasurement.trim() === '') {
       return;
     }
 
@@ -289,6 +324,62 @@ export function PatientObservations(): JSX.Element {
     setNewMeasurement('');
   }
 
+  // TODO: frontend implement this to open a modal for adding a new non-numeric observation (bowel/urine)
+  function handleAddNonGraphableEntry(): void {
+    // TODO: frontend implement bowel/urine entry modal opening logic
+  }
+
+  // TODO: backend POST running note for patient
+  function handleAddRunningNote(noteInput: {
+    plainText: string;
+    html: string;
+  }): void {
+    const newNote: Note = {
+      noteId: `note-${dayjs().tz().toISOString()}-${patientId}`, // TODO: backend generate unique note ID (?)
+      authorName: 'Jane Smith', // TODO: backend use authenticated user
+      createdAt: dayjs().tz().toISOString(),
+      plainText: noteInput.plainText,
+      html: noteInput.html,
+    };
+
+    setNotes((current) => [newNote, ...current]);
+  }
+
+  // TODO: backend PATCH formatted running note + create audit entry
+  function handleSaveFormatting(auditUpdate: {
+    noteId: string;
+    formattedBy: string;
+    formattedAt: string;
+    beforeHtml: string;
+    afterHtml: string;
+  }): void {
+    setNotes((current) =>
+      current.map((note) => {
+        if (note.noteId !== auditUpdate.noteId) {
+          return note;
+        }
+
+        const auditEntry: NoteAuditEntry = {
+          auditId: `audit-${dayjs().tz().toISOString()}-${patientId}`, // TODO: backend generate unique audit ID (?)
+          formattedBy: auditUpdate.formattedBy,
+          formattedAt: auditUpdate.formattedAt,
+          beforeHtml: auditUpdate.beforeHtml,
+          afterHtml: auditUpdate.afterHtml,
+        };
+
+        return {
+          ...note,
+          html: auditUpdate.afterHtml,
+          lastFormattedBy: auditUpdate.formattedBy,
+          lastFormattedAt: auditUpdate.formattedAt,
+          auditHistory: [...(note.auditHistory ?? []), auditEntry],
+        };
+      }),
+    );
+
+    setEditingNoteId(null);
+  }
+
   // handle dropdown change for selecting a different observation type
   function handleObservationChange(selectedLabels: string[]): void {
     const selectedLabel = selectedLabels[0];
@@ -299,11 +390,6 @@ export function PatientObservations(): JSX.Element {
     if (selectedType) {
       setSelectedObservation(selectedType);
     }
-  }
-
-  // TODO: frontend implement this to open a modal for adding a new non-numeric observation (bowel/urine)
-  function handleAddNonGraphableEntry(): void {
-    // TODO: frontend implement bowel/urine entry modal opening logic
   }
 
   return (
@@ -355,9 +441,9 @@ export function PatientObservations(): JSX.Element {
             />
           </div>
 
-          {/* Keep the action controls right-aligned in both modes. */}
+          {/* input for adding new entries + view entries/graph button */}
           <div className="ml-auto flex shrink-0 items-center gap-5">
-            {isGraphable && (
+            {isGraphable && !isRunningNotes && (
               <SingleLineInput
                 type="number"
                 value={newMeasurement}
@@ -376,7 +462,9 @@ export function PatientObservations(): JSX.Element {
               textIconGap={0.3}
               verticalPadding={0.27}
               onClick={() => {
-                if (isGraphable) {
+                if (isRunningNotes) {
+                  setIsAddNoteOpen(true);
+                } else if (isGraphable) {
                   handleAddGraphableEntry();
                 } else {
                   handleAddNonGraphableEntry();
@@ -384,7 +472,7 @@ export function PatientObservations(): JSX.Element {
               }}
             />
 
-            {isGraphable && (
+            {isGraphable && !isRunningNotes && (
               <ContentButton
                 text1={showEntries ? 'Graph View' : 'See Entries'}
                 iconProps={
@@ -404,12 +492,21 @@ export function PatientObservations(): JSX.Element {
         </div>
       </div>
 
-      {/* TODO: frontend implement running notes list + modals  */}
-
-      {/* main observation content; either graph or table */}
+      {/* main observation content; either graph, table or running notes */}
       <div className="overflow-x-auto">
-        <div className="min-w-350 bg-rehua-white pl-10">
-          {isGraphable && !showEntries ? (
+        <div className="min-w-350 bg-rehua-white pb-10 pl-10">
+          {isRunningNotes ? (
+            <NoteList
+              notes={filteredNotes}
+              onEditFormatting={(note) => {
+                setEditingNoteId(note.noteId);
+              }}
+              onViewAuditHistory={(note) => {
+                // TODO: frontend open audit history modal
+                console.log(note.auditHistory);
+              }}
+            />
+          ) : isGraphable && !showEntries ? (
             <Graph
               type={selectedObservation}
               data={filteredObservations}
@@ -430,6 +527,27 @@ export function PatientObservations(): JSX.Element {
           )}
         </div>
       </div>
+
+      {/* modals for adding and formatting running notes */}
+      <AddNoteModal
+        open={isAddNoteOpen}
+        onClose={() => {
+          setIsAddNoteOpen(false);
+        }}
+        onAdd={handleAddRunningNote}
+      />
+
+      {editingNote && (
+        <FormatNoteModal
+          open={true}
+          note={editingNote}
+          currentUser="Jane Smith" // TODO: backend use authenticated user
+          onClose={() => {
+            setEditingNoteId(null);
+          }}
+          onSave={handleSaveFormatting}
+        />
+      )}
     </>
   );
 }
