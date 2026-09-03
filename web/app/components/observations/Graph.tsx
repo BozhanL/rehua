@@ -150,6 +150,7 @@ function Graph({
       height={height}
       role="img"
       aria-label={`${config.label} over 24 hours`}
+      className="bg-rehua-white"
     >
       {/* Gridlines - horizontal */}
       {yTicks.map(({ index, value }) => (
@@ -160,6 +161,7 @@ function Graph({
           x2={width - resolvedPadding.right}
           y2={yScale(value)}
           className="stroke-rehua-dark-gray"
+          strokeWidth={2}
           strokeDasharray="2 2"
         />
       ))}
@@ -183,6 +185,7 @@ function Graph({
           x2={xScale(hour)}
           y2={height - resolvedPadding.bottom}
           className="stroke-rehua-dark-gray"
+          strokeWidth={2}
           strokeDasharray="2 2"
         />
       ))}
@@ -193,8 +196,8 @@ function Graph({
           key={`label-y-${String(index)}`}
           x={resolvedPadding.left - 8}
           y={yScale(value)}
-          fontSize={11}
-          className="fill-rehua-navy font-medium"
+          fontSize={17}
+          className="fill-rehua-navy font-bold"
           textAnchor="end"
           dominantBaseline="middle"
         >
@@ -208,8 +211,8 @@ function Graph({
           key={`label-x-${String(hour)}`}
           x={xScale(hour)}
           y={height - resolvedPadding.bottom + 16}
-          fontSize={10}
-          className="fill-rehua-navy font-medium"
+          fontSize={17}
+          className="fill-rehua-navy font-bold"
           textAnchor="middle"
         >
           {formatHourLabel(hour)}
@@ -222,7 +225,7 @@ function Graph({
           d={linePath}
           fill="none"
           className="stroke-rehua-navy"
-          strokeWidth={2}
+          strokeWidth={3}
           strokeLinejoin="round"
         />
       )}
@@ -235,16 +238,15 @@ function Graph({
             <circle
               cx={xScale(point.hour)}
               cy={yScale(point.value)}
-              r={5}
+              r={7}
               className="fill-rehua-mini-opaque-navy stroke-rehua-white"
               strokeWidth={2}
             />
             <text
               x={xScale(point.hour)}
               y={yScale(point.value) - 12}
-              fontSize={11}
-              fontWeight={600}
-              className="fill-rehua-navy font-medium"
+              fontSize={18}
+              className="fill-rehua-navy font-bold"
               textAnchor="middle"
             >
               {formatPointValue(point.value, config.unit)}
