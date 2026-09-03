@@ -563,20 +563,24 @@ export function PatientObservations(): JSX.Element {
                 }}
               />
             </div>
-          ) : isGraphable && !showEntries ? (
-            <div className="bg-rehua-white pl-10">
-              <Graph
-                type={selectedObservation}
-                data={filteredObservations}
-                width={1800}
-                height={550}
-              />
-            </div>
           ) : (
-            <Table
-              columns={displayedObservationColumns}
-              rows={observationRows}
-            />
+            <>
+              {isGraphable && !showEntries ? (
+                <div className="bg-rehua-white pl-10">
+                  <Graph
+                    type={selectedObservation}
+                    data={filteredObservations}
+                    width={1800}
+                    height={550}
+                  />
+                </div>
+              ) : (
+                <Table
+                  columns={displayedObservationColumns}
+                  rows={observationRows}
+                />
+              )}
+            </>
           )}
         </div>
       </div>
