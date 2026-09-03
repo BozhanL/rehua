@@ -78,7 +78,6 @@ function NavigationBar({
         )}
         {/* available to all users */}
         <ShowManualButton />
-        {/* TODO: backend to implement logout button and use this snippet within <LogoutButton />  */}
         <LogoutButton />
       </div>
     </nav>
