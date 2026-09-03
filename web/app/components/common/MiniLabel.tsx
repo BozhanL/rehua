@@ -37,7 +37,7 @@ const colors = {
 };
 
 // all preset labels that can be rendered in the component
-const presetLabels = {
+export const presetLabels = {
   active: {
     text: 'Active',
     color: colors.green,
@@ -121,3 +121,4 @@ function MiniLabel({
 }
 
 export default MiniLabel;
+export type MiniPresetLabel = keyof typeof presetLabels;
