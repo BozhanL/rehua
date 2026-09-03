@@ -79,9 +79,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @TypedRoute.Post('logout')
   logout(@Res({ passthrough: true }) response: Response): { success: boolean } {
-    response.cookie(JWT_COOKIE_NAME, '', {
-      maxAge: 0,
-
+    response.clearCookie(JWT_COOKIE_NAME, {
       // Secure cookie settings
       httpOnly: true,
       secure: true,
