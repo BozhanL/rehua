@@ -19,7 +19,6 @@ import {
   type ObservationType,
   isGraphableObservationType,
 } from '@/app/components/observations/observation-graph.config';
-import { INITIAL_NOTES } from '@/app/demos/observations/running-notes/page';
 import dayjs from '@/app/utils/dayjs';
 import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
 import { useMemo, useState, type ChangeEvent, type JSX } from 'react';
@@ -184,6 +183,35 @@ const DEMO_OBSERVATIONS: Observation_idstring[] = [
   },
 ];
 
+// TODO: backend delete this with patient's running notes
+const INITIAL_NOTES: Note[] = [
+  {
+    noteId: 'note-1',
+    authorName: 'Jane Smith',
+    createdAt: dayjs()
+      .hour(8)
+      .minute(15)
+      .second(0)
+      .millisecond(0)
+      .toISOString(),
+    plainText: 'This is a test note.\n\n\nIt has multiple lines.',
+    html: '<p>This is a test note.</p><p>&nbsp;</p><p>&nbsp;</p><p>It has multiple lines.</p>',
+  },
+  {
+    noteId: 'note-2',
+    authorName: 'Jane Smith',
+    createdAt: dayjs()
+      .hour(12)
+      .minute(30)
+      .second(0)
+      .millisecond(0)
+      .toISOString(),
+    plainText:
+      'These notes are not changable.\nNurse running notes are preserved.',
+    html: '<p>These notes are not changable.</p><p>Nurse running notes are preserved.</p>',
+  },
+];
+
 // function to format the measurement value of an observation for display purposes
 // show "-" if the measurement value is undefined, otherwise show the value with its unit
 function formatMeasurement(observation: Observation_idstring): string {
@@ -329,6 +357,18 @@ export function PatientObservations(): JSX.Element {
     // TODO: frontend implement bowel/urine entry modal opening logic
   }
 
+  // handle dropdown change for selecting a different observation type
+  function handleObservationChange(selectedLabels: string[]): void {
+    const selectedLabel = selectedLabels[0];
+    if (!selectedLabel || selectedLabel === selectedObservationLabel) {
+      return;
+    }
+    const selectedType = observationTypeByLabel[selectedLabel];
+    if (selectedType) {
+      setSelectedObservation(selectedType);
+    }
+  }
+
   // TODO: backend POST running note for patient
   function handleAddRunningNote(noteInput: {
     plainText: string;
@@ -378,18 +418,6 @@ export function PatientObservations(): JSX.Element {
     );
 
     setEditingNoteId(null);
-  }
-
-  // handle dropdown change for selecting a different observation type
-  function handleObservationChange(selectedLabels: string[]): void {
-    const selectedLabel = selectedLabels[0];
-    if (!selectedLabel || selectedLabel === selectedObservationLabel) {
-      return;
-    }
-    const selectedType = observationTypeByLabel[selectedLabel];
-    if (selectedType) {
-      setSelectedObservation(selectedType);
-    }
   }
 
   return (
