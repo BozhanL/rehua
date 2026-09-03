@@ -54,7 +54,7 @@ export function sessionStorageGetUserInfo(): UserInfo {
     firstName,
     lastName,
     userName,
-    group: group === 'admin' || group === 'nurse' ? group : 'nurse',
+    group: group === 'admin' ? group : 'nurse',
   };
 }
 
