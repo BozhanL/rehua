@@ -1,5 +1,6 @@
 'use client';
 import { PatientDocuments } from './documentstab';
+import { PatientObservations } from './observationstab';
 import { PatientListRows, patient } from './patientlistview';
 import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';
@@ -149,7 +150,7 @@ export default function PatientProfilePage(): JSX.Element {
                   name: 'heart-pulse',
                   width: 35,
                 },
-                content: <p>Observations content goes here.</p>,
+                content: PatientObservations(),
               },
             ]}
           />

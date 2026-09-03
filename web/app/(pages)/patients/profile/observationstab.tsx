@@ -33,22 +33,28 @@ const observationColumns: TableColumn[] = [
   {
     rowKey: 'id',
     header: 'Entry ID',
+    width: 50,
+    columnClassName: 'pl-10',
   },
   {
     rowKey: 'date',
     header: 'Date Recorded',
+    width: 50,
   },
   {
     rowKey: 'time',
     header: 'Time Recorded',
+    width: 50,
   },
   {
     rowKey: 'measurement',
     header: 'Measurement',
+    width: 50,
   },
   {
     rowKey: 'notes',
     header: 'Notes & Description',
+    width: 50,
   },
 ];
 
@@ -165,7 +171,7 @@ function formatMeasurement(observation: Observation_idstring): string {
 }
 
 // React component for displaying patient's observations
-export default function PatientObservations(): JSX.Element {
+export function PatientObservations(): JSX.Element {
   // TODO: frontend running notes component/modal state
 
   // TODO: frontend to change this so that the first observation is running notes
@@ -238,14 +244,23 @@ export default function PatientObservations(): JSX.Element {
 
   // TODO: backend modify this to make a POST request to the backend to add a new observation for the patient
   // performs frontend validation and updates the local state with the new observation
-  function handleAddMeasurement(): void {
-    if (!isGraphable || newMeasurement.trim() === '') {
+  function handleAddGraphableEntry(): void {
+    if (
+      !isGraphableObservationType(selectedObservation) ||
+      newMeasurement.trim() === ''
+    ) {
       return;
     }
 
+    // if the measurement is not a finite number, do not add
     const measurement = Number(newMeasurement);
-
     if (!Number.isFinite(measurement)) {
+      return;
+    }
+
+    // if the measurement is outside the min/max range for the selected observation type, do not add
+    const { min, max } = OBSERVATION_GRAPH_CONFIG[selectedObservation];
+    if (measurement < min || measurement > max) {
       return;
     }
 
@@ -272,7 +287,6 @@ export default function PatientObservations(): JSX.Element {
     const selectedType = observationTypeByLabel[selectedLabel];
     if (selectedType) {
       setSelectedObservation(selectedType);
-      setShowEntries(false);
     }
   }
 
@@ -282,28 +296,33 @@ export default function PatientObservations(): JSX.Element {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="mx-5 mt-5 mb-4 overflow-x-auto">
-        <div className="flex min-w-max items-center gap-6">
+    <>
+      <div className="overflow-x-auto">
+        <div className="flex min-w-max items-center gap-6 p-5">
           {/* observation title */}
-          <span className="text-2xl font-bold">
-            {selectedObservationLabel} for{' '}
+          <span className="text-2xl font-bold text-rehua-navy">
+            {selectedObservationLabel}
+            {' for:'}
+            <br />
             {dayjs(selectedDate).tz().format('DD/MM/YYYY')}
           </span>
 
           {/* observation selector */}
-          <DropdownBar
-            options={observationLabels}
-            defaultText="Observation: "
-            width={300}
-            labelMode="prefix"
-            selectedValues={[selectedObservationLabel]}
-            onChange={handleObservationChange}
-          />
+          <div className="shrink-0">
+            <DropdownBar
+              options={observationLabels}
+              defaultText="Observation: "
+              width={450}
+              size={18}
+              labelMode="prefix"
+              selectedValues={[selectedObservationLabel]}
+              onChange={handleObservationChange}
+            />
+          </div>
 
           {/* date filter */}
           <div className="flex shrink-0 items-center gap-2">
-            <label htmlFor="observation-date" className="whitespace-nowrap">
+            <label htmlFor="observation-date" style={{ fontSize: 18 }}>
               Filter by date:
             </label>
 
@@ -312,96 +331,90 @@ export default function PatientObservations(): JSX.Element {
               type="date"
               value={selectedDate}
               onChange={(event) => {
+                // if the date input is cleared, reset to today's date
+                if (!event.target.value) {
+                  setSelectedDate(dayjs().tz().format('YYYY-MM-DD'));
+                  return;
+                }
+                // else, set the selected date to the chosen value
                 setSelectedDate(event.target.value);
-                setShowEntries(false);
               }}
               className="h-10 rounded-md border px-3"
+              style={{ fontSize: 18 }}
             />
           </div>
 
-          {/* graphable observation inputs; numeric input + add button
-              minimum and maximum values are enforced based on the selected observation type */}
-          {isGraphable && (
-            <>
+          {/* Keep the action controls right-aligned in both modes. */}
+          <div className="ml-auto flex shrink-0 items-center gap-5">
+            {isGraphable && (
               <SingleLineInput
                 autoFocus
                 type="number"
-                min={
-                  isGraphableObservationType(selectedObservation)
-                    ? OBSERVATION_GRAPH_CONFIG[selectedObservation].min
-                    : 0
-                }
-                max={
-                  isGraphableObservationType(selectedObservation)
-                    ? OBSERVATION_GRAPH_CONFIG[selectedObservation].max
-                    : undefined
-                }
                 value={newMeasurement}
                 placeholder={`Enter new measurement . . .`}
+                style={{ width: 350, height: 40, fontSize: 18 }}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   setNewMeasurement(event.currentTarget.value);
                 }}
               />
+            )}
 
-              <ContentButton
-                text1="Add Entry"
-                iconProps={{ name: 'plus' }}
-                backgroundColor="bg-rehua-green"
-                textIconGap={0.3}
-                verticalPadding={0.2}
-                onClick={() => {
-                  handleAddMeasurement();
-                }}
-              />
+            <ContentButton
+              text1="Add Entry"
+              iconProps={{ name: 'plus', width: 0.8 }}
+              backgroundColor="bg-rehua-green"
+              textIconGap={0.3}
+              verticalPadding={0.27}
+              onClick={() => {
+                if (isGraphable) {
+                  handleAddGraphableEntry();
+                } else {
+                  handleAddNonGraphableEntry();
+                }
+              }}
+            />
 
+            {isGraphable && (
               <ContentButton
                 text1={showEntries ? 'Graph View' : 'See Entries'}
-                iconProps={{ name: showEntries ? 'piechart' : 'clipboard' }}
+                iconProps={
+                  showEntries
+                    ? { name: 'piechart', width: 0.8 }
+                    : { name: 'clipboard' }
+                }
                 backgroundColor="bg-rehua-jordy"
-                textIconGap={0.3}
-                verticalPadding={0.2}
+                textIconGap={showEntries ? 0.35 : 0.3}
+                verticalPadding={showEntries ? 0.29 : 0.22}
                 onClick={() => {
                   setShowEntries((current) => !current);
                 }}
               />
-            </>
-          )}
-
-          {/* bowel/urine add button */}
-          {!isGraphable && (
-            <ContentButton
-              text1="Add Entry"
-              iconProps={{ name: 'plus' }}
-              backgroundColor="bg-rehua-green"
-              textIconGap={0.3}
-              verticalPadding={0.2}
-              onClick={() => {
-                handleAddNonGraphableEntry();
-              }}
-            />
-          )}
-
-          {/* TODO: frontend implement running notes list + modals  */}
+            )}
+          </div>
         </div>
       </div>
 
+      {/* TODO: frontend implement running notes list + modals  */}
+
       {/* main observation content; either graph or table */}
-      <div className="mx-5 overflow-x-auto">
-        {isGraphable && !showEntries ? (
-          <Graph type={selectedObservation} data={filteredObservations} />
-        ) : (
-          <Table
-            columns={
-              isGraphable
-                ? observationColumns.filter(
-                    (column) => column.rowKey !== 'notes',
-                  )
-                : observationColumns
-            }
-            rows={observationRows}
-          />
-        )}
+      <div className="overflow-x-auto">
+        <div className="min-w-350">
+          {isGraphable && !showEntries ? (
+            <Graph type={selectedObservation} data={filteredObservations} />
+          ) : (
+            <Table
+              columns={
+                isGraphable
+                  ? observationColumns.filter(
+                      (column) => column.rowKey !== 'notes',
+                    )
+                  : observationColumns
+              }
+              rows={observationRows}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
