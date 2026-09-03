@@ -13,7 +13,19 @@ export class TemplatesService {
   async create(
     createTemplateDto: CreateTemplateDto,
   ): Promise<TemplateDocument> {
-    return this.templateModel.create(createTemplateDto);
+    const version = await this.templateModel
+      .findOne({
+        templateName: createTemplateDto.templateName,
+      })
+      .sort({ version: -1 })
+      .select({ _id: 0, version: 1 })
+      .exec();
+
+    const data = new Template(
+      version ? version.version + 1 : 0,
+      createTemplateDto,
+    );
+    return this.templateModel.create(data);
   }
 
   async findOne(id: string): Promise<TemplateDocument | null> {

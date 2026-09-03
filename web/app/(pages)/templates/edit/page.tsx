@@ -1,18 +1,17 @@
 'use client';
 
-import useFindOneTemplateOptions from './useFindOneTemplateOptions';
-import FormTemplate from '@/app/components/form';
+import useFindOneTemplateOptions from '../useFindOneTemplateOptions';
+import EditFormPage from '@/app/components/form/EditFormPage';
+import type { TemplateDocumentType } from '@/app/utils/types';
 import { useQuery } from '@tanstack/react-query';
 import { notFound, useSearchParams } from 'next/navigation';
-import { useState, type JSX } from 'react';
+import type { JSX } from 'react';
 import typia from 'typia';
 
 export default function Home(): JSX.Element {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
   typia.assertGuard<string>(id);
-
-  const [formData, setFormData] = useState<unknown>(undefined);
 
   const options = useFindOneTemplateOptions(id);
   const findTemplate = useQuery(options);
@@ -28,17 +27,15 @@ export default function Home(): JSX.Element {
   const data = findTemplate.data;
 
   return (
-    <>
-      <h1>Form example</h1>
+    <EditFormPage
+      title="Modify Template"
 
-      <FormTemplate
-        schema={data.schema}
-        uiSchema={data.uiSchema}
-        formData={formData}
-        onChange={(e) => {
-          setFormData(e.formData);
-        }}
-      />
-    </>
+      defaultTemplateName={data.templateName}
+      defaultTemplateType={typia.assert<TemplateDocumentType[]>(
+        data.templateType,
+      )}
+      defaultSchema={data.schema}
+      defaultUiSchema={data.uiSchema}
+    />
   );
 }
