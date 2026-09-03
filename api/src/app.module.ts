@@ -1,6 +1,7 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { DocumentsModule } from './documents/documents.module';
 import { HelloModule } from './hello/hello.module';
 import { ManualModule } from './manual/manual.module';
 import { EmergencyContactModule } from './schema/emergency_contacts/emergency_contact.module';
@@ -44,6 +45,7 @@ export const mongoModule = MongooseModule.forRootAsync({
     UserModule,
     ManualModule,
     TemplatesModule,
+    DocumentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -3,9 +3,7 @@ import PopUp from '../common/PopUp';
 import useApiUrl from '@/app/hooks/useApiUrl';
 import { isTesting } from '@/app/utils/env';
 import type { HttpError } from '@rehua/sdk';
-// TODO:
-// backend document module to be created
-import { create } from '@rehua/sdk/functional/document';
+import { createFile } from '@rehua/sdk/functional/documents/file';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
@@ -17,9 +15,9 @@ async function uploadDocument({
   body,
 }: {
   host: string;
-  body: create.Body;
-}): Promise<create.Output> {
-  return create(
+  body: createFile.Body;
+}): Promise<createFile.Output> {
+  return createFile(
     {
       host,
       simulate: isTesting,
@@ -56,7 +54,7 @@ export function UploadDocumentButton(): JSX.Element {
         button2Props={{
           onClick: () => {
             setShowUploadSuccessPopup(false);
-            router.push(`${apiUrl}${create.path()}`);
+            router.push(`${apiUrl}${createFile.path()}`);
           },
           text1: 'Open',
           backgroundColor: 'bg-rehua-green',
@@ -92,7 +90,11 @@ export function UploadDocumentButton(): JSX.Element {
           uploadDocumentMutation.mutate(
             {
               host: apiUrl,
-              body: { file },
+              body: {
+                file,
+                // TODO: Replace with the actual patient ID when available
+                patientId: '6a8fbff66a614aff391130a3',
+              },
             },
             {
               onSuccess: () => {

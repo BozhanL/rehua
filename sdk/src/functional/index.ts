@@ -17,6 +17,7 @@ export * as patient from './patient/index';
 export * as user from './user/index';
 export * as manual from './manual/index';
 export * as templates from './templates/index';
+export * as documents from './documents/index';
 
 /**
  * @controller AppController.getHello
