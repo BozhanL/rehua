@@ -90,6 +90,18 @@ const DEMO_OBSERVATIONS: Observation_idstring[] = [
   },
   {
     patientId: patientId,
+    _id: 'OBS-011',
+    type: 'OXYGEN_RATE',
+    dateTime: dayjs()
+      .hour(23)
+      .minute(59)
+      .second(0)
+      .millisecond(0)
+      .toISOString(),
+    measurementValue: 100,
+  },
+  {
+    patientId: patientId,
     _id: 'OBS-002',
     type: 'OXYGEN_RATE',
     dateTime: dayjs()
@@ -348,7 +360,6 @@ export function PatientObservations(): JSX.Element {
           <div className="ml-auto flex shrink-0 items-center gap-5">
             {isGraphable && (
               <SingleLineInput
-                autoFocus
                 type="number"
                 value={newMeasurement}
                 placeholder={`Enter new measurement . . .`}
@@ -400,7 +411,12 @@ export function PatientObservations(): JSX.Element {
       <div className="overflow-x-auto">
         <div className="min-w-350">
           {isGraphable && !showEntries ? (
-            <Graph type={selectedObservation} data={filteredObservations} />
+            <Graph
+              type={selectedObservation}
+              data={filteredObservations}
+              width={1800}
+              height={550}
+            />
           ) : (
             <Table
               columns={
