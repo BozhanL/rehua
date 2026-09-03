@@ -30,7 +30,7 @@ export const OBSERVATION_GRAPH_CONFIG: Record<
 > = {
   OXYGEN_RATE: {
     shortCode: 'SpO2',
-    label: 'Oxygen % rate',
+    label: 'Oxygen % Rate',
     unit: '%',
     min: 65,
     max: 100,
