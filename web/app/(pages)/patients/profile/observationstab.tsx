@@ -494,7 +494,7 @@ export function PatientObservations(): JSX.Element {
 
       {/* main observation content; either graph, table or running notes */}
       <div className="overflow-x-auto">
-        <div className="min-w-350 bg-rehua-white pb-10 pl-10">
+        <div className="min-w-350 pb-10">
           {isRunningNotes ? (
             <NoteList
               notes={filteredNotes}
@@ -507,12 +507,14 @@ export function PatientObservations(): JSX.Element {
               }}
             />
           ) : isGraphable && !showEntries ? (
-            <Graph
-              type={selectedObservation}
-              data={filteredObservations}
-              width={1800}
-              height={550}
-            />
+            <div className="bg-rehua-white pl-10">
+              <Graph
+                type={selectedObservation}
+                data={filteredObservations}
+                width={1800}
+                height={550}
+              />
+            </div>
           ) : (
             <Table
               columns={
