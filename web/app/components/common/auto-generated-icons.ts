@@ -37,6 +37,7 @@ import Search from '../../assets/icons/search.svg';
 import SectionPlus from '../../assets/icons/section-plus.svg';
 import SimpleArrow from '../../assets/icons/simple-arrow.svg';
 import Tick from '../../assets/icons/tick.svg';
+import Time from '../../assets/icons/time.svg';
 import Trash from '../../assets/icons/trash.svg';
 import UserFolder from '../../assets/icons/user-folder.svg';
 import UserPlus from '../../assets/icons/user-plus.svg';
@@ -84,6 +85,7 @@ export const icons = {
   'section-plus': SectionPlus,
   'simple-arrow': SimpleArrow,
   tick: Tick,
+  time: Time,
   trash: Trash,
   'user-folder': UserFolder,
   'user-plus': UserPlus,

@@ -25,4 +25,12 @@ export namespace mongoose {
      */
     upsertedId: null | string;
   };
+  export namespace Types {
+    export type ObjectId = {
+      /**
+       * Mongoose automatically adds a conveniency "_id" getter on the base ObjectId class
+       */
+      _id: string;
+    };
+  }
 }
