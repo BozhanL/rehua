@@ -81,7 +81,7 @@
     "ts-jest": "29.4.12",
     "ts-node": "10.9.2",
     "ts-patch": "3.3.0",
-    "typescript": "5.9.3",
+    "typescript": "7.0.2",
     "typescript-eslint": "8.68.0"
   }
 }
