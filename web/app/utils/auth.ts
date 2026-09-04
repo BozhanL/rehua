@@ -1,6 +1,16 @@
 import { isTesting } from '@/app/utils/env';
-import { login as loginSdk } from '@rehua/sdk/functional/auth';
+import {
+  login as loginSdk,
+  logout as logoutSdk,
+} from '@rehua/sdk/functional/auth';
 import typia from 'typia';
+
+export interface UserInfo {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  group: 'admin' | 'nurse';
+}
 
 export async function login({
   host,
@@ -19,13 +29,33 @@ export async function login({
   );
 }
 
-export function sessionStorageAddUserInfo(data: loginSdk.Output): void {
-  const userInfo = {
-    firsName: data.firstName,
-    lastName: data.lastName,
-    userName: data.userName,
-    group: data.group,
-  };
-
-  sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+export async function logout({ host }: { host: string }): Promise<void> {
+  await logoutSdk({
+    host,
+    simulate: isTesting,
+    options: { credentials: 'include' },
+  });
 }
+
+export function sessionStorageAddUserInfo(data: loginSdk.Output): void {
+  sessionStorage.setItem('firstName', data.firstName);
+  sessionStorage.setItem('lastName', data.lastName);
+  sessionStorage.setItem('userName', data.userName);
+  sessionStorage.setItem('group', data.group);
+}
+
+export function sessionStorageGetUserInfo(): UserInfo {
+  const firstName = sessionStorage.getItem('firstName') ?? '';
+  const lastName = sessionStorage.getItem('lastName') ?? '';
+  const userName = sessionStorage.getItem('userName') ?? '';
+  const group = sessionStorage.getItem('group');
+
+  return {
+    firstName,
+    lastName,
+    userName,
+    group: group === 'admin' ? group : 'nurse',
+  };
+}
+
+export const userInfo = sessionStorageGetUserInfo();

@@ -3,6 +3,7 @@ import ContentButton from '../common/ContentButton';
 import Icon from '../common/Icon';
 import Logo from '../common/Logo';
 import { UploadManualButton, ShowManualButton } from './ManualButtons';
+import { LogoutButton } from './logoutButton';
 import type { JSX } from 'react';
 
 interface NavigationBarProps {
@@ -77,18 +78,7 @@ function NavigationBar({
         )}
         {/* available to all users */}
         <ShowManualButton />
-        {/* TODO: backend to implement logout button and use this snippet within <LogoutButton />  */}
-        <ContentButton
-          text1="Logout"
-          iconProps={{ name: 'access', flip: 'horizontal' }}
-          backgroundColor="bg-rehua-red"
-          iconPosition="left"
-          verticalPadding={0.3}
-          horizontalPadding={0.4}
-          lineHeight={1.1}
-          textIconGap={0.3}
-          className="text-lg"
-        />
+        <LogoutButton />
       </div>
     </nav>
   );

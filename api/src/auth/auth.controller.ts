@@ -1,7 +1,6 @@
 import { AuthService, TOKEN_TTL_SEC } from './auth.service';
 import type { LoginBody } from './dto/login-body.dto';
 import type { LoginResponseDto } from './dto/login-response.dto';
-import { JwtAuthGuard } from './jwt.guard';
 import { JWT_COOKIE_NAME } from './jwt.strategy';
 import { LocalAuthGuard } from './local.guard';
 import { TOTPAuthGuard } from './totp.guard';
@@ -10,8 +9,13 @@ import { CurrentUser } from '@/schema/users/users.decorator';
 import type { ExpressUser } from '@/utils/types';
 import { TypedBody, TypedRoute } from '@nestia/core';
 import { Controller, UseGuards, Res } from '@nestjs/common';
+import { SetMetadata } from '@nestjs/common';
 import type { Response } from 'express';
 import { misc } from 'typia';
+
+export const IS_PUBLIC_KEY = 'isPublic';
+// eslint-disable-next-line func-style, @typescript-eslint/explicit-function-return-type
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 @Controller('auth')
 export class AuthController {
@@ -20,6 +24,7 @@ export class AuthController {
     private readonly userService: UserService,
   ) {}
 
+  @Public()
   @UseGuards(LocalAuthGuard, TOTPAuthGuard)
   @TypedRoute.Post('login')
   async login(
@@ -55,12 +60,11 @@ export class AuthController {
     return user;
   }
 
-  @UseGuards(JwtAuthGuard)
   @TypedRoute.Post('refresh')
   refresh(
     @CurrentUser() expressUser: ExpressUser,
     @Res({ passthrough: true }) response: Response,
-  ): void {
+  ): { success: boolean } {
     const token = this.authService.signJwt(expressUser);
     response.cookie(JWT_COOKIE_NAME, token, {
       // Browser may keep session cookies even after the browser is closed, so we need to set an expiration time for the cookie
@@ -72,11 +76,23 @@ export class AuthController {
       secure: true,
       sameSite: 'strict',
     });
+
+    return { success: true };
+  }
+
+  @TypedRoute.Post('logout')
+  logout(@Res({ passthrough: true }) response: Response): { success: boolean } {
+    response.clearCookie(JWT_COOKIE_NAME, {
+      // Secure cookie settings
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    return { success: true };
   }
 
   // TODO: remove TotpPayload type and only return the totpSecret
   // Generate the TOTP uri on the client side
-  @UseGuards(JwtAuthGuard)
   @TypedRoute.Get('totp')
   async getTotpSecret(
     @CurrentUser() user: ExpressUser,
