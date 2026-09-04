@@ -1,6 +1,6 @@
 import { AuthService } from './auth.service';
 import type { LoginBody } from './dto/login-body.dto';
-import type { ExpressUser } from '@/utils/types';
+import { User } from '@/schema/users/entities/user.entity';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Request } from 'express';
@@ -9,8 +9,8 @@ import typia from 'typia';
 
 export const TOTP_STRATEGY_NAME = 'totp';
 
-// This strategy is used to authenticate users using their userId and TOTP code.
-// It validates the userId and TOTP code against the database and returns the ExpressUser from req.user if valid.
+// This strategy is used to authenticate users using their userName and TOTP code.
+// It validates the userName and TOTP code against the database and returns the ExpressUser from req.user if valid.
 // Password checking is done in the LocalStrategy, so we don't need to check the password here.
 @Injectable()
 export class TOTPStrategy extends PassportStrategy(
@@ -19,7 +19,7 @@ export class TOTPStrategy extends PassportStrategy(
 ) {
   constructor(private readonly authService: AuthService) {
     super({
-      usernameField: 'userId' satisfies keyof LoginBody,
+      usernameField: 'userName' satisfies keyof LoginBody,
       passwordField: 'totpCode' satisfies keyof LoginBody,
       passReqToCallback: true,
       session: false,
@@ -28,18 +28,18 @@ export class TOTPStrategy extends PassportStrategy(
 
   async validate(
     req: Request,
-    userId: number,
+    userName: string,
     totpCode: string,
-  ): Promise<ExpressUser | undefined> {
-    typia.assertGuard<typeof userId>(userId);
+  ): Promise<User | undefined> {
+    typia.assertGuard<typeof userName>(userName);
     typia.assertGuard<typeof totpCode>(totpCode);
 
-    const isValid = await this.authService.validateTotp(userId, totpCode);
+    const isValid = await this.authService.validateTotp(userName, totpCode);
 
     if (!isValid) {
       throw new UnauthorizedException();
     }
 
-    return req.user;
+    return req.user as User | undefined;
   }
 }

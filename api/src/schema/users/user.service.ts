@@ -24,13 +24,17 @@ export class UserService {
     return this.userModel.findOne({ _id: id }).exec();
   }
 
+  async findOneUserNameForAuth(userName: string): Promise<UserDocument | null> {
+    return this.userModel.findOne({ userName: userName }).exec();
+  }
+
   async findPage(
     numberOfRows: number,
     pageNumber: number,
   ): Promise<UserDocument[]> {
     return this.userModel
       .find()
-      .sort({ username: 'asc' })
+      .sort({ userName: 'asc' })
       .skip((pageNumber - 1) * numberOfRows)
       .limit(numberOfRows)
       .exec();

@@ -1,5 +1,5 @@
 export type LoginBody = {
-  userId: number;
+  userName: string;
   password: string;
   totpCode: string;
 };

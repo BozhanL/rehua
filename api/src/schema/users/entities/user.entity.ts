@@ -5,14 +5,20 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
-  @Prop({ required: true })
-  username: string;
+  @Prop({ required: true, unique: true })
+  userName: string;
 
   @Prop({ required: true })
   firstName: string;
 
   @Prop({ required: true })
   lastName: string;
+
+  @Prop({ required: true })
+  password: string;
+
+  @Prop({ required: true })
+  totpSecret: string;
 
   @Prop({ required: true })
   email: string;
@@ -30,18 +36,22 @@ export class User {
   group: 'admin' | 'nurse';
 
   constructor(
-    username: string,
+    userName: string,
     firstName: string,
     lastName: string,
+    password: string,
+    totpSecret: string,
     email: string,
     status: 'active' | 'disabled',
     homePhoneNumber: string,
     address: string,
     group: 'admin' | 'nurse',
   ) {
-    this.username = username;
+    this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
+    this.password = password;
+    this.totpSecret = totpSecret;
     this.email = email;
     this.status = status;
     this.homePhoneNumber = homePhoneNumber;

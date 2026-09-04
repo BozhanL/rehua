@@ -1,10 +1,12 @@
 export type CreateUserDto = {
-  username: string;
+  userName: string;
   firstName: string;
   lastName: string;
+  password: string;
+  totpSecret: string;
   email: string;
   status: 'active' | 'disabled';
   homePhoneNumber: string;
   address: string;
-  group: 'nurse' | 'admin';
+  group: 'admin' | 'nurse';
 };
