@@ -19,13 +19,5 @@
   "ignorePresets": ["security:minimumReleaseAgeNpm"],
 
   "labels": ["dependencies", "{{{manager}}}"],
-  "postUpdateOptions": ["npmDedupe", "npmInstallTwice"],
-
-  // Debug npm
-  "logLevelRemap": [
-    {
-      "matchMessage": "/Massaging out/",
-      "newLogLevel": "debug"
-    }
-  ]
+  "postUpdateOptions": ["npmDedupe", "npmInstallTwice"]
 }
