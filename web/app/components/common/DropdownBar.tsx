@@ -116,7 +116,7 @@ function DropdownBar<T extends string = string>({
       <button
         className={`
           flex items-center justify-between gap-2 rounded-sm border
-          border-rehua-gray p-1
+          border-rehua-gray bg-rehua-white p-1
         `}
         style={{
           width,
@@ -131,7 +131,11 @@ function DropdownBar<T extends string = string>({
           {label}
         </span>
         {/* dropdown bar arrow */}
-        <Icon name="dropdown-arrow" width={iconSize} className="mr-1" />
+        <Icon
+          name="dropdown-arrow"
+          width={iconSize}
+          className="mr-1 shrink-0"
+        />
       </button>
 
       {/* options in dropdown bar  (list of buttons) */}
@@ -159,7 +163,6 @@ function DropdownBar<T extends string = string>({
             {/* Render search box if specified */}
             {search && (
               <input
-                autoFocus // Auto focus search bar when dropdown opens
                 type="text"
                 value={query}
                 onChange={(e) => {
@@ -192,7 +195,7 @@ function DropdownBar<T extends string = string>({
                     key={option}
                     type="button"
                     className={`
-                      flex w-full items-center gap-2 outline-none
+                      flex w-full items-center gap-2 pl-2 outline-none
                       ${isSelected && !multiple ? selectedColor : ''}
                       ${(multiple || !isSelected) && activeIndex === index ? 'bg-rehua-light-gray' : ''}
               `}

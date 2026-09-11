@@ -1,12 +1,12 @@
 'use client';
 
 import ContentButton from '@/app/components/common/ContentButton';
-import AddNoteModal from '@/app/components/notes/AddNoteModal';
-import FormatNoteModal from '@/app/components/notes/FormatNoteModal';
+import AddNoteModal from '@/app/components/observations/notes/AddNoteModal';
+import FormatNoteModal from '@/app/components/observations/notes/FormatNoteModal';
 import NoteList, {
   type Note,
   type NoteAuditEntry,
-} from '@/app/components/notes/NoteList';
+} from '@/app/components/observations/notes/NoteList';
 import dayjs from '@/app/utils/dayjs';
 import { useMemo, useState, type JSX } from 'react';
 
