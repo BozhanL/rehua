@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Component detection
-        uses: advanced-security/component-detection-dependency-submission-action@4737f4899f8a2d167aa795f96fffba5cf82dd51e # v0.1.5
+        uses: advanced-security/component-detection-dependency-submission-action@b282c67b1008fde9b60da4bdfcd8849613e293b2 # v0.1.6
 
   dependency-review:
     runs-on: ubuntu-latest
