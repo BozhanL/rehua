@@ -27,7 +27,13 @@ async function uploadDocument({
   );
 }
 
-export function UploadDocumentButton(): JSX.Element {
+export interface UploadDocumentButtonProps {
+  patientId: createFile.Body['patientId'];
+}
+
+export function UploadDocumentButton({
+  patientId,
+}: Readonly<UploadDocumentButtonProps>): JSX.Element {
   const [showUploadSuccessPopup, setShowUploadSuccessPopup] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
 
@@ -54,7 +60,9 @@ export function UploadDocumentButton(): JSX.Element {
         button2Props={{
           onClick: () => {
             setShowUploadSuccessPopup(false);
-            router.push(`${apiUrl}${createFile.path()}`);
+            router.push(
+              `${apiUrl}/documents/file/${String(uploadDocumentMutation.data?._id)}`,
+            );
           },
           text1: 'Open',
           backgroundColor: 'bg-rehua-green',
@@ -92,8 +100,7 @@ export function UploadDocumentButton(): JSX.Element {
               host: apiUrl,
               body: {
                 file,
-                // TODO: Replace with the actual patient ID when available
-                patientId: '6a8fbff66a614aff391130a3',
+                patientId,
               },
             },
             {

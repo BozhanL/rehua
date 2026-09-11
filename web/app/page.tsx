@@ -2,6 +2,7 @@
 
 import ContentButton from './components/common/ContentButton';
 import Icon from './components/common/Icon';
+import { UploadDocumentButton } from './components/modals/UploadDocumentButton';
 import { APIUrlContext } from './providers';
 import {
   ShowManualButton,
@@ -11,7 +12,7 @@ import { isTesting } from '@/app/utils/env';
 import { getHello } from '@rehua/sdk/functional';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useContext, type JSX } from 'react';
+import { useContext, useState, type JSX } from 'react';
 import { functional } from 'typia';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -31,6 +32,8 @@ function useHelloOptions() {
 function Home(): JSX.Element {
   const query = useQuery(useHelloOptions());
 
+  const [patientId, setPatientId] = useState('');
+
   if (!query.isSuccess) {
     return <h1>Loading...</h1>;
   }
@@ -49,6 +52,15 @@ function Home(): JSX.Element {
           backgroundColor="bg-rehua-green"
         />
       </Link>
+
+      <input
+        name="patientId"
+        onChange={(e) => {
+          setPatientId(e.target.value);
+        }}
+        value={patientId}
+      />
+      <UploadDocumentButton patientId={patientId} />
     </>
   );
 }

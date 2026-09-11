@@ -11,6 +11,8 @@ import { TypedBody, TypedFormData, TypedParam, TypedRoute } from '@nestia/core';
 import {
   BadRequestException,
   Controller,
+  Get,
+  Param,
   Req,
   StreamableFile,
 } from '@nestjs/common';
@@ -84,8 +86,8 @@ export class DocumentsController {
    * @ignore
    * @description This endpoint is used to view the file type document and the SDK does not support it.
    */
-  @TypedRoute.Get('file/:id')
-  async getFile(@TypedParam('id') id: string): Promise<StreamableFile> {
+  @Get('file/:id')
+  async getFile(@Param('id') id: string): Promise<StreamableFile> {
     return this.documentsService.getFile(id);
   }
 }

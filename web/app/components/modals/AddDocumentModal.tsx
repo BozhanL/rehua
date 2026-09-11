@@ -4,16 +4,19 @@ import Icon from '../common/Icon';
 import Modal from '../common/Modal';
 import SingleLineInput from '../common/SingleLineInput';
 import { UploadDocumentButton } from './UploadDocumentButton';
+import type { createFile } from '@rehua/sdk/functional/documents/file';
 import { useState, type ChangeEvent, type JSX } from 'react';
 
 interface AddDocumentModalProps {
   isOpen: boolean;
   onBack: () => void; // let the parent handle the back button, matches AddMFAModal
+  patientId: createFile.Body['patientId'];
 }
 
 function AddDocumentModal({
   isOpen,
   onBack,
+  patientId,
 }: Readonly<AddDocumentModalProps>): JSX.Element {
   const [category, setCategory] = useState<string | null>(null);
   const [label, setLabel] = useState<string | null>(
@@ -142,7 +145,7 @@ function AddDocumentModal({
               />
               {/* file upload  */}
               <div className="col-span-2 flex justify-center">
-                <UploadDocumentButton />
+                <UploadDocumentButton patientId={patientId} />
               </div>
             </div>
           ) : (
