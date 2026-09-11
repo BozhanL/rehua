@@ -5,6 +5,7 @@ export class FindDocumentDto {
   constructor(
     public patientId: MongoId,
 
+    public tags: string[],
     public template?: Template | undefined,
     public data?: Record<string, unknown> | undefined,
   ) {}

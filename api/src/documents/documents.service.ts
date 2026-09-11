@@ -85,6 +85,7 @@ export class DocumentsService {
 
     const doc = await this.fileDocumentModel.create({
       patientId: createFileDocumentDto.patientId,
+      tags: createFileDocumentDto.tags,
       path: filePath,
       fileName: file.originalname,
     });

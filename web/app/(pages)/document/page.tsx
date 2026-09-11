@@ -1,6 +1,7 @@
 'use client';
 
 import ContentButton from '@/app/components/common/ContentButton';
+import DropdownBar from '@/app/components/common/DropdownBar';
 import Icon from '@/app/components/common/Icon';
 import PopUp from '@/app/components/common/PopUp';
 import Surface from '@/app/components/common/Surface';
@@ -81,7 +82,7 @@ export default function Home(): JSX.Element {
     notFound();
   }
 
-  const currentFormData = !docData ? data.data : docData.data;
+  const currentData = docData ?? data;
 
   return (
     <div className="flex h-dvh flex-col">
@@ -198,6 +199,25 @@ export default function Home(): JSX.Element {
                 justify-end gap-3
               `}
             >
+              <div className="min-w-0">
+                <DropdownBar
+                  options={[
+                    // TODO: Fetch tags from API
+                    'Tag 1',
+                    'Tag 2',
+                    'Tag 3',
+                  ]}
+                  selectedValues={currentData.tags}
+                  multiple
+                  onChange={(d) => {
+                    setDocData((prev) => ({
+                      ...(prev ?? data),
+                      tags: d,
+                    }));
+                  }}
+                  defaultText="Select document tags"
+                />
+              </div>
               <ContentButton
                 type="button"
                 text1="Save"
@@ -219,7 +239,7 @@ export default function Home(): JSX.Element {
             <FormTemplate
               schema={data.template.schema}
               uiSchema={data.template.uiSchema}
-              formData={currentFormData}
+              formData={currentData.data}
               onChange={(e) => {
                 setDocData((prev) => ({
                   ...(prev ?? data),

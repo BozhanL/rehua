@@ -18,13 +18,22 @@ export class FileDocument {
   patientId: Types.ObjectId;
 
   @Prop({ required: true })
+  public tags: string[];
+
+  @Prop({ required: true })
   public path: string;
 
   @Prop({ required: true })
   public fileName: string;
 
-  constructor(patientId: Types.ObjectId, path: string, fileName: string) {
+  constructor(
+    patientId: Types.ObjectId,
+    tags: string[],
+    path: string,
+    fileName: string,
+  ) {
     this.patientId = patientId;
+    this.tags = tags;
     this.path = path;
     this.fileName = fileName;
   }
@@ -42,6 +51,9 @@ export class FormDocument {
   })
   patientId: Types.ObjectId;
 
+  @Prop({ required: true })
+  public tags: string[];
+
   @Prop({
     required: true,
     type: MongoSchema.Types.ObjectId,
@@ -54,10 +66,12 @@ export class FormDocument {
 
   constructor(
     patientId: Types.ObjectId,
+    tags: string[],
     templateId: Types.ObjectId,
     data: Record<string, unknown>,
   ) {
     this.patientId = patientId;
+    this.tags = tags;
     this.templateId = templateId;
     this.data = data;
   }

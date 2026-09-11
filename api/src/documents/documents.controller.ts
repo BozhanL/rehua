@@ -91,11 +91,16 @@ export class DocumentsController {
     const patientId = doc.patientId.toString();
 
     if ('path' in doc) {
-      return new FindDocumentDto(patientId);
+      return new FindDocumentDto(patientId, doc.tags);
     }
 
     const { __v, _id, ...template } = doc.templateId.toJSON();
-    return new FindDocumentDto(patientId, template, doc.toJSON().data);
+    return new FindDocumentDto(
+      patientId,
+      doc.tags,
+      template,
+      doc.toJSON().data,
+    );
   }
 
   /**

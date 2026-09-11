@@ -100,6 +100,7 @@ export function UploadDocumentButton({
               host: apiUrl,
               body: {
                 file,
+                tags: [],
                 patientId,
               },
             },

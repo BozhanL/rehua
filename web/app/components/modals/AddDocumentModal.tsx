@@ -240,6 +240,7 @@ function AddDocumentModal({
                               docData: {
                                 templateId: template._id,
                                 patientId,
+                                tags: [],
                                 data: {},
                               },
                             },
