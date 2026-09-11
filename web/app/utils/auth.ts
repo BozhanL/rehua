@@ -19,6 +19,7 @@ export async function login({
   );
 }
 
+// Switch to `useSessionStorage` from `usehooks-ts` if value doesn't update on data change.
 export function sessionStorageAddUserInfo(data: loginSdk.Output): void {
   const userInfo = {
     firsName: data.firstName,
