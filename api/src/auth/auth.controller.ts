@@ -74,7 +74,6 @@ export class AuthController {
     });
   }
 
-  // TODO: remove TotpPayload type and only return the totpSecret
   // Generate the TOTP uri on the client side
   @UseGuards(JwtAuthGuard)
   @TypedRoute.Get('totp')

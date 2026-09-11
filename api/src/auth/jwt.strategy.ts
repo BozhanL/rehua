@@ -8,9 +8,7 @@ import typia from 'typia';
 export const JWT_COOKIE_NAME = 'token';
 export const JWT_STRATEGY_NAME = 'jwt';
 
-// TODO: read from environment variable and file. See MONGODB_URI_FILE for details
-export const JWT_SECRET =
-  'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.';
+export const JWT_SECRET = process.env['JWT_SECRET'] ?? '';
 
 function cookieExtractor(req: Request): string | null {
   const token: unknown = req.cookies[JWT_COOKIE_NAME];
