@@ -1,8 +1,5 @@
 import { Patient } from '@/schema/patients/entities/patient.entity';
-import {
-  Template,
-  TemplateDocument,
-} from '@/templates/entities/template.entity';
+import { Template } from '@/templates/entities/template.entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import {
   HydratedDocument,
@@ -70,9 +67,7 @@ export type FormDocumentDocument = HydratedDocument<FormDocument>;
 export type FormDocumentPopulatedDocument<Paths> = PopulateDocumentResult<
   FormDocumentDocument,
   Paths,
-  Omit<FormDocument, 'templateId'> & {
-    templateId: TemplateDocument;
-  },
+  Omit<FormDocument, 'templateId'> & Paths,
   FormDocument
 >;
 export const FormDocumentSchema = SchemaFactory.createForClass(FormDocument);
