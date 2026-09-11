@@ -1,6 +1,6 @@
 export class LoginBody {
   constructor(
-    public userId: number,
+    public userName: string,
     public password: string,
     public totpCode: string,
   ) {}
