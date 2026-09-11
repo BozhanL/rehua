@@ -4,8 +4,49 @@ import Icon from '../common/Icon';
 import Modal from '../common/Modal';
 import SingleLineInput from '../common/SingleLineInput';
 import { UploadDocumentButton } from './UploadDocumentButton';
+import useApiUrl from '@/app/hooks/useApiUrl';
+import { isTesting } from '@/app/utils/env';
+import { TemplateDocumentType } from '@/app/utils/types';
 import type { createFile } from '@rehua/sdk/functional/documents/file';
+import { createForm as createFormSdk } from '@rehua/sdk/functional/documents/form';
+import { findTemplatesWithType } from '@rehua/sdk/functional/templates/type';
+import { queryOptions, useMutation, useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useState, type ChangeEvent, type JSX } from 'react';
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function useGetTemplateOptions(type: TemplateDocumentType | null) {
+  const host = useApiUrl();
+
+  return queryOptions({
+    queryKey: [findTemplatesWithType.path(type ?? 'Short Term'), host],
+    enabled: type !== null,
+    queryFn: async () => {
+      if (type === null) {
+        throw new Error('Unreachable: query is disabled');
+      }
+
+      return findTemplatesWithType(
+        {
+          host: host,
+          simulate: isTesting,
+          options: { credentials: 'include' },
+        },
+        type,
+      );
+    },
+  });
+}
+
+async function createForm({
+  host,
+  docData,
+}: {
+  host: string;
+  docData: createFormSdk.Body;
+}): Promise<createFormSdk.Output> {
+  return createFormSdk({ host, simulate: isTesting }, docData);
+}
 
 interface AddDocumentModalProps {
   isOpen: boolean;
@@ -18,7 +59,7 @@ function AddDocumentModal({
   onBack,
   patientId,
 }: Readonly<AddDocumentModalProps>): JSX.Element {
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<TemplateDocumentType | null>(null);
   const [label, setLabel] = useState<string | null>(
     'Add a New Patient Document',
   );
@@ -26,42 +67,39 @@ function AddDocumentModal({
   const [query, setQuery] = useState<string | null>(null);
   const [appliedQuery, setAppliedQuery] = useState<string | null>(null);
 
-  function handleSwitch(category: string | null): void {
+  const router = useRouter();
+
+  function handleSwitch(category: TemplateDocumentType | null): void {
     const label = category ? 'Pick a Template' : 'Add a New Patient Document';
     setCategory(category);
     setLabel(label);
     setAppliedQuery(null);
-    // TODO:
-    // api call
   }
 
-  //TODO:
-  // Remove hardcoded templates when api call is implemented
-  const templates = [
-    'Client Satisfaction Questionnaire',
-    'Admission Checklist Form',
-    'Admission Notifcation Form',
-    'Diabetes Test',
-    'Client Satisfactoin Questionnaire',
-    'Admission Checklist Test',
-    'Admission Notifcation Test',
-    'Diabetes Form',
-  ];
+  const templateQuery = useGetTemplateOptions(category);
+  const { data: templates = [] } = useQuery(templateQuery);
+
+  const host = useApiUrl();
+  const createFormMutation = useMutation({
+    mutationFn: createForm,
+  });
 
   const filteredTemplates = appliedQuery
     ? templates.filter((template) =>
-        template.toLowerCase().includes(appliedQuery.toLowerCase()),
+        template.templateName
+          .toLowerCase()
+          .includes(appliedQuery.toLowerCase()),
       )
     : templates;
 
   const categoryColours = {
-    longterm: { background: 'bg-rehua-green', icon: '#399740' },
-    shortterm: { background: 'bg-rehua-blue', icon: '#2a93bd' },
-    palliative: { background: 'bg-rehua-pastel-pink', icon: '#c2515c' },
-    daycare: { background: 'bg-rehua-orange', icon: '#c25a37' },
+    'Long Term': { background: 'bg-rehua-green', icon: '#399740' },
+    'Short Term': { background: 'bg-rehua-blue', icon: '#2a93bd' },
+    Palliative: { background: 'bg-rehua-pastel-pink', icon: '#c2515c' },
+    Daycare: { background: 'bg-rehua-orange', icon: '#c25a37' },
   } as const;
 
-  const colours = categoryColours[category as keyof typeof categoryColours];
+  const colours = categoryColours[category ?? 'Short Term'];
 
   return (
     <Modal open={isOpen} surfaceProps={{ width: 650, height: 500 }}>
@@ -103,9 +141,9 @@ function AddDocumentModal({
                 height={80}
                 textIconGap={0.5}
                 style={{ width: 240 }}
-                backgroundColor={categoryColours.longterm.background}
+                backgroundColor={categoryColours['Long Term'].background}
                 onClick={() => {
-                  handleSwitch('longterm');
+                  handleSwitch(TemplateDocumentType.LongTerm);
                 }}
               />
               <ContentButton
@@ -114,9 +152,9 @@ function AddDocumentModal({
                 iconPosition="right"
                 textIconGap={0.3}
                 height={80}
-                backgroundColor={categoryColours.palliative.background}
+                backgroundColor={categoryColours.Palliative.background}
                 onClick={() => {
-                  handleSwitch('palliative');
+                  handleSwitch(TemplateDocumentType.Palliative);
                 }}
               />
               <ContentButton
@@ -127,9 +165,9 @@ function AddDocumentModal({
                 textIconGap={0.5}
                 height={80}
                 style={{ width: 240 }}
-                backgroundColor={categoryColours.shortterm.background}
+                backgroundColor={categoryColours['Short Term'].background}
                 onClick={() => {
-                  handleSwitch('shortterm');
+                  handleSwitch(TemplateDocumentType.ShortTerm);
                 }}
               />
               <ContentButton
@@ -138,9 +176,9 @@ function AddDocumentModal({
                 iconPosition="right"
                 textIconGap={0.5}
                 height={80}
-                backgroundColor={categoryColours.daycare.background}
+                backgroundColor={categoryColours.Daycare.background}
                 onClick={() => {
-                  handleSwitch('daycare');
+                  handleSwitch(TemplateDocumentType.Daycare);
                 }}
               />
               {/* file upload  */}
@@ -173,7 +211,6 @@ function AddDocumentModal({
                   }}
                 />
               </div>
-              {/* TODO: api call based on category or something (need to research) */}
               {/* List of template options */}
               <div
                 dir="rtl"
@@ -183,9 +220,8 @@ function AddDocumentModal({
               >
                 {filteredTemplates.length > 0 ? (
                   filteredTemplates.map((template) => (
-                    // TODO: change key to template.id so its unique
                     <div
-                      key={template}
+                      key={template._id}
                       dir="ltr"
                       className="flex shrink-0 items-center gap-4 py-1"
                     >
@@ -195,10 +231,24 @@ function AddDocumentModal({
                         width={45}
                       />
                       <ContentButton
-                        text1={template}
+                        text1={template.templateName}
                         backgroundColor={colours.background}
                         onClick={() => {
-                          // handle template selection
+                          createFormMutation.mutate(
+                            {
+                              host,
+                              docData: {
+                                templateId: template._id,
+                                patientId,
+                                data: {},
+                              },
+                            },
+                            {
+                              onSuccess: (data) => {
+                                router.push(`/document/?id=${data._id}`);
+                              },
+                            },
+                          );
                         }}
                         height={61}
                         style={{ width: 470 }}

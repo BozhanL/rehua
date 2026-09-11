@@ -2,6 +2,7 @@ import {
   CreateFileDocumentDto,
   CreateFormDocumentDto,
 } from './dto/create-document.dto';
+import { UpdateFormDocumentDto } from './dto/update-document.dto';
 import {
   FileDocument,
   FileDocumentDocument,
@@ -23,7 +24,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { access, constants, createReadStream, move } from 'fs-extra';
-import { Model } from 'mongoose';
+import { Model, UpdateWriteOpResult } from 'mongoose';
 import multer, { diskStorage, Multer } from 'multer';
 import { join } from 'node:path';
 import typia from 'typia';
@@ -96,6 +97,20 @@ export class DocumentsService {
     return this.formDocumentModel.create(createFormDocumentDto);
   }
 
+  async updateForm(
+    id: MongoId,
+    updateFormDocumentDto: UpdateFormDocumentDto,
+  ): Promise<UpdateWriteOpResult> {
+    return this.formDocumentModel
+      .updateOne(
+        { _id: id },
+        {
+          $set: updateFormDocumentDto,
+        },
+      )
+      .exec();
+  }
+
   async findOne(
     id: MongoId,
   ): Promise<
@@ -108,13 +123,11 @@ export class DocumentsService {
       .populate<{ templateId: TemplateDocument }>('templateId')
       .exec();
     if (formDocument?.populated('templateId')) {
-      console.log('Form Document:', formDocument.toJSON());
       return formDocument;
     }
 
     const fileDocument = await this.fileDocumentModel.findById(id).exec();
     if (fileDocument) {
-      console.log('File Document:', fileDocument.toJSON());
       return fileDocument;
     }
 

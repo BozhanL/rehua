@@ -4,7 +4,7 @@ import {
   CreateFormDocumentDto,
 } from './dto/create-document.dto';
 import { FindDocumentDto } from './dto/find-document.dto';
-import { FormDocument } from './entities/document.entity';
+import { UpdateFormDocumentDto } from './dto/update-document.dto';
 import { getFilesFromRequest } from '@/utils/helpers';
 import type { MongoId } from '@/utils/types';
 import { TypedBody, TypedFormData, TypedParam, TypedRoute } from '@nestia/core';
@@ -18,6 +18,7 @@ import {
 } from '@nestjs/common';
 import type { Request } from 'express';
 import { remove } from 'fs-extra';
+import { UpdateWriteOpResult } from 'mongoose';
 
 @Controller('documents')
 export class DocumentsController {
@@ -53,14 +54,29 @@ export class DocumentsController {
   async createForm(
     @TypedBody()
     createFormDocumentDto: CreateFormDocumentDto,
-  ): Promise<FormDocument & { _id: MongoId }> {
+  ): Promise<{
+    _id: MongoId;
+    patientId: MongoId;
+    templateId: MongoId;
+    data: Record<string, unknown>;
+  }> {
     const doc = await this.documentsService.createForm(createFormDocumentDto);
 
     return {
-      // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      ...doc.toJSON(),
       _id: doc._id.toString(),
+      patientId: doc.patientId.toString(),
+      templateId: doc.templateId.toString(),
+      data: doc.data,
     };
+  }
+
+  @TypedRoute.Post('form/:id')
+  async updateForm(
+    @TypedParam('id') id: MongoId,
+    @TypedBody()
+    updateFormDocumentDto: UpdateFormDocumentDto,
+  ): Promise<UpdateWriteOpResult> {
+    return this.documentsService.updateForm(id, updateFormDocumentDto);
   }
 
   @TypedRoute.Get(':id')
@@ -79,7 +95,7 @@ export class DocumentsController {
     }
 
     const { __v, _id, ...template } = doc.templateId.toJSON();
-    return new FindDocumentDto(patientId, template, doc.data);
+    return new FindDocumentDto(patientId, template, doc.toJSON().data);
   }
 
   /**

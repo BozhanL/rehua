@@ -2,6 +2,7 @@
 
 import ContentButton from './components/common/ContentButton';
 import Icon from './components/common/Icon';
+import AddDocumentModal from './components/modals/AddDocumentModal';
 import { UploadDocumentButton } from './components/modals/UploadDocumentButton';
 import { APIUrlContext } from './providers';
 import {
@@ -33,6 +34,7 @@ function Home(): JSX.Element {
   const query = useQuery(useHelloOptions());
 
   const [patientId, setPatientId] = useState('');
+  const [openAddDocumentModal, setOpenAddDocumentModal] = useState(false);
 
   if (!query.isSuccess) {
     return <h1>Loading...</h1>;
@@ -61,6 +63,23 @@ function Home(): JSX.Element {
         value={patientId}
       />
       <UploadDocumentButton patientId={patientId} />
+
+      <ContentButton
+        type="button"
+        iconProps={{ name: 'circle-arrow' }}
+        text1="Create Document"
+        backgroundColor="bg-rehua-green"
+        onClick={() => {
+          setOpenAddDocumentModal(true);
+        }}
+      />
+      <AddDocumentModal
+        isOpen={openAddDocumentModal}
+        onBack={() => {
+          setOpenAddDocumentModal(false);
+        }}
+        patientId={patientId}
+      />
     </>
   );
 }

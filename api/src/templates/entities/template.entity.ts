@@ -15,10 +15,10 @@ export class Template {
   public templateType: TemplateType[];
 
   @Prop({ required: true, type: MongoSchema.Types.Map })
-  schema: Record<string, unknown>;
+  public schema: Record<string, unknown>;
 
   @Prop({ required: true, type: MongoSchema.Types.Map })
-  uiSchema: Record<string, unknown>;
+  public uiSchema: Record<string, unknown>;
 
   constructor(version: number, data: CreateTemplateDto) {
     this.version = version;

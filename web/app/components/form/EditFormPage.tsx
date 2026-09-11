@@ -9,7 +9,7 @@ import FormTemplate, {
   ObjectFieldTemplate,
   type ObjectFieldTemplateContext,
 } from '@/app/components/form';
-import { APIUrlContext } from '@/app/providers';
+import useApiUrl from '@/app/hooks/useApiUrl';
 import { isTesting } from '@/app/utils/env';
 import {
   TemplateDocumentTypeValues,
@@ -19,7 +19,7 @@ import { create as createTemplateSDK } from '@rehua/sdk/functional/templates';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useContext, useState, type JSX } from 'react';
+import { useState, type JSX } from 'react';
 
 async function createTemplate({
   host,
@@ -72,7 +72,7 @@ export default function EditFormPage({
 
   const router = useRouter();
 
-  const host = useContext(APIUrlContext);
+  const host = useApiUrl();
 
   const createTemplateMutation = useMutation({
     mutationFn: createTemplate,
