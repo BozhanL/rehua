@@ -15,12 +15,18 @@ const JWT_SIGN_OPTIONS: SignOptions = { expiresIn: '1h' };
   controllers: [AuthController],
   imports: [
     UsersModule,
-    PassportModule,
+    // @nestjs/passport v12 guards inject an `AuthModuleOptions` provider that is
+    // only registered by `PassportModule.register()`/`registerAsync()`. A bare
+    // `PassportModule` import no longer provides it, so the guards must be used
+    // with a registered module. All strategies are stateless (cookie/JWT based),
+    // so disable sessions to match the original behavior.
+    PassportModule.register({ session: false }),
     JwtModule.register({
       secret: JWT_SECRET,
       signOptions: JWT_SIGN_OPTIONS,
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, TOTPStrategy],
+  exports: [PassportModule],
 })
 export class AuthModule {}
