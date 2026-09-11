@@ -8,6 +8,7 @@ import typia from 'typia';
 export const JWT_COOKIE_NAME = 'token';
 export const JWT_STRATEGY_NAME = 'jwt';
 
+// TODO: implement it with ConfigModule
 if (!process.env['JWT_SECRET']) {
   console.log('Error: JWT_SECRET is not defined in the environment variables');
 }
