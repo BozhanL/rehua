@@ -8,7 +8,12 @@ import typia from 'typia';
 export const JWT_COOKIE_NAME = 'token';
 export const JWT_STRATEGY_NAME = 'jwt';
 
-export const JWT_SECRET = process.env['JWT_SECRET'] ?? '';
+if (!process.env['JWT_SECRET']) {
+  throw new Error(
+    'Error: JWT_SECRET is not defined in the environment variables',
+  );
+}
+export const JWT_SECRET = process.env['JWT_SECRET'];
 
 function cookieExtractor(req: Request): string | null {
   const token: unknown = req.cookies[JWT_COOKIE_NAME];
