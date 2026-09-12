@@ -12,8 +12,8 @@ import type { UpdateHelloDto } from '../../structures/UpdateHelloDto';
 import type { mongoose } from '../../structures/mongoose';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
-import type { Resolved } from 'typia';
 import typia from 'typia';
+import type { Resolved } from 'typia';
 
 /**
  * @controller HelloController.create
@@ -25,6 +25,7 @@ export async function create(
   connection: IConnection,
   createHelloDto: create.Body,
 ): Promise<create.Output> {
+  typia.assert<typeof createHelloDto>(createHelloDto);
   return true === connection.simulate
     ? create.simulate(connection, createHelloDto)
     : PlainFetcher.fetch(
@@ -127,6 +128,7 @@ export async function findOne(
   connection: IConnection,
   id: string,
 ): Promise<findOne.Output> {
+  typia.assert<typeof id>(id);
   return true === connection.simulate
     ? findOne.simulate(connection, id)
     : PlainFetcher.fetch(connection, {
@@ -176,6 +178,8 @@ export async function update(
   id: string,
   updateHelloDto: update.Body,
 ): Promise<update.Output> {
+  typia.assert<typeof id>(id);
+  typia.assert<typeof updateHelloDto>(updateHelloDto);
   return true === connection.simulate
     ? update.simulate(connection, id, updateHelloDto)
     : PlainFetcher.fetch(
@@ -243,6 +247,7 @@ export async function remove(
   connection: IConnection,
   id: string,
 ): Promise<remove.Output> {
+  typia.assert<typeof id>(id);
   return true === connection.simulate
     ? remove.simulate(connection, id)
     : PlainFetcher.fetch(connection, {

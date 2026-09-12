@@ -40,6 +40,15 @@ const eslintConfig = defineConfig([
       '@typescript-eslint/promise-function-async': 'error',
 
       '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
+      '@typescript-eslint/prefer-nullish-coalescing': [
+        'error',
+        {
+          ignorePrimitives: {
+            // ignores null or undefined unions with boolean
+            boolean: true,
+          },
+        },
+      ],
     },
   },
   {
@@ -107,6 +116,13 @@ const eslintConfig = defineConfig([
     ...jest.configs['flat/all'],
   },
   {
+    files: [
+      '**/*.test.tsx',
+      '**/*.test.ts',
+      '**/*.spec.tsx',
+      '**/*.spec.ts',
+      '**/*e2e-spec.ts',
+    ],
     rules: {
       'jest/no-hooks': 'off',
       'jest/prefer-mock-return-shorthand': 'off',

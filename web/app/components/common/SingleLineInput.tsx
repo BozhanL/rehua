@@ -4,7 +4,7 @@ import type { InputHTMLAttributes, JSX } from 'react';
 function SingleLineInput({
   style,
   ...props
-}: Readonly<InputHTMLAttributes<HTMLElement>>): JSX.Element {
+}: Readonly<InputHTMLAttributes<HTMLInputElement>>): JSX.Element {
   return (
     <input
       {...props}

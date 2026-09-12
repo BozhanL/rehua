@@ -7,8 +7,8 @@
 import type { Observation_idstring } from '../../../structures/Observation_idstring';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
-import type { Resolved } from 'typia';
 import typia from 'typia';
+import type { Resolved } from 'typia';
 
 /**
  * @controller ObservationsController.findByType
@@ -21,6 +21,8 @@ export async function findByType(
   patientId: string,
   query: findByType.Query,
 ): Promise<findByType.Output> {
+  typia.assert<typeof patientId>(patientId);
+  typia.assert<typeof query>(query);
   return true === connection.simulate
     ? findByType.simulate(connection, patientId, query)
     : PlainFetcher.fetch(connection, {

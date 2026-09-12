@@ -67,52 +67,50 @@ function RadioGroup<T extends string = string>({
       }}
     >
       {/* maps over options array to render each radio button and its label */}
-      {options.map((option) => {
-        return (
-          // label element wraps radio input and its label, allows label of button to be clickable
-          <label
-            key={option.buttonOption}
-            style={{
-              display: 'flex',
-              flexDirection,
-              alignItems: 'center',
-              gap: 6,
-              cursor: disabled ? 'not-allowed' : 'pointer',
+      {options.map((option, index) => (
+        // label element wraps radio input and its label, allows label of button to be clickable
+        <label
+          key={`${String(index)}-${option.buttonOption}`}
+          style={{
+            display: 'flex',
+            flexDirection,
+            alignItems: 'center',
+            gap: 6,
+            cursor: disabled ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {/* radio input element */}
+          <input
+            type="radio"
+            name={radioGroupName}
+            value={option.buttonOption}
+            checked={selectedButton === option.buttonOption}
+            onChange={() => {
+              if (disabled) {
+                return;
+              } // read-only mode
+              onChange(option.buttonOption);
             }}
+            style={{
+              width: size,
+              height: size,
+              margin: 0,
+            }}
+            className={buttonColor}
+            disabled={disabled}
+          />
+          {/* label for the radio button */}
+          <span
+            style={{ fontSize: buttonLabelFontSize }}
+            className={`
+              ${buttonLabelColor}
+              ${buttonLabelFontWeight}
+            `}
           >
-            {/* radio input element */}
-            <input
-              type="radio"
-              name={radioGroupName}
-              value={option.buttonOption}
-              checked={selectedButton === option.buttonOption}
-              onChange={() => {
-                if (disabled) {
-                  return;
-                } // read-only mode
-                onChange(option.buttonOption);
-              }}
-              style={{
-                width: size,
-                height: size,
-                margin: 0,
-              }}
-              className={buttonColor}
-              disabled={disabled}
-            />
-            {/* label for the radio button */}
-            <span
-              style={{ fontSize: buttonLabelFontSize }}
-              className={`
-                ${buttonLabelColor}
-                ${buttonLabelFontWeight}
-              `}
-            >
-              {option.buttonLabel}
-            </span>
-          </label>
-        );
-      })}
+            {option.buttonLabel}
+          </span>
+        </label>
+      ))}
     </div>
   );
 }
