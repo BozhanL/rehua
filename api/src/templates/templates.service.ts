@@ -1,8 +1,9 @@
 import type { CreateTemplateDto } from './dto/create-template.dto';
+import { TemplateType } from './entities/template-type.enum';
 import { Template, TemplateDocument } from './entities/template.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import type { Model } from 'mongoose';
+import type { Model, Require_id } from 'mongoose';
 
 @Injectable()
 export class TemplatesService {
@@ -32,8 +33,40 @@ export class TemplatesService {
     return this.templateModel.findById(id).exec();
   }
 
-  async findAll(): Promise<TemplateDocument[]> {
-    return this.templateModel.find().exec();
+  async findByType(type: TemplateType): Promise<Require_id<Template>[]> {
+    const docs = await this.templateModel
+      .aggregate<Require_id<Template>>([
+        {
+          $sort: {
+            templateName: 1,
+            version: -1,
+          },
+        },
+        {
+          $group: {
+            _id: '$templateName',
+            template: { $first: '$$ROOT' },
+          },
+        },
+        {
+          $replaceRoot: {
+            newRoot: '$template',
+          },
+        },
+        {
+          $match: {
+            templateType: type,
+          },
+        },
+        {
+          $sort: {
+            templateName: 1,
+          },
+        },
+      ])
+      .exec();
+
+    return docs;
   }
 
   async remove(id: string): Promise<TemplateDocument | null> {

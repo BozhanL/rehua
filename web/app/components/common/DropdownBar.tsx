@@ -19,6 +19,7 @@ interface DropdownProps<T extends string = string> {
   checkboxColor?: string; // tailwind CSS accent class for the checkbox tick colour (multi-select), fallback 'accent-rehua-blue'
   textAlign?: 'left' | 'right' | 'center'; // fallback to 'left'
   style?: React.CSSProperties;
+  zindex?: number; // manually change z index of the dropdown popout to overlay ontop of other components
 }
 function DropdownBar<T extends string = string>({
   options,
@@ -35,6 +36,7 @@ function DropdownBar<T extends string = string>({
   textAlign = 'left',
   size = 16,
   style,
+  zindex,
 }: Readonly<DropdownProps<T>>): JSX.Element {
   // Calls custom useDropdown hook to handle state and logic
   const {
@@ -147,13 +149,14 @@ function DropdownBar<T extends string = string>({
               handleKeyPress(e);
             }}
             className="
-              fixed z-40 overflow-x-hidden overflow-y-auto bg-rehua-white
-              shadow-md outline-none
+              fixed overflow-x-hidden overflow-y-auto bg-rehua-white shadow-md
+              outline-none
             "
             style={{
               top: menuPosition.top,
               left: menuPosition.left,
               maxHeight: lengthOfDropdown,
+              zIndex: zindex,
             }}
           >
             {/* Render search box if specified */}
