@@ -191,8 +191,7 @@ function GraphDemo(): JSX.Element {
         </h3>
         <Graph type={selectedType} data={DEMO_OBSERVATIONS[selectedType]} />
         <p className="mt-2 text-xs text-rehua-dark-gray">
-          Graph example using mock observation schema. Component drops
-          value-less observations before Graph ever sees them.
+          Graph example using mock observation schema.
         </p>
       </div>
     </section>

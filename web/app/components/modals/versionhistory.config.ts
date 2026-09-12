@@ -2,8 +2,15 @@ import dayjs, { type Dayjs } from 'dayjs';
 
 //TODO:
 // Replace with SDK once backend implemented
-
 export interface HistoryEntry {
+  id: number;
+  userId: string;
+  userName: string;
+  date: Dayjs;
+  details: string[];
+}
+// replace with sdk
+export interface LogEntry {
   id: number;
   userId: string;
   userName: string;
@@ -13,86 +20,156 @@ export interface HistoryEntry {
 
 // TODO:
 // Remove and replace with api call at point of use once backend implemented
-const historyEntries: HistoryEntry[] = [
+export const historyEntries: HistoryEntry[] = [
   {
     id: 1,
     userId: 'u_8f21c4',
-    userName: 'Amelia Ross',
-    date: dayjs('2026-08-27T16:42:00'),
+    userName: 'Noah Brown',
+    date: dayjs('2026-04-21T11:56:00'),
     details: [
-      'Updated the pricing table in section 4, revised Tier 2 rate from $180 to $195.',
-      'Added a footnote clarifying that rates exclude GST.',
+      'Tickbox "Ibuprofen 5mg" checked',
+      'Added to running notes "Patient has issues swallowing medication, needed assistance"',
     ],
   },
   {
     id: 2,
     userId: 'u_3a9d10',
-    userName: 'Daniel Okafor',
-    date: dayjs('2026-08-27T11:05:00'),
-    details: ['Resolved 3 open comments on the liability clause.'],
+    userName: 'Emma Davies',
+    date: dayjs('2026-04-20T17:12:00'),
+    details: [
+      'Added to running notes "Patient medication to be re-checked with the GP"',
+    ],
   },
   {
     id: 3,
-    userId: 'u_8f21c4',
-    userName: 'Amelia Ross',
-    date: dayjs('2026-08-26T09:18:00'),
-    details: ['Added appendix B with vendor compliance certificates.'],
+    userId: 'u_3a9d10',
+    userName: 'Emma Davies',
+    date: dayjs('2026-04-18T12:01:00'),
+    details: ['Tickbox "Ibuprofen 5mg" checked'],
   },
   {
     id: 4,
     userId: 'u_5c72be',
-    userName: 'Priya Nair',
-    date: dayjs('2026-08-25T15:33:00'),
+    userName: 'Sarah Miller',
+    date: dayjs('2026-04-17T09:30:00'),
     details: [
-      'Accepted all tracked changes from the legal review.',
-      'Removed 2 resolved comment threads from section 6.',
+      'Tickbox "Paracetamol 500mg" unchecked',
+      'Added to running notes "Patient reported nausea, withheld dose pending review"',
     ],
   },
   {
     id: 5,
-    userId: 'u_3a9d10',
-    userName: 'Daniel Okafor',
-    date: dayjs('2026-08-25T10:47:00'),
-    details: ['Reworded the termination notice period from 30 to 60 days.'],
+    userId: 'u_1b40ff',
+    userName: 'William Smith',
+    date: dayjs('2026-04-16T14:45:00'),
+    details: [
+      'Updated question 3 response from "Satisfied" to "Very Satisfied"',
+    ],
   },
   {
     id: 6,
-    userId: 'u_1b40ff',
-    userName: 'Marcus Lee',
-    date: dayjs('2026-08-24T14:12:00'),
-    details: ['Replaced the outdated company logo on the cover page.'],
+    userId: 'u_8f21c4',
+    userName: 'Noah Brown',
+    date: dayjs('2026-04-15T08:20:00'),
+    details: [
+      'Tickbox "Paracetamol 500mg" checked',
+      'Signed off section 2 of the questionnaire',
+    ],
   },
   {
     id: 7,
     userId: 'u_5c72be',
-    userName: 'Priya Nair',
-    date: dayjs('2026-08-22T17:56:00'),
-    details: ['Deleted the deprecated “Legacy Support” subsection.'],
+    userName: 'Sarah Miller',
+    date: dayjs('2026-04-14T16:05:00'),
+    details: [
+      'Added to running notes "Family requested a copy of this document"',
+    ],
   },
   {
     id: 8,
     userId: 'u_1b40ff',
-    userName: 'Marcus Lee',
-    date: dayjs('2026-08-21T08:29:00'),
+    userName: 'William Smith',
+    date: dayjs('2026-04-12T10:52:00'),
+    details: ['Created "Client Satisfaction Questionnaire" from template'],
+  },
+];
+
+// TODO:
+// Remove and replace with api call at point of use once backend implemented
+export const logEntries: HistoryEntry[] = [
+  {
+    id: 1,
+    userId: 'u_8f21c4',
+    userName: 'Noah Brown',
+    date: dayjs('2026-04-21T11:56:00'),
+    details: ['Logged in from 192.168.2.10'],
+  },
+  {
+    id: 2,
+    userId: 'u_3a9d10',
+    userName: 'Emma Davies',
+    date: dayjs('2026-04-20T17:12:00'),
+    details: ['Logged out from 192.168.2.11'],
+  },
+  {
+    id: 3,
+    userId: 'u_3a9d10',
+    userName: 'Emma Davies',
+    date: dayjs('2026-04-18T12:01:00'),
+    details: ['Edited patient "Tama Manaaki", document "Pain Assessment"'],
+  },
+  {
+    id: 4,
+    userId: 'u_8f21c4',
+    userName: 'Noah Brown',
+    date: dayjs('2026-04-17T17:01:00'),
+    details: ['Logged in from 192.168.2.10'],
+  },
+  {
+    id: 5,
+    userId: 'u_5c72be',
+    userName: 'Sarah Miller',
+    date: dayjs('2026-04-17T09:24:00'),
     details: [
-      'Shared the document with the finance team (view-only).',
-      'Set the link to expire on 30 Sep 2026.',
+      'Updated patient "William Smith" status from "Long term" to "Discharged"',
+      'Added nursing note to file',
     ],
+  },
+  {
+    id: 6,
+    userId: 'u_1b40ff',
+    userName: 'William Smith',
+    date: dayjs('2026-04-15T14:47:00'),
+    details: ['Logged in from 192.168.2.14'],
+  },
+  {
+    id: 7,
+    userId: 'u_1b40ff',
+    userName: 'William Smith',
+    date: dayjs('2026-04-15T14:12:00'),
+    details: ['Edited patient "Ana Ngata", document "Admission Form"'],
+  },
+  {
+    id: 8,
+    userId: 'u_5c72be',
+    userName: 'Sarah Miller',
+    date: dayjs('2026-04-14T08:56:00'),
+    details: ['Logged out from 192.168.2.12'],
   },
   {
     id: 9,
     userId: 'u_8f21c4',
-    userName: 'Amelia Ross',
-    date: dayjs('2026-08-20T13:04:00'),
-    details: ['Restored version from 18 Aug after an accidental overwrite.'],
+    userName: 'Noah Brown',
+    date: dayjs('2026-04-13T16:30:00'),
+    details: [
+      'Updated funding source for patient "Tama Manaaki" from "ACC Hospital" to "CHG Hospital"',
+    ],
   },
   {
     id: 10,
-    userId: 'u_8f21c4',
-    userName: 'Amelia Ross',
-    date: dayjs('2026-08-18T10:00:00'),
-    details: ['Created the document from the “Service Agreement” template.'],
+    userId: 'u_3a9d10',
+    userName: 'Emma Davies',
+    date: dayjs('2026-04-10T10:00:00'),
+    details: ['Created patient record "Ana Ngata"'],
   },
 ];
-
-export default historyEntries;

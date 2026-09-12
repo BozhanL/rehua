@@ -5,7 +5,7 @@ import { isTesting } from '@/app/utils/env';
 import type { HttpError } from '@rehua/sdk';
 // TODO:
 // backend document module to be created
-import { create } from '@rehua/sdk/functional/document';
+import { create } from '@rehua/sdk/functional/hello';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
