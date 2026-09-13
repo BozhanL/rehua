@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
-    "@next/bundle-analyzer": "16.2.10",
+    "@next/bundle-analyzer": "16.2.12",
     "@svgr/webpack": "8.1.0",
     "@tailwindcss/postcss": "4.3.3",
     "@tanstack/eslint-plugin-query": "5.102.8",
