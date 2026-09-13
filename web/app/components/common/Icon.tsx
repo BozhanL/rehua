@@ -9,7 +9,7 @@ type IconProps = Omit<SVGProps<SVGSVGElement>, 'width' | 'height' | 'ref'> & {
   name: keyof typeof icons;
   width?: number;
   rotation?: number;
-  flip?: 'horizontal' | 'vertical';
+  flip?: 'horizontal' | 'vertical' | undefined;
 };
 
 // React component that renders an SVG icon with a consistent aspect ratio

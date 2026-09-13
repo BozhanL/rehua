@@ -7,6 +7,7 @@ import { EmergencyContactModule } from './schema/emergency_contacts/emergency_co
 import { ObservationModule } from './schema/observations/observation.module';
 import { PatientModule } from './schema/patients/patient.module';
 import { UserModule } from './schema/users/user.module';
+import { TemplatesModule } from './templates/templates.module';
 import { Config, configModule } from './utils/config';
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -40,6 +41,7 @@ export const mongoModule = MongooseModule.forRootAsync({
     ObservationModule,
     PatientModule,
     ManualModule,
+    TemplatesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
