@@ -10,18 +10,25 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, type JSX } from 'react';
 import { functional } from 'typia';
 
+interface TotpSecretResponse {
+  totpUri: string;
+  totpSecret: string;
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function useGetTotpSecretOptions() {
   const host = useApiUrl();
 
   return queryOptions({
     queryKey: ['getTotpSecret', host],
-    queryFn: async () =>
-      getTotpSecret({
+    queryFn: async () => {
+      const response = await getTotpSecret({
         host: host,
         simulate: isTesting,
         options: { credentials: 'include' },
-      }),
+      });
+      return response as unknown as TotpSecretResponse;
+    },
   });
 }
 
@@ -37,7 +44,7 @@ function Home(): JSX.Element {
     }
   }, [error, router]);
 
-  if (!isSuccess || !data) {
+  if (!isSuccess) {
     return <h1>Loading...</h1>;
   }
 
