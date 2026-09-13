@@ -92,7 +92,7 @@ export default function EditFormPage({
                 onSuccess: (resp) => {
                   const searchParams = new URLSearchParams();
                   searchParams.append('id', resp._id);
-                  router.push(`/templates?${searchParams.toString()}`);
+                  router.back();
                 },
               },
             );
