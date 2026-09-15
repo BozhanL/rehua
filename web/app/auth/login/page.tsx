@@ -6,8 +6,9 @@ import Logo from '../../components/common/Logo';
 import SingleLineInput from '../../components/common/SingleLineInput';
 import MFAModal from '../../components/mfa/MFAModal';
 import useApiUrl from '../../hooks/useApiUrl';
+import { useRefreshOptions } from '@/app/providers';
 import { login, sessionStorageAddUserInfo } from '@/app/utils/auth';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import React, { useState, type JSX } from 'react';
 import { functional } from 'typia';
@@ -20,6 +21,8 @@ interface PendingCredentials {
 function Home(): JSX.Element {
   const host = useApiUrl();
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const refreshOptions = useRefreshOptions(host);
 
   const [showPassword, setShowPassword] = useState(false);
   const [userName, setUserName] = useState<string>('');
@@ -33,12 +36,15 @@ function Home(): JSX.Element {
   const loginMutation = useMutation({
     mutationFn: login,
 
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       sessionStorageAddUserInfo(data);
       setIsMFAOpen(false);
       setPendingCredentials(null);
       setPassword('');
       setMfaError(null);
+
+      await queryClient.invalidateQueries(refreshOptions);
+
       router.push('/patients');
     },
 

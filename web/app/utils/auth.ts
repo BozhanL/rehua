@@ -46,6 +46,15 @@ export function sessionStorageAddUserInfo(data: loginSdk.Output): void {
 }
 
 export function sessionStorageGetUserInfo(): UserInfo {
+  if (typeof sessionStorage === 'undefined') {
+    return {
+      firstName: '',
+      lastName: '',
+      userName: '',
+      group: 'nurse',
+    };
+  }
+
   const firstName = sessionStorage.getItem('firstName') ?? '';
   const lastName = sessionStorage.getItem('lastName') ?? '';
   const userName = sessionStorage.getItem('userName') ?? '';
