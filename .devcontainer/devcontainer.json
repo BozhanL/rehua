@@ -41,7 +41,7 @@
     "ghcr.io/devcontainers-extra/features/npm-package:1.0.4": {
       "package": "@commitlint/cz-commitlint"
     },
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1.10.0": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1.10.1": {
       "moby": false
     }
   },
