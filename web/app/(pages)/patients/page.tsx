@@ -1,12 +1,13 @@
-// TODO: backend delete this lint rule once the group variable is actually coming from the backend
-// ignore any errors for group === 'nurse' or group === 'admin' until above is completed
-
 'use client';
 import Pagination from '../../components/common/Pagination';
 import Surface from '../../components/common/Surface';
 import Table from '../../components/common/Table';
-import DashboardToolbar from '../../components/dashboard/DashboardToolbar';
+import DashboardToolbar, {
+  getFilterType,
+  type SearchFilter,
+} from '../../components/dashboard/DashboardToolbar';
 import { patientColumns, patientRows } from './rowsandcolumns';
+import dayjs from '@/app/utils/dayjs';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';
 
@@ -16,8 +17,19 @@ export default function PatientsPage(): JSX.Element {
   // TODO: backend replace this info with currently logged in user's group (nurse or admin)
   const group: 'nurse' | 'admin' = 'admin';
 
-  const [searchFilter, setSearchFilter] = useState<string[]>(['Name']); // default search filter is by name
+  // TODO: backend return available statuses for currently logged in user
+  const patientStatusOptions = [
+    'Long Term',
+    'Short Term',
+    'Palliative',
+    'Daycare',
+  ];
+
+  const [searchFilter, setSearchFilter] = useState<SearchFilter[]>([
+    'No Filter',
+  ]); // by default no search filter is applied
   const [searchValue, setSearchValue] = useState('');
+  const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // filter by status uses this
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -27,6 +39,12 @@ export default function PatientsPage(): JSX.Element {
 
   // TODO: backend to handle search/filter and pagination based on these values being passed to it
   function handleSearch(): void {
+    const searchValueToSend =
+      getFilterType(searchFilter) === 'date'
+        ? dayjs.utc(searchValue).startOf('day').toISOString()
+        : searchValue;
+    console.log('searchFilter:', searchValueToSend);
+
     // send searchFilter, searchValue, rowsPerPage
 
     // a new search/filter should start from page 1
@@ -84,23 +102,19 @@ export default function PatientsPage(): JSX.Element {
           title="Patients"
           group={group}
           selectedSearchFilter={searchFilter}
-          searchFilterOptions={[
-            'Room #',
-            'Name',
-            'DOB',
-            'Gender',
-            'NHI',
-            'Date Admitted',
-            'Nurse',
-            'Status',
-            'Funding',
-          ]}
           searchValue={searchValue}
           searchPlaceholder="Search Patients"
+          searchInputType={getFilterType(searchFilter)}
+          dropdownSearchOptions={patientStatusOptions}
+          dropdownSearchValue={dropdownSearchValue}
           addButtonText="Add Patient"
           selectedDashboard={['Patients Dashboard']}
-          onSearchFilterChange={setSearchFilter}
+          onSearchFilterChange={(newSearchFilter) => {
+            setSearchValue(''); // reset search value when filter changes
+            setSearchFilter(newSearchFilter);
+          }}
           onSearchValueChange={setSearchValue}
+          onDropdownSearchChange={setDropdownSearchValue}
           onSearch={handleSearch}
           onAdd={handleAddPatient}
           onDashboardChange={handleDashboardChange}

@@ -16,11 +16,11 @@ interface UseDropdownReturn<T extends string = string> {
   handleKeyPress: (e: React.KeyboardEvent) => void;
   handleOptionClick: (option: T) => void;
   toggleOpen: () => void;
-  filteredOptions: T[];
+  filteredOptions: readonly T[];
 }
 // Input props for Dropdownbar
 interface UseDropdownProps<T extends string = string> {
-  options: T[];
+  options: readonly T[];
   selectedValues: T[];
   onChange: (newValues: T[]) => void;
   multiple?: boolean;

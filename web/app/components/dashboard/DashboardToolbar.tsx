@@ -6,6 +6,39 @@ import type { ChangeEvent, JSX } from 'react';
 // TODO: backend see if this should remain as is after auth is implemented
 type UserGroup = 'nurse' | 'admin';
 
+// different components are rendered depending on the type of filter selected
+type SearchInputType = 'none' | 'text' | 'date' | 'dropdown';
+
+// options for search filter dropdown
+const searchFilterOptions = [
+  'No Filter',
+  'Room #',
+  'Name',
+  'DOB',
+  'Gender',
+  'NHI',
+  'Date Admitted',
+  'Nurse',
+  'Status',
+  'Funding',
+] as const;
+export type SearchFilter = (typeof searchFilterOptions)[number];
+
+// helper function to determine the type of search input to render based on the selected search filter
+export function getFilterType(searchFilter: SearchFilter[]): SearchInputType {
+  switch (searchFilter[0]) {
+    case 'DOB':
+    case 'Date Admitted':
+      return 'date';
+    case 'Status':
+      return 'dropdown';
+    case 'No Filter':
+      return 'none';
+    default:
+      return 'text';
+  }
+}
+
 // options for dashboard dropdown; only for admin users
 const dashboardOptions = [
   'Patients Dashboard',
@@ -17,18 +50,22 @@ interface DashboardToolbarProps {
   title: string;
   group: UserGroup;
 
-  selectedSearchFilter: string[];
-  searchFilterOptions: string[];
-
+  selectedSearchFilter: SearchFilter[];
   searchValue: string;
   searchPlaceholder: string;
+  searchInputType: SearchInputType;
+
+  // only used when searchInputType === "dropdown"
+  dropdownSearchOptions?: string[];
+  dropdownSearchValue?: string[];
 
   addButtonText: string;
 
   selectedDashboard?: string[];
 
-  onSearchFilterChange: (value: string[]) => void;
+  onSearchFilterChange: (value: SearchFilter[]) => void;
   onSearchValueChange: (value: string) => void;
+  onDropdownSearchChange?: (value: string[]) => void;
   onSearch: () => void;
   onAdd: () => void;
   onDashboardChange?: (value: string[]) => void;
@@ -39,13 +76,16 @@ function DashboardToolbar({
   title,
   group,
   selectedSearchFilter,
-  searchFilterOptions,
   searchValue,
   searchPlaceholder,
+  searchInputType,
+  dropdownSearchOptions,
+  dropdownSearchValue,
   addButtonText,
   selectedDashboard = [],
   onSearchFilterChange,
   onSearchValueChange,
+  onDropdownSearchChange,
   onSearch,
   onAdd,
   onDashboardChange,
@@ -65,28 +105,58 @@ function DashboardToolbar({
             labelMode="prefix"
             defaultText="Search by: "
             width={300}
-            onChange={onSearchFilterChange}
+            onChange={(newSearchFilter) => {
+              onSearchFilterChange(newSearchFilter);
+            }}
           />
         </div>
 
         {/* search input */}
-        <SingleLineInput
-          value={searchValue}
-          placeholder={searchPlaceholder}
-          style={{ width: 300 }}
-          onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            onSearchValueChange(event.currentTarget.value);
-          }}
-        />
+        {searchInputType === 'text' && (
+          <SingleLineInput
+            value={searchValue}
+            placeholder={searchPlaceholder}
+            style={{ width: 300 }}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              onSearchValueChange(event.currentTarget.value);
+            }}
+          />
+        )}
+
+        {searchInputType === 'date' && (
+          <SingleLineInput
+            type="date"
+            value={searchValue}
+            style={{ width: 300 }}
+            onChange={(event) => {
+              onSearchValueChange(event.target.value);
+            }}
+          />
+        )}
+
+        {searchInputType === 'dropdown' && (
+          <DropdownBar
+            selectedValues={dropdownSearchValue ?? []}
+            options={dropdownSearchOptions ?? []}
+            defaultText="Select Status"
+            width={300}
+            size={17}
+            onChange={(value) => {
+              onDropdownSearchChange?.(value);
+            }}
+          />
+        )}
 
         {/* search button */}
-        <ContentButton
-          text1="Search"
-          iconProps={{ name: 'search' }}
-          backgroundColor="bg-rehua-jordy"
-          verticalPadding={0.2}
-          onClick={onSearch}
-        />
+        {searchInputType !== 'none' && (
+          <ContentButton
+            text1="Search"
+            iconProps={{ name: 'search' }}
+            backgroundColor="bg-rehua-jordy"
+            verticalPadding={0.2}
+            onClick={onSearch}
+          />
+        )}
 
         {/* add x button; will change for admin depending on selected dashboard */}
         <div className="ml-auto flex items-center gap-4">
