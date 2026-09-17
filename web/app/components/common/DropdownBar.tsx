@@ -5,7 +5,7 @@ import React, { useEffect, useState, type JSX } from 'react';
 import { createPortal } from 'react-dom';
 
 interface DropdownProps<T extends string = string> {
-  options: T[]; // list of options to select
+  options: readonly T[]; // list of options to select
   selectedValues: T[]; // either one or multiple element array depending on multiple flag
   onChange: (newValues: T[]) => void; // callback function to handle new list of selected values
   multiple?: boolean;
