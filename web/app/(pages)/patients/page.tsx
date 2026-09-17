@@ -37,6 +37,16 @@ export default function PatientsPage(): JSX.Element {
   // TODO: backend to provide total number of rows for pagination
   const totalRows = patientRows.length;
 
+  // handle search filter change + reset search value when filter changes
+  function handleNewSearchFilter(newSearchFilter: SearchFilter[]): void {
+    setSearchValue(''); // reset search value when filter changes
+    setSearchFilter(newSearchFilter);
+    if (newSearchFilter[0] === 'No Filter') {
+      // TODO: backend handle if filter is reset to "No Filter"
+      console.log('searchFilter: No Filter');
+    }
+  }
+
   // TODO: backend to handle search/filter and pagination based on these values being passed to it
   function handleSearch(): void {
     const searchValueToSend =
@@ -110,8 +120,7 @@ export default function PatientsPage(): JSX.Element {
           addButtonText="Add Patient"
           selectedDashboard={['Patients Dashboard']}
           onSearchFilterChange={(newSearchFilter) => {
-            setSearchValue(''); // reset search value when filter changes
-            setSearchFilter(newSearchFilter);
+            handleNewSearchFilter(newSearchFilter);
           }}
           onSearchValueChange={setSearchValue}
           onDropdownSearchChange={setDropdownSearchValue}
