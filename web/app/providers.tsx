@@ -108,12 +108,13 @@ export default function Providers({
       return;
     } else if (
       (error instanceof HttpError && error.status === 401) ||
+      // TODO: change it to a proper way to detect login status
       sessionStorageGetUserInfo().userName === ''
     ) {
       // If the user is not authenticated, redirect to the login page
       router.push('/auth/login');
     }
-  }, [apiUrl, error, isClient, router]);
+  }, [error, isClient, router]);
 
   if (!isClient || apiUrl.trim() === '') {
     return <h1>Loading...</h1>;
