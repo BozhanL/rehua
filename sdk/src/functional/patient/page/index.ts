@@ -7,8 +7,8 @@
 import type { Patient_idstring } from '../../../structures/Patient_idstring';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
-import type { Resolved } from 'typia';
 import typia from 'typia';
+import type { Resolved } from 'typia';
 
 /**
  * @controller PatientController.findPage
@@ -21,6 +21,8 @@ export async function findPage(
   numberOfRows: number,
   pageNumber: number,
 ): Promise<findPage.Output> {
+  typia.assert<typeof numberOfRows>(numberOfRows);
+  typia.assert<typeof pageNumber>(pageNumber);
   return true === connection.simulate
     ? findPage.simulate(connection, numberOfRows, pageNumber)
     : PlainFetcher.fetch(connection, {

@@ -8,8 +8,8 @@ import type { CreateObservationDto } from '../../structures/CreateObservationDto
 import type { Observation_idstring } from '../../structures/Observation_idstring';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
-import type { Resolved } from 'typia';
 import typia from 'typia';
+import type { Resolved } from 'typia';
 
 export * as type from './type/index';
 
@@ -23,6 +23,7 @@ export async function create(
   connection: IConnection,
   createObservationDto: create.Body,
 ): Promise<create.Output> {
+  typia.assert<typeof createObservationDto>(createObservationDto);
   return true === connection.simulate
     ? create.simulate(connection, createObservationDto)
     : PlainFetcher.fetch(
@@ -87,6 +88,7 @@ export async function findAllObservations(
   connection: IConnection,
   patientId: string,
 ): Promise<findAllObservations.Output> {
+  typia.assert<typeof patientId>(patientId);
   return true === connection.simulate
     ? findAllObservations.simulate(connection, patientId)
     : PlainFetcher.fetch(connection, {

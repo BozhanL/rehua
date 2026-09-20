@@ -10,8 +10,8 @@ import type { User_idstring } from '../../structures/User_idstring';
 import type { mongoose } from '../../structures/mongoose';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
-import type { Resolved } from 'typia';
 import typia from 'typia';
+import type { Resolved } from 'typia';
 
 export * as page from './page/index';
 
@@ -25,6 +25,7 @@ export async function create(
   connection: IConnection,
   createUserDto: create.Body,
 ): Promise<create.Output> {
+  typia.assert<typeof createUserDto>(createUserDto);
   return true === connection.simulate
     ? create.simulate(connection, createUserDto)
     : PlainFetcher.fetch(
@@ -128,6 +129,7 @@ export async function findOne(
   connection: IConnection,
   id: string,
 ): Promise<findOne.Output> {
+  typia.assert<typeof id>(id);
   return true === connection.simulate
     ? findOne.simulate(connection, id)
     : PlainFetcher.fetch(connection, {
@@ -177,6 +179,8 @@ export async function update(
   id: string,
   updateUserDto: update.Body,
 ): Promise<update.Output> {
+  typia.assert<typeof id>(id);
+  typia.assert<typeof updateUserDto>(updateUserDto);
   return true === connection.simulate
     ? update.simulate(connection, id, updateUserDto)
     : PlainFetcher.fetch(
