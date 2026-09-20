@@ -38,7 +38,7 @@ export class DocumentsController {
         throw new BadRequestException('Exactly one file must be uploaded.');
       }
 
-      // Store the uploaded file using the ManualService
+      // Store the uploaded file using the DocumentService
       return await this.documentsService.createFile(
         createFileDocumentDto,
         files[0],
