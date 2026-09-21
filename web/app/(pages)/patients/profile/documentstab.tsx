@@ -9,6 +9,7 @@ import {
   TableToolbar,
   type DocumentTag,
 } from '@/app/components/dashboard/TableToolbar';
+import AddDocumentModal from '@/app/components/modals/AddDocumentModal';
 import dayjs from '@/app/utils/dayjs';
 import { useRouter } from 'next/navigation';
 import {
@@ -179,6 +180,9 @@ export function PatientDocuments(): JSX.Element {
   // input for creating a new tag
   const [newTagName, setNewTagName] = useState('');
 
+  // open add document modal to create a new document from a template, or upload a pdf document
+  const [openAddDocumentModal, setOpenAddDocumentModal] = useState(false);
+
   // function to toggle the selection of a document for exporting
   function toggleDocument(documentId: string): void {
     setSelectedDocumentIds((previous) =>
@@ -291,32 +295,40 @@ export function PatientDocuments(): JSX.Element {
   );
 
   return (
-    <TableToolbar
-      filterOptions={tags.map((tag) => tag.name)}
-      selectedFilterValues={selectedFilterTags.map(
-        (tagId) => tags.find((tag) => tag.id === tagId)?.name ?? tagId,
-      )}
-      onFilterChange={(selectedNames) => {
-        const selectedIds = tags
-          .filter((tag) => selectedNames.includes(tag.name))
-          .map((tag) => tag.id);
-        setSelectedFilterTags(selectedIds);
-      }}
-      inputValue={newTagName}
-      onInputChange={(event: ChangeEvent<HTMLInputElement>) => {
-        setNewTagName(event.currentTarget.value);
-      }}
-      onAddTag={addTag}
-      onExport={() => {
-        // TODO: backend export selected documents for patient
-        console.log('Export documents', selectedDocumentIds);
-      }}
-      onAddDocument={() => {
-        // TODO: frontend - open modals for document creation
-        console.log('Open add document modal');
-      }}
-      documentColumns={documentColumns}
-      documentRows={documentRows}
-    />
+    <>
+      <TableToolbar
+        filterOptions={tags.map((tag) => tag.name)}
+        selectedFilterValues={selectedFilterTags.map(
+          (tagId) => tags.find((tag) => tag.id === tagId)?.name ?? tagId,
+        )}
+        onFilterChange={(selectedNames) => {
+          const selectedIds = tags
+            .filter((tag) => selectedNames.includes(tag.name))
+            .map((tag) => tag.id);
+          setSelectedFilterTags(selectedIds);
+        }}
+        inputValue={newTagName}
+        onInputChange={(event: ChangeEvent<HTMLInputElement>) => {
+          setNewTagName(event.currentTarget.value);
+        }}
+        onAddTag={addTag}
+        onExport={() => {
+          // TODO: backend export selected documents for patient
+          console.log('Export documents', selectedDocumentIds);
+        }}
+        onAddDocument={() => {
+          setOpenAddDocumentModal(true);
+        }}
+        documentColumns={documentColumns}
+        documentRows={documentRows}
+      />
+      <AddDocumentModal
+        isOpen={openAddDocumentModal}
+        onBack={() => {
+          setOpenAddDocumentModal(false);
+        }}
+        patientId={patientId}
+      />
+    </>
   );
 }
