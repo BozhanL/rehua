@@ -232,6 +232,9 @@ function AddDocumentModal({
                       />
                       <ContentButton
                         text1={template.templateName}
+                        verticalPadding={
+                          template.templateName.length >= 34 ? 0.4 : 0
+                        }
                         backgroundColor={colours.background}
                         onClick={() => {
                           createFormMutation.mutate(
