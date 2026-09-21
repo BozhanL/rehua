@@ -1,4 +1,5 @@
 import type { CreateTemplateDto } from './dto/create-template.dto';
+import { TemplateType } from './entities/template-type.enum';
 import type { Template } from './entities/template.entity';
 import { TemplatesService } from './templates.service';
 import type { MongoId } from '@/utils/types';
@@ -22,7 +23,7 @@ export class TemplatesController {
     };
   }
 
-  @TypedRoute.Get(':id')
+  @TypedRoute.Get('/id/:id')
   async findOne(
     @TypedParam('id') id: MongoId,
   ): Promise<(Template & { _id: MongoId }) | null> {
@@ -38,13 +39,15 @@ export class TemplatesController {
     };
   }
 
-  @TypedRoute.Get()
-  async findAll(): Promise<(Template & { _id: MongoId })[]> {
-    const docs = await this.templatesService.findAll();
+  @TypedRoute.Get('/type/:type')
+  async findTemplatesWithType(
+    @TypedParam('type') type: TemplateType,
+  ): Promise<(Template & { _id: MongoId })[]> {
+    const docs = await this.templatesService.findByType(type);
 
     return docs.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      ...doc.toJSON(),
+      ...doc,
       _id: doc._id.toString(),
     }));
   }

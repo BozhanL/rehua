@@ -1,6 +1,6 @@
 import useApiUrl from '@/app/hooks/useApiUrl';
 import { isTesting } from '@/app/utils/env';
-import { findOne as findOneTemplate } from '@rehua/sdk/functional/templates';
+import { findOne as findOneTemplate } from '@rehua/sdk/functional/templates/id';
 import { queryOptions, type QueryFunctionContext } from '@tanstack/react-query';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
