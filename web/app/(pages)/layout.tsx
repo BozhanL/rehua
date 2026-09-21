@@ -1,6 +1,6 @@
 'use client';
 import NavigationBar from '../components/navigation/NavigationBar';
-import { userInfo } from '../utils/auth';
+import { sessionStorageGetUserInfo } from '../utils/auth';
 import type { JSX, ReactNode } from 'react';
 
 // layout for (pages) route, which ensures all pages have navigation bar at the top
@@ -11,9 +11,9 @@ export default function PagesLayout({
   return (
     <>
       <NavigationBar
-        firstName={userInfo.firstName}
-        lastName={userInfo.lastName}
-        group={userInfo.group}
+        firstName={sessionStorageGetUserInfo().firstName}
+        lastName={sessionStorageGetUserInfo().lastName}
+        group={sessionStorageGetUserInfo().group}
       />
       <main>{children}</main>
     </>

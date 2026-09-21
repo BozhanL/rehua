@@ -67,5 +67,3 @@ export function sessionStorageGetUserInfo(): UserInfo {
     group: group === 'admin' ? group : 'nurse',
   };
 }
-
-export const userInfo = sessionStorageGetUserInfo();
