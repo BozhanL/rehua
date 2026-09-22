@@ -3,6 +3,8 @@ import {
   login as loginSdk,
   logout as logoutSdk,
 } from '@rehua/sdk/functional/auth';
+import { create as createSdk } from '@rehua/sdk/functional/user';
+import { generateSecret, generate, generateURI } from 'otplib';
 import typia from 'typia';
 
 export interface UserInfo {
@@ -66,4 +68,34 @@ export function sessionStorageGetUserInfo(): UserInfo {
     userName,
     group: group === 'admin' ? group : 'nurse',
   };
+}
+
+export interface TotpData {
+  token: string;
+  uri: string;
+}
+
+/**
+ * @param label user's email
+ * @returns TOTP token and uri
+ */
+export async function getTotpData(label: string): Promise<TotpData> {
+  const secret = generateSecret();
+  const token = await generate({ secret, strategy: 'totp' });
+  const uri = generateURI({
+    issuer: 'Rehua',
+    label,
+    secret,
+  });
+  return { token, uri };
+}
+
+export async function signup({
+  host,
+  data,
+}: {
+  host: string;
+  data: createSdk.Body;
+}): Promise<createSdk.Output> {
+  return createSdk({ host, simulate: isTesting }, data);
 }
