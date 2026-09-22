@@ -71,7 +71,7 @@ export function sessionStorageGetUserInfo(): UserInfo {
 }
 
 export interface TotpData {
-  token: string;
+  secret: string;
   uri: string;
 }
 
@@ -79,15 +79,14 @@ export interface TotpData {
  * @param label user's email
  * @returns TOTP token and uri
  */
-export async function getTotpData(label: string): Promise<TotpData> {
+export function getTotpData(label: string): TotpData {
   const secret = generateSecret();
-  const token = await generate({ secret, strategy: 'totp' });
   const uri = generateURI({
     issuer: 'Rehua',
     label,
     secret,
   });
-  return { token, uri };
+  return { secret, uri };
 }
 
 export async function signup({
@@ -97,5 +96,8 @@ export async function signup({
   host: string;
   data: createSdk.Body;
 }): Promise<createSdk.Output> {
-  return createSdk({ host, simulate: isTesting }, data);
+  return createSdk(
+    { host, simulate: isTesting, options: { credentials: 'include' } },
+    data,
+  );
 }
