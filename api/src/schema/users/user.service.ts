@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import bcrypt from 'bcrypt';
 import { Model, UpdateWriteOpResult } from 'mongoose';
+import { hash } from 'node:crypto';
 
 const SALT_ROUND = 10;
 
@@ -15,7 +16,11 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDocument> {
-    const password = await bcrypt.hash(createUserDto.password, SALT_ROUND);
+    const password = await bcrypt.hash(
+      // Reduce the length to < 72 bytes
+      hash('sha512', createUserDto.password, { outputEncoding: 'buffer' }),
+      SALT_ROUND,
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-misused-spread
     return this.userModel.create({ ...createUserDto, password });
@@ -49,11 +54,21 @@ export class UserService {
     id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UpdateWriteOpResult> {
+    let password = updateUserDto.password;
+    if (password !== undefined) {
+      password = await bcrypt.hash(
+        // Reduce the length to < 72 bytes
+        hash('sha512', password, { outputEncoding: 'buffer' }),
+        SALT_ROUND,
+      );
+    }
+
     return this.userModel
       .updateOne(
         { _id: id },
         {
-          $set: updateUserDto,
+          // eslint-disable-next-line @typescript-eslint/no-misused-spread
+          $set: { ...updateUserDto, password },
         },
       )
       .exec();

@@ -4,6 +4,7 @@ import { ExpressUser } from '@/utils/types';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
+import { hash } from 'node:crypto';
 import { verify } from 'otplib';
 
 // 5 min for the token to be valid
@@ -22,7 +23,14 @@ export class AuthService {
     password: string,
   ): Promise<LoginResponseDto | null> {
     const user = await this.userService.findOneUserNameForAuth(userName);
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+
+    const isCorrectPassword = await bcrypt.compare(
+      // Reduce the length to < 72 bytes
+      hash('sha512', password, { outputEncoding: 'buffer' }),
+      user?.password ?? '',
+    );
+
+    if (!isCorrectPassword || !user) {
       return null;
     }
 
