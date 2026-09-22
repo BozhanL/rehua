@@ -4,7 +4,7 @@ import {
   logout as logoutSdk,
 } from '@rehua/sdk/functional/auth';
 import { create as createSdk } from '@rehua/sdk/functional/user';
-import { generateSecret, generate, generateURI } from 'otplib';
+import { generateSecret, generateURI } from 'otplib';
 import typia from 'typia';
 
 export interface UserInfo {
