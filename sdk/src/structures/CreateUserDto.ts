@@ -4,6 +4,7 @@ export type CreateUserDto = {
   lastName: string;
   password: string;
   totpSecret: string;
+  totpCode: string;
   email: string;
   status: 'active' | 'disabled';
   homePhoneNumber: string;
