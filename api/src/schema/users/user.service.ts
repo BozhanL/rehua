@@ -17,6 +17,7 @@ export class UserService {
   async create(createUserDto: CreateUserDto): Promise<UserDocument> {
     const password = await bcrypt.hash(createUserDto.password, SALT_ROUND);
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-spread
     return this.userModel.create({ ...createUserDto, password });
   }
 
