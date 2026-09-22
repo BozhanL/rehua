@@ -1,15 +1,10 @@
 import { isTesting } from '@/app/utils/env';
-import { generateSecret } from '@otplib/core';
-import { base32 } from '@otplib/plugin-base32-scure';
-import { crypto } from '@otplib/plugin-crypto-web';
-// import { generateSecret, generate, generateURI } from 'otplib';
-import { generate } from '@otplib/totp';
-import { generateTOTP } from '@otplib/uri';
 import {
   login as loginSdk,
   logout as logoutSdk,
 } from '@rehua/sdk/functional/auth';
 import { create as createSdk } from '@rehua/sdk/functional/user';
+import { generateSecret, generate, generateURI } from 'otplib';
 import typia from 'typia';
 
 export interface UserInfo {
@@ -85,15 +80,9 @@ export interface TotpData {
  * @returns TOTP token and uri
  */
 export async function getTotpData(label: string): Promise<TotpData> {
-  const secret = generateSecret({
-    crypto: crypto,
-    base32: base32,
-  });
-  const token = await generate({
-    secret,
-    crypto: crypto,
-  });
-  const uri = generateTOTP({
+  const secret = generateSecret();
+  const token = await generate({ secret, strategy: 'totp' });
+  const uri = generateURI({
     issuer: 'Rehua',
     label,
     secret,
