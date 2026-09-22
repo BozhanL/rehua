@@ -3,7 +3,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import bcrypt from 'bcrypt';
 import { Model, UpdateWriteOpResult } from 'mongoose';
+
+const SALT_ROUND = 10;
 
 @Injectable()
 export class UserService {
@@ -12,8 +15,9 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDocument> {
-    const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
+    const password = await bcrypt.hash(createUserDto.password, SALT_ROUND);
+
+    return this.userModel.create({ ...createUserDto, password });
   }
 
   async findAll(): Promise<UserDocument[]> {
