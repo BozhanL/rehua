@@ -2,10 +2,12 @@ import type { Note } from '@/app/components/observations/notes/NoteList';
 import dayjs from '@/app/utils/dayjs';
 import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
 
-// TODO: backend delete this and replace with the patient ID
+// TODO: backend delete this file when done with integration
+
+// TODO: backend delete this and replace with patient ID
 export const patientId = '123';
 
-// TODO: backend delete this with the patient's observations
+// TODO: backend delete this and replace with patient's observations
 export const DEMO_OBSERVATIONS: Observation_idstring[] = [
   {
     patientId: patientId,
@@ -95,7 +97,7 @@ export const DEMO_OBSERVATIONS: Observation_idstring[] = [
   },
 ];
 
-// TODO: backend delete this with patient's running notes
+// TODO: backend delete this and replace with patient's running notes
 export const INITIAL_NOTES: Note[] = [
   {
     noteId: 'note-1',
