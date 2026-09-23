@@ -1,5 +1,4 @@
 'use client';
-import { PatientListRows, patient } from './patientlistview';
 import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';
 import ListView from '@/app/components/common/ListView';
@@ -7,6 +6,10 @@ import Surface from '@/app/components/common/Surface';
 import Tabs from '@/app/components/common/Tab';
 import { PatientDocuments } from '@/app/components/observations/PatientDocumentsTab';
 import { PatientObservations } from '@/app/components/observations/PatientObservationsTab';
+import {
+  PatientListRows,
+  patient,
+} from '@/app/components/patient/PatientProfileList';
 import dayjs from '@/app/utils/dayjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

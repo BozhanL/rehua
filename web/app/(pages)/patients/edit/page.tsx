@@ -4,38 +4,45 @@ import Icon from '@/app/components/common/Icon';
 import ListView from '@/app/components/common/ListView';
 import PopUp from '@/app/components/common/PopUp';
 import Surface from '@/app/components/common/Surface';
-import { buildPatientFormRows } from '@/app/components/patient/PatientForm';
+import {
+  buildPatientFormRows,
+  group,
+} from '@/app/components/patient/PatientForm';
 import type { PatientListInformation } from '@/app/components/patient/PatientProfileList';
-import dayjs from '@/app/utils/dayjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';
 
-// React page to display the form for adding a new patient, using ListView to render the form fields
-export default function AddPatientPage(): JSX.Element {
+// TODO: backend connect image upload
+function handleUploadPhoto(): void {
+  console.log('Upload photo clicked');
+}
+
+// React page to display the form for editing an existing patient, using ListView to render the form fields
+export default function EditPatientPage(): JSX.Element {
   const router = useRouter(); // router for navigation
 
   // state to hold the new patient data
   const [patient, setPatient] = useState<PatientListInformation>({
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
-    address: '',
-    nhi: '',
-    gpNameAndMedicalCentre: '',
-    nurse: '',
-    roomNumber: '',
+    firstName: 'Tama',
+    lastName: 'Manaaki',
+    dateOfBirth: '1990-10-02',
+    address: '247 Whitaker Street, Some City 3320',
+    nhi: 'ABC6789',
+    gpNameAndMedicalCentre: 'Dr John Smith, Some Medical Centre',
+    nurse: 'Nurse 1',
+    roomNumber: '101',
     status: 'longTerm',
-    funding: '',
-    email: '',
-    homePhoneNumber: '',
-    gender: '',
-    primaryLanguage: '',
-    maritalStatus: '',
-    ethnicity: '',
+    funding: 'Funded',
+    email: 'tama.manaaki@example.com',
+    homePhoneNumber: '0211234567',
+    gender: 'Male',
+    primaryLanguage: 'English',
+    maritalStatus: 'Single',
+    ethnicity: 'Māori',
     allergies: '',
     photoUrl: null,
-    dateAdmitted: dayjs().tz().toISOString(), // TODO: backend take this away if desirable
+    dateAdmitted: '1990-10-02',
     timeOfDeath: null,
   });
 
@@ -78,14 +85,19 @@ export default function AddPatientPage(): JSX.Element {
       return;
     }
 
+    // additional validation for deceased patients when admin is editting the form
+    if (
+      group === 'admin' &&
+      patient.status === 'deceased' &&
+      !patient.timeOfDeath
+    ) {
+      setShowValidationPopup(true);
+      return;
+    }
+
     // TODO: backend - POST patient to backend here
     // patientDobIso = dayjs(patient.dateOfBirth).toISOString();
     console.log(patient);
-  }
-
-  function handleUploadPhoto(): void {
-    // TODO: backend connect image upload
-    console.log('Upload photo clicked');
   }
 
   return (
@@ -100,7 +112,7 @@ export default function AddPatientPage(): JSX.Element {
           <button
             type="button"
             onClick={() => {
-              router.push('/patients');
+              router.back(); // navigate back to previous page
             }}
             style={{ cursor: 'pointer' }}
           >
@@ -108,9 +120,9 @@ export default function AddPatientPage(): JSX.Element {
           </button>
 
           <div className="flex gap-3">
-            <Icon name="user-profile" width={35} />
+            <Icon name="pencil-note" width={40} />
             <span className="translate-y-1 text-3xl font-bold">
-              Add New Patient
+              Edit Patient Information
             </span>
           </div>
         </div>
@@ -173,7 +185,7 @@ export default function AddPatientPage(): JSX.Element {
           </div>
         </div>
 
-        {/* add patient list */}
+        {/* edit patient list */}
         <div className="pt-4 pb-30">
           <ListView rows={rows} insidePadding="px-8" />
         </div>

@@ -5,43 +5,46 @@ import {
   type MiniPresetLabel,
 } from '@/app/components/common/MiniLabel';
 import SingleLineInput from '@/app/components/common/SingleLineInput';
+import type { PatientListInformation } from '@/app/components/patient/PatientProfileList';
+import dayjs from '@/app/utils/dayjs';
 import type { ChangeEvent } from 'react';
 
-// interface for form data used to create a new patient
-export interface NewPatient {
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string; // ISO string
-  address: string;
-  photoUrl: string | null;
-  nhi: string;
-  // dateAdmitted: string; // ISO string, not included in the form
-  gpNameAndMedicalCentre: string;
-  nurse: string; // fullname of nurse
-  roomNumber: string; // string in case we have room numbers like "101A" or "B12"
-  status: MiniPresetLabel;
-  // timeOfDeath: string | null; // ISO string, required if status is "deceased", otherwise null; not included in the form
-  funding: string;
-  email: string;
-  homePhoneNumber: string; // string in case we have + country codes
-  gender: string;
-  primaryLanguage: string;
-  maritalStatus: string;
-  ethnicity: string;
-  allergies: string; // if empty = frontend will display "None"
-}
+// TODO: backend - replace this with currently logged in user's group
+export const group: 'nurse' | 'admin' = 'admin';
 
 // TODO: backend - fetch all nurses in the system
 function getNurses(): string[] {
   return ['Nurse 1', 'Nurse 2', 'Nurse 3'];
 }
 
-// function to build the rows for the add patient form
-export function buildAddPatientRows(
-  patient: NewPatient,
-  updateField: <K extends keyof NewPatient>(
+// helper functions to convert between status and text for the dropdown
+function statusToText(status: MiniPresetLabel): string {
+  return presetLabels[status].text;
+}
+
+function textToStatus(text: string): MiniPresetLabel | undefined {
+  return (
+    Object.entries(presetLabels) as [MiniPresetLabel, { text: string }][]
+  ).find(([, label]) => label.text === text)?.[0];
+}
+
+// define the list of patient statuses for the dropdown, using preset labels
+export const patientStatuses = [
+  presetLabels.longTerm,
+  presetLabels.shortTerm,
+  presetLabels.daycare,
+  presetLabels.palliative,
+  // TODO: delete this line when backend is implemented
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  ...(group === 'admin' ? [presetLabels.deceased] : []),
+];
+
+// function to build the rows for the patient form
+export function buildPatientFormRows(
+  patient: PatientListInformation,
+  updateField: <K extends keyof PatientListInformation>(
     field: K,
-    value: NewPatient[K],
+    value: PatientListInformation[K],
   ) => void,
 ): ListRow[] {
   // define iconProps for required fields (asterisk icon in red)
@@ -53,25 +56,6 @@ export function buildAddPatientRows(
 
   // font size of all input fields
   const inputFontSize = 22;
-
-  // define the list of patient statuses for the dropdown, using preset labels
-  const newPatientStatuses = [
-    presetLabels.longTerm,
-    presetLabels.shortTerm,
-    presetLabels.daycare,
-    presetLabels.palliative,
-  ];
-
-  // helper functions to convert between status and text for the dropdown
-  function statusToText(status: MiniPresetLabel): string {
-    return presetLabels[status].text;
-  }
-
-  function textToStatus(text: string): MiniPresetLabel | undefined {
-    return (
-      Object.entries(presetLabels) as [MiniPresetLabel, { text: string }][]
-    ).find(([, label]) => label.text === text)?.[0];
-  }
 
   return [
     {
@@ -108,9 +92,16 @@ export function buildAddPatientRows(
         <SingleLineInput
           type="date"
           style={{ width: 500, fontSize: inputFontSize }}
-          value={patient.dateOfBirth}
+          value={
+            patient.dateOfBirth
+              ? dayjs(patient.dateOfBirth).format('YYYY-MM-DD')
+              : ''
+          }
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            updateField('dateOfBirth', event.target.value);
+            updateField(
+              'dateOfBirth',
+              event.target.value ? dayjs(event.target.value).toISOString() : '',
+            );
           }}
           placeholder="Enter date of birth"
         />
@@ -196,7 +187,7 @@ export function buildAddPatientRows(
       heading: 'Status',
       content: (
         <DropdownBar
-          options={newPatientStatuses.map((label) => label.text)}
+          options={patientStatuses.map((label) => label.text)}
           selectedValues={[statusToText(patient.status)]}
           size={19}
           width={550}
@@ -206,6 +197,10 @@ export function buildAddPatientRows(
               const status = textToStatus(selectedStatus[0]);
               if (status) {
                 updateField('status', status);
+                // TODO: backend - time of death should be cleared when status is changed from deceased
+                if (status !== 'deceased') {
+                  updateField('timeOfDeath', null);
+                }
               }
             }
           }}
@@ -213,6 +208,52 @@ export function buildAddPatientRows(
       ),
       iconProps: iconProps,
     },
+    ...(group === 'admin' && patient.status === 'deceased'
+      ? [
+          {
+            heading: 'Time of Death',
+            content: (
+              <SingleLineInput
+                type="datetime-local"
+                style={{ width: 500, fontSize: inputFontSize }}
+                value={
+                  patient.timeOfDeath
+                    ? dayjs(patient.timeOfDeath).format('YYYY-MM-DDTHH:mm')
+                    : ''
+                }
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  updateField(
+                    'timeOfDeath',
+                    event.target.value
+                      ? dayjs(event.target.value).toISOString()
+                      : null,
+                  );
+                }}
+                placeholder="Enter time of death"
+              />
+            ),
+            iconProps: iconProps,
+          },
+        ]
+      : []),
+    ...(group === 'admin'
+      ? [
+          {
+            heading: 'Funding',
+            content: (
+              <SingleLineInput
+                value={patient.funding}
+                style={{ fontSize: inputFontSize }}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  updateField('funding', event.target.value);
+                }}
+                placeholder="Enter funding"
+              />
+            ),
+            iconProps: iconProps,
+          },
+        ]
+      : []),
     {
       heading: 'Email',
       content: (
