@@ -1,5 +1,4 @@
 'use client';
-import { INITIAL_NOTES, patientId } from './tempobservationsdata';
 import ContentButton from '@/app/components/common/ContentButton';
 import DropdownBar from '@/app/components/common/DropdownBar';
 import SingleLineInput from '@/app/components/common/SingleLineInput';
@@ -8,18 +7,16 @@ import AddEntryModal from '@/app/components/observations/AddEntryModal';
 import Graph from '@/app/components/observations/Graph';
 import AddNoteModal from '@/app/components/observations/notes/AddNoteModal';
 import FormatNoteModal from '@/app/components/observations/notes/FormatNoteModal';
-import type {
-  Note,
-  NoteAuditEntry,
-} from '@/app/components/observations/notes/NoteList';
 import NoteList from '@/app/components/observations/notes/NoteList';
 import { useObservations } from '@/app/hooks/useObservations';
+import { useRunningNotes } from '@/app/hooks/useRunningNotes';
 import dayjs from '@/app/utils/dayjs';
 import { isGraphableType, isNonGraphableType } from '@/app/utils/observations';
-import { useMemo, useState, type ChangeEvent, type JSX } from 'react';
+import type { ChangeEvent, JSX } from 'react';
 
 // React component for displaying patient's observations
 export function PatientObservations(): JSX.Element {
+  // custom hooks for managing observations and running notes
   const {
     selectedObservation,
     selectedDate,
@@ -43,78 +40,15 @@ export function PatientObservations(): JSX.Element {
     handleObservationChange,
   } = useObservations();
 
-  // TODO: backend replace demo notes with patient's running notes for selected date
-  const [notes, setNotes] = useState<Note[]>(INITIAL_NOTES);
-
-  // running notes modal states
-  const [isAddNoteOpen, setIsAddNoteOpen] = useState(false);
-  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
-
-  // today's running notes by default, or whichever date is selected
-  const filteredNotes = useMemo(() => {
-    return notes.filter(
-      (note) =>
-        dayjs(note.createdAt).tz().format('YYYY-MM-DD') ===
-        dayjs(selectedDate).tz().format('YYYY-MM-DD'),
-    );
-  }, [notes, selectedDate]);
-
-  // currently selected note for formatting modal
-  const editingNote = useMemo(
-    () => notes.find((note) => note.noteId === editingNoteId) ?? null,
-    [notes, editingNoteId],
-  );
-
-  // TODO: backend POST running note for patient
-  function handleAddRunningNote(noteInput: {
-    plainText: string;
-    html: string;
-  }): void {
-    const newNote: Note = {
-      noteId: `note-${dayjs().tz().toISOString()}-${patientId}`, // TODO: backend generate unique note ID (?)
-      authorName: 'Jane Smith', // TODO: backend use authenticated user
-      createdAt: dayjs().tz().toISOString(),
-      plainText: noteInput.plainText,
-      html: noteInput.html,
-    };
-
-    setNotes((current) => [newNote, ...current]);
-  }
-
-  // TODO: backend PATCH formatted running note + create audit entry
-  function handleSaveFormatting(auditUpdate: {
-    noteId: string;
-    formattedBy: string;
-    formattedAt: string;
-    beforeHtml: string;
-    afterHtml: string;
-  }): void {
-    setNotes((current) =>
-      current.map((note) => {
-        if (note.noteId !== auditUpdate.noteId) {
-          return note;
-        }
-
-        const auditEntry: NoteAuditEntry = {
-          auditId: `audit-${dayjs().tz().toISOString()}-${patientId}`, // TODO: backend generate unique audit ID (?)
-          formattedBy: auditUpdate.formattedBy,
-          formattedAt: auditUpdate.formattedAt,
-          beforeHtml: auditUpdate.beforeHtml,
-          afterHtml: auditUpdate.afterHtml,
-        };
-
-        return {
-          ...note,
-          html: auditUpdate.afterHtml,
-          lastFormattedBy: auditUpdate.formattedBy,
-          lastFormattedAt: auditUpdate.formattedAt,
-          auditHistory: [...(note.auditHistory ?? []), auditEntry],
-        };
-      }),
-    );
-
-    setEditingNoteId(null);
-  }
+  const {
+    filteredNotes,
+    editingNote,
+    isAddNoteOpen,
+    setIsAddNoteOpen,
+    setEditingNoteId,
+    handleAddRunningNote,
+    handleSaveFormatting,
+  } = useRunningNotes(selectedDate);
 
   return (
     <>
