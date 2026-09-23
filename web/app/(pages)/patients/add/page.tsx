@@ -1,10 +1,13 @@
 'use client';
-import { buildAddPatientRows, type NewPatient } from './patientaddlistview';
 import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';
 import ListView from '@/app/components/common/ListView';
 import PopUp from '@/app/components/common/PopUp';
 import Surface from '@/app/components/common/Surface';
+import {
+  buildAddPatientRows,
+  type NewPatient,
+} from '@/app/components/patient/PatientFormListView';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';

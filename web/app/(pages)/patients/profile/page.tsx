@@ -107,6 +107,9 @@ export default function PatientProfilePage(): JSX.Element {
                   textIconGap={0.3}
                   backgroundColor="bg-rehua-tangerine"
                   className="text-xl"
+                  onClick={() => {
+                    router.push(`/patients/edit`); // TODO: backend update the URL if needed
+                  }}
                 />
 
                 <ContentButton
