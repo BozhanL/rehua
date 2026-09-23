@@ -31,6 +31,11 @@ export interface NewPatient {
   allergies: string; // if empty = frontend will display "None"
 }
 
+// TODO: backend - fetch all nurses in the system
+function getNurses(): string[] {
+  return ['Nurse 1', 'Nurse 2', 'Nurse 3'];
+}
+
 // function to build the rows for the add patient form
 export function buildAddPatientRows(
   patient: NewPatient,
@@ -158,8 +163,10 @@ export function buildAddPatientRows(
       heading: 'Nurse',
       content: (
         <DropdownBar
-          options={['Nurse 1', 'Nurse 2', 'Nurse 3']} // TODO: backend replace with all nurses in the system
+          options={getNurses()}
           selectedValues={[patient.nurse ? patient.nurse : 'Nurse 1']}
+          // TODO: backend uncomment the line below when finished, delete line above, dont need the fake 'Nurse 1' fallback
+          // selectedValues={[patient.nurse]}
           search={true}
           size={19}
           width={550}

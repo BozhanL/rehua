@@ -3,10 +3,11 @@ import { buildAddPatientRows, type NewPatient } from './patientaddlistview';
 import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';
 import ListView from '@/app/components/common/ListView';
+import PopUp from '@/app/components/common/PopUp';
 import Surface from '@/app/components/common/Surface';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState, type JSX } from 'react';
+import { useState, type JSX } from 'react';
 
 // React page to display the form for adding a new patient, using ListView to render the form fields
 export default function AddPatientPage(): JSX.Element {
@@ -34,6 +35,12 @@ export default function AddPatientPage(): JSX.Element {
     photoUrl: null,
   });
 
+  // state to control the visibility of the validation popup
+  const [showValidationPopup, setShowValidationPopup] = useState(false);
+
+  // rows for the ListView component
+  const rows = buildAddPatientRows(patient, updateField);
+
   // function to update a specific field in the patient state
   function updateField<K extends keyof NewPatient>(
     field: K,
@@ -42,15 +49,34 @@ export default function AddPatientPage(): JSX.Element {
     setPatient((prev) => ({ ...prev, [field]: value }));
   }
 
-  // memoized rows for the ListView, rebuilt only when patient state changes
-  const rows = useMemo(
-    () => buildAddPatientRows(patient, updateField),
-    [patient],
-  );
-
   // helper functions to handle button clicks for saving the patient and uploading a photo
   function handleSavePatient(): void {
-    // TODO: backend save patient to database
+    const mandatoryFields = [
+      patient.firstName,
+      patient.lastName,
+      patient.dateOfBirth,
+      patient.address,
+      patient.nhi,
+      patient.gpNameAndMedicalCentre,
+      patient.nurse,
+      patient.status,
+      patient.email,
+      patient.homePhoneNumber,
+      patient.gender,
+      patient.ethnicity,
+      patient.allergies,
+    ];
+
+    const hasMissingFields = mandatoryFields.some((field) => !field.trim());
+
+    if (hasMissingFields) {
+      setShowValidationPopup(true);
+      return;
+    }
+
+    // TODO: backend - POST patient to backend here
+    // patientDobIso = dayjs(patient.dateOfBirth).toISOString();
+    // record today as patientDateAdmittedIso, and null for patientTimeOfDeathIso
     console.log(patient);
   }
 
@@ -148,6 +174,23 @@ export default function AddPatientPage(): JSX.Element {
         <div className="pt-4 pb-30">
           <ListView rows={rows} insidePadding="px-8" />
         </div>
+
+        {/* mandatory fields validation popup */}
+        <PopUp
+          text1={'Please ensure all the mandatory\nfields have been filled in.'}
+          button1Props={{
+            text1: 'OK',
+            iconProps: { name: 'circle-arrow' },
+            backgroundColor: 'bg-rehua-green',
+            onClick: () => {
+              setShowValidationPopup(false);
+            },
+          }}
+          modalProps={{
+            open: showValidationPopup,
+            surfaceProps: { style: { height: 550 } },
+          }}
+        />
       </Surface>
     </div>
   );
