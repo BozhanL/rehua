@@ -5,6 +5,7 @@ import {
 import {
   isGraphableObservationType,
   OBSERVATION_GRAPH_CONFIG,
+  type GraphableObservationType,
 } from '../components/observations/observation-graph.config';
 import dayjs from '../utils/dayjs';
 import {
@@ -40,7 +41,8 @@ interface UseObservationsReturn {
   setNewMeasurement: Dispatch<SetStateAction<string>>;
   setIsAddEntryModalOpen: Dispatch<SetStateAction<boolean>>;
 
-  handleAddGraphableEntry: () => void;
+  isValidMeasurementInput: () => boolean;
+  handleAddGraphableEntry: (observationType: GraphableObservationType) => void;
   handleAddNonGraphableEntry: () => void;
   onAddNonGraphableEntry: (entry: {
     measurementValue?: number;
@@ -140,30 +142,38 @@ export function useObservations(): UseObservationsReturn {
     });
   }, [filteredObservations]);
 
-  // TODO: backend modify this to make a POST request to the backend to add a new observation for the patient
-  // performs frontend validation and updates the local state with the new observation
-  function handleAddGraphableEntry(): void {
+  // function to validate the new measurement input
+  function isValidMeasurementInput(): boolean {
     if (!isGraphable || newMeasurement.trim() === '') {
-      return;
+      return false;
     }
 
     // if the measurement is not a finite number, do not add
     const measurement = Number(newMeasurement);
     if (!Number.isFinite(measurement)) {
-      return;
+      return false;
     }
 
     // if the measurement is outside the min/max range for the selected observation type, do not add
     const { min, max } = OBSERVATION_GRAPH_CONFIG[selectedObservation];
     if (measurement < min || measurement > max) {
-      return;
+      return false;
     }
 
+    return true;
+  }
+
+  // TODO: backend modify this to make a POST request to the backend to add a new observation for the patient
+  // updates the local state with the new observation
+  function handleAddGraphableEntry(
+    observationType: GraphableObservationType,
+  ): void {
+    const measurement = Number(newMeasurement);
     // TODO: backend modify id creation (?) and replace with the backend-generated observation ID
     const newObservation: Observation_idstring = {
       patientId,
       _id: `OBS-ID-${dayjs().tz().format('DD/MM/YYYY')}-${patientId}`,
-      type: selectedObservation,
+      type: observationType,
       dateTime: dayjs().toISOString(),
       measurementValue: measurement,
     };
@@ -219,6 +229,7 @@ export function useObservations(): UseObservationsReturn {
     setShowEntries,
     setNewMeasurement,
     setIsAddEntryModalOpen,
+    isValidMeasurementInput,
     handleAddGraphableEntry,
     handleAddNonGraphableEntry,
     onAddNonGraphableEntry,
