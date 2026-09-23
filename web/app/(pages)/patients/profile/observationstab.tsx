@@ -1,6 +1,7 @@
 'use client';
 import ContentButton from '@/app/components/common/ContentButton';
 import DropdownBar from '@/app/components/common/DropdownBar';
+import PopUp from '@/app/components/common/PopUp';
 import SingleLineInput from '@/app/components/common/SingleLineInput';
 import Table from '@/app/components/common/Table';
 import AddEntryModal from '@/app/components/observations/AddEntryModal';
@@ -12,10 +13,14 @@ import { useObservations } from '@/app/hooks/useObservations';
 import { useRunningNotes } from '@/app/hooks/useRunningNotes';
 import dayjs from '@/app/utils/dayjs';
 import { isGraphableType, isNonGraphableType } from '@/app/utils/observations';
-import type { ChangeEvent, JSX } from 'react';
+import { useState, type ChangeEvent, type JSX } from 'react';
 
 // React component for displaying patient's observations
 export function PatientObservations(): JSX.Element {
+  // state for managing the visibility of confirmation and invalid measurement popups
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
+  const [isInvalidEntryPopupOpen, setIsInvalidEntryPopupOpen] = useState(false);
+
   // custom hooks for managing observations and running notes
   const {
     selectedObservation,
@@ -36,6 +41,7 @@ export function PatientObservations(): JSX.Element {
     setShowEntries,
     setNewMeasurement,
     setIsAddEntryModalOpen,
+    isValidMeasurementInput,
     handleAddGraphableEntry,
     handleAddNonGraphableEntry,
     onAddNonGraphableEntry,
@@ -55,6 +61,54 @@ export function PatientObservations(): JSX.Element {
   return (
     <>
       <div className="overflow-x-auto">
+        {/* popup for confirming new graphable entries */}
+        <PopUp
+          isAlertPopup={true}
+          text1={`Are you sure you want to make a new entry for\n${selectedObservationLabel}? The following measurement\nwill be recorded:`}
+          text2={`${newMeasurement} at ${dayjs().tz().format('HH:mm, DD MMMM YYYY')}`}
+          button1Props={{
+            text1: 'CONFIRM',
+            iconProps: { name: 'tick' },
+            backgroundColor: 'bg-rehua-green',
+            horizontalPadding: 0.5,
+            onClick: () => {
+              if (!isGraphableType(selectedObservation)) {
+                return;
+              }
+              handleAddGraphableEntry(selectedObservation);
+              setIsConfirmPopupOpen(false);
+            },
+          }}
+          button2Props={{
+            text1: 'DISCARD',
+            iconProps: { name: 'trash' },
+            backgroundColor: 'bg-rehua-red',
+            verticalPadding: 0.2,
+            horizontalPadding: 0.5,
+            onClick: () => {
+              setIsConfirmPopupOpen(false);
+            },
+          }}
+          defaultButtonHeight={60}
+          modalProps={{ open: isConfirmPopupOpen }}
+        />
+
+        {/* popup for invalid entry submission; used by graphable + non-graphable entries */}
+        <PopUp
+          text1={
+            'Please ensure the value you have entered is valid and\nnotes are filled out (where applicable) before submitting your entry.'
+          }
+          button1Props={{
+            text1: 'OK',
+            iconProps: { name: 'circle-arrow' },
+            backgroundColor: 'bg-rehua-green',
+            onClick: () => {
+              setIsInvalidEntryPopupOpen(false);
+            },
+          }}
+          modalProps={{ open: isInvalidEntryPopupOpen }}
+        />
+
         <div className="flex min-w-max items-center gap-6 p-5">
           {/* observation title */}
           <span className="text-2xl font-bold text-rehua-navy">
@@ -168,11 +222,18 @@ export function PatientObservations(): JSX.Element {
               textIconGap={0.3}
               verticalPadding={0.27}
               onClick={() => {
+                // running notes have their own modal for adding new entries
                 if (isRunningNotes) {
                   setIsAddNoteOpen(true);
-                } else if (isGraphable) {
-                  handleAddGraphableEntry();
+                } else if (isGraphableType(selectedObservation)) {
+                  // graphable types have a local confirmation pop up ^
+                  if (!isValidMeasurementInput()) {
+                    setIsInvalidEntryPopupOpen(true);
+                    return;
+                  }
+                  setIsConfirmPopupOpen(true);
                 } else {
+                  // non-graphable types (bowel/urine output) have their own modal for adding new entries, with confirmation pop up
                   handleAddNonGraphableEntry();
                 }
               }}
@@ -273,6 +334,9 @@ export function PatientObservations(): JSX.Element {
             setIsAddEntryModalOpen(false);
           }}
           onAdd={onAddNonGraphableEntry}
+          onInvalid={() => {
+            setIsInvalidEntryPopupOpen(true);
+          }}
         />
       )}
     </>
