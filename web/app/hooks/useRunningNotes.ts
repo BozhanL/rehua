@@ -34,7 +34,10 @@ interface UseRunningNotesReturn {
 }
 
 // React hook for managing state and logic related to patient's running notes
-export function useRunningNotes(selectedDate: string): UseRunningNotesReturn {
+export function useRunningNotes(
+  startDate: string,
+  endDate: string,
+): UseRunningNotesReturn {
   // TODO: backend replace demo notes with patient's running notes for selected date
   const [notes, setNotes] = useState<Note[]>(INITIAL_NOTES);
 
@@ -42,14 +45,16 @@ export function useRunningNotes(selectedDate: string): UseRunningNotesReturn {
   const [isAddNoteOpen, setIsAddNoteOpen] = useState(false);
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
 
-  // today's running notes by default, or whichever date is selected
+  // TODO: backend replace this local filtering with backend filtering
   const filteredNotes = useMemo(() => {
-    return notes.filter(
-      (note) =>
-        dayjs(note.createdAt).tz().format('YYYY-MM-DD') ===
-        dayjs(selectedDate).tz().format('YYYY-MM-DD'),
-    );
-  }, [notes, selectedDate]);
+    // use if helpful
+    // const startDateTime = dayjs.tz(startDate).startOf('day').toISOString();
+    // const endDateTime = dayjs.tz(endDate).endOf('day').toISOString();
+    return notes.filter((note) => {
+      const noteDate = dayjs(note.createdAt).tz().format('YYYY-MM-DD');
+      return noteDate >= startDate && noteDate <= endDate;
+    });
+  }, [notes, startDate, endDate]);
 
   // currently selected note for formatting modal
   const editingNote = useMemo(

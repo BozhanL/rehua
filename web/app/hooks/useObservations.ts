@@ -21,7 +21,8 @@ import { useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 // interface for below hook
 interface UseObservationsReturn {
   selectedObservation: ObservationViewType;
-  selectedDate: string;
+  startDate: string;
+  endDate: string;
   showEntries: boolean;
   newMeasurement: string;
   isAddEntryModalOpen: boolean;
@@ -33,7 +34,8 @@ interface UseObservationsReturn {
   displayedObservationColumns: typeof observationColumns;
   observationRows: ObservationRow[];
 
-  setSelectedDate: Dispatch<SetStateAction<string>>;
+  setStartDate: Dispatch<SetStateAction<string>>;
+  setEndDate: Dispatch<SetStateAction<string>>;
   setShowEntries: Dispatch<SetStateAction<boolean>>;
   setNewMeasurement: Dispatch<SetStateAction<string>>;
   setIsAddEntryModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -53,10 +55,10 @@ export function useObservations(): UseObservationsReturn {
   const [selectedObservation, setSelectedObservation] =
     useState<ObservationViewType>('RUNNING_NOTES');
 
-  // selected date for filtering observations, defaulting to today's date
-  const [selectedDate, setSelectedDate] = useState(
-    dayjs().tz().format('YYYY-MM-DD'),
-  );
+  // selected date range for filtering observations, defaulting to today's date
+  const today = dayjs().tz().format('YYYY-MM-DD');
+  const [startDate, setStartDate] = useState(today);
+  const [endDate, setEndDate] = useState(today);
 
   // controls whether observation entries table or graph view is shown for graphable observation types
   const [showEntries, setShowEntries] = useState(false);
@@ -71,18 +73,20 @@ export function useObservations(): UseObservationsReturn {
   const [observations, setObservations] =
     useState<Observation_idstring[]>(DEMO_OBSERVATIONS);
 
-  // filter the observations based on the selected observation type and date
+  // TODO: backend replace this local observations filtering with backend filtering
   const filteredObservations = useMemo(() => {
     return observations.filter((observation) => {
       if (observation.type !== selectedObservation) {
         return false;
       }
-      return (
-        dayjs(observation.dateTime).tz().format('YYYY-MM-DD') ===
-        dayjs(selectedDate).tz().format('YYYY-MM-DD')
-      );
+
+      const observationDate = dayjs(observation.dateTime)
+        .tz()
+        .format('YYYY-MM-DD');
+
+      return observationDate >= startDate && observationDate <= endDate;
     });
-  }, [observations, selectedObservation, selectedDate]);
+  }, [observations, selectedObservation, startDate, endDate]);
 
   // unique labels from the backend observation enum/data
   const observationLabels = OBSERVATION_OPTIONS.map((type) => {
@@ -198,7 +202,8 @@ export function useObservations(): UseObservationsReturn {
   // return all the state and handlers needed for the PatientObservations component
   return {
     selectedObservation,
-    selectedDate,
+    startDate,
+    endDate,
     showEntries,
     newMeasurement,
     isAddEntryModalOpen,
@@ -209,7 +214,8 @@ export function useObservations(): UseObservationsReturn {
     isRunningNotes,
     displayedObservationColumns,
     observationRows,
-    setSelectedDate,
+    setStartDate,
+    setEndDate,
     setShowEntries,
     setNewMeasurement,
     setIsAddEntryModalOpen,

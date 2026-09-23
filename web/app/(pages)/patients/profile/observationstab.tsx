@@ -19,7 +19,8 @@ export function PatientObservations(): JSX.Element {
   // custom hooks for managing observations and running notes
   const {
     selectedObservation,
-    selectedDate,
+    startDate,
+    endDate,
     showEntries,
     newMeasurement,
     isAddEntryModalOpen,
@@ -30,7 +31,8 @@ export function PatientObservations(): JSX.Element {
     isRunningNotes,
     displayedObservationColumns,
     observationRows,
-    setSelectedDate,
+    setStartDate,
+    setEndDate,
     setShowEntries,
     setNewMeasurement,
     setIsAddEntryModalOpen,
@@ -48,7 +50,7 @@ export function PatientObservations(): JSX.Element {
     setEditingNoteId,
     handleAddRunningNote,
     handleSaveFormatting,
-  } = useRunningNotes(selectedDate);
+  } = useRunningNotes(startDate, endDate);
 
   return (
     <>
@@ -59,7 +61,9 @@ export function PatientObservations(): JSX.Element {
             {selectedObservationLabel}
             {' for:'}
             <br />
-            {dayjs(selectedDate).tz().format('DD/MM/YYYY')}
+            {dayjs(startDate).tz().format('DD/MM/YYYY')}
+            {startDate !== endDate &&
+              ` - ${dayjs(endDate).tz().format('DD/MM/YYYY')}`}
           </span>
 
           {/* observation selector */}
@@ -75,29 +79,73 @@ export function PatientObservations(): JSX.Element {
             />
           </div>
 
-          {/* date filter */}
-          <div className="flex shrink-0 items-center gap-2">
-            <label htmlFor="observation-date" style={{ fontSize: 18 }}>
-              Filter by date:
-            </label>
+          {/* date filtering; single date for graphs, otherwise date range */}
+          {!showEntries && !isRunningNotes ? (
+            // single date input for graph view
+            <div className="flex shrink-0 items-center gap-2">
+              <label htmlFor="observation-date" style={{ fontSize: 18 }}>
+                Filter by date:
+              </label>
 
-            <input
-              id="observation-date"
-              type="date"
-              value={selectedDate}
-              onChange={(event) => {
-                // if the date input is cleared, reset to today's date
-                if (!event.target.value) {
-                  setSelectedDate(dayjs().tz().format('YYYY-MM-DD'));
-                  return;
-                }
-                // else, set the selected date to the chosen value
-                setSelectedDate(event.target.value);
-              }}
-              className="h-10 rounded-md border px-3"
-              style={{ fontSize: 18 }}
-            />
-          </div>
+              <SingleLineInput
+                id="observation-date"
+                type="date"
+                style={{ width: 300 }}
+                value={startDate}
+                onChange={(event) => {
+                  // if the date input is cleared, reset to today's date
+                  if (!event.target.value) {
+                    setStartDate(dayjs().tz().format('YYYY-MM-DD'));
+                    return;
+                  }
+                  // else, set the selected date to the chosen value (reset both start and end date for consistency)
+                  setStartDate(event.target.value);
+                  setEndDate(event.target.value);
+                }}
+              />
+            </div>
+          ) : (
+            // date range input for entries view or running notes
+            <div className="flex shrink-0 items-center gap-2">
+              <label htmlFor="observation-start-date" style={{ fontSize: 18 }}>
+                Filter by date range, from:
+              </label>
+
+              <SingleLineInput
+                id="observation-start-date"
+                type="date"
+                style={{ width: 300 }}
+                value={startDate}
+                onChange={(event) => {
+                  // if the date input is cleared, reset to today's date
+                  if (!event.target.value) {
+                    setStartDate(dayjs().tz().format('YYYY-MM-DD'));
+                    return;
+                  }
+                  // else, set the selected date to the chosen value
+                  setStartDate(event.target.value);
+                }}
+              />
+
+              <span>to:</span>
+
+              <SingleLineInput
+                id="observation-end-date"
+                type="date"
+                style={{ width: 300 }}
+                value={endDate}
+                onChange={(event) => {
+                  // if the date input is cleared, reset to today's date
+                  if (!event.target.value) {
+                    setEndDate(dayjs().tz().format('YYYY-MM-DD'));
+                    return;
+                  }
+                  // else, set the selected date to the chosen value
+                  setEndDate(event.target.value);
+                }}
+              />
+            </div>
+          )}
 
           {/* input for adding new entries + view entries/graph button */}
           <div className="ml-auto flex shrink-0 items-center gap-5">
@@ -142,6 +190,11 @@ export function PatientObservations(): JSX.Element {
                 textIconGap={showEntries ? 0.35 : 0.3}
                 verticalPadding={showEntries ? 0.29 : 0.22}
                 onClick={() => {
+                  if (showEntries) {
+                    // when switching from table view, set the end date to the start date to ensure graph view shows only one day
+                    setEndDate(startDate);
+                  }
+                  // toggle between graph and table view
                   setShowEntries((current) => !current);
                 }}
               />
@@ -168,7 +221,9 @@ export function PatientObservations(): JSX.Element {
             </div>
           ) : (
             <>
-              {isGraphableType(selectedObservation) && !showEntries ? (
+              {isGraphableType(selectedObservation) &&
+              !showEntries &&
+              startDate === endDate ? (
                 <div className="bg-rehua-white pl-10">
                   <Graph
                     type={selectedObservation}
