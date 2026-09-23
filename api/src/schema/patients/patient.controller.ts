@@ -95,6 +95,28 @@ export class PatientController {
     }));
   }
 
+  //returns patients like in a the list view (number of results shown, page number)
+  @TypedRoute.Get('page/:pageNumber/:numberOfRows/:filter/:search')
+  async findPageByFilter(
+    @TypedParam('numberOfRows') numberOfRows: number,
+    @TypedParam('pageNumber') pageNumber: number,
+    @TypedParam('filter') filter: string,
+    @TypedParam('search') search: string,
+  ): Promise<(Patient & { _id: string })[]> {
+    const docs = await this.patientService.findPageByFilter(
+      numberOfRows,
+      pageNumber,
+      filter,
+      search,
+    );
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
+  }
+
   @TypedRoute.Patch(':id')
   async update(
     @TypedParam('id') id: string,
