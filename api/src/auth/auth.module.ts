@@ -11,7 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import type { SignOptions } from 'jsonwebtoken';
 
-const JWT_SIGN_OPTIONS: SignOptions = { expiresIn: '1h' };
+const JWT_SIGN_OPTIONS: SignOptions = { expiresIn: '5m' };
 
 @Module({
   controllers: [AuthController],
