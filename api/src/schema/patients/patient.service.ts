@@ -3,7 +3,7 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient, PatientDocument } from './entities/patient.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateWriteOpResult } from 'mongoose';
+import { Model, QueryFilter, UpdateWriteOpResult } from 'mongoose';
 
 @Injectable()
 export class PatientService {
@@ -30,6 +30,33 @@ export class PatientService {
   ): Promise<PatientDocument[]> {
     return this.patientModel
       .find()
+      .sort({ dateAdmitted: 'desc' })
+      .skip((pageNumber - 1) * numberOfRows)
+      .limit(numberOfRows)
+      .exec();
+  }
+
+  async findPageByFilter(
+    numberOfRows: number,
+    pageNumber: number,
+    filter: string,
+    search: string,
+  ): Promise<PatientDocument[]> {
+    const searchFilter: Record<string, unknown> = {};
+
+    if (filter && search) {
+      const escapedValue = search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+
+      searchFilter[filter] = {
+        $regex: escapedValue,
+        $options: 'i',
+      };
+    }
+
+    const query = searchFilter as QueryFilter<PatientDocument>;
+
+    return this.patientModel
+      .find(query)
       .sort({ dateAdmitted: 'desc' })
       .skip((pageNumber - 1) * numberOfRows)
       .limit(numberOfRows)

@@ -2,6 +2,7 @@ import type { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
 import { PatientService } from './patient.service';
+import { Public } from '@/auth/auth.controller';
 import {
   SwaggerExample,
   TypedBody,
@@ -85,6 +86,29 @@ export class PatientController {
     @TypedParam('pageNumber') pageNumber: number,
   ): Promise<(Patient & { _id: string })[]> {
     const docs = await this.patientService.findPage(numberOfRows, pageNumber);
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
+  }
+
+  //returns patients like in a the list view (number of results shown, page number)
+  @Public()
+  @TypedRoute.Get('page/:pageNumber/:numberOfRows/:filter/:search')
+  async findPageByFilter(
+    @TypedParam('numberOfRows') numberOfRows: number,
+    @TypedParam('pageNumber') pageNumber: number,
+    @TypedParam('filter') filter: string,
+    @TypedParam('search') search: string,
+  ): Promise<(Patient & { _id: string })[]> {
+    const docs = await this.patientService.findPageByFilter(
+      numberOfRows,
+      pageNumber,
+      filter,
+      search,
+    );
 
     return docs.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
