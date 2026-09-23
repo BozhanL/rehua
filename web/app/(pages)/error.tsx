@@ -1,5 +1,6 @@
 'use client';
 
+import Surface from '../components/common/Surface';
 import ContentButton from '@/app/components/common/ContentButton';
 import { useEffect, type JSX } from 'react';
 
@@ -16,18 +17,23 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <p>{error.message}</p>
-      <ContentButton
-        type="button"
-        text1="Try again"
-        iconProps={{ name: 'alert' }}
-        foregroundColor="text-rehua-white"
-        backgroundColor="bg-rehua-green"
-        textAlign="right"
-        onClick={unstable_retry}
-      />
+    <div className="flex h-dvh flex-col">
+      <Surface width="100%" height="100%">
+        <div className="flex h-dvh flex-col items-center justify-center gap-4 p-4">
+          <h2>Something went wrong!</h2>
+          <p>{error.message}</p>
+          <ContentButton
+            type="button"
+            height={45}
+            text1="Try again"
+            iconProps={{ name: 'alert' }}
+            foregroundColor="text-rehua-white"
+            backgroundColor="bg-rehua-red"
+            textAlign="right"
+            onClick={unstable_retry}
+          />
+        </div>
+      </Surface>
     </div>
   );
 }
