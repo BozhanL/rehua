@@ -51,7 +51,7 @@ export default function PatientsPage(): JSX.Element {
   function handleSearch(): void {
     const searchValueToSend =
       getFilterType(searchFilter) === 'date'
-        ? dayjs.utc(searchValue).startOf('day').toISOString()
+        ? dayjs.tz(searchValue).startOf('day').toISOString()
         : searchValue;
     console.log('searchFilter:', searchValueToSend);
 
