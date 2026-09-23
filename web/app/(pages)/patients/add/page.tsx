@@ -1,16 +1,63 @@
 'use client';
-import { AddPatientRows, patient } from './patientaddlistview';
+import { buildAddPatientRows, type NewPatient } from './patientaddlistview';
 import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';
 import ListView from '@/app/components/common/ListView';
 import Surface from '@/app/components/common/Surface';
-import dayjs from '@/app/utils/dayjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import type { JSX } from 'react';
+import { useMemo, useState, type JSX } from 'react';
 
+// React page to display the form for adding a new patient, using ListView to render the form fields
 export default function AddPatientPage(): JSX.Element {
-  const router = useRouter();
+  const router = useRouter(); // router for navigation
+
+  // state to hold the new patient data
+  const [patient, setPatient] = useState<NewPatient>({
+    firstName: '',
+    lastName: '',
+    nhi: '',
+    dateOfBirth: '',
+    gpNameAndMedicalCentre: '',
+    nurse: '',
+    roomNumber: '',
+    status: 'longTerm',
+    address: '',
+    funding: '',
+    email: '',
+    homePhoneNumber: '',
+    gender: '',
+    primaryLanguage: '',
+    maritalStatus: '',
+    ethnicity: '',
+    allergies: '',
+    photoUrl: null,
+  });
+
+  // function to update a specific field in the patient state
+  function updateField<K extends keyof NewPatient>(
+    field: K,
+    value: NewPatient[K],
+  ): void {
+    setPatient((prev) => ({ ...prev, [field]: value }));
+  }
+
+  // memoized rows for the ListView, rebuilt only when patient state changes
+  const rows = useMemo(
+    () => buildAddPatientRows(patient, updateField),
+    [patient],
+  );
+
+  // helper functions to handle button clicks for saving the patient and uploading a photo
+  function handleSavePatient(): void {
+    // TODO: backend save patient to database
+    console.log(patient);
+  }
+
+  function handleUploadPhoto(): void {
+    // TODO: backend connect image upload
+    console.log('Upload photo clicked');
+  }
 
   return (
     <div className="flex h-dvh flex-col">
@@ -30,6 +77,7 @@ export default function AddPatientPage(): JSX.Element {
           >
             <Icon name="circle-arrow" width={50} className="text-rehua-navy" />
           </button>
+
           <div className="flex gap-3">
             <Icon name="user-profile" width={35} />
             <span className="translate-y-1 text-3xl font-bold">
@@ -49,24 +97,22 @@ export default function AddPatientPage(): JSX.Element {
               "
               style={{ boxShadow: 'inset 0 5px 8px rgb(0 0 0 / 0.2)' }}
             >
-              {
-                // TODO: backend - ignore this until backend is completed to provide a photoUrl for the patient
-                patient.photoUrl ? (
-                  <Image
-                    src={patient.photoUrl}
-                    alt={`${patient.firstName} ${patient.lastName} profile photo`}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex size-full items-center justify-center">
-                    <Icon name="user" width={85} className="text-rehua-white" />
-                  </div>
-                )
-              }
+              {/* placeholder for the patient's profile photo */}
+              {patient.photoUrl ? (
+                <Image
+                  src={patient.photoUrl}
+                  alt={`${patient.firstName} ${patient.lastName} profile photo`}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="flex size-full items-center justify-center">
+                  <Icon name="user" width={85} className="text-rehua-white" />
+                </div>
+              )}
             </div>
 
-            {/* buttons */}
+            {/* buttons: photo upload + save new patient */}
             <div className="flex justify-center gap-6">
               <ContentButton
                 text1="Upload"
@@ -77,6 +123,7 @@ export default function AddPatientPage(): JSX.Element {
                 textIconGap={0.3}
                 backgroundColor="bg-rehua-jordy"
                 className="text-xl"
+                onClick={handleUploadPhoto}
               />
 
               <ContentButton
@@ -91,14 +138,15 @@ export default function AddPatientPage(): JSX.Element {
                 textIconGap={0.4}
                 backgroundColor="bg-rehua-green"
                 className="text-xl"
+                onClick={handleSavePatient}
               />
             </div>
           </div>
         </div>
 
         {/* add patient list */}
-        <div className="pt-4">
-          <ListView rows={AddPatientRows} insidePadding="px-8" />
+        <div className="pt-4 pb-30">
+          <ListView rows={rows} insidePadding="px-8" />
         </div>
       </Surface>
     </div>

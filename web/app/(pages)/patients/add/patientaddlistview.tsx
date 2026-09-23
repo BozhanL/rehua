@@ -20,7 +20,7 @@ export interface NewPatient {
   nurse: string; // fullname of nurse
   roomNumber: string; // string in case we have room numbers like "101A" or "B12"
   status: MiniPresetLabel;
-  timeOfDeath: string | null; // ISO string, required if status is "deceased", otherwise null
+  // timeOfDeath: string | null; // ISO string, required if status is "deceased", otherwise null; not included in the form
   funding: string;
   email: string;
   homePhoneNumber: string; // string in case we have + country codes
@@ -42,8 +42,12 @@ export function buildAddPatientRows(
   // define iconProps for required fields (asterisk icon in red)
   const iconProps = {
     name: 'asterisk',
-    color: 'text-rehua-red',
+    width: 10,
+    className: 'text-rehua-ruby',
   } as const;
+
+  // font size of all input fields
+  const inputFontSize = 22;
 
   // define the list of patient statuses for the dropdown, using preset labels
   const newPatientStatuses = [
@@ -53,6 +57,7 @@ export function buildAddPatientRows(
     presetLabels.palliative,
   ];
 
+  // helper functions to convert between status and text for the dropdown
   function statusToText(status: MiniPresetLabel): string {
     return presetLabels[status].text;
   }
@@ -69,6 +74,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.firstName}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('firstName', event.target.value);
           }}
@@ -82,6 +88,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.lastName}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('lastName', event.target.value);
           }}
@@ -95,6 +102,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           type="date"
+          style={{ width: 500, fontSize: inputFontSize }}
           value={patient.dateOfBirth}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('dateOfBirth', event.target.value);
@@ -109,6 +117,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.address}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('address', event.target.value);
           }}
@@ -122,6 +131,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.nhi}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('nhi', event.target.value);
           }}
@@ -135,6 +145,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.gpNameAndMedicalCentre}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('gpNameAndMedicalCentre', event.target.value);
           }}
@@ -148,7 +159,11 @@ export function buildAddPatientRows(
       content: (
         <DropdownBar
           options={['Nurse 1', 'Nurse 2', 'Nurse 3']} // TODO: backend replace with all nurses in the system
-          selectedValues={[patient.nurse]}
+          selectedValues={[patient.nurse ? patient.nurse : 'Nurse 1']}
+          search={true}
+          size={19}
+          width={550}
+          lengthOfDropdown={350}
           defaultText="Select designated nurse name"
           onChange={(selectedNurse) => {
             updateField('nurse', selectedNurse[0] ?? '');
@@ -161,6 +176,7 @@ export function buildAddPatientRows(
       heading: 'Room Number',
       content: (
         <SingleLineInput
+          style={{ fontSize: inputFontSize }}
           value={patient.roomNumber}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('roomNumber', event.target.value);
@@ -175,6 +191,8 @@ export function buildAddPatientRows(
         <DropdownBar
           options={newPatientStatuses.map((label) => label.text)}
           selectedValues={[statusToText(patient.status)]}
+          size={19}
+          width={550}
           defaultText="Select patient status"
           onChange={(selectedStatus) => {
             if (selectedStatus[0]) {
@@ -193,6 +211,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.email}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('email', event.target.value);
           }}
@@ -206,6 +225,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.homePhoneNumber}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('homePhoneNumber', event.target.value);
           }}
@@ -219,6 +239,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.gender}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('gender', event.target.value);
           }}
@@ -232,6 +253,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.primaryLanguage}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('primaryLanguage', event.target.value);
           }}
@@ -244,6 +266,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.maritalStatus}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('maritalStatus', event.target.value);
           }}
@@ -256,6 +279,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.ethnicity}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('ethnicity', event.target.value);
           }}
@@ -269,6 +293,7 @@ export function buildAddPatientRows(
       content: (
         <SingleLineInput
           value={patient.allergies}
+          style={{ fontSize: inputFontSize }}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             updateField('allergies', event.target.value);
           }}
