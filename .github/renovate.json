@@ -10,7 +10,7 @@
     "customManagers:dockerfileVersions",
     "customManagers:githubActionsVersions",
 
-    ":assignAndReview(BozhanL)",
+    // ":assignAndReview(BozhanL)",
 
     "local>BozhanL/rehua//.github/renovate/minimumReleaseAge",
     "local>BozhanL/rehua//.github/renovate/automerge",
