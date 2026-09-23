@@ -1,11 +1,9 @@
 'use client';
+import { INITIAL_NOTES, patientId } from './tempobservationsdata';
 import ContentButton from '@/app/components/common/ContentButton';
 import DropdownBar from '@/app/components/common/DropdownBar';
 import SingleLineInput from '@/app/components/common/SingleLineInput';
-import Table, {
-  type TableColumn,
-  type TableRow,
-} from '@/app/components/common/Table';
+import Table from '@/app/components/common/Table';
 import AddEntryModal from '@/app/components/observations/AddEntryModal';
 import Graph from '@/app/components/observations/Graph';
 import AddNoteModal from '@/app/components/observations/notes/AddNoteModal';
@@ -15,276 +13,42 @@ import type {
   NoteAuditEntry,
 } from '@/app/components/observations/notes/NoteList';
 import NoteList from '@/app/components/observations/notes/NoteList';
-import {
-  OBSERVATION_GRAPH_CONFIG,
-  type ObservationType,
-  isGraphableObservationType,
-} from '@/app/components/observations/observation-graph.config';
+import { useObservations } from '@/app/hooks/useObservations';
 import dayjs from '@/app/utils/dayjs';
-import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
+import { isGraphableType, isNonGraphableType } from '@/app/utils/observations';
 import { useMemo, useState, type ChangeEvent, type JSX } from 'react';
-
-// interface for a table row representing an observation
-interface ObservationRow extends TableRow {
-  id: number; // unique identifier for the row
-  content: {
-    id: string;
-    date: string;
-    time: string;
-    measurement: string;
-    notes?: string;
-  };
-}
-
-// table columns for displaying observations in a table
-const observationColumns: TableColumn[] = [
-  {
-    rowKey: 'id',
-    header: 'Entry ID',
-    width: 50,
-    columnClassName: 'pl-10',
-  },
-  {
-    rowKey: 'date',
-    header: 'Date Recorded',
-    width: 50,
-  },
-  {
-    rowKey: 'time',
-    header: 'Time Recorded',
-    width: 50,
-  },
-  {
-    rowKey: 'measurement',
-    header: 'Measurement',
-    width: 50,
-  },
-  {
-    rowKey: 'notes',
-    header: 'Notes & Description',
-    width: 50,
-  },
-];
-
-// frontend-only observation type
-type ObservationViewType = ObservationType | 'RUNNING_NOTES';
-
-// all observation views shown in the dropdown
-const OBSERVATION_OPTIONS: ObservationViewType[] = [
-  'RUNNING_NOTES',
-  ...Object.keys(OBSERVATION_GRAPH_CONFIG),
-  'BOWEL_OUTPUT',
-  'URINE_OUTPUT',
-] as ObservationViewType[];
-
-// mapping of observation types to their dropdown/display labels
-function getObservationLabel(type: ObservationViewType): string {
-  if (type === 'RUNNING_NOTES') {
-    return 'Running Notes';
-  }
-
-  if (isGraphableObservationType(type)) {
-    const config = OBSERVATION_GRAPH_CONFIG[type];
-    return `${config.shortCode} - ${config.label}`;
-  }
-
-  return type === 'BOWEL_OUTPUT' ? 'BO - Bowel Output' : 'UO - Urine Output';
-}
-
-// TODO: backend delete this and replace with the patient ID
-const patientId = '123';
-
-// TODO: backend delete this with the patient's observations
-const DEMO_OBSERVATIONS: Observation_idstring[] = [
-  {
-    patientId: patientId,
-    _id: 'OBS-001',
-    type: 'OXYGEN_RATE',
-    dateTime: dayjs().hour(8).minute(15).second(0).millisecond(0).toISOString(),
-    measurementValue: 96,
-  },
-  {
-    patientId: patientId,
-    _id: 'OBS-011',
-    type: 'OXYGEN_RATE',
-    dateTime: dayjs()
-      .hour(23)
-      .minute(59)
-      .second(0)
-      .millisecond(0)
-      .toISOString(),
-    measurementValue: 100,
-  },
-  {
-    patientId: patientId,
-    _id: 'OBS-002',
-    type: 'OXYGEN_RATE',
-    dateTime: dayjs()
-      .hour(12)
-      .minute(30)
-      .second(0)
-      .millisecond(0)
-      .toISOString(),
-    measurementValue: 98,
-  },
-  {
-    patientId: patientId,
-    _id: 'OBS-003',
-    type: 'OXYGEN_RATE',
-    dateTime: dayjs()
-      .hour(16)
-      .minute(45)
-      .second(0)
-      .millisecond(0)
-      .toISOString(),
-    measurementValue: 97,
-  },
-  {
-    patientId: patientId,
-    _id: 'OBS-004',
-    type: 'HEART_RATE',
-    dateTime: dayjs().hour(9).minute(0).second(0).millisecond(0).toISOString(),
-    measurementValue: 72,
-  },
-  {
-    patientId: patientId,
-    _id: 'OBS-005',
-    type: 'HEART_RATE',
-    dateTime: dayjs()
-      .hour(14)
-      .minute(20)
-      .second(0)
-      .millisecond(0)
-      .toISOString(),
-    measurementValue: 80,
-  },
-  {
-    patientId: patientId,
-    _id: 'OBS-006',
-    type: 'BOWEL_OUTPUT',
-    dateTime: dayjs()
-      .hour(10)
-      .minute(15)
-      .second(0)
-      .millisecond(0)
-      .toISOString(),
-    notes: 'Normal bowel movement',
-  },
-  {
-    patientId: patientId,
-    _id: 'OBS-007',
-    type: 'URINE_OUTPUT',
-    dateTime: dayjs()
-      .hour(13)
-      .minute(40)
-      .second(0)
-      .millisecond(0)
-      .toISOString(),
-    notes: 'Normal',
-  },
-];
-
-// TODO: backend delete this with patient's running notes
-const INITIAL_NOTES: Note[] = [
-  {
-    noteId: 'note-1',
-    authorName: 'Jane Smith',
-    createdAt: dayjs()
-      .hour(8)
-      .minute(15)
-      .second(0)
-      .millisecond(0)
-      .toISOString(),
-    plainText: 'This is a test note.\n\n\nIt has multiple lines.',
-    html: '<p>This is a test note.</p><p>&nbsp;</p><p>&nbsp;</p><p>It has multiple lines.</p>',
-  },
-  {
-    noteId: 'note-2',
-    authorName: 'Jane Smith',
-    createdAt: dayjs()
-      .hour(12)
-      .minute(30)
-      .second(0)
-      .millisecond(0)
-      .toISOString(),
-    plainText:
-      'These notes are not changable.\nNurse running notes are preserved.',
-    html: '<p>These notes are not changable.</p><p>Nurse running notes are preserved.</p>',
-  },
-];
-
-// function to format the measurement value of an observation for display purposes
-// show "-" if the measurement value is undefined, otherwise show the value with its unit
-function formatMeasurement(observation: Observation_idstring): string {
-  if (observation.measurementValue === undefined) {
-    return '—';
-  }
-  if (!isGraphableObservationType(observation.type)) {
-    return String(observation.measurementValue);
-  }
-  const config = OBSERVATION_GRAPH_CONFIG[observation.type];
-  return `${String(observation.measurementValue)} ${config.unit}`;
-}
 
 // React component for displaying patient's observations
 export function PatientObservations(): JSX.Element {
+  const {
+    selectedObservation,
+    selectedDate,
+    showEntries,
+    newMeasurement,
+    isAddEntryModalOpen,
+    filteredObservations,
+    observationLabels,
+    selectedObservationLabel,
+    isGraphable,
+    isRunningNotes,
+    displayedObservationColumns,
+    observationRows,
+    setSelectedDate,
+    setShowEntries,
+    setNewMeasurement,
+    setIsAddEntryModalOpen,
+    handleAddGraphableEntry,
+    handleAddNonGraphableEntry,
+    onAddNonGraphableEntry,
+    handleObservationChange,
+  } = useObservations();
+
   // TODO: backend replace demo notes with patient's running notes for selected date
   const [notes, setNotes] = useState<Note[]>(INITIAL_NOTES);
 
   // running notes modal states
   const [isAddNoteOpen, setIsAddNoteOpen] = useState(false);
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
-
-  // selected observation type, defaulting to the first option in OBSERVATION_OPTIONS
-  const [selectedObservation, setSelectedObservation] =
-    useState<ObservationViewType>('RUNNING_NOTES');
-
-  // selected date for filtering observations, defaulting to today's date
-  const [selectedDate, setSelectedDate] = useState(
-    dayjs().tz().format('YYYY-MM-DD'),
-  );
-
-  // controls whether observation entries table or graph view is shown for graphable observation types
-  const [showEntries, setShowEntries] = useState(false);
-
-  // state for the new measurement input field, used for adding new numeric observations (graphable types only)
-  const [newMeasurement, setNewMeasurement] = useState('');
-
-  // state for controlling the visibility of the modal for adding new non-graph observation entries (bowel/urine output)
-  const [isAddEntryModalOpen, setIsAddEntryModalOpen] = useState(false);
-
-  // TODO: backend modify this and replace with the patient's observations for the selected observation type and date
-  const [observations, setObservations] =
-    useState<Observation_idstring[]>(DEMO_OBSERVATIONS);
-
-  // filter the observations based on the selected observation type and date
-  const filteredObservations = useMemo(() => {
-    return observations.filter((observation) => {
-      if (observation.type !== selectedObservation) {
-        return false;
-      }
-      return (
-        dayjs(observation.dateTime).tz().format('YYYY-MM-DD') ===
-        dayjs(selectedDate).tz().format('YYYY-MM-DD')
-      );
-    });
-  }, [observations, selectedObservation, selectedDate]);
-
-  // unique labels from the backend observation enum/data
-  const observationLabels = OBSERVATION_OPTIONS.map((type) => {
-    return getObservationLabel(type);
-  });
-
-  // map each observation label back to its observation type
-  const observationTypeByLabel: Record<string, ObservationViewType> =
-    Object.fromEntries(
-      OBSERVATION_OPTIONS.map((type) => [getObservationLabel(type), type]),
-    );
-
-  // label for the currently selected observation type, used in dropdown and header
-  const selectedObservationLabel = useMemo(() => {
-    return getObservationLabel(selectedObservation);
-  }, [selectedObservation]);
 
   // today's running notes by default, or whichever date is selected
   const filteredNotes = useMemo(() => {
@@ -300,101 +64,6 @@ export function PatientObservations(): JSX.Element {
     () => notes.find((note) => note.noteId === editingNoteId) ?? null,
     [notes, editingNoteId],
   );
-
-  // determine type of currently selected observation type
-  const isGraphable =
-    selectedObservation !== 'RUNNING_NOTES' &&
-    isGraphableObservationType(selectedObservation);
-  const isRunningNotes = selectedObservation === 'RUNNING_NOTES';
-  const isBowelOutput = selectedObservation === 'BOWEL_OUTPUT';
-
-  // filter the table columns to display based on the selected observation type
-  const displayedObservationColumns = observationColumns.filter((column) => {
-    if (isGraphable) {
-      return column.rowKey !== 'notes';
-    }
-
-    if (isBowelOutput) {
-      return column.rowKey !== 'measurement';
-    }
-
-    return true;
-  });
-
-  // convert the filtered observations into table rows for display in the table component
-  const observationRows: ObservationRow[] = useMemo(() => {
-    return filteredObservations.map((observation, rowIndex) => {
-      return {
-        id: rowIndex,
-        content: {
-          id: observation._id,
-          date: dayjs(observation.dateTime).tz().format('dddd, DD/MM/YYYY'),
-          time: dayjs(observation.dateTime).tz().format('HH:mm'),
-          measurement: formatMeasurement(observation),
-          notes: observation.notes ?? '',
-        },
-      };
-    });
-  }, [filteredObservations]);
-
-  // TODO: backend modify this to make a POST request to the backend to add a new observation for the patient
-  // performs frontend validation and updates the local state with the new observation
-  function handleAddGraphableEntry(): void {
-    if (!isGraphable || newMeasurement.trim() === '') {
-      return;
-    }
-
-    // if the measurement is not a finite number, do not add
-    const measurement = Number(newMeasurement);
-    if (!Number.isFinite(measurement)) {
-      return;
-    }
-
-    // if the measurement is outside the min/max range for the selected observation type, do not add
-    const { min, max } = OBSERVATION_GRAPH_CONFIG[selectedObservation];
-    if (measurement < min || measurement > max) {
-      return;
-    }
-
-    // TODO: backend modify id creation (?) and replace with the backend-generated observation ID
-    const newObservation: Observation_idstring = {
-      patientId,
-      _id: `OBS-ID-${dayjs().tz().format('DD/MM/YYYY')}-${patientId}`,
-      type: selectedObservation,
-      dateTime: dayjs().toISOString(),
-      measurementValue: measurement,
-    };
-
-    // local state update to include new observation
-    setObservations((current) => [...current, newObservation]);
-    setNewMeasurement('');
-  }
-
-  // open modal for adding a new non-numeric observation (bowel/urine)
-  function handleAddNonGraphableEntry(): void {
-    setIsAddEntryModalOpen(true);
-  }
-
-  // TODO: backend POST bowel/urine observation
-  function onAddNonGraphableEntry(entry: {
-    measurementValue?: number;
-    notes: string;
-  }): void {
-    console.log(entry);
-    setIsAddEntryModalOpen(false); // close modal
-  }
-
-  // handle dropdown change for selecting a different observation type
-  function handleObservationChange(selectedLabels: string[]): void {
-    const selectedLabel = selectedLabels[0];
-    if (!selectedLabel || selectedLabel === selectedObservationLabel) {
-      return;
-    }
-    const selectedType = observationTypeByLabel[selectedLabel];
-    if (selectedType) {
-      setSelectedObservation(selectedType);
-    }
-  }
 
   // TODO: backend POST running note for patient
   function handleAddRunningNote(noteInput: {
@@ -565,7 +234,7 @@ export function PatientObservations(): JSX.Element {
             </div>
           ) : (
             <>
-              {isGraphable && !showEntries ? (
+              {isGraphableType(selectedObservation) && !showEntries ? (
                 <div className="bg-rehua-white pl-10">
                   <Graph
                     type={selectedObservation}
@@ -607,7 +276,7 @@ export function PatientObservations(): JSX.Element {
       )}
 
       {/* modal for adding new non-graphable observation entries (bowel/urine output) */}
-      {!isGraphable && !isRunningNotes && (
+      {isNonGraphableType(selectedObservation) && (
         <AddEntryModal
           open={isAddEntryModalOpen}
           observationType={selectedObservation} // render slight changes depending on current observation type
