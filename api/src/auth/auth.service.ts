@@ -3,6 +3,8 @@ import { UserService } from '@/schema/users/user.service';
 import { ExpressUser } from '@/utils/types';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import bcrypt from 'bcrypt';
+import { hash } from 'node:crypto';
 import { verify } from 'otplib';
 
 // 5 min for the token to be valid
@@ -22,15 +24,22 @@ export class AuthService {
   ): Promise<LoginResponseDto | null> {
     const user = await this.userService.findOneUserNameForAuth(userName);
 
-    if (user?.password === password) {
-      return {
-        userName: user.userName,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        group: user.group,
-      };
+    const isCorrectPassword = await bcrypt.compare(
+      // Reduce the length to < 72 bytes
+      hash('sha512', password, { outputEncoding: 'buffer' }),
+      user?.password ?? '',
+    );
+
+    if (!isCorrectPassword || !user) {
+      return null;
     }
-    return null;
+
+    return {
+      userName: user.userName,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      group: user.group,
+    };
   }
 
   async validateTotp(userName: string, totpCode: string): Promise<boolean> {

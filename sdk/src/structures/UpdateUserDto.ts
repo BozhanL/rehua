@@ -4,6 +4,7 @@ export type UpdateUserDto = {
   lastName?: undefined | string;
   password?: undefined | string;
   totpSecret?: undefined | string;
+  totpCode?: undefined | string;
   email?: undefined | string;
   status?: undefined | 'active' | 'disabled';
   homePhoneNumber?: undefined | string;

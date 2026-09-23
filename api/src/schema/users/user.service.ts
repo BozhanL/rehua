@@ -1,9 +1,14 @@
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './entities/user.entity';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import bcrypt from 'bcrypt';
 import { Model, UpdateWriteOpResult } from 'mongoose';
+import { hash } from 'node:crypto';
+import { verify } from 'otplib';
+
+const SALT_ROUND = 10;
 
 @Injectable()
 export class UserService {
@@ -12,8 +17,29 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDocument> {
-    const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
+    if (createUserDto.totpSecret) {
+      const result = await verify({
+        token: createUserDto.totpCode,
+        secret: createUserDto.totpSecret,
+
+        // Accept tokens that are at max 30 seconds old.
+        // Reject tokens that are older than 30 seconds, or newer than the current time.
+        epochTolerance: [30, 0],
+      });
+
+      if (!result.valid) {
+        throw new BadRequestException('Invalid TOTP code');
+      }
+    }
+
+    const password = await bcrypt.hash(
+      // Reduce the length to < 72 bytes
+      hash('sha512', createUserDto.password, { outputEncoding: 'buffer' }),
+      SALT_ROUND,
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-misused-spread
+    return this.userModel.create({ ...createUserDto, password });
   }
 
   async findAll(): Promise<UserDocument[]> {
@@ -44,11 +70,36 @@ export class UserService {
     id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UpdateWriteOpResult> {
+    if (updateUserDto.totpSecret) {
+      const result = await verify({
+        token: updateUserDto.totpCode ?? '',
+        secret: updateUserDto.totpSecret,
+
+        // Accept tokens that are at max 30 seconds old.
+        // Reject tokens that are older than 30 seconds, or newer than the current time.
+        epochTolerance: [30, 0],
+      });
+
+      if (!result.valid) {
+        throw new BadRequestException('Invalid TOTP code');
+      }
+    }
+
+    let password = updateUserDto.password;
+    if (password !== undefined) {
+      password = await bcrypt.hash(
+        // Reduce the length to < 72 bytes
+        hash('sha512', password, { outputEncoding: 'buffer' }),
+        SALT_ROUND,
+      );
+    }
+
     return this.userModel
       .updateOne(
         { _id: id },
         {
-          $set: updateUserDto,
+          // eslint-disable-next-line @typescript-eslint/no-misused-spread
+          $set: { ...updateUserDto, password },
         },
       )
       .exec();

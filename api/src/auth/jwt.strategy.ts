@@ -23,6 +23,7 @@ function cookieExtractor(req: Request): string | null {
 }
 
 // This strategy is used to authenticate users using their JWT token.
+// TODO: implement it with ConfigModule
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
   constructor() {

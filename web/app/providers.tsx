@@ -1,8 +1,17 @@
 'use client';
 
+import { sessionStorageGetUserInfo } from './utils/auth';
+import { isTesting } from './utils/env';
 import { HttpError } from '@rehua/sdk';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { refresh } from '@rehua/sdk/functional/auth';
+import {
+  QueryClient,
+  QueryClientProvider,
+  queryOptions,
+  useQuery,
+} from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useRouter } from 'next/navigation';
 import { createContext, useEffect, type JSX, type ReactNode } from 'react';
 import { TypeGuardError } from 'typia';
 import { useLocalStorage, useIsClient } from 'usehooks-ts';
@@ -39,6 +48,32 @@ export const queryClient = new QueryClient({
   },
 });
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function useRefreshOptions(host: string) {
+  return queryOptions({
+    queryKey: [refresh.path(), host],
+    queryFn: async () =>
+      refresh({
+        host: host,
+        simulate: isTesting,
+        options: { credentials: 'include' },
+      }),
+
+    // eslint-disable-next-line sonarjs/function-return-type
+    refetchInterval: (query): number | false => {
+      const error = query.state.error;
+      if (error instanceof HttpError && error.status === 401) {
+        // If the error is 401 Unauthorized, do not retry
+        return false;
+      }
+
+      // Refresh the token every 2.5 minutes
+      // if there is no error or if the error is not 401 Unauthorized
+      return 2.5 * 60 * 1000;
+    },
+  });
+}
+
 export default function Providers({
   children,
 }: Readonly<{ children: ReactNode }>): JSX.Element {
@@ -62,6 +97,24 @@ export default function Providers({
       setApiUrl((s) => s.replace(/\/$/, ''));
     }
   }, [apiUrl, setApiUrl]);
+
+  const refreshOptions = useRefreshOptions(apiUrl);
+  const { error } = useQuery(refreshOptions, queryClient);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isClient) {
+      return;
+    } else if (
+      (error instanceof HttpError && error.status === 401) ||
+      // TODO: change it to a proper way to detect login status
+      sessionStorageGetUserInfo().userName === ''
+    ) {
+      // If the user is not authenticated, redirect to the login page
+      router.push('/auth/login');
+    }
+  }, [error, isClient, router]);
 
   if (!isClient || apiUrl.trim() === '') {
     return <h1>Loading...</h1>;

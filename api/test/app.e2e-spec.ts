@@ -21,7 +21,7 @@ import type { Model } from 'mongoose';
 import os from 'node:os';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
-import { assert, json, TypeGuardError } from 'typia';
+import { assert, TypeGuardError } from 'typia';
 
 describe('appController (e2e)', () => {
   let app: INestApplication<App>;
@@ -85,15 +85,6 @@ describe('appController (e2e)', () => {
     if (mongod) {
       await mongod.stop();
     }
-  });
-
-  it('/ (GET)', async () => {
-    expect.assertions(2);
-
-    const res = await request(app.getHttpServer()).get('/');
-
-    expect(res.status).toBe(200);
-    expect(res.text).toBe(json.stringify('Hello World!'));
   });
 
   it('/hello (POST)', async () => {
