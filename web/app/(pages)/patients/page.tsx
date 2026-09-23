@@ -7,6 +7,7 @@ import DashboardToolbar, {
   type SearchFilter,
 } from '../../components/dashboard/DashboardToolbar';
 import { patientColumns, patientRows } from './rowsandcolumns';
+import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import dayjs from '@/app/utils/dayjs';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';
@@ -14,15 +15,14 @@ import { useState, type JSX } from 'react';
 export default function PatientsPage(): JSX.Element {
   const router = useRouter();
 
-  // TODO: backend replace this info with currently logged in user's group (nurse or admin)
-  const group: 'nurse' | 'admin' = 'admin';
+  const group: 'nurse' | 'admin' = sessionStorageGetUserInfo().group;
 
-  // TODO: backend return available statuses for currently logged in user
   const patientStatusOptions = [
     'Long Term',
     'Short Term',
     'Palliative',
     'Daycare',
+    ...(group === 'admin' ? ['Deceased'] : []), // add Decesed option if user is admin
   ];
 
   const [searchFilter, setSearchFilter] = useState<SearchFilter[]>([
@@ -55,7 +55,7 @@ export default function PatientsPage(): JSX.Element {
         : searchValue;
     console.log('searchFilter:', searchValueToSend);
 
-    // send searchFilter, searchValue, rowsPerPage
+    // send searchFilter, searchValue, rowsPerPage, pageNumber
 
     // a new search/filter should start from page 1
     setCurrentPage(1);
