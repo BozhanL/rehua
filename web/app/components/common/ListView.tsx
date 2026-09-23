@@ -7,7 +7,7 @@ export interface ListRow {
   internalRowSize?: number; // Size of the icon, content (if plain text) and heading
   contentStyle?: CSSProperties; // Lets parent set custom CSS of the content data
   redRow?: boolean; // Apply rehua-ruby colour to row
-  iconProps?: Omit<IconProps, 'className'>; // Optional icon to display next to heading
+  iconProps?: IconProps; // Optional icon to display next to heading
   stacked?: boolean; // Render content below the heading instead of inline
 }
 
@@ -49,9 +49,9 @@ function ListView({
             >
               {row.iconProps && (
                 <Icon
-                  {...row.iconProps}
                   width={internalRowSize}
                   className={redRowStyle}
+                  {...row.iconProps}
                 />
               )}
               {row.heading}:
