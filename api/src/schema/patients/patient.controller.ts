@@ -95,7 +95,7 @@ export class PatientController {
     }));
   }
 
-  //returns patients like in a the list view (number of results shown, page number)
+  //returns patients in paginaiton format and based on filter and search
   @TypedRoute.Get('page/:pageNumber/:numberOfRows/:filter/:search')
   async findPageByFilter(
     @TypedParam('numberOfRows') numberOfRows: number,
