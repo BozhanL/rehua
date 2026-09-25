@@ -91,7 +91,7 @@ function Home(): JSX.Element {
             <SingleLineInput
               required={true}
               placeholder="Username"
-              inputMode="numeric"
+              inputMode="text"
               value={userName}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setUserName(e.target.value);
