@@ -23,9 +23,8 @@ function statusToText(status: MiniPresetLabel): string {
 }
 
 function textToStatus(text: string): MiniPresetLabel | undefined {
-  return (
-    Object.entries(presetLabels) as [MiniPresetLabel, { text: string }][]
-  ).find(([, label]) => label.text === text)?.[0];
+  const keys = Object.keys(presetLabels) as MiniPresetLabel[];
+  return keys.find((key) => presetLabels[key].text === text);
 }
 
 // define the list of patient statuses for the dropdown, using preset labels
