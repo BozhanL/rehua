@@ -4,7 +4,6 @@ import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
 import { PatientService } from './patient.service';
-import { Public } from '@/auth/auth.controller';
 import {
   SwaggerExample,
   TypedBody,
@@ -84,7 +83,6 @@ export class PatientController {
 
   //returns patients like in a the list view (number of results shown, page number)
   //optional filters
-  @Public()
   @TypedRoute.Get('page/:pageNumber/:numberOfRows')
   async findPage(
     @TypedParam('numberOfRows') numberOfRows: number,
