@@ -52,7 +52,7 @@ export class PatientService {
     pageNumber: number,
     filter: string,
     search: string,
-  ): Promise<PatientDocument[]> {
+  ): Promise<PaginatedResponseDto<PatientDocument>> {
     const searchFilter: Record<string, unknown> = {};
 
     if (filter && search) {
@@ -66,12 +66,22 @@ export class PatientService {
 
     const query = searchFilter as QueryFilter<PatientDocument>;
 
-    return this.patientModel
+    const docs = await this.patientModel
       .find(query)
       .sort({ dateAdmitted: 'desc' })
       .skip((pageNumber - 1) * numberOfRows)
       .limit(numberOfRows)
       .exec();
+
+    const totalFilteredDocuments = docs.length;
+    const totalPages = Math.ceil(totalFilteredDocuments / numberOfRows);
+
+    return {
+      data: docs,
+      meta: {
+        totalPages,
+      },
+    };
   }
 
   async update(

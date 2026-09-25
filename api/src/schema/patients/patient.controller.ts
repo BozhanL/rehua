@@ -3,7 +3,6 @@ import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
 import { PatientService } from './patient.service';
-import { Public } from '@/auth/auth.controller';
 import {
   SwaggerExample,
   TypedBody,
@@ -81,7 +80,6 @@ export class PatientController {
   }
 
   //returns patients like in a the list view (number of results shown, page number)
-  @Public()
   @TypedRoute.Get('page/:pageNumber/:numberOfRows')
   async findPage(
     @TypedParam('numberOfRows') numberOfRows: number,
@@ -111,19 +109,24 @@ export class PatientController {
     @TypedParam('pageNumber') pageNumber: number,
     @TypedParam('filter') filter: string,
     @TypedParam('search') search: string,
-  ): Promise<(Patient & { _id: string })[]> {
-    const docs = await this.patientService.findPageByFilter(
+  ): Promise<PaginatedResponseDto<Patient & { _id: string }>> {
+    const paginatedResult = await this.patientService.findPageByFilter(
       numberOfRows,
       pageNumber,
       filter,
       search,
     );
 
-    return docs.map((doc) => ({
+    const formattedDocs = paginatedResult.data.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...doc.toJSON(),
       _id: doc._id.toString(),
     }));
+
+    return {
+      data: formattedDocs,
+      meta: paginatedResult.meta,
+    };
   }
 
   @TypedRoute.Patch(':id')
