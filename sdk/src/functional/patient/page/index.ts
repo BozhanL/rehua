@@ -5,7 +5,6 @@
  */
 //================================================================
 import type { PaginatedResponseDtoPatient_idstring } from '../../../structures/PaginatedResponseDtoPatient_idstring';
-import type { Patient_idstring } from '../../../structures/Patient_idstring';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
 import typia from 'typia';
@@ -99,7 +98,7 @@ export async function findPageByFilter(
       });
 }
 export namespace findPageByFilter {
-  export type Output = Patient_idstring.o4[];
+  export type Output = PaginatedResponseDtoPatient_idstring.o1;
 
   export const METADATA = {
     method: 'GET',
@@ -119,8 +118,8 @@ export namespace findPageByFilter {
     search: string,
   ) =>
     `/patient/page/${encodeURIComponent(pageNumber?.toString() ?? 'null')}/${encodeURIComponent(numberOfRows?.toString() ?? 'null')}/${encodeURIComponent(filter?.toString() ?? 'null')}/${encodeURIComponent(search?.toString() ?? 'null')}`;
-  export const random = (): Resolved<Patient_idstring.o4[]> =>
-    typia.random<Patient_idstring.o4[]>();
+  export const random = (): Resolved<PaginatedResponseDtoPatient_idstring.o1> =>
+    typia.random<PaginatedResponseDtoPatient_idstring.o1>();
   export const simulate = (
     connection: IConnection,
     numberOfRows: number,
