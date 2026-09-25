@@ -1,3 +1,4 @@
+import { PaginatedResponseDto } from '../patients/dto/pagination-response.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './entities/user.entity';
@@ -57,13 +58,23 @@ export class UserService {
   async findPage(
     numberOfRows: number,
     pageNumber: number,
-  ): Promise<UserDocument[]> {
-    return this.userModel
+  ): Promise<PaginatedResponseDto<UserDocument>> {
+    const docs = await this.userModel
       .find()
       .sort({ userName: 'asc' })
       .skip((pageNumber - 1) * numberOfRows)
       .limit(numberOfRows)
       .exec();
+
+    const totalDocuments = await this.userModel.countDocuments();
+    const totalPages = Math.ceil(totalDocuments / numberOfRows);
+
+    return {
+      data: docs,
+      meta: {
+        totalPages,
+      },
+    };
   }
 
   async update(
