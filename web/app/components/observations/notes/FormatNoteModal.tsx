@@ -1,11 +1,11 @@
 'use client';
 
-import dayjs from '../../../utils/dayjs';
-import ContentButton from '../../common/ContentButton';
-import Icon from '../../common/Icon';
-import Modal from '../../common/Modal';
-import PopUp from '../../common/PopUp';
 import type { Note } from './NoteList';
+import ContentButton from '@/app/components/common/ContentButton';
+import Icon from '@/app/components/common/Icon';
+import Modal from '@/app/components/common/Modal';
+import PopUp from '@/app/components/common/PopUp';
+import dayjs from '@/app/utils/dayjs';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
 import {
   LexicalComposer,

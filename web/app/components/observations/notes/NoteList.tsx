@@ -1,7 +1,7 @@
 'use client';
 
-import dayjs from '../../../utils/dayjs';
-import ContentButton from '../../common/ContentButton';
+import ContentButton from '@/app/components/common/ContentButton';
+import dayjs from '@/app/utils/dayjs';
 import DOMPurify from 'dompurify';
 import type { JSX } from 'react';
 

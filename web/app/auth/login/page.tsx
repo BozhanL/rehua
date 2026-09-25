@@ -1,11 +1,11 @@
 'use client';
 
-import ContentButton from '../../components/common/ContentButton';
-import Icon from '../../components/common/Icon';
-import Logo from '../../components/common/Logo';
-import SingleLineInput from '../../components/common/SingleLineInput';
-import MFAModal from '../../components/mfa/MFAModal';
-import useApiUrl from '../../hooks/useApiUrl';
+import ContentButton from '@/app/components/common/ContentButton';
+import Icon from '@/app/components/common/Icon';
+import Logo from '@/app/components/common/Logo';
+import SingleLineInput from '@/app/components/common/SingleLineInput';
+import MFAModal from '@/app/components/mfa/MFAModal';
+import useApiUrl from '@/app/hooks/useApiUrl';
 import { useRefreshOptions } from '@/app/providers';
 import { login, sessionStorageAddUserInfo } from '@/app/utils/auth';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
