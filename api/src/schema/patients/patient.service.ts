@@ -1,4 +1,5 @@
 import type { CreatePatientDto } from './dto/create-patient.dto';
+import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient, PatientDocument } from './entities/patient.entity';
 import { Injectable } from '@nestjs/common';
@@ -27,13 +28,23 @@ export class PatientService {
   async findPage(
     numberOfRows: number,
     pageNumber: number,
-  ): Promise<PatientDocument[]> {
-    return this.patientModel
+  ): Promise<PaginatedResponseDto<PatientDocument>> {
+    const docs = await this.patientModel
       .find()
       .sort({ dateAdmitted: 'desc' })
       .skip((pageNumber - 1) * numberOfRows)
       .limit(numberOfRows)
       .exec();
+
+    const totalDocuments = await this.patientModel.countDocuments();
+    const totalPages = Math.ceil(totalDocuments / numberOfRows);
+
+    return {
+      data: docs,
+      meta: {
+        totalPages,
+      },
+    };
   }
 
   async findPageByFilter(

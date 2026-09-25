@@ -1,4 +1,5 @@
 import type { CreatePatientDto } from './dto/create-patient.dto';
+import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
 import { PatientService } from './patient.service';
@@ -80,18 +81,27 @@ export class PatientController {
   }
 
   //returns patients like in a the list view (number of results shown, page number)
+  @Public()
   @TypedRoute.Get('page/:pageNumber/:numberOfRows')
   async findPage(
     @TypedParam('numberOfRows') numberOfRows: number,
     @TypedParam('pageNumber') pageNumber: number,
-  ): Promise<(Patient & { _id: string })[]> {
-    const docs = await this.patientService.findPage(numberOfRows, pageNumber);
+  ): Promise<PaginatedResponseDto<Patient & { _id: string }>> {
+    const paginatedResult = await this.patientService.findPage(
+      numberOfRows,
+      pageNumber,
+    );
 
-    return docs.map((doc) => ({
+    const formattedDocs = paginatedResult.data.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...doc.toJSON(),
       _id: doc._id.toString(),
     }));
+
+    return {
+      data: formattedDocs,
+      meta: paginatedResult.meta,
+    };
   }
 
   //returns patients in paginaiton format and based on filter and search
