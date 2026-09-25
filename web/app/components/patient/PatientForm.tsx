@@ -196,7 +196,7 @@ export function buildPatientFormRows(
               const status = textToStatus(selectedStatus[0]);
               if (status) {
                 updateField('status', status);
-                // TODO: backend - time of death should be cleared when status is changed from deceased
+                // TODO: backend, just a note, time of death should be cleared when status is changed from deceased
                 if (status !== 'deceased') {
                   updateField('timeOfDeath', null);
                 }
