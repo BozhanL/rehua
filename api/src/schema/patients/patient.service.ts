@@ -73,7 +73,9 @@ export class PatientService {
       .limit(numberOfRows)
       .exec();
 
-    const totalFilteredDocuments = docs.length;
+    const matchresults = await this.patientModel.find(query).exec();
+
+    const totalFilteredDocuments = matchresults.length;
     const totalPages = Math.ceil(totalFilteredDocuments / numberOfRows);
 
     return {

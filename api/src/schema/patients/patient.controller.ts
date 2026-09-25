@@ -1,4 +1,5 @@
 import type { CreatePatientDto } from './dto/create-patient.dto';
+import type { PatientPageQueryDto } from './dto/pagination-request.dto';
 import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
@@ -8,6 +9,7 @@ import {
   SwaggerExample,
   TypedBody,
   TypedParam,
+  TypedQuery,
   TypedRoute,
 } from '@nestia/core';
 import { Controller } from '@nestjs/common';
@@ -82,45 +84,33 @@ export class PatientController {
   }
 
   //returns patients like in a the list view (number of results shown, page number)
+  //optional filters
+  @Public()
   @TypedRoute.Get('page/:pageNumber/:numberOfRows')
   async findPage(
     @TypedParam('numberOfRows') numberOfRows: number,
     @TypedParam('pageNumber') pageNumber: number,
+    @TypedQuery() query: PatientPageQueryDto,
   ): Promise<PaginatedResponseDto<Patient & { _id: string }>> {
-    const paginatedResult = await this.patientService.findPage(
-      numberOfRows,
-      pageNumber,
-    );
+    const { filter, search } = query;
+
+    let paginatedResult;
+
+    if (filter || search) {
+      paginatedResult = await this.patientService.findPageByFilter(
+        numberOfRows,
+        pageNumber,
+        filter ?? '',
+        search ?? '',
+      );
+    } else {
+      paginatedResult = await this.patientService.findPage(
+        numberOfRows,
+        pageNumber,
+      );
+    }
 
     const formattedDocs = paginatedResult.data.map((doc) => ({
-       
-      ...doc.toJSON(),
-      _id: doc._id.toString(),
-    }));
-
-    return {
-      data: formattedDocs,
-      meta: paginatedResult.meta,
-    };
-  }
-
-  //returns patients in paginaiton format and based on filter and search
-  @TypedRoute.Get('page/:pageNumber/:numberOfRows/:filter/:search')
-  async findPageByFilter(
-    @TypedParam('numberOfRows') numberOfRows: number,
-    @TypedParam('pageNumber') pageNumber: number,
-    @TypedParam('filter') filter: string,
-    @TypedParam('search') search: string,
-  ): Promise<PaginatedResponseDto<Patient & { _id: string }>> {
-    const paginatedResult = await this.patientService.findPageByFilter(
-      numberOfRows,
-      pageNumber,
-      filter,
-      search,
-    );
-
-    const formattedDocs = paginatedResult.data.map((doc) => ({
-       
       ...doc.toJSON(),
       _id: doc._id.toString(),
     }));
