@@ -6,14 +6,24 @@ import DashboardToolbar, {
   getFilterType,
   type SearchFilter,
 } from '../../components/dashboard/DashboardToolbar';
-import { patientColumns, patientRows } from './rowsandcolumns';
+import {
+  createPatientRow,
+  patientColumns,
+  type Patient,
+  type PatientRow,
+} from './rowsandcolumns';
+import { APIUrlContext } from '@/app/providers';
 import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import dayjs from '@/app/utils/dayjs';
+import { isTesting } from '@/app/utils/env';
+import { findPage } from '@rehua/sdk/functional/patient/page';
+import { queryOptions, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState, type JSX } from 'react';
+import { useContext, useState, type JSX } from 'react';
 
 export default function PatientsPage(): JSX.Element {
   const router = useRouter();
+  const host = useContext(APIUrlContext);
 
   const group: 'nurse' | 'admin' = sessionStorageGetUserInfo().group;
 
@@ -34,8 +44,37 @@ export default function PatientsPage(): JSX.Element {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // TODO: backend to provide total number of rows for pagination
-  const totalRows = patientRows.length;
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  function usePatientOptions(rowsPerPage: number, currentPage: number) {
+    return queryOptions({
+      queryKey: ['patients', host, rowsPerPage, currentPage],
+      queryFn: async () =>
+        findPage(
+          {
+            host: host,
+            simulate: isTesting,
+            options: { credentials: 'include' },
+          },
+          rowsPerPage,
+          currentPage,
+          {}, // TODO: add optinal filter + search value
+        ),
+    });
+  }
+
+  // TODO: review and clean up logic
+  const patientQuery = usePatientOptions(rowsPerPage, currentPage);
+  const { data: apiResponse } = useQuery(patientQuery);
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const patients = (apiResponse?.data as unknown as Patient[]) ?? [];
+  const totalPages = apiResponse?.meta.totalPages ?? 0;
+
+  const patientRows: PatientRow[] = patients.map((patient, rowIndex) =>
+    createPatientRow(patient, rowIndex),
+  );
+
+  const totalRows = totalPages;
 
   // handle search filter change + reset search value when filter changes
   function handleNewSearchFilter(newSearchFilter: SearchFilter[]): void {
