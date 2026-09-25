@@ -3,4 +3,4 @@
         ${s.color.textColor}
         ${s.color.backgroundColor}
         font-bold
-      `,children:s.text})}},77220:(e,t,n)=>{Promise.resolve().then(n.bind(n,13973))}},e=>{e.O(0,[349,423,51,5,520,140,15,912,347,494,358],()=>e(e.s=77220)),_N_E=e.O()}]);
+      `,children:s.text})}},77220:(e,t,n)=>{Promise.resolve().then(n.bind(n,13973))}},e=>{e.O(0,[467,51,5,140,15,912,347,494,358],()=>e(e.s=77220)),_N_E=e.O()}]);
