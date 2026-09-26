@@ -1,4 +1,4 @@
 export interface PatientPageQueryDto {
-  filter?: string;
-  search?: string;
+  filter?: string | undefined;
+  search?: string | undefined;
 }

@@ -17,7 +17,11 @@ import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import dayjs from '@/app/utils/dayjs';
 import { isTesting } from '@/app/utils/env';
 import { findPage } from '@rehua/sdk/functional/patient/page';
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useContext, useState, type JSX } from 'react';
 
@@ -45,36 +49,52 @@ export default function PatientsPage(): JSX.Element {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  function usePatientOptions(rowsPerPage: number, currentPage: number) {
+  function usePatientOptions(
+    rowsPerPage: number,
+    currentPage: number,
+    filter?: string,
+    search?: string,
+  ) {
     return queryOptions({
-      queryKey: ['patients', host, rowsPerPage, currentPage],
-      queryFn: async () =>
+      queryKey: ['patients', host, rowsPerPage, currentPage, filter, search],
+      queryFn: async ({ signal }: QueryFunctionContext) =>
         findPage(
           {
             host: host,
             simulate: isTesting,
-            options: { credentials: 'include' },
+            options: { signal, credentials: 'include' },
           },
           rowsPerPage,
           currentPage,
-          {}, // TODO: add optinal filter + search value
+          {
+            filter,
+            search,
+          },
         ),
     });
   }
 
   // TODO: review and clean up logic
+
+  //  const patients = (apiResponse?.data as unknown as Patient[]) ?? [];
+  //  const totalPages = apiResponse?.meta.totalPages ?? 0;
+
+  //  const patientRows: PatientRow[] = patients.map((patient, rowIndex) =>
+  //    createPatientRow(patient, rowIndex),
+  //  );
+
   const patientQuery = usePatientOptions(rowsPerPage, currentPage);
-  const { data: apiResponse } = useQuery(patientQuery);
+  const doc = useQuery(patientQuery);
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const patients = (apiResponse?.data as unknown as Patient[]) ?? [];
-  const totalPages = apiResponse?.meta.totalPages ?? 0;
+  //check if docs has loaded, returns loading of not done
+  if (doc.isError) {
+    throw doc.error;
+  } else if (!doc.isSuccess) {
+    return <h1>Loading...</h1>;
+  }
 
-  const patientRows: PatientRow[] = patients.map((patient, rowIndex) =>
-    createPatientRow(patient, rowIndex),
-  );
-
-  const totalRows = totalPages;
+  const patients: Patient[] = doc.data.data;
+  const totalRows = doc.data.meta.totalPages;
 
   // handle search filter change + reset search value when filter changes
   function handleNewSearchFilter(newSearchFilter: SearchFilter[]): void {
@@ -85,6 +105,10 @@ export default function PatientsPage(): JSX.Element {
       console.log('searchFilter: No Filter');
     }
   }
+
+  const patientRows: PatientRow[] = patients.map((patient, rowIndex) =>
+    createPatientRow(patient, rowIndex),
+  );
 
   // TODO: backend to handle search/filter and pagination based on these values being passed to it
   function handleSearch(): void {
