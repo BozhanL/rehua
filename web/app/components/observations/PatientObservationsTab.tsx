@@ -147,9 +147,11 @@ export function PatientObservations(): JSX.Element {
                 style={{ width: 300 }}
                 value={startDate}
                 onChange={(event) => {
-                  // if the date input is cleared, reset to today's date
+                  // if the date input is cleared, reset both dates to today's date
                   if (!event.target.value) {
-                    setStartDate(dayjs().tz().format('YYYY-MM-DD'));
+                    const today = dayjs().tz().format('YYYY-MM-DD');
+                    setStartDate(today);
+                    setEndDate(today);
                     return;
                   }
                   // else, set the selected date to the chosen value (reset both start and end date for consistency)
