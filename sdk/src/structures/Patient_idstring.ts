@@ -3,12 +3,21 @@ export type Patient_idstring = {
   lastName: string;
   dateOfBirth: string;
   address: string;
-  nhi: number;
+  nhi: string;
   dateAdmitted: string;
   gpNameAndMedicalCenter: string;
   nurse: string;
-  roomNumber: number;
-  status: string;
+  roomNumber: string;
+  status:
+    | 'active'
+    | 'disabled'
+    | 'longTerm'
+    | 'palliative'
+    | 'shortTerm'
+    | 'daycare'
+    | 'discharged'
+    | 'deceased'
+    | 'upload';
   email: string;
   homePhoneNumber: string;
   gender: string;
@@ -27,12 +36,21 @@ export namespace Patient_idstring {
     lastName: string;
     dateOfBirth: string;
     address: string;
-    nhi: number;
+    nhi: string;
     dateAdmitted: string;
     gpNameAndMedicalCenter: string;
     nurse: string;
-    roomNumber: number;
-    status: string;
+    roomNumber: string;
+    status:
+      | 'active'
+      | 'disabled'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload';
     email: string;
     homePhoneNumber: string;
     gender: string;
@@ -50,12 +68,21 @@ export namespace Patient_idstring {
     lastName: string;
     dateOfBirth: string;
     address: string;
-    nhi: number;
+    nhi: string;
     dateAdmitted: string;
     gpNameAndMedicalCenter: string;
     nurse: string;
-    roomNumber: number;
-    status: string;
+    roomNumber: string;
+    status:
+      | 'active'
+      | 'disabled'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload';
     email: string;
     homePhoneNumber: string;
     gender: string;
@@ -73,12 +100,21 @@ export namespace Patient_idstring {
     lastName: string;
     dateOfBirth: string;
     address: string;
-    nhi: number;
+    nhi: string;
     dateAdmitted: string;
     gpNameAndMedicalCenter: string;
     nurse: string;
-    roomNumber: number;
-    status: string;
+    roomNumber: string;
+    status:
+      | 'active'
+      | 'disabled'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload';
     email: string;
     homePhoneNumber: string;
     gender: string;

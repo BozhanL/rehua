@@ -9,17 +9,17 @@ import type { JSX, ReactNode } from 'react';
 
 // interface for a patient
 export interface Patient {
-  id: string; // unique identifier for the patient
-  roomNo: string;
+  _id: string; // unique identifier for the patient
+  roomNumber: string;
   firstName: string;
   lastName: string;
-  dob: string; // ISO string
+  dateOfBirth: string; // ISO string
   gender: string;
   nhi: string;
   dateAdmitted: string; // ISO string
   nurse: string;
   status: MiniPresetLabel;
-  funding: string;
+  funding?: undefined | string;
 }
 
 // interface for a patient row in the table
@@ -126,19 +126,19 @@ export function createPatientRow(
   return {
     id: rowIndex,
     content: {
-      roomNo: patient.roomNo ? patient.roomNo : '-',
+      roomNo: patient.roomNumber ? patient.roomNumber : '-',
       name: `${patient.firstName} ${patient.lastName}`,
-      dob: dayjs(patient.dob).tz().format('DD/MM/YYYY'),
+      dob: dayjs(patient.dateOfBirth).tz().format('DD/MM/YYYY'),
       gender:
         patient.gender === 'Male' || patient.gender === 'Female'
           ? patient.gender.charAt(0).toUpperCase()
           : 'O', // O for Other, TODO: backend let me know if gender is a dropdown or free text, change this logic accordingly
-      nhi: patient.nhi,
+      nhi: patient.nhi ? patient.nhi : '-',
       dateAdmitted: dayjs(patient.dateAdmitted).tz().format('DD/MM/YYYY'),
       nurse: patient.nurse,
       status: <MiniLabel name={patient.status} />,
-      funding: patient.funding,
-      view: <PatientViewButton patientId={patient.id} />,
+      funding: patient.funding ?? '-',
+      view: <PatientViewButton patientId={patient._id} />,
     },
   };
 }
