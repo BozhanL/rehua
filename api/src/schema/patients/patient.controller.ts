@@ -2,6 +2,7 @@ import type { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
 import { PatientService } from './patient.service';
+import { Roles } from '@/auth/roles.decorator';
 import {
   SwaggerExample,
   TypedBody,
@@ -11,6 +12,7 @@ import {
 import { Controller } from '@nestjs/common';
 import { UpdateWriteOpResult } from 'mongoose';
 
+@Roles('admin', 'nurse')
 @Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}

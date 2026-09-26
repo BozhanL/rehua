@@ -5,6 +5,7 @@ import {
 } from './dto/create-document.dto';
 import { FindDocumentDto } from './dto/find-document.dto';
 import { UpdateFormDocumentDto } from './dto/update-document.dto';
+import { Roles } from '@/auth/roles.decorator';
 import { getFilesFromRequest } from '@/utils/helpers';
 import type { MongoId } from '@/utils/types';
 import { TypedBody, TypedFormData, TypedParam, TypedRoute } from '@nestia/core';
@@ -20,6 +21,7 @@ import type { Request } from 'express';
 import { remove } from 'fs-extra';
 import { UpdateWriteOpResult } from 'mongoose';
 
+@Roles('admin', 'nurse')
 @Controller('documents')
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}

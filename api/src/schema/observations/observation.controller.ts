@@ -2,6 +2,7 @@ import { CreateObservationDto } from './dto/create-observation.dto';
 import { ObservationType } from './entities/observation-type.enum';
 import { Observation } from './entities/observation.entity';
 import { ObservationService } from './observation.service';
+import { Roles } from '@/auth/roles.decorator';
 import {
   SwaggerExample,
   TypedBody,
@@ -11,6 +12,7 @@ import {
 } from '@nestia/core';
 import { Controller } from '@nestjs/common';
 
+@Roles('admin', 'nurse')
 @Controller('observations')
 export class ObservationsController {
   constructor(private readonly observationService: ObservationService) {}

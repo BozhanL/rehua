@@ -3,20 +3,18 @@ import type { LoginBody } from './dto/login-body.dto';
 import type { LoginResponseDto } from './dto/login-response.dto';
 import { JWT_COOKIE_NAME } from './jwt.strategy';
 import { LocalAuthGuard } from './local.guard';
+import { Public } from './public.decorator';
+import { Roles } from './roles.decorator';
 import { TOTPAuthGuard } from './totp.guard';
 import { UserService } from '@/schema/users/user.service';
 import { CurrentUser } from '@/schema/users/users.decorator';
 import type { ExpressUser } from '@/utils/types';
 import { TypedBody, TypedRoute } from '@nestia/core';
 import { Controller, UseGuards, Res } from '@nestjs/common';
-import { SetMetadata } from '@nestjs/common';
 import type { Response } from 'express';
 import { misc } from 'typia';
 
-export const IS_PUBLIC_KEY = 'isPublic';
-// eslint-disable-next-line func-style, @typescript-eslint/explicit-function-return-type
-export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
-
+@Roles('admin', 'nurse')
 @Controller('auth')
 export class AuthController {
   constructor(
