@@ -11,6 +11,7 @@ import dayjs from '../utils/dayjs';
 import {
   formatMeasurement,
   getObservationLabel,
+  isGraphableType,
   OBSERVATION_OPTIONS,
   observationColumns,
   type ObservationRow,
@@ -63,7 +64,7 @@ export function useObservations(): UseObservationsReturn {
   const [endDate, setEndDate] = useState(today);
 
   // controls whether observation entries table or graph view is shown for graphable observation types
-  const [showEntries, setShowEntries] = useState(false);
+  const [showEntries, setShowEntries] = useState(true);
 
   // state for the new measurement input field, used for adding new numeric observations (graphable types only)
   const [newMeasurement, setNewMeasurement] = useState('');
@@ -199,13 +200,24 @@ export function useObservations(): UseObservationsReturn {
 
   // handle dropdown change for selecting a different observation type
   function handleObservationChange(selectedLabels: string[]): void {
+    // if no label is selected or the selected label is the same as the current one, do nothing
     const selectedLabel = selectedLabels[0];
     if (!selectedLabel || selectedLabel === selectedObservationLabel) {
       return;
     }
+
+    // find the observation type corresponding to the selected label and update the state
     const selectedType = observationTypeByLabel[selectedLabel];
     if (selectedType) {
       setSelectedObservation(selectedType);
+
+      if (isGraphableType(selectedType)) {
+        if (!showEntries) {
+          setEndDate(startDate);
+        }
+      } else {
+        setShowEntries(true);
+      }
     }
   }
 
