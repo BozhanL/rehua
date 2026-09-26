@@ -1,3 +1,4 @@
+import PopUp from '../common/PopUp';
 import ContentButton from '@/app/components/common/ContentButton';
 import DropdownBar from '@/app/components/common/DropdownBar';
 import PopUp from '@/app/components/common/PopUp';
