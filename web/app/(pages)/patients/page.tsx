@@ -12,6 +12,10 @@ import {
   type Patient,
   type PatientRow,
 } from './rowsandcolumns';
+import {
+  presetLabels,
+  type MiniPresetLabel,
+} from '@/app/components/common/MiniLabel';
 import { APIUrlContext } from '@/app/providers';
 import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import { isTesting } from '@/app/utils/env';
@@ -27,17 +31,19 @@ import { useContext, useState, type JSX } from 'react';
 export default function PatientsPage(): JSX.Element {
   const router = useRouter();
   const host = useContext(APIUrlContext);
-
   const group: 'nurse' | 'admin' = sessionStorageGetUserInfo().group;
 
-  // TODO: frontend come back to this and import from elsewhere
-  const patientStatusOptions = [
-    'Long Term',
-    'Short Term',
-    'Palliative',
-    'Daycare',
-    ...(group === 'admin' ? ['Deceased'] : []), // add Decesed option if user is admin
+  // convert preset keys into frontend text for the dropdown
+  const patientStatusOptions: MiniPresetLabel[] = [
+    'longTerm',
+    'shortTerm',
+    'daycare',
+    'palliative',
+    ...(group === 'admin' ? (['deceased'] as MiniPresetLabel[]) : []),
   ];
+  const patientStatusDropdownOptions = patientStatusOptions.map(
+    (status) => presetLabels[status].text,
+  );
 
   // search filters for the patient dashboard
   const patientSearchFilters: [SearchFilterOption, ...SearchFilterOption[]] = [
@@ -58,7 +64,9 @@ export default function PatientsPage(): JSX.Element {
     patientSearchFilters[0],
   ); // by default no search filter is applied
   const [searchValue, setSearchValue] = useState('');
-  const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // filter by status uses this
+  const [dropdownSearchValue, setDropdownSearchValue] = useState<
+    MiniPresetLabel[]
+  >([]); // filter by status uses this
   const [isSearchInvalid, setIsSearchInvalid] = useState(false); // state for showing pop up for no search value
 
   const [activeSearchFilter, setActiveSearchFilter] = useState<string>('');
@@ -213,8 +221,10 @@ export default function PatientsPage(): JSX.Element {
           searchValue={searchValue}
           searchPlaceholder="Search Patients"
           searchInputType={searchFilter.inputType}
-          dropdownSearchOptions={patientStatusOptions}
-          dropdownSearchValue={dropdownSearchValue}
+          dropdownSearchOptions={patientStatusDropdownOptions}
+          dropdownSearchValue={dropdownSearchValue.map(
+            (status) => presetLabels[status].text,
+          )}
           addButtonText="Add Patient"
           selectedDashboard={['Patients Dashboard']}
           onSearchFilterChange={(newSearchFilter) => {
@@ -224,7 +234,12 @@ export default function PatientsPage(): JSX.Element {
           onSearchInvalidClose={() => {
             setIsSearchInvalid(false);
           }}
-          onDropdownSearchChange={setDropdownSearchValue}
+          onDropdownSearchChange={(value) => {
+            const selectedStatuses = patientStatusOptions.filter((status) =>
+              value.includes(presetLabels[status].text),
+            );
+            setDropdownSearchValue(selectedStatuses);
+          }}
           onSearch={handleSearch}
           onAdd={handleAddPatient}
           onDashboardChange={handleDashboardChange}
