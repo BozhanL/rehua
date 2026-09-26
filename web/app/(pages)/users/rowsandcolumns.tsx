@@ -42,6 +42,8 @@ export const userColumns: TableColumn[] = [
   {
     rowKey: 'username',
     header: 'Username',
+    width: 250,
+    columnClassName: 'pl-15',
   },
   {
     rowKey: 'fullName',
@@ -56,15 +58,21 @@ export const userColumns: TableColumn[] = [
   {
     rowKey: 'group',
     header: 'Group',
+    contentAlignment: 'center',
+
+    width: columnWidth,
   },
   {
     rowKey: 'status',
     header: 'Status',
+    contentAlignment: 'center',
+
     width: columnWidth,
   },
   {
     rowKey: 'view',
     header: 'View',
+    contentAlignment: 'center',
     width: columnWidth,
   },
 ];
