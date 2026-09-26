@@ -1,5 +1,6 @@
 import { CreateManualDto } from './dto/create-manual.dto';
 import { MANUAL_TYPE, ManualService } from './manual.service';
+import { Roles } from '@/auth/roles.decorator';
 import { getFilesFromRequest } from '@/utils/helpers';
 import { TypedFormData, TypedRoute } from '@nestia/core';
 import {
@@ -13,6 +14,7 @@ import {
 import type { Request } from 'express';
 import { remove } from 'fs-extra';
 
+@Roles('admin', 'nurse')
 @Controller('manual')
 export class ManualController {
   constructor(private readonly manualService: ManualService) {}
@@ -20,6 +22,8 @@ export class ManualController {
   /**
    * @description This endpoint is used to upload a new PDF manual.
    */
+
+  @Roles('admin')
   @TypedRoute.Post()
   async create(
     @Req() request: Request,
