@@ -17,8 +17,8 @@ export class Patient {
   @Prop({ type: String, required: true })
   address: string;
 
-  @Prop({ type: Number, required: true })
-  nhi: number;
+  @Prop({ type: String, required: true })
+  nhi: string;
 
   @Prop({ type: String, required: true })
   dateAdmitted: string;
@@ -29,11 +29,20 @@ export class Patient {
   @Prop({ type: String, required: true })
   nurse: string;
 
-  @Prop({ type: Number, required: true })
-  roomNumber: number;
+  @Prop({ type: String, required: true })
+  roomNumber: string;
 
   @Prop({ type: String, required: true })
-  status: string;
+  status:
+    | 'active'
+    | 'disabled'
+    | 'longTerm'
+    | 'palliative'
+    | 'shortTerm'
+    | 'daycare'
+    | 'discharged'
+    | 'deceased'
+    | 'upload';
 
   @Prop({ type: String, required: true })
   email: string;
@@ -70,12 +79,21 @@ export class Patient {
     lastName: string,
     dateOfBirth: string,
     address: string,
-    nhi: number,
+    nhi: string,
     dateAdmitted: string,
     gpNameAndMedicalCenter: string,
     nurse: string,
-    roomNumber: number,
-    status: string,
+    roomNumber: string,
+    status:
+      | 'active'
+      | 'disabled'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload',
     email: string,
     homePhoneNumber: string,
     gender: string,

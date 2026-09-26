@@ -3,65 +3,167 @@ import Pagination from '../../components/common/Pagination';
 import Surface from '../../components/common/Surface';
 import Table from '../../components/common/Table';
 import DashboardToolbar, {
-  getFilterType,
-  type SearchFilter,
+  type SearchFilterOption,
+  getSearchValue,
 } from '../../components/dashboard/DashboardToolbar';
-import { patientColumns, patientRows } from './rowsandcolumns';
-import dayjs from '@/app/utils/dayjs';
+import {
+  createPatientRow,
+  patientColumns,
+  type Patient,
+  type PatientRow,
+} from './rowsandcolumns';
+import {
+  presetLabels,
+  type MiniPresetLabel,
+} from '@/app/components/common/MiniLabel';
+import { APIUrlContext } from '@/app/providers';
+import { sessionStorageGetUserInfo } from '@/app/utils/auth';
+import { isTesting } from '@/app/utils/env';
+import { findPage } from '@rehua/sdk/functional/patient/page';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState, type JSX } from 'react';
+import { useContext, useState, type JSX } from 'react';
 
 export default function PatientsPage(): JSX.Element {
   const router = useRouter();
+  const host = useContext(APIUrlContext);
+  const group: 'nurse' | 'admin' = sessionStorageGetUserInfo().group;
 
-  // TODO: backend replace this info with currently logged in user's group (nurse or admin)
-  const group: 'nurse' | 'admin' = 'admin';
+  // convert preset keys into frontend text for the dropdown
+  const patientStatusOptions: MiniPresetLabel[] = [
+    'longTerm',
+    'shortTerm',
+    'daycare',
+    'palliative',
+    ...(group === 'admin' ? (['deceased'] as MiniPresetLabel[]) : []),
+  ];
+  const patientStatusDropdownOptions = patientStatusOptions.map(
+    (status) => presetLabels[status].text,
+  );
 
-  // TODO: backend return available statuses for currently logged in user
-  const patientStatusOptions = [
-    'Long Term',
-    'Short Term',
-    'Palliative',
-    'Daycare',
+  // search filters for the patient dashboard
+  const patientSearchFilters: [SearchFilterOption, ...SearchFilterOption[]] = [
+    { webValue: 'No Filter', apiValue: '', inputType: 'none' },
+    { webValue: 'Room #', apiValue: 'roomNumber', inputType: 'text' },
+    { webValue: 'First Name', apiValue: 'firstName', inputType: 'text' },
+    { webValue: 'Last Name', apiValue: 'lastName', inputType: 'text' },
+    { webValue: 'DOB', apiValue: 'dateOfBirth', inputType: 'date' },
+    { webValue: 'Gender', apiValue: 'gender', inputType: 'text' },
+    { webValue: 'NHI', apiValue: 'nhi', inputType: 'text' },
+    { webValue: 'Date Admitted', apiValue: 'dateAdmitted', inputType: 'date' },
+    { webValue: 'Nurse', apiValue: 'nurse', inputType: 'text' },
+    { webValue: 'Status', apiValue: 'status', inputType: 'dropdown' },
+    { webValue: 'Funding', apiValue: 'funding', inputType: 'text' },
   ];
 
-  const [searchFilter, setSearchFilter] = useState<SearchFilter[]>([
-    'No Filter',
-  ]); // by default no search filter is applied
+  const [searchFilter, setSearchFilter] = useState<SearchFilterOption>(
+    patientSearchFilters[0],
+  ); // by default no search filter is applied
   const [searchValue, setSearchValue] = useState('');
-  const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // filter by status uses this
+  const [dropdownSearchValue, setDropdownSearchValue] = useState<
+    MiniPresetLabel[]
+  >([]); // filter by status uses this
+  const [isSearchInvalid, setIsSearchInvalid] = useState(false); // state for showing pop up for no search value
+
+  const [activeSearchFilter, setActiveSearchFilter] = useState<string>('');
+  const [activeSearchValue, setActiveSearchValue] = useState<string>('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // TODO: backend to provide total number of rows for pagination
-  const totalRows = patientRows.length;
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  function usePatientOptions(
+    rowsPerPage: number,
+    currentPage: number,
+    filter?: string,
+    search?: string,
+  ) {
+    return queryOptions({
+      queryKey: ['patients', host, rowsPerPage, currentPage, filter, search],
+      queryFn: async ({ signal }: QueryFunctionContext) =>
+        findPage(
+          {
+            host: host,
+            simulate: isTesting,
+            options: { signal, credentials: 'include' },
+          },
+          rowsPerPage,
+          currentPage,
+          {
+            filter,
+            search,
+          },
+        ),
+    });
+  }
+
+  const patientQuery = usePatientOptions(
+    rowsPerPage,
+    currentPage,
+    activeSearchFilter,
+    activeSearchValue,
+  );
+  const doc = useQuery(patientQuery);
+
+  //check if docs has loaded, returns loading of not done
+  if (doc.isError) {
+    throw doc.error;
+  } else if (!doc.isSuccess) {
+    return <h1>Loading...</h1>;
+  }
+
+  const patients: Patient[] = doc.data.data;
+  const totalRows = doc.data.meta.totalPages;
 
   // handle search filter change + reset search value when filter changes
-  function handleNewSearchFilter(newSearchFilter: SearchFilter[]): void {
+  function handleNewSearchFilter(newSearchFilter: SearchFilterOption): void {
     setSearchValue(''); // reset search value when filter changes
+    setDropdownSearchValue([]); // reset dropdown search value when filter changes
     setSearchFilter(newSearchFilter);
-    if (newSearchFilter[0] === 'No Filter') {
-      // TODO: backend handle if filter is reset to "No Filter"
-      console.log('searchFilter: No Filter');
+
+    if (newSearchFilter.webValue === 'No Filter') {
+      setActiveSearchFilter('');
+      setActiveSearchValue('');
+      setCurrentPage(1);
     }
   }
 
-  // TODO: backend to handle search/filter and pagination based on these values being passed to it
-  function handleSearch(): void {
-    const searchValueToSend =
-      getFilterType(searchFilter) === 'date'
-        ? dayjs.tz(searchValue).startOf('day').toISOString()
-        : searchValue;
-    console.log('searchFilter:', searchValueToSend);
+  const patientRows: PatientRow[] = patients.map((patient, rowIndex) =>
+    createPatientRow(patient, rowIndex),
+  );
 
-    // send searchFilter, searchValue, rowsPerPage
+  function handleSearch(): void {
+    const searchValueToSend = getSearchValue(
+      searchFilter.inputType,
+      searchValue,
+      dropdownSearchValue,
+    );
+    console.log('searchFilter:', searchValue);
+
+    // dont search if there is no search value
+    if (searchFilter.inputType !== 'none' && !searchValueToSend) {
+      setIsSearchInvalid(true);
+      return;
+    }
+
+    // else, search is valid, reset pop up state
+    setIsSearchInvalid(false);
+
+    console.log('searchFilter apiValue:', searchFilter.apiValue);
+    console.log('searchValueToSend:', searchValueToSend);
+
+    // send searchFilter.value, searchValueToSend, rowsPerPage, pageNumber
+    setActiveSearchFilter(searchFilter.apiValue);
+    setActiveSearchValue(searchValueToSend);
 
     // a new search/filter should start from page 1
     setCurrentPage(1);
   }
 
-  // TODO: backend handle page change; request new page with current filter/search values
   function handlePageChange(newPage: number): void {
     // set current page to newPage
     setCurrentPage(newPage);
@@ -72,16 +174,6 @@ export default function PatientsPage(): JSX.Element {
   function handleRowsPerPageChange(newRowsPerPage: number): void {
     setRowsPerPage(newRowsPerPage);
     setCurrentPage(1);
-
-    // TODO: backend request page 1 using the new rowsPerPage value
-    //
-    // send:
-    // {
-    //   filter: searchFilter,
-    //   search: searchValue,
-    //   page: 1,
-    //   rowsPerPage: newRowsPerPage
-    // }
   }
 
   // route to add patient page
@@ -111,19 +203,31 @@ export default function PatientsPage(): JSX.Element {
         <DashboardToolbar
           title="Patients"
           group={group}
+          searchFilters={patientSearchFilters}
           selectedSearchFilter={searchFilter}
+          isSearchInvalid={isSearchInvalid}
           searchValue={searchValue}
           searchPlaceholder="Search Patients"
-          searchInputType={getFilterType(searchFilter)}
-          dropdownSearchOptions={patientStatusOptions}
-          dropdownSearchValue={dropdownSearchValue}
+          searchInputType={searchFilter.inputType}
+          dropdownSearchOptions={patientStatusDropdownOptions}
+          dropdownSearchValue={dropdownSearchValue.map(
+            (status) => presetLabels[status].text,
+          )}
           addButtonText="Add Patient"
           selectedDashboard={['Patients Dashboard']}
           onSearchFilterChange={(newSearchFilter) => {
             handleNewSearchFilter(newSearchFilter);
           }}
           onSearchValueChange={setSearchValue}
-          onDropdownSearchChange={setDropdownSearchValue}
+          onSearchInvalidClose={() => {
+            setIsSearchInvalid(false);
+          }}
+          onDropdownSearchChange={(value) => {
+            const selectedStatuses = patientStatusOptions.filter((status) =>
+              value.includes(presetLabels[status].text),
+            );
+            setDropdownSearchValue(selectedStatuses);
+          }}
           onSearch={handleSearch}
           onAdd={handleAddPatient}
           onDashboardChange={handleDashboardChange}

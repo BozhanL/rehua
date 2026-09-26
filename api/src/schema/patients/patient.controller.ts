@@ -1,4 +1,6 @@
 import type { CreatePatientDto } from './dto/create-patient.dto';
+import type { PatientPageQueryDto } from './dto/pagination-request.dto';
+import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
 import { PatientService } from './patient.service';
@@ -7,6 +9,7 @@ import {
   SwaggerExample,
   TypedBody,
   TypedParam,
+  TypedQuery,
   TypedRoute,
 } from '@nestia/core';
 import { Controller } from '@nestjs/common';
@@ -47,12 +50,12 @@ export class PatientController {
       'Doe',
       '1990-07-21',
       '123 street, city, suburb',
-      1234567,
+      '1234567',
       '2026-06-20',
       'David at Main Hospital',
       'Sarah Smith',
-      123,
-      'long term',
+      'A123',
+      'longTerm',
       'email@domain.com',
       '+64 123 456789',
       'Male',
@@ -81,18 +84,41 @@ export class PatientController {
   }
 
   //returns patients like in a the list view (number of results shown, page number)
+  //optional filters
   @TypedRoute.Get('page/:pageNumber/:numberOfRows')
   async findPage(
     @TypedParam('numberOfRows') numberOfRows: number,
     @TypedParam('pageNumber') pageNumber: number,
-  ): Promise<(Patient & { _id: string })[]> {
-    const docs = await this.patientService.findPage(numberOfRows, pageNumber);
+    @TypedQuery() query: PatientPageQueryDto,
+  ): Promise<PaginatedResponseDto<Patient & { _id: string }>> {
+    const { filter, search } = query;
 
-    return docs.map((doc) => ({
+    let paginatedResult;
+
+    if (filter || search) {
+      paginatedResult = await this.patientService.findPageByFilter(
+        numberOfRows,
+        pageNumber,
+        filter ?? '',
+        search ?? '',
+      );
+    } else {
+      paginatedResult = await this.patientService.findPage(
+        numberOfRows,
+        pageNumber,
+      );
+    }
+
+    const formattedDocs = paginatedResult.data.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...doc.toJSON(),
       _id: doc._id.toString(),
     }));
+
+    return {
+      data: formattedDocs,
+      meta: paginatedResult.meta,
+    };
   }
 
   @TypedRoute.Patch(':id')

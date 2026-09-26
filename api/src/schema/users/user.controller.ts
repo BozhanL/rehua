@@ -1,3 +1,4 @@
+import { PaginatedResponseDto } from '../patients/dto/pagination-response.dto';
 import type { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -77,14 +78,22 @@ export class UserController {
   async findPage(
     @TypedParam('pageNumber') pageNumber: number,
     @TypedParam('numberOfRows') numberOfRows: number,
-  ): Promise<(User & { _id: string })[]> {
-    const docs = await this.userService.findPage(numberOfRows, pageNumber);
+  ): Promise<PaginatedResponseDto<User & { _id: string }>> {
+    const paginatedResult = await this.userService.findPage(
+      numberOfRows,
+      pageNumber,
+    );
 
-    return docs.map((doc) => ({
+    const formattedDocs = paginatedResult.data.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...doc.toJSON(),
       _id: doc._id.toString(),
     }));
+
+    return {
+      data: formattedDocs,
+      meta: paginatedResult.meta,
+    };
   }
 
   @TypedRoute.Patch(':id')

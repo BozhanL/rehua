@@ -1,9 +1,10 @@
 import type { CreatePatientDto } from './dto/create-patient.dto';
+import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient, PatientDocument } from './entities/patient.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateWriteOpResult } from 'mongoose';
+import { Model, QueryFilter, UpdateWriteOpResult } from 'mongoose';
 
 @Injectable()
 export class PatientService {
@@ -27,13 +28,62 @@ export class PatientService {
   async findPage(
     numberOfRows: number,
     pageNumber: number,
-  ): Promise<PatientDocument[]> {
-    return this.patientModel
+  ): Promise<PaginatedResponseDto<PatientDocument>> {
+    const docs = await this.patientModel
       .find()
       .sort({ dateAdmitted: 'desc' })
       .skip((pageNumber - 1) * numberOfRows)
       .limit(numberOfRows)
       .exec();
+
+    const totalDocuments = await this.patientModel.countDocuments();
+    const totalPages = Math.ceil(totalDocuments / numberOfRows);
+
+    return {
+      data: docs,
+      meta: {
+        totalPages,
+      },
+    };
+  }
+
+  async findPageByFilter(
+    numberOfRows: number,
+    pageNumber: number,
+    filter: string,
+    search: string,
+  ): Promise<PaginatedResponseDto<PatientDocument>> {
+    const searchFilter: Record<string, unknown> = {};
+
+    if (filter && search) {
+      const escapedValue = search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+
+      searchFilter[filter] = {
+        $regex: escapedValue,
+        $options: 'i',
+      };
+    }
+
+    const query = searchFilter as QueryFilter<PatientDocument>;
+
+    const docs = await this.patientModel
+      .find(query)
+      .sort({ dateAdmitted: 'desc' })
+      .skip((pageNumber - 1) * numberOfRows)
+      .limit(numberOfRows)
+      .exec();
+
+    const matchresults = await this.patientModel.find(query).exec();
+
+    const totalFilteredDocuments = matchresults.length;
+    const totalPages = Math.ceil(totalFilteredDocuments / numberOfRows);
+
+    return {
+      data: docs,
+      meta: {
+        totalPages,
+      },
+    };
   }
 
   async update(
