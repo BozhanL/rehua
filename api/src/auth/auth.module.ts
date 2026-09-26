@@ -1,5 +1,6 @@
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { AuthorisationGuard } from './authorisation.guard';
 import { JwtAuthGuard } from './jwt.guard';
 import { JWT_SECRET, JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
@@ -31,6 +32,10 @@ const JWT_SIGN_OPTIONS: SignOptions = { expiresIn: '5m' };
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthorisationGuard,
     },
   ],
 })

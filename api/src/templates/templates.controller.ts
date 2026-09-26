@@ -2,14 +2,17 @@ import type { CreateTemplateDto } from './dto/create-template.dto';
 import { TemplateType } from './entities/template-type.enum';
 import type { Template } from './entities/template.entity';
 import { TemplatesService } from './templates.service';
+import { Roles } from '@/auth/roles.decorator';
 import type { MongoId } from '@/utils/types';
 import { TypedBody, TypedParam, TypedRoute } from '@nestia/core';
 import { Controller } from '@nestjs/common';
 
+@Roles('admin', 'nurse')
 @Controller('templates')
 export class TemplatesController {
   constructor(private readonly templatesService: TemplatesService) {}
 
+  @Roles('admin')
   @TypedRoute.Post()
   async create(
     @TypedBody() createTemplateDto: CreateTemplateDto,

@@ -1,12 +1,12 @@
-import { IS_PUBLIC_KEY } from './auth.controller';
 import { JWT_STRATEGY_NAME } from './jwt.strategy';
+import { IS_PUBLIC_KEY } from './public.decorator';
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard(JWT_STRATEGY_NAME) {
-  constructor(private reflector: Reflector) {
+  constructor(private readonly reflector: Reflector) {
     super();
   }
 

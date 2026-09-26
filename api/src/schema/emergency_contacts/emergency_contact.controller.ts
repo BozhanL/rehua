@@ -2,6 +2,7 @@ import { CreateEmergencyContactDto } from './dto/create-emergency_contact.dto';
 import { UpdateEmergencyContactDto } from './dto/update-emergency_contact.dto';
 import { EmergencyContactService } from './emergency_contact.service';
 import { EmergencyContact } from './entities/emergency_contact.entity';
+import { Roles } from '@/auth/roles.decorator';
 import {
   SwaggerExample,
   TypedBody,
@@ -11,6 +12,7 @@ import {
 import { Controller } from '@nestjs/common';
 import { UpdateWriteOpResult } from 'mongoose';
 
+@Roles('admin', 'nurse')
 @Controller('emergency-contacts')
 export class EmergencyContactController {
   constructor(

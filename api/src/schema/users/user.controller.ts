@@ -3,6 +3,7 @@ import type { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
+import { Roles } from '@/auth/roles.decorator';
 import {
   SwaggerExample,
   TypedBody,
@@ -12,6 +13,7 @@ import {
 import { Controller } from '@nestjs/common';
 import { UpdateWriteOpResult } from 'mongoose';
 
+@Roles('admin')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
