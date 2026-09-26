@@ -35,8 +35,8 @@
     "normalise-icons": "ts-node app/assets/scripts/normalise-icons.ts"
   },
   "dependencies": {
-    "@lexical/html": "0.50.0",
-    "@lexical/react": "0.50.0",
+    "@lexical/html": "0.51.0",
+    "@lexical/react": "0.51.0",
     "@rehua/sdk": "*",
     "@rjsf/core": "6.8.0",
     "@rjsf/utils": "6.8.0",
@@ -45,7 +45,7 @@
     "@tanstack/react-query-devtools": "5.102.8",
     "dayjs": "1.11.23",
     "dompurify": "3.4.15",
-    "lexical": "0.50.0",
+    "lexical": "0.51.0",
     "next": "16.3.5",
     "otplib": "13.5.0",
     "qrcode.react": "4.2.0",
