@@ -43,12 +43,13 @@ export default function PatientsPage(): JSX.Element {
   const patientSearchFilters: [SearchFilterOption, ...SearchFilterOption[]] = [
     { webValue: 'No Filter', apiValue: '', inputType: 'none' },
     { webValue: 'Room #', apiValue: 'roomNumber', inputType: 'text' },
-    { webValue: 'Name', apiValue: 'fullName', inputType: 'text' },
+    { webValue: 'First Name', apiValue: 'firstName', inputType: 'text' },
+    { webValue: 'Last Name', apiValue: 'lastName', inputType: 'text' },
     { webValue: 'DOB', apiValue: 'dateOfBirth', inputType: 'date' },
     { webValue: 'Gender', apiValue: 'gender', inputType: 'text' },
     { webValue: 'NHI', apiValue: 'nhi', inputType: 'text' },
     { webValue: 'Date Admitted', apiValue: 'dateAdmitted', inputType: 'date' },
-    { webValue: 'Nurse', apiValue: 'assignedNurse', inputType: 'text' },
+    { webValue: 'Nurse', apiValue: 'nurse', inputType: 'text' },
     { webValue: 'Status', apiValue: 'status', inputType: 'dropdown' },
     { webValue: 'Funding', apiValue: 'funding', inputType: 'text' },
   ];
@@ -59,6 +60,9 @@ export default function PatientsPage(): JSX.Element {
   const [searchValue, setSearchValue] = useState('');
   const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // filter by status uses this
   const [isSearchInvalid, setIsSearchInvalid] = useState(false); // state for showing pop up for no search value
+
+  const [activeSearchFilter, setActiveSearchFilter] = useState<string>('');
+  const [activeSearchValue, setActiveSearchValue] = useState<string>('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -89,16 +93,12 @@ export default function PatientsPage(): JSX.Element {
     });
   }
 
-  // TODO: review and clean up logic
-
-  //  const patients = (apiResponse?.data as unknown as Patient[]) ?? [];
-  //  const totalPages = apiResponse?.meta.totalPages ?? 0;
-
-  //  const patientRows: PatientRow[] = patients.map((patient, rowIndex) =>
-  //    createPatientRow(patient, rowIndex),
-  //  );
-
-  const patientQuery = usePatientOptions(rowsPerPage, currentPage);
+  const patientQuery = usePatientOptions(
+    rowsPerPage,
+    currentPage,
+    activeSearchFilter,
+    activeSearchValue,
+  );
   const doc = useQuery(patientQuery);
 
   //check if docs has loaded, returns loading of not done
@@ -118,8 +118,9 @@ export default function PatientsPage(): JSX.Element {
     setSearchFilter(newSearchFilter);
 
     if (newSearchFilter.webValue === 'No Filter') {
-      // TODO: backend handle if filter is reset to "No Filter"
-      console.log('searchFilter: No Filter');
+      setActiveSearchFilter('');
+      setActiveSearchValue('');
+      setCurrentPage(1);
     }
   }
 
@@ -134,10 +135,10 @@ export default function PatientsPage(): JSX.Element {
       searchValue,
       dropdownSearchValue,
     );
-    console.log('searchFilter:', searchValueToSend);
+    console.log('searchFilter:', searchValue);
 
     // dont search if there is no search value
-    if (searchFilter.inputType === 'none' || !searchValueToSend) {
+    if (searchFilter.inputType !== 'none' && !searchValueToSend) {
       setIsSearchInvalid(true);
       return;
     }
@@ -145,7 +146,12 @@ export default function PatientsPage(): JSX.Element {
     // else, search is valid, reset pop up state
     setIsSearchInvalid(false);
 
+    console.log('searchFilter apiValue:', searchFilter.apiValue);
+    console.log('searchValueToSend:', searchValueToSend);
+
     // send searchFilter.value, searchValueToSend, rowsPerPage, pageNumber
+    setActiveSearchFilter(searchFilter.apiValue);
+    setActiveSearchValue(searchValueToSend);
 
     // a new search/filter should start from page 1
     setCurrentPage(1);
