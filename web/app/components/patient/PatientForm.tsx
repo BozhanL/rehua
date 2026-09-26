@@ -18,11 +18,11 @@ function getNurses(): string[] {
 }
 
 // helper functions to convert between status and text for the dropdown
-function statusToText(status: MiniPresetLabel): string {
+export function statusToText(status: MiniPresetLabel): string {
   return presetLabels[status].text;
 }
 
-function textToStatus(text: string): MiniPresetLabel | undefined {
+export function textToStatus(text: string): MiniPresetLabel | undefined {
   const keys = Object.keys(presetLabels) as MiniPresetLabel[];
   return keys.find((key) => presetLabels[key].text === text);
 }
