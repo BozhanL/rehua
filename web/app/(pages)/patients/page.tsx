@@ -136,7 +136,6 @@ export default function PatientsPage(): JSX.Element {
     createPatientRow(patient, rowIndex),
   );
 
-  // TODO: backend to handle search/filter and pagination based on these values being passed to it
   function handleSearch(): void {
     const searchValueToSend = getSearchValue(
       searchFilter.inputType,
@@ -165,7 +164,6 @@ export default function PatientsPage(): JSX.Element {
     setCurrentPage(1);
   }
 
-  // TODO: backend handle page change; request new page with current filter/search values
   function handlePageChange(newPage: number): void {
     // set current page to newPage
     setCurrentPage(newPage);
@@ -176,16 +174,6 @@ export default function PatientsPage(): JSX.Element {
   function handleRowsPerPageChange(newRowsPerPage: number): void {
     setRowsPerPage(newRowsPerPage);
     setCurrentPage(1);
-
-    // TODO: backend request page 1 using the new rowsPerPage value
-    //
-    // send:
-    // {
-    //   filter: searchFilter,
-    //   search: searchValue,
-    //   page: 1,
-    //   rowsPerPage: newRowsPerPage
-    // }
   }
 
   // route to add patient page
