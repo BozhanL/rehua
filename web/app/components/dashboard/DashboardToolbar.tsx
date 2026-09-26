@@ -1,41 +1,44 @@
 import ContentButton from '../../components/common/ContentButton';
 import DropdownBar from '../../components/common/DropdownBar';
 import SingleLineInput from '../../components/common/SingleLineInput';
+import PopUp from '../common/PopUp';
+import dayjs from '@/app/utils/dayjs';
 import type { ChangeEvent, JSX } from 'react';
 
 // TODO: backend see if this should remain as is after auth is implemented
 type UserGroup = 'nurse' | 'admin';
 
 // different components are rendered depending on the type of filter selected
-type SearchInputType = 'none' | 'text' | 'date' | 'dropdown';
+export type SearchInputType = 'none' | 'text' | 'date' | 'dropdown';
 
-// options for search filter dropdown
-const searchFilterOptions = [
-  'No Filter',
-  'Room #',
-  'Name',
-  'DOB',
-  'Gender',
-  'NHI',
-  'Date Admitted',
-  'Nurse',
-  'Status',
-  'Funding',
-] as const;
-export type SearchFilter = (typeof searchFilterOptions)[number];
+// interface for search filter options (mappings between what the user sees and what the backend expects)
+export interface SearchFilterOption {
+  webValue: string; // what the user sees
+  apiValue: string; // what backend expects
+  inputType: SearchInputType; // what type of input to render for this filter
+}
 
-// helper function to determine the type of search input to render based on the selected search filter
-export function getFilterType(searchFilter: SearchFilter[]): SearchInputType {
-  switch (searchFilter[0]) {
-    case 'DOB':
-    case 'Date Admitted':
-      return 'date';
-    case 'Status':
-      return 'dropdown';
-    case 'No Filter':
-      return 'none';
+// helper function to obtain the search value to send to the backend depending on the type of filter selected
+export function getSearchValue(
+  inputType: SearchInputType,
+  searchValue: string,
+  dropdownSearchValue: string[],
+): string {
+  switch (inputType) {
+    case 'date': {
+      if (!searchValue) {
+        return '';
+      }
+
+      const date = dayjs.utc(searchValue);
+      return date.isValid() ? date.startOf('day').toISOString() : '';
+    }
+
+    case 'dropdown':
+      return dropdownSearchValue[0] ?? '';
+
     default:
-      return 'text';
+      return searchValue;
   }
 }
 
@@ -50,7 +53,10 @@ interface DashboardToolbarProps {
   title: string;
   group: UserGroup;
 
-  selectedSearchFilter: SearchFilter[];
+  searchFilters: SearchFilterOption[];
+  selectedSearchFilter: SearchFilterOption;
+  isSearchInvalid: boolean;
+
   searchValue: string;
   searchPlaceholder: string;
   searchInputType: SearchInputType;
@@ -63,8 +69,9 @@ interface DashboardToolbarProps {
 
   selectedDashboard?: string[];
 
-  onSearchFilterChange: (value: SearchFilter[]) => void;
+  onSearchFilterChange: (value: SearchFilterOption) => void;
   onSearchValueChange: (value: string) => void;
+  onSearchInvalidClose: () => void;
   onDropdownSearchChange?: (value: string[]) => void;
   onSearch: () => void;
   onAdd: () => void;
@@ -75,7 +82,9 @@ interface DashboardToolbarProps {
 function DashboardToolbar({
   title,
   group,
+  searchFilters,
   selectedSearchFilter,
+  isSearchInvalid,
   searchValue,
   searchPlaceholder,
   searchInputType,
@@ -85,6 +94,7 @@ function DashboardToolbar({
   selectedDashboard = [],
   onSearchFilterChange,
   onSearchValueChange,
+  onSearchInvalidClose,
   onDropdownSearchChange,
   onSearch,
   onAdd,
@@ -93,20 +103,41 @@ function DashboardToolbar({
   return (
     <div className="mx-5 mt-5 mb-4 overflow-x-auto">
       <div className="flex min-w-max items-center gap-6">
+        {/* pop up for if no filter is selected/empty search value */}
+        <PopUp
+          text1={
+            'Your search filter is empty/unselected.\nPlease select a filter or enter a search value to continue.'
+          }
+          button1Props={{
+            text1: 'OK',
+            iconProps: { name: 'circle-arrow' },
+            backgroundColor: 'bg-rehua-green',
+            horizontalPadding: 0.3,
+            onClick: onSearchInvalidClose,
+          }}
+          modalProps={{ open: isSearchInvalid, surfaceProps: { height: 600 } }}
+        />
+
         {/* page title */}
         <span className="text-3xl font-bold">{title}</span>
 
         {/* search filter; 1 option may be selected at a time */}
         <div className="shrink-0">
           <DropdownBar
-            selectedValues={selectedSearchFilter}
-            options={searchFilterOptions}
+            selectedValues={[selectedSearchFilter.webValue]}
+            options={searchFilters.map((filter) => filter.webValue)}
             size={17}
             labelMode="prefix"
             defaultText="Search by: "
             width={300}
             onChange={(newSearchFilter) => {
-              onSearchFilterChange(newSearchFilter);
+              const selectedFilter = searchFilters.find(
+                (filter) => filter.webValue === newSearchFilter[0],
+              );
+
+              if (selectedFilter) {
+                onSearchFilterChange(selectedFilter);
+              }
             }}
           />
         </div>
