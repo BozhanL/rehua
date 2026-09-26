@@ -3,8 +3,8 @@ import Pagination from '../../components/common/Pagination';
 import Surface from '../../components/common/Surface';
 import Table from '../../components/common/Table';
 import DashboardToolbar, {
-  getFilterType,
-  type SearchFilter,
+  type SearchFilterOption,
+  getSearchValue,
 } from '../../components/dashboard/DashboardToolbar';
 import {
   createPatientRow,
@@ -14,7 +14,6 @@ import {
 } from './rowsandcolumns';
 import { APIUrlContext } from '@/app/providers';
 import { sessionStorageGetUserInfo } from '@/app/utils/auth';
-import dayjs from '@/app/utils/dayjs';
 import { isTesting } from '@/app/utils/env';
 import { findPage } from '@rehua/sdk/functional/patient/page';
 import {
@@ -31,6 +30,7 @@ export default function PatientsPage(): JSX.Element {
 
   const group: 'nurse' | 'admin' = sessionStorageGetUserInfo().group;
 
+  // TODO: frontend come back to this and import from elsewhere
   const patientStatusOptions = [
     'Long Term',
     'Short Term',
@@ -39,11 +39,26 @@ export default function PatientsPage(): JSX.Element {
     ...(group === 'admin' ? ['Deceased'] : []), // add Decesed option if user is admin
   ];
 
-  const [searchFilter, setSearchFilter] = useState<SearchFilter[]>([
-    'No Filter',
-  ]); // by default no search filter is applied
+  // search filters for the patient dashboard
+  const patientSearchFilters: [SearchFilterOption, ...SearchFilterOption[]] = [
+    { webValue: 'No Filter', apiValue: '', inputType: 'none' },
+    { webValue: 'Room #', apiValue: 'roomNumber', inputType: 'text' },
+    { webValue: 'Name', apiValue: 'fullName', inputType: 'text' },
+    { webValue: 'DOB', apiValue: 'dateOfBirth', inputType: 'date' },
+    { webValue: 'Gender', apiValue: 'gender', inputType: 'text' },
+    { webValue: 'NHI', apiValue: 'nhi', inputType: 'text' },
+    { webValue: 'Date Admitted', apiValue: 'dateAdmitted', inputType: 'date' },
+    { webValue: 'Nurse', apiValue: 'assignedNurse', inputType: 'text' },
+    { webValue: 'Status', apiValue: 'status', inputType: 'dropdown' },
+    { webValue: 'Funding', apiValue: 'funding', inputType: 'text' },
+  ];
+
+  const [searchFilter, setSearchFilter] = useState<SearchFilterOption>(
+    patientSearchFilters[0],
+  ); // by default no search filter is applied
   const [searchValue, setSearchValue] = useState('');
   const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // filter by status uses this
+  const [isSearchInvalid, setIsSearchInvalid] = useState(false); // state for showing pop up for no search value
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -97,10 +112,12 @@ export default function PatientsPage(): JSX.Element {
   const totalRows = doc.data.meta.totalPages;
 
   // handle search filter change + reset search value when filter changes
-  function handleNewSearchFilter(newSearchFilter: SearchFilter[]): void {
+  function handleNewSearchFilter(newSearchFilter: SearchFilterOption): void {
     setSearchValue(''); // reset search value when filter changes
+    setDropdownSearchValue([]); // reset dropdown search value when filter changes
     setSearchFilter(newSearchFilter);
-    if (newSearchFilter[0] === 'No Filter') {
+
+    if (newSearchFilter.webValue === 'No Filter') {
       // TODO: backend handle if filter is reset to "No Filter"
       console.log('searchFilter: No Filter');
     }
@@ -112,13 +129,23 @@ export default function PatientsPage(): JSX.Element {
 
   // TODO: backend to handle search/filter and pagination based on these values being passed to it
   function handleSearch(): void {
-    const searchValueToSend =
-      getFilterType(searchFilter) === 'date'
-        ? dayjs.tz(searchValue).startOf('day').toISOString()
-        : searchValue;
+    const searchValueToSend = getSearchValue(
+      searchFilter.inputType,
+      searchValue,
+      dropdownSearchValue,
+    );
     console.log('searchFilter:', searchValueToSend);
 
-    // send searchFilter, searchValue, rowsPerPage, pageNumber
+    // dont search if there is no search value
+    if (searchFilter.inputType === 'none' || !searchValueToSend) {
+      setIsSearchInvalid(true);
+      return;
+    }
+
+    // else, search is valid, reset pop up state
+    setIsSearchInvalid(false);
+
+    // send searchFilter.value, searchValueToSend, rowsPerPage, pageNumber
 
     // a new search/filter should start from page 1
     setCurrentPage(1);
@@ -174,10 +201,12 @@ export default function PatientsPage(): JSX.Element {
         <DashboardToolbar
           title="Patients"
           group={group}
+          searchFilters={patientSearchFilters}
           selectedSearchFilter={searchFilter}
+          isSearchInvalid={isSearchInvalid}
           searchValue={searchValue}
           searchPlaceholder="Search Patients"
-          searchInputType={getFilterType(searchFilter)}
+          searchInputType={searchFilter.inputType}
           dropdownSearchOptions={patientStatusOptions}
           dropdownSearchValue={dropdownSearchValue}
           addButtonText="Add Patient"
@@ -186,6 +215,9 @@ export default function PatientsPage(): JSX.Element {
             handleNewSearchFilter(newSearchFilter);
           }}
           onSearchValueChange={setSearchValue}
+          onSearchInvalidClose={() => {
+            setIsSearchInvalid(false);
+          }}
           onDropdownSearchChange={setDropdownSearchValue}
           onSearch={handleSearch}
           onAdd={handleAddPatient}
