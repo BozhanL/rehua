@@ -9,7 +9,16 @@ export class CreatePatientDto {
     public gpNameAndMedicalCenter: string,
     public nurse: string,
     public roomNumber: number,
-    public status: string,
+    public status:
+      | 'active'
+      | 'disabled'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload',
     public email: string,
     public homePhoneNumber: string,
     public gender: string,

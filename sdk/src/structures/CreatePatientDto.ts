@@ -8,7 +8,16 @@ export type CreatePatientDto = {
   gpNameAndMedicalCenter: string;
   nurse: string;
   roomNumber: number;
-  status: string;
+  status:
+    | 'active'
+    | 'disabled'
+    | 'longTerm'
+    | 'palliative'
+    | 'shortTerm'
+    | 'daycare'
+    | 'discharged'
+    | 'deceased'
+    | 'upload';
   email: string;
   homePhoneNumber: string;
   gender: string;

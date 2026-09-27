@@ -8,7 +8,17 @@ export type UpdatePatientDto = {
   gpNameAndMedicalCenter?: undefined | string;
   nurse?: undefined | string;
   roomNumber?: undefined | number;
-  status?: undefined | string;
+  status?:
+    | undefined
+    | 'active'
+    | 'disabled'
+    | 'longTerm'
+    | 'palliative'
+    | 'shortTerm'
+    | 'daycare'
+    | 'discharged'
+    | 'deceased'
+    | 'upload';
   email?: undefined | string;
   homePhoneNumber?: undefined | string;
   gender?: undefined | string;
