@@ -3,7 +3,7 @@ import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';
 import ListView from '@/app/components/common/ListView';
 import Surface from '@/app/components/common/Surface';
-import { PatientListRows } from '@/app/components/patient/PatientProfileList';
+import { UserListRows } from '@/app/components/user/UserProfileList';
 import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 
@@ -20,9 +20,7 @@ export default function PatientProfilePage(): JSX.Element {
       <Surface width="100%" height="100%">
         {/* page back button and title */}
         <div
-          className="
-            mx-6 mt-6 mb-5 flex min-w-max items-center gap-6 bg-rehua-white
-          "
+          className="mx-6 mt-6 flex min-w-max items-center gap-6 bg-rehua-white"
         >
           <button
             type="button"
@@ -87,9 +85,9 @@ export default function PatientProfilePage(): JSX.Element {
           </div>
         </div>
 
-        {/* patient information list */}
+        {/* user information list */}
         <div className="pt-4">
-          <ListView rows={PatientListRows} insidePadding="px-8" />
+          <ListView rows={UserListRows} insidePadding="px-8" />
         </div>
       </Surface>
     </div>
