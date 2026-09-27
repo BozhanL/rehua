@@ -1,6 +1,6 @@
-import ContentButton from '../../components/common/ContentButton';
-import DropdownBar from '../../components/common/DropdownBar';
-import SingleLineInput from '../../components/common/SingleLineInput';
+import ContentButton from '@/app/components/common/ContentButton';
+import DropdownBar from '@/app/components/common/DropdownBar';
+import SingleLineInput from '@/app/components/common/SingleLineInput';
 import type { ChangeEvent, JSX } from 'react';
 
 // TODO: backend see if this should remain as is after auth is implemented

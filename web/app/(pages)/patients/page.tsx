@@ -1,12 +1,12 @@
 'use client';
-import Pagination from '../../components/common/Pagination';
-import Surface from '../../components/common/Surface';
-import Table from '../../components/common/Table';
+import { patientColumns, patientRows } from './rowsandcolumns';
+import Pagination from '@/app/components/common/Pagination';
+import Surface from '@/app/components/common/Surface';
+import Table from '@/app/components/common/Table';
 import DashboardToolbar, {
   getFilterType,
   type SearchFilter,
-} from '../../components/dashboard/DashboardToolbar';
-import { patientColumns, patientRows } from './rowsandcolumns';
+} from '@/app/components/dashboard/DashboardToolbar';
 import dayjs from '@/app/utils/dayjs';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';
