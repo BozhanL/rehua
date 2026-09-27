@@ -3,7 +3,7 @@ export type CreatePatientDto = {
   lastName: string;
   dateOfBirth: string;
   address: string;
-  nhi: number;
+  nhi: string;
   dateAdmitted: string;
   gpNameAndMedicalCenter: string;
   nurse: string;

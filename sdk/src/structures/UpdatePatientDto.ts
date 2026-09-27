@@ -3,7 +3,7 @@ export type UpdatePatientDto = {
   lastName?: undefined | string;
   dateOfBirth?: undefined | string;
   address?: undefined | string;
-  nhi?: undefined | number;
+  nhi?: undefined | string;
   dateAdmitted?: undefined | string;
   gpNameAndMedicalCenter?: undefined | string;
   nurse?: undefined | string;

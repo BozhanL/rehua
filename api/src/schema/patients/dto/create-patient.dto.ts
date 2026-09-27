@@ -4,7 +4,7 @@ export class CreatePatientDto {
     public lastName: string,
     public dateOfBirth: string,
     public address: string,
-    public nhi: number,
+    public nhi: string,
     public dateAdmitted: string,
     public gpNameAndMedicalCenter: string,
     public nurse: string,
