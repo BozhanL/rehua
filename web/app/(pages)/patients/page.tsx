@@ -1,11 +1,4 @@
 'use client';
-import Pagination from '../../components/common/Pagination';
-import Surface from '../../components/common/Surface';
-import Table from '../../components/common/Table';
-import DashboardToolbar, {
-  type SearchFilterOption,
-  getSearchValue,
-} from '../../components/dashboard/DashboardToolbar';
 import {
   createPatientRow,
   patientColumns,
@@ -16,6 +9,13 @@ import {
   presetLabels,
   type MiniPresetLabel,
 } from '@/app/components/common/MiniLabel';
+import Pagination from '@/app/components/common/Pagination';
+import Surface from '@/app/components/common/Surface';
+import Table from '@/app/components/common/Table';
+import DashboardToolbar, {
+  type SearchFilterOption,
+  getSearchValue,
+} from '@/app/components/dashboard/DashboardToolbar';
 import { APIUrlContext } from '@/app/providers';
 import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import { isTesting } from '@/app/utils/env';

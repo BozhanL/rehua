@@ -1,7 +1,7 @@
-import ContentButton from '../../components/common/ContentButton';
-import DropdownBar from '../../components/common/DropdownBar';
-import SingleLineInput from '../../components/common/SingleLineInput';
-import PopUp from '../common/PopUp';
+import ContentButton from '@/app/components/common/ContentButton';
+import DropdownBar from '@/app/components/common/DropdownBar';
+import PopUp from '@/app/components/common/PopUp';
+import SingleLineInput from '@/app/components/common/SingleLineInput';
 import dayjs from '@/app/utils/dayjs';
 import type { ChangeEvent, JSX } from 'react';
 
