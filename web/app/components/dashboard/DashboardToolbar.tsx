@@ -5,8 +5,7 @@ import PopUp from '../common/PopUp';
 import dayjs from '@/app/utils/dayjs';
 import type { ChangeEvent, JSX } from 'react';
 
-// TODO: backend see if this should remain as is after auth is implemented
-type UserGroup = 'nurse' | 'admin';
+export type UserGroup = 'nurse' | 'admin';
 
 // different components are rendered depending on the type of filter selected
 export type SearchInputType = 'none' | 'text' | 'date' | 'dropdown';

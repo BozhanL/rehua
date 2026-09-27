@@ -94,9 +94,7 @@ export const patientColumns: TableColumn[] = [
   },
 ];
 
-// TODO: backend implement the PatientViewButton below within the "View" column of the patient table,
-// the button already routes to /patients/profile?id=<patientId> page, patientId has to be passed in
-// -- for better clarity, feel free to rename this file from "rowsandcolumns.tsx" if it suits
+// React icon component for routing to patient profiles
 export function PatientViewButton({
   patientId,
 }: Readonly<{ patientId: string }>): JSX.Element {
@@ -132,7 +130,7 @@ export function createPatientRow(
       gender:
         patient.gender === 'Male' || patient.gender === 'Female'
           ? patient.gender.charAt(0).toUpperCase()
-          : 'O', // O for Other, TODO: backend let me know if gender is a dropdown or free text, change this logic accordingly
+          : 'O', // O for Other
       nhi: patient.nhi ? patient.nhi : '-',
       dateAdmitted: dayjs(patient.dateAdmitted).tz().format('DD/MM/YYYY'),
       nurse: patient.nurse,
