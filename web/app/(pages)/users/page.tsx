@@ -1,6 +1,14 @@
 'use client';
-import { userColumns, userGroups, userRows } from './rowsandcolumns';
-import { presetLabels } from '@/app/components/common/MiniLabel';
+import {
+  userColumns,
+  userGroupLabels,
+  userGroups,
+  userRows,
+} from './rowsandcolumns';
+import {
+  presetLabels,
+  type MiniPresetLabel,
+} from '@/app/components/common/MiniLabel';
 import Pagination from '@/app/components/common/Pagination';
 import Surface from '@/app/components/common/Surface';
 import Table from '@/app/components/common/Table';
@@ -16,8 +24,8 @@ export default function UsersPage(): JSX.Element {
   const group: 'nurse' | 'admin' = 'admin';
   const router = useRouter();
 
-  // define the list of user statuses for the status dropdown, using preset labels
-  const userStatuses = [presetLabels.active, presetLabels.disabled];
+  // values for the dropdown options of status search filters
+  const userStatusOptions: MiniPresetLabel[] = ['active', 'disabled'];
 
   // search filters for the users dashboard
   const userSearchFilters: [SearchFilterOption, ...SearchFilterOption[]] = [
@@ -34,9 +42,6 @@ export default function UsersPage(): JSX.Element {
     userSearchFilters[0],
   ); // by default no search filter is applied
   const [searchValue, setSearchValue] = useState('');
-  const [dropdownSearchOptions, setDropdownSearchOptions] = useState<string[]>(
-    [],
-  ); // options for the dropdown search filter
   const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // filter by status uses this
   const [isSearchInvalid, setIsSearchInvalid] = useState(false); // state for showing pop up for no search value
 
@@ -44,21 +49,18 @@ export default function UsersPage(): JSX.Element {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const totalRows = 5; // TODO: backend replace this
 
+  // frontend dropdown options for the currently selected search filter
+  const searchOptionsMap: Record<string, string[]> = {
+    Group: userGroups.map((group) => userGroupLabels[group]),
+    Status: userStatusOptions.map((status) => presetLabels[status].text),
+  };
+  const dropdownSearchOptions = searchOptionsMap[searchFilter.webValue] ?? [];
+
   // handle search filter change + reset search value when filter changes
   function handleNewSearchFilter(newSearchFilter: SearchFilterOption): void {
     setSearchValue(''); // reset search value when filter changes
     setDropdownSearchValue([]); // reset dropdown search value when filter changes
     setSearchFilter(newSearchFilter);
-
-    // handle dropdown search option edge cases
-    if (newSearchFilter.inputType === 'dropdown') {
-      if (newSearchFilter.webValue === 'Group') {
-        setDropdownSearchOptions(userGroups);
-      }
-      if (newSearchFilter.webValue === 'Status') {
-        setDropdownSearchOptions(userStatuses.map((label) => label.text));
-      }
-    }
 
     if (newSearchFilter.webValue === 'No Filter') {
       // TODO: backend handle if filter is reset to "No Filter"
@@ -84,8 +86,6 @@ export default function UsersPage(): JSX.Element {
     // else, search is valid, reset pop up state
     setIsSearchInvalid(false);
 
-    // send searchFilter.value, searchValueToSend, rowsPerPage, pageNumber
-
     // a new search/filter should start from page 1
     setCurrentPage(1);
   }
@@ -94,7 +94,6 @@ export default function UsersPage(): JSX.Element {
   function handlePageChange(newPage: number): void {
     // set current page to newPage
     setCurrentPage(newPage);
-    // send searchFilter, searchValue, currentPage and rowsPerPage
   }
 
   // handle rows per page change; the current page is reset to 1
@@ -157,7 +156,21 @@ export default function UsersPage(): JSX.Element {
           onSearchInvalidClose={() => {
             setIsSearchInvalid(false);
           }}
-          onDropdownSearchChange={setDropdownSearchValue}
+          onDropdownSearchChange={(value) => {
+            if (searchFilter.webValue === 'Group') {
+              const selectedGroups = userGroups.filter((group) =>
+                value.includes(userGroupLabels[group]),
+              );
+              setDropdownSearchValue(selectedGroups);
+            }
+
+            if (searchFilter.webValue === 'Status') {
+              const selectedStatuses = userStatusOptions.filter((status) =>
+                value.includes(presetLabels[status].text),
+              );
+              setDropdownSearchValue(selectedStatuses);
+            }
+          }}
           onSearch={handleSearch}
           onAdd={handleAddUser}
           onDashboardChange={handleDashboardChange}

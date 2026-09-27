@@ -6,9 +6,13 @@ import type { TableColumn, TableRow } from '@/app/components/common/Table';
 import { useRouter } from 'next/navigation';
 import type { JSX, ReactNode } from 'react';
 
-// TODO: backend derive the available user groups from the db (?)
-type UserGroup = 'Admin' | 'Nurse';
-export const userGroups: UserGroup[] = ['Admin', 'Nurse'];
+// TODO: frontend come back here and import type from elsewhere
+export type UserGroup = 'admin' | 'nurse';
+export const userGroups: UserGroup[] = ['admin', 'nurse'];
+export const userGroupLabels: Record<UserGroup, string> = {
+  admin: 'Admin',
+  nurse: 'Nurse',
+};
 
 // interface for a user
 export interface User {
@@ -77,9 +81,7 @@ export const userColumns: TableColumn[] = [
   },
 ];
 
-// TODO: backend implement the UserViewButton below within the "View" column of the user table,
-// the button already routes to /users/profile?id=<userId> page, userId has to be passed in
-// -- for better clarity, feel free to rename this file from "rowsandcolumns.tsx" if it suits
+// React icon component for routing to user profiles
 function UserViewButton({ userId }: Readonly<{ userId: string }>): JSX.Element {
   const router = useRouter();
   return (
@@ -107,7 +109,7 @@ function createUserRow(user: User, rowIndex: number): UserRow {
       username: user.username ? user.username : '-',
       fullName: `${user.firstName} ${user.lastName}`,
       email: user.email ? user.email : '-',
-      group: user.group,
+      group: userGroupLabels[user.group],
       status: <MiniLabel name={user.status} />,
       view: <UserViewButton userId={user.id} />,
     },
@@ -122,7 +124,7 @@ export const users: User[] = [
     firstName: 'John',
     lastName: 'Doe',
     email: 'john.doe@example.com',
-    group: 'Admin',
+    group: 'admin',
     status: 'active',
   },
   {
@@ -131,7 +133,7 @@ export const users: User[] = [
     firstName: 'Jane',
     lastName: 'Doe',
     email: 'jane.doe@example.com',
-    group: 'Nurse',
+    group: 'nurse',
     status: 'active',
   },
   {
@@ -140,12 +142,12 @@ export const users: User[] = [
     firstName: 'Bob',
     lastName: 'Smith',
     email: 'bob.smith@example.com',
-    group: 'Admin',
+    group: 'admin',
     status: 'disabled',
   },
 ];
 
-// create user rows from the sample user data - TODO: backend to alter this if needed
+// create user rows from the sample user data
 export const userRows: UserRow[] = users.map((user, rowIndex) =>
   createUserRow(user, rowIndex),
 );
