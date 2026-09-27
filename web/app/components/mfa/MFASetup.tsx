@@ -7,8 +7,8 @@ import { HttpError } from '@rehua/sdk';
 import { QRCodeSVG } from 'qrcode.react';
 import { useState, type JSX } from 'react';
 
-// size of the QR code and width of the secret underneath it, in pixels
-const qrCodeSize = 400;
+// the QR code is at most 400px, and shrinks to fit narrow or short screens
+const qrCodeWidth = 'min(100%, 400px, 40dvh)';
 
 // the API responds with 400 "Invalid TOTP code" when the code does not match the secret
 export function isInvalidTotpCodeError(error: unknown): boolean {
@@ -59,35 +59,59 @@ export default function MFASetUp({
 
   return (
     <>
-      {/* back button and title */}
-      <div
-        className="
-          mx-6 mt-6 mb-5 flex min-w-max items-center gap-6 bg-rehua-white
-        "
-      >
+      {/* back button and title, the title wraps on narrow screens */}
+      <div className="mx-6 mt-6 mb-5 flex items-center gap-6 bg-rehua-white">
         <button
           type="button"
           aria-label="Go back"
           onClick={onBack}
+          className="shrink-0"
           style={{ cursor: 'pointer' }}
         >
           <Icon name="circle-arrow" width={50} className="text-rehua-navy" />
         </button>
 
-        <div className="flex gap-3">
-          <Icon name="lock-time" width={40} />
-          <h1 className="translate-y-1 text-3xl font-bold">{title}</h1>
+        <div className="flex min-w-0 items-center gap-3">
+          <Icon name="lock-time" width={40} className="shrink-0" />
+          <h1
+            className="
+              text-2xl font-bold
+              md:text-3xl
+            "
+          >
+            {title}
+          </h1>
         </div>
       </div>
 
-      <div className="mx-16 flex flex-wrap justify-between gap-12 pb-10">
+      {/* stacked on tablets and smaller, side by side on wider screens */}
+      <div
+        className="
+          mx-6 flex flex-col items-center gap-10 pb-10
+          md:mx-16
+          lg:flex-row lg:items-start lg:justify-between
+        "
+      >
         {/* set-up steps */}
-        <div className="mt-10 flex max-w-3xl flex-col gap-8">
-          <span className="text-3xl font-bold">Set-Up Steps:</span>
+        <div
+          className="
+            flex max-w-3xl min-w-0 flex-col gap-6
+            lg:mt-10
+          "
+        >
+          <span
+            className="
+              text-2xl font-bold
+              md:text-3xl
+            "
+          >
+            Set-Up Steps:
+          </span>
           <ol
             className="
-              flex list-decimal flex-col gap-8 pl-10 text-2xl/relaxed
+              flex list-decimal flex-col gap-6 pl-8 text-xl/relaxed
               font-semibold
+              md:gap-8 md:pl-10 md:text-2xl/relaxed
             "
           >
             <li>
@@ -104,16 +128,27 @@ export default function MFASetUp({
         </div>
 
         {/* QR code, secret for manual entry and next step button */}
-        <div className="flex flex-col items-center gap-5">
-          <QRCodeSVG
-            value={totpData.uri}
-            size={qrCodeSize}
-            level="Q"
-            title="Authenticator app QR code"
-          />
+        <div
+          className="
+            flex w-full flex-col items-center gap-5
+            lg:w-100 lg:shrink-0
+          "
+        >
+          <div style={{ width: qrCodeWidth }}>
+            <QRCodeSVG
+              value={totpData.uri}
+              size={400}
+              level="Q"
+              title="Authenticator app QR code"
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </div>
           <span
-            className="text-center text-4xl font-semibold break-all"
-            style={{ width: qrCodeSize }}
+            className="
+              text-center text-2xl font-semibold break-all
+              md:text-3xl
+            "
+            style={{ width: qrCodeWidth }}
           >
             {totpData.secret}
           </span>
