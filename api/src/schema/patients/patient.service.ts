@@ -66,20 +66,44 @@ export class PatientService {
 
     const query = searchFilter as QueryFilter<PatientDocument>;
 
-    const docs = await this.patientModel
-      .find(query)
-      .sort({ dateAdmitted: 'desc' })
-      .skip((pageNumber - 1) * numberOfRows)
-      .limit(numberOfRows)
+    interface PatientAggregateResult {
+      data: PatientDocument[];
+      total: number;
+    }
+
+    const [result] = await this.patientModel
+      .aggregate<PatientAggregateResult>([
+        { $match: query },
+        {
+          $facet: {
+            totalCount: [{ $count: 'count' }],
+            paginatedResults: [
+              { $sort: { dateAdmitted: -1 } },
+              { $skip: (pageNumber - 1) * numberOfRows },
+              { $limit: numberOfRows },
+            ],
+          },
+        },
+        {
+          $project: {
+            data: '$paginatedResults',
+            total: { $ifNull: [{ $arrayElemAt: ['$totalCount.count', 0] }, 0] },
+          },
+        },
+      ])
       .exec();
 
-    const matchresults = await this.patientModel.find(query).exec();
+    const rawData = result?.data ?? [];
+    const total = result?.total ?? 0;
 
-    const totalFilteredDocuments = matchresults.length;
+    // rehydrate the raw objects into full Mongoose documents, to allow contorller to add _id
+    const data = rawData.map((doc) => this.patientModel.hydrate(doc));
+
+    const totalFilteredDocuments = total;
     const totalPages = Math.ceil(totalFilteredDocuments / numberOfRows);
 
     return {
-      data: docs,
+      data: data,
       meta: {
         totalPages,
       },
