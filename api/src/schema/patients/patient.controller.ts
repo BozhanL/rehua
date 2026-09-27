@@ -86,6 +86,7 @@ export class PatientController {
 
   //returns patients like in a the list view (number of results shown, page number)
   //optional filters
+  // TODO: limit nurses from reciving decesed patients
   @Public()
   @TypedRoute.Get('page/:pageNumber/:numberOfRows')
   async findPage(
