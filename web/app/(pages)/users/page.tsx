@@ -47,14 +47,29 @@ export default function UsersPage(): JSX.Element {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const totalRows = 5; // TODO: backend replace this
+  const totalRows = 5; // TODO: backend replace this, provide totalPages
 
   // frontend dropdown options for the currently selected search filter
-  const searchOptionsMap: Record<string, string[]> = {
-    Group: userGroups.map((group) => userGroupLabels[group]),
-    Status: userStatusOptions.map((status) => presetLabels[status].text),
-  };
-  const dropdownSearchOptions = searchOptionsMap[searchFilter.webValue] ?? [];
+  const dropdownSearchOptions =
+    searchFilter.webValue === 'Group'
+      ? userGroups.map((apiGroupValue) => userGroupLabels[apiGroupValue])
+      : userStatusOptions.map(
+          (apiStatusValue) => presetLabels[apiStatusValue].text,
+        );
+
+  // frontend dropdown display values for the currently selected search filter
+  const dropdownSearchValueDisplay =
+    searchFilter.webValue === 'Group'
+      ? userGroups
+          .filter((apiGroupValue) =>
+            dropdownSearchValue.includes(apiGroupValue),
+          )
+          .map((apiGroupValue) => userGroupLabels[apiGroupValue])
+      : userStatusOptions
+          .filter((apiStatusValue) =>
+            dropdownSearchValue.includes(apiStatusValue),
+          )
+          .map((apiStatusValue) => presetLabels[apiStatusValue].text);
 
   // handle search filter change + reset search value when filter changes
   function handleNewSearchFilter(newSearchFilter: SearchFilterOption): void {
@@ -146,7 +161,7 @@ export default function UsersPage(): JSX.Element {
           searchPlaceholder="Search Users"
           searchInputType={searchFilter.inputType}
           dropdownSearchOptions={dropdownSearchOptions}
-          dropdownSearchValue={dropdownSearchValue}
+          dropdownSearchValue={dropdownSearchValueDisplay}
           addButtonText="Add User"
           selectedDashboard={['Users Dashboard']}
           onSearchFilterChange={(newSearchFilter) => {
@@ -156,17 +171,18 @@ export default function UsersPage(): JSX.Element {
           onSearchInvalidClose={() => {
             setIsSearchInvalid(false);
           }}
-          onDropdownSearchChange={(value) => {
+          onDropdownSearchChange={(webValue) => {
             if (searchFilter.webValue === 'Group') {
-              const selectedGroups = userGroups.filter((group) =>
-                value.includes(userGroupLabels[group]),
+              const selectedGroups = userGroups.filter((apiGroupValue) =>
+                webValue.includes(userGroupLabels[apiGroupValue]),
               );
               setDropdownSearchValue(selectedGroups);
             }
 
             if (searchFilter.webValue === 'Status') {
-              const selectedStatuses = userStatusOptions.filter((status) =>
-                value.includes(presetLabels[status].text),
+              const selectedStatuses = userStatusOptions.filter(
+                (apiStatusValue) =>
+                  webValue.includes(presetLabels[apiStatusValue].text),
               );
               setDropdownSearchValue(selectedStatuses);
             }
