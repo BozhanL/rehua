@@ -117,7 +117,11 @@ export default function PatientsPage(): JSX.Element {
   }
 
   const patients: Patient[] = doc.data.data;
-  const totalRows = doc.data.meta.totalPages;
+  const totalPages = doc.data.meta.totalPages;
+
+  const patientRows: PatientRow[] = patients.map((patient, rowIndex) =>
+    createPatientRow(patient, rowIndex),
+  );
 
   // handle search filter change + reset search value when filter changes
   function handleNewSearchFilter(newSearchFilter: SearchFilterOption): void {
@@ -132,17 +136,12 @@ export default function PatientsPage(): JSX.Element {
     }
   }
 
-  const patientRows: PatientRow[] = patients.map((patient, rowIndex) =>
-    createPatientRow(patient, rowIndex),
-  );
-
   function handleSearch(): void {
     const searchValueToSend = getSearchValue(
       searchFilter.inputType,
       searchValue,
       dropdownSearchValue,
     );
-    console.log('searchFilter:', searchValue);
 
     // dont search if there is no search value
     if (searchFilter.inputType !== 'none' && !searchValueToSend) {
@@ -153,10 +152,7 @@ export default function PatientsPage(): JSX.Element {
     // else, search is valid, reset pop up state
     setIsSearchInvalid(false);
 
-    console.log('searchFilter apiValue:', searchFilter.apiValue);
-    console.log('searchValueToSend:', searchValueToSend);
-
-    // send searchFilter.value, searchValueToSend, rowsPerPage, pageNumber
+    // update searchFilter.apiValue and searchValueToSend for the query
     setActiveSearchFilter(searchFilter.apiValue);
     setActiveSearchValue(searchValueToSend);
 
@@ -167,7 +163,6 @@ export default function PatientsPage(): JSX.Element {
   function handlePageChange(newPage: number): void {
     // set current page to newPage
     setCurrentPage(newPage);
-    // send searchFilter, searchValue, currentPage and rowsPerPage
   }
 
   // handle rows per page change; the current page is reset to 1
@@ -241,7 +236,7 @@ export default function PatientsPage(): JSX.Element {
           <Pagination
             currentPage={currentPage}
             rowsPerPage={rowsPerPage}
-            totalRows={totalRows}
+            totalPages={totalPages}
             onPageChange={handlePageChange}
             onRowsPerPageChange={handleRowsPerPageChange}
           />
