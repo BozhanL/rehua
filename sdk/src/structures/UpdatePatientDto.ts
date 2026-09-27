@@ -5,13 +5,13 @@ export type UpdatePatientDto = {
   address?: undefined | string;
   nhi?: undefined | string;
   dateAdmitted?: undefined | string;
-  gpNameAndMedicalCenter?: undefined | string;
+  gpNameAndMedicalCentre?: undefined | string;
   nurse?: undefined | string;
-  roomNumber?: undefined | number;
+  roomNumber?: undefined | string;
   status?:
     | undefined
-    | 'disabled'
     | 'active'
+    | 'disabled'
     | 'longTerm'
     | 'palliative'
     | 'shortTerm'

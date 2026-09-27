@@ -6,12 +6,12 @@ export class CreatePatientDto {
     public address: string,
     public nhi: string,
     public dateAdmitted: string,
-    public gpNameAndMedicalCenter: string,
+    public gpNameAndMedicalCentre: string,
     public nurse: string,
-    public roomNumber: number,
+    public roomNumber: string,
     public status:
-      | 'active'
       | 'disabled'
+      | 'active'
       | 'longTerm'
       | 'palliative'
       | 'shortTerm'

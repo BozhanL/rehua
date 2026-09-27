@@ -5,12 +5,12 @@ export type CreatePatientDto = {
   address: string;
   nhi: string;
   dateAdmitted: string;
-  gpNameAndMedicalCenter: string;
+  gpNameAndMedicalCentre: string;
   nurse: string;
-  roomNumber: number;
+  roomNumber: string;
   status:
-    | 'disabled'
     | 'active'
+    | 'disabled'
     | 'longTerm'
     | 'palliative'
     | 'shortTerm'

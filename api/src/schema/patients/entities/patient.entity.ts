@@ -24,7 +24,7 @@ export class Patient {
   dateAdmitted: string;
 
   @Prop({ type: String, required: true })
-  gpNameAndMedicalCenter: string;
+  gpNameAndMedicalCentre: string;
 
   @Prop({ type: String, required: true })
   nurse: string;
@@ -66,7 +66,7 @@ export class Patient {
   allergies: string;
 
   @Prop({ type: String, required: false })
-  profilePicture?: string | undefined; //not required
+  photoUrl?: string | undefined; //not required
 
   @Prop({ type: String, required: false })
   funding: string | undefined; //not required, admin only
@@ -81,7 +81,7 @@ export class Patient {
     address: string,
     nhi: string,
     dateAdmitted: string,
-    gpNameAndMedicalCenter: string,
+    gpNameAndMedicalCentre: string,
     nurse: string,
     roomNumber: string,
     status:
@@ -103,11 +103,11 @@ export class Patient {
     allergies: string,
 
     //Not required
-    profilePicture?: string,
+    photoUrl?: string,
     funding?: string, //Admin only
     timeOfDeath?: string, //Admin only
   ) {
-    this.profilePicture = profilePicture;
+    this.photoUrl = photoUrl;
     this.firstName = firstName;
     this.lastName = lastName;
     this.dateOfBirth = dateOfBirth;
@@ -115,7 +115,7 @@ export class Patient {
     this.address = address;
     this.nhi = nhi;
     this.dateAdmitted = dateAdmitted;
-    this.gpNameAndMedicalCenter = gpNameAndMedicalCenter;
+    this.gpNameAndMedicalCentre = gpNameAndMedicalCentre;
     this.nurse = nurse;
     this.roomNumber = roomNumber;
     this.status = status;

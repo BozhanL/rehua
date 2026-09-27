@@ -5,7 +5,7 @@ export type Patient_idstring = {
   address: string;
   nhi: string;
   dateAdmitted: string;
-  gpNameAndMedicalCenter: string;
+  gpNameAndMedicalCentre: string;
   nurse: string;
   roomNumber: string;
   status:
@@ -25,7 +25,7 @@ export type Patient_idstring = {
   maritalStatus: string;
   ethnicity: string;
   allergies: string;
-  profilePicture?: undefined | string;
+  photoUrl?: undefined | string;
   funding?: undefined | string;
   timeOfDeath?: undefined | string;
   _id: string;
@@ -38,7 +38,7 @@ export namespace Patient_idstring {
     address: string;
     nhi: string;
     dateAdmitted: string;
-    gpNameAndMedicalCenter: string;
+    gpNameAndMedicalCentre: string;
     nurse: string;
     roomNumber: string;
     status:
@@ -58,7 +58,7 @@ export namespace Patient_idstring {
     maritalStatus: string;
     ethnicity: string;
     allergies: string;
-    profilePicture?: undefined | string;
+    photoUrl?: undefined | string;
     funding?: undefined | string;
     timeOfDeath?: undefined | string;
     _id: string;
@@ -70,7 +70,7 @@ export namespace Patient_idstring {
     address: string;
     nhi: string;
     dateAdmitted: string;
-    gpNameAndMedicalCenter: string;
+    gpNameAndMedicalCentre: string;
     nurse: string;
     roomNumber: string;
     status:
@@ -90,7 +90,7 @@ export namespace Patient_idstring {
     maritalStatus: string;
     ethnicity: string;
     allergies: string;
-    profilePicture?: undefined | string;
+    photoUrl?: undefined | string;
     funding?: undefined | string;
     timeOfDeath?: undefined | string;
     _id: string;
@@ -102,7 +102,7 @@ export namespace Patient_idstring {
     address: string;
     nhi: string;
     dateAdmitted: string;
-    gpNameAndMedicalCenter: string;
+    gpNameAndMedicalCentre: string;
     nurse: string;
     roomNumber: string;
     status:
@@ -122,7 +122,7 @@ export namespace Patient_idstring {
     maritalStatus: string;
     ethnicity: string;
     allergies: string;
-    profilePicture?: undefined | string;
+    photoUrl?: undefined | string;
     funding?: undefined | string;
     timeOfDeath?: undefined | string;
     _id: string;
