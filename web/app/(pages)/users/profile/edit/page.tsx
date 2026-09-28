@@ -3,6 +3,11 @@ import UserFormPage from '@/app/components/user/UserFormPage';
 import type { UserListInformation } from '@/app/components/user/UserProfileList';
 import type { JSX } from 'react';
 
+// import { useSearchParams } from 'next/navigation';
+// TODO: backend - variables to get userId from the URL query parameters, may be used by backend (?)
+// const searchParams = useSearchParams();
+// const userId = searchParams.get('id');
+
 // React page to display the form for editing an existing user, using UserFormPage to render the page
 export default function EditUserPage(): JSX.Element {
   // TODO: backend GET user here
