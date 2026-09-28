@@ -12,8 +12,22 @@ import {
   TypedQuery,
   TypedRoute,
 } from '@nestia/core';
-import { Controller } from '@nestjs/common';
+import {
+  Controller,
+  createParamDecorator,
+  ExecutionContext,
+} from '@nestjs/common';
 import { UpdateWriteOpResult } from 'mongoose';
+
+// TODO: find a better way to impliment this
+export const UserRole = createParamDecorator(
+  (_data: unknown, ctx: ExecutionContext) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const request = ctx.switchToHttp().getRequest();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+    return request.user;
+  },
+);
 
 @Roles('admin', 'nurse')
 @Controller('patient')
@@ -85,10 +99,9 @@ export class PatientController {
 
   //returns patients like in a the list view (number of results shown, page number)
   //optional filters
-  // TODO: limit nurses from reciving decesed patients
-  @Roles('admin', 'nurse')
   @TypedRoute.Get('page/:pageNumber/:numberOfRows')
   async findPage(
+    @UserRole() user: { group: string },
     @TypedParam('numberOfRows') numberOfRows: number,
     @TypedParam('pageNumber') pageNumber: number,
     @TypedQuery() query: PatientPageQueryDto,
@@ -103,11 +116,13 @@ export class PatientController {
         pageNumber,
         filter ?? '',
         search ?? '',
+        user.group,
       );
     } else {
       paginatedResult = await this.patientService.findPage(
         numberOfRows,
         pageNumber,
+        user.group,
       );
     }
 
@@ -123,7 +138,6 @@ export class PatientController {
     };
   }
 
-  @Roles('admin', 'nurse')
   @TypedRoute.Patch(':id')
   async update(
     @TypedParam('id') id: string,

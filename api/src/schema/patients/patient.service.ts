@@ -28,9 +28,16 @@ export class PatientService {
   async findPage(
     numberOfRows: number,
     pageNumber: number,
+    userGroup: string,
   ): Promise<PaginatedResponseDto<PatientDocument>> {
+    const searchFilter: Record<string, unknown> = {};
+
+    if (userGroup === 'nurse') {
+      searchFilter['status'] = { $ne: 'deceased' };
+    }
+
     const docs = await this.patientModel
-      .find()
+      .find(searchFilter)
       .sort({ dateAdmitted: 'desc' })
       .skip((pageNumber - 1) * numberOfRows)
       .limit(numberOfRows)
@@ -52,8 +59,13 @@ export class PatientService {
     pageNumber: number,
     filter: string,
     search: string,
+    userGroup: string,
   ): Promise<PaginatedResponseDto<PatientDocument>> {
     const searchFilter: Record<string, unknown> = {};
+
+    if (userGroup === 'nurse') {
+      searchFilter['status'] = { $ne: 'deceased' };
+    }
 
     if (filter && search) {
       const escapedValue = search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
