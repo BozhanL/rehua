@@ -12,7 +12,7 @@ export interface UserListInformation {
   email: string;
   homePhoneNumber: string;
   address: string;
-  group: UserGroup; // TODO frontend: come back and import type from elsewhere
+  group: UserGroup;
   status: MiniPresetLabel;
 }
 

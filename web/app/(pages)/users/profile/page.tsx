@@ -50,7 +50,8 @@ export default function UserProfilePage(): JSX.Element {
                 backgroundColor="bg-rehua-tangerine"
                 className="text-xl"
                 onClick={() => {
-                  router.push(`/users/edit`); // TODO: backend update the URL if needed
+                  // TODO: backend uncomment this when the userId is made available
+                  // router.push(`/users/profile/edit?id=${userId}`);
                 }}
               />
 
@@ -66,7 +67,8 @@ export default function UserProfilePage(): JSX.Element {
                 horizontalPadding={0.4}
                 backgroundColor="bg-rehua-jordy"
                 onClick={() => {
-                  router.push(`/users/reset-password`); // TODO: backend update the URL if needed
+                  // TODO: backend uncomment this when the userId is made available
+                  // router.push(`/users/profile/reset-password?id=${userId}`);
                 }}
               />
 
@@ -82,7 +84,8 @@ export default function UserProfilePage(): JSX.Element {
                 horizontalPadding={0.5}
                 backgroundColor="bg-rehua-navy"
                 onClick={() => {
-                  router.push(`/users/reset-mfa`); // TODO: backend update the URL if needed
+                  // TODO: backend uncomment this when the userId is made available
+                  // router.push(`/users/profile/reset-mfa?id=${userId}`);
                 }}
               />
             </div>
