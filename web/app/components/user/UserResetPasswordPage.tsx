@@ -8,27 +8,18 @@ import Surface from '@/app/components/common/Surface';
 import { useRouter } from 'next/navigation';
 import { useState, type ChangeEvent, type JSX } from 'react';
 
-// interface to define the user info needed to reset password
-export interface UserPasswordInformation {
-  userId: string;
-  newUserPassword: string;
-}
-
 // interface to define the props for the UserResetPasswordPage component
 export interface UserResetPasswordPageProps {
-  userInfo: UserPasswordInformation;
-  onSave: (userInfo: UserPasswordInformation) => void;
+  onSave: (newUserPassword: string) => void;
 }
 
 // React page to display the form for resetting a user's password
 export default function UserResetPasswordPage({
-  userInfo,
   onSave,
 }: Readonly<UserResetPasswordPageProps>): JSX.Element {
   const router = useRouter(); // router for navigation
 
   // state to hold the new password data + the visibility of the validation and leave page popups
-  const [user] = useState(userInfo);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword1, setShowPassword1] = useState(false);
@@ -143,7 +134,7 @@ export default function UserResetPasswordPage({
 
     // TODO: backend implement password reset logic here
     // setShowSaveErrorPopup(true) should be called if the save fails
-    onSave(user);
+    onSave(password);
     setShowSaveSuccessPopup(true);
   }
 
