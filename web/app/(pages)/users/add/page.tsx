@@ -292,16 +292,14 @@ export default function CreateUserPage(): JSX.Element {
               >
                 <Icon
                   name="circle-arrow"
-                  width={50}
+                  width={40}
                   className="text-rehua-navy"
                 />
               </button>
 
               <div className="flex gap-3">
-                <Icon name="user-profile" width={35} />
-                <h1 className="translate-y-1 text-3xl font-bold">
-                  Add New User
-                </h1>
+                <Icon name="user-profile" width={30} />
+                <span className="text-3xl font-bold">Add New User</span>
               </div>
 
               <ContentButton
@@ -312,7 +310,7 @@ export default function CreateUserPage(): JSX.Element {
                 iconProps={{ name: 'lock-time', width: 0.8 }}
                 iconPosition="right"
                 verticalPadding={0.2}
-                horizontalPadding={0.6}
+                horizontalPadding={0.4}
                 textIconGap={0.4}
                 backgroundColor="bg-rehua-navy"
                 className="text-xl"
