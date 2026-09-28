@@ -160,11 +160,14 @@ function DocumentViewButton({
   );
 }
 
-// React component to display the whole documents tab for a patient
-export function PatientDocuments(): JSX.Element {
-  // TODO: backend replace patientId with current patient's id
-  const patientId = '123';
+interface PatientDocumentsProps {
+  patientId: string;
+}
 
+// React component to display the whole documents tab for a patient
+export function PatientDocuments({
+  patientId,
+}: Readonly<PatientDocumentsProps>): JSX.Element {
   // TODO: backend replace inital mock data with actual data from the backend
   // state for documents and tags
   const [documents, setDocuments] =
