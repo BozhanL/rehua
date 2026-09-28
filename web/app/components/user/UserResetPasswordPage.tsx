@@ -159,8 +159,8 @@ export default function UserResetPasswordPage({
             </button>
 
             <div className="flex gap-5">
-              <Icon name="lock" width={40} />
-              <span className="translate-y-3 text-3xl font-bold">
+              <Icon name="lock" width={37} />
+              <span className="translate-y-2 text-3xl font-bold">
                 Reset User Password
               </span>
             </div>

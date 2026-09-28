@@ -16,7 +16,7 @@ export default function UserProfilePage(): JSX.Element {
     <div className="flex h-dvh flex-col">
       <Surface width="100%" height="100%">
         {/* page back button and title */}
-        <div className="mx-5 mt-5 overflow-x-auto">
+        <div className="mx-6 mt-6 overflow-x-auto">
           <div className="flex min-w-max items-center gap-6 bg-rehua-white">
             <button
               type="button"
