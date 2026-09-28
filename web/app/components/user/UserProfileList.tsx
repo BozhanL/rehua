@@ -2,6 +2,7 @@ import type { ListRow } from '@/app/components/common/ListView';
 import MiniLabel, {
   type MiniPresetLabel,
 } from '@/app/components/common/MiniLabel';
+import { userGroupLabels, type UserGroup } from '@/app/utils/types';
 
 // interface to enforce and define the structure of the user information
 export interface UserListInformation {
@@ -11,7 +12,7 @@ export interface UserListInformation {
   email: string;
   homePhoneNumber: string;
   address: string;
-  group: 'admin' | 'nurse';
+  group: UserGroup; // TODO frontend: come back and import type from elsewhere
   status: MiniPresetLabel;
 }
 
@@ -24,7 +25,7 @@ export function getUserListRows(user: UserListInformation): ListRow[] {
     { heading: 'Email', content: user.email },
     { heading: 'Home Phone Number', content: user.homePhoneNumber },
     { heading: 'Address', content: user.address },
-    { heading: 'Group', content: user.group },
+    { heading: 'Group', content: userGroupLabels[user.group] },
     {
       heading: 'Status',
       content: <MiniLabel name={user.status} height={34} />,
@@ -52,6 +53,6 @@ export const UserListRows: ListRow[] = [
   { heading: 'Email', content: user.email },
   { heading: 'Home Phone Number', content: user.homePhoneNumber },
   { heading: 'Address', content: user.address },
-  { heading: 'Group', content: user.group },
+  { heading: 'Group', content: userGroupLabels[user.group] },
   { heading: 'Status', content: <MiniLabel name={user.status} height={34} /> },
 ];

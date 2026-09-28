@@ -3,16 +3,11 @@ import MiniLabel, {
   type MiniPresetLabel,
 } from '@/app/components/common/MiniLabel';
 import type { TableColumn, TableRow } from '@/app/components/common/Table';
+import { userGroupLabels, type UserGroup } from '@/app/utils/types';
 import { useRouter } from 'next/navigation';
 import type { JSX, ReactNode } from 'react';
 
-// TODO: frontend come back here and import type from elsewhere
-export type UserGroup = 'admin' | 'nurse';
 export const userGroups: UserGroup[] = ['admin', 'nurse'];
-export const userGroupLabels: Record<UserGroup, string> = {
-  admin: 'Admin',
-  nurse: 'Nurse',
-};
 
 // interface for a user
 export interface User {

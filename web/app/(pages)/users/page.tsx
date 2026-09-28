@@ -1,10 +1,5 @@
 'use client';
-import {
-  userColumns,
-  userGroupLabels,
-  userGroups,
-  userRows,
-} from './rowsandcolumns';
+import { userColumns, userGroups, userRows } from './rowsandcolumns';
 import {
   presetLabels,
   type MiniPresetLabel,
@@ -16,6 +11,7 @@ import type { SearchFilterOption } from '@/app/components/dashboard/DashboardToo
 import DashboardToolbar, {
   getSearchValue,
 } from '@/app/components/dashboard/DashboardToolbar';
+import { userGroupLabels } from '@/app/utils/types';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';
 
