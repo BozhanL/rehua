@@ -4,16 +4,13 @@ import Icon from '@/app/components/common/Icon';
 import ListView from '@/app/components/common/ListView';
 import Surface from '@/app/components/common/Surface';
 import { UserListRows } from '@/app/components/user/UserProfileList';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import type { JSX } from 'react';
-
-// import { useSearchParams } from 'next/navigation';
-// TODO: backend - variables to get userId from the URL query parameters, may be used by backend (?)
-// const searchParams = useSearchParams();
-// const userId = searchParams.get('id');
 
 export default function UserProfilePage(): JSX.Element {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const userId = searchParams.get('id') ?? '';
 
   return (
     <div className="flex h-dvh flex-col">
@@ -50,8 +47,7 @@ export default function UserProfilePage(): JSX.Element {
                 backgroundColor="bg-rehua-tangerine"
                 className="text-xl"
                 onClick={() => {
-                  // TODO: backend uncomment this when the userId is made available
-                  // router.push(`/users/profile/edit?id=${userId}`);
+                  router.push(`/users/profile/edit?id=${userId}`);
                 }}
               />
 
@@ -67,8 +63,7 @@ export default function UserProfilePage(): JSX.Element {
                 horizontalPadding={0.4}
                 backgroundColor="bg-rehua-jordy"
                 onClick={() => {
-                  // TODO: backend uncomment this when the userId is made available
-                  // router.push(`/users/profile/reset-password?id=${userId}`);
+                  router.push(`/users/profile/reset-password?id=${userId}`);
                 }}
               />
 
@@ -84,8 +79,7 @@ export default function UserProfilePage(): JSX.Element {
                 horizontalPadding={0.5}
                 backgroundColor="bg-rehua-navy"
                 onClick={() => {
-                  // TODO: backend uncomment this when the userId is made available
-                  // router.push(`/users/profile/reset-mfa?id=${userId}`);
+                  router.push(`/users/profile/reset-mfa?id=${userId}`);
                 }}
               />
             </div>

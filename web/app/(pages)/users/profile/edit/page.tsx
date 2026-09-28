@@ -1,15 +1,14 @@
 'use client';
 import UserFormPage from '@/app/components/user/UserFormPage';
 import type { UserListInformation } from '@/app/components/user/UserProfileList';
+import { useSearchParams } from 'next/navigation';
 import type { JSX } from 'react';
-
-// import { useSearchParams } from 'next/navigation';
-// TODO: backend - variables to get userId from the URL query parameters, may be used by backend (?)
-// const searchParams = useSearchParams();
-// const userId = searchParams.get('id');
 
 // React page to display the form for editing an existing user, using UserFormPage to render the page
 export default function EditUserPage(): JSX.Element {
+  const searchParams = useSearchParams();
+  const userId = searchParams.get('id') ?? '';
+
   // TODO: backend GET user here
   const user: UserListInformation = {
     username: 'JohnDoe',
@@ -29,7 +28,7 @@ export default function EditUserPage(): JSX.Element {
       userInfo={user}
       onSave={(user) => {
         // TODO: backend PATCH/PUT user here
-        console.log(user);
+        console.log(userId, user);
       }}
     />
   );
