@@ -58,7 +58,7 @@
     "dayjs": "1.11.23",
     "fs-extra": "10.1.0",
     "joi": "18.2.9",
-    "mongoose": "9.9.5",
+    "mongoose": "9.10.1",
     "multer": "2.2.0",
     "otplib": "13.5.0",
     "passport": "0.7.0",
