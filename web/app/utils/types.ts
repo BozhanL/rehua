@@ -8,6 +8,7 @@ export enum TemplateDocumentType {
 }
 
 export type TemplateStatus = 'active' | 'archived';
+export const templateStatuses: TemplateStatus[] = ['active', 'archived'];
 export const templateStatusLabels: Record<TemplateStatus, string> = {
   active: 'Active',
   archived: 'Archived',

@@ -1,5 +1,5 @@
 'use client';
-import { userColumns, userGroups, userRows } from './rowsandcolumns';
+import { templateColumns, templateRows } from './rowsandcolumns';
 import {
   presetLabels,
   type MiniPresetLabel,
@@ -11,26 +11,29 @@ import type { SearchFilterOption } from '@/app/components/dashboard/DashboardToo
 import DashboardToolbar, {
   getSearchValue,
 } from '@/app/components/dashboard/DashboardToolbar';
-import { userGroupLabels } from '@/app/utils/types';
+import { templateStatuses, templateStatusLabels } from '@/app/utils/types';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';
 
-export default function UsersPage(): JSX.Element {
+export default function TemplatesPage(): JSX.Element {
   // TODO: backend replace this with currently logged in user's group
   const group: 'nurse' | 'admin' = 'admin';
   const router = useRouter();
 
-  // values for the dropdown options of status search filters
-  const userStatusOptions: MiniPresetLabel[] = ['active', 'disabled'];
+  // convert preset keys into frontend text for the type search filter dropdown
+  const templateTypeOptions: MiniPresetLabel[] = [
+    'longTerm',
+    'shortTerm',
+    'daycare',
+    'palliative',
+  ];
 
   // search filters for the users dashboard
   const userSearchFilters: [SearchFilterOption, ...SearchFilterOption[]] = [
     { webValue: 'No Filter', apiValue: '', inputType: 'none' },
-    { webValue: 'Username', apiValue: 'username', inputType: 'text' },
-    { webValue: 'First Name', apiValue: 'firstName', inputType: 'text' },
-    { webValue: 'Last Name', apiValue: 'lastName', inputType: 'text' },
-    { webValue: 'Email', apiValue: 'email', inputType: 'text' },
-    { webValue: 'Group', apiValue: 'group', inputType: 'dropdown' },
+    { webValue: 'Template ID', apiValue: 'templateId', inputType: 'text' },
+    { webValue: 'Template Name', apiValue: 'name', inputType: 'text' },
+    { webValue: 'Type', apiValue: 'type', inputType: 'dropdown' },
     { webValue: 'Status', apiValue: 'status', inputType: 'dropdown' },
   ];
 
@@ -38,7 +41,7 @@ export default function UsersPage(): JSX.Element {
     userSearchFilters[0],
   ); // by default no search filter is applied
   const [searchValue, setSearchValue] = useState('');
-  const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // filter by status uses this
+  const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // dropdown search filters use this
   const [isSearchInvalid, setIsSearchInvalid] = useState(false); // state for showing pop up for no search value
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,25 +50,23 @@ export default function UsersPage(): JSX.Element {
 
   // frontend dropdown options for the currently selected search filter
   const dropdownSearchOptions =
-    searchFilter.webValue === 'Group'
-      ? userGroups.map((apiGroupValue) => userGroupLabels[apiGroupValue])
-      : userStatusOptions.map(
-          (apiStatusValue) => presetLabels[apiStatusValue].text,
-        );
+    searchFilter.webValue === 'Type'
+      ? templateTypeOptions.map(
+          (apiTypeValue) => presetLabels[apiTypeValue].text,
+        )
+      : Object.values(templateStatusLabels);
 
   // frontend dropdown display values for the currently selected search filter
   const dropdownSearchValueDisplay =
-    searchFilter.webValue === 'Group'
-      ? userGroups
-          .filter((apiGroupValue) =>
-            dropdownSearchValue.includes(apiGroupValue),
-          )
-          .map((apiGroupValue) => userGroupLabels[apiGroupValue])
-      : userStatusOptions
+    searchFilter.webValue === 'Type'
+      ? templateTypeOptions
+          .filter((apiTypeValue) => dropdownSearchValue.includes(apiTypeValue))
+          .map((apiTypeValue) => presetLabels[apiTypeValue].text)
+      : templateStatuses
           .filter((apiStatusValue) =>
             dropdownSearchValue.includes(apiStatusValue),
           )
-          .map((apiStatusValue) => presetLabels[apiStatusValue].text);
+          .map((apiStatusValue) => templateStatusLabels[apiStatusValue]);
 
   // handle search filter change + reset search value when filter changes
   function handleNewSearchFilter(newSearchFilter: SearchFilterOption): void {
@@ -123,12 +124,12 @@ export default function UsersPage(): JSX.Element {
     // }
   }
 
-  // route to add user page
-  function handleAddUser(): void {
-    router.push('/users/add');
+  // route to create template page
+  function handleCreateTemplate(): void {
+    router.push('/templates/create');
   }
 
-  // route to selected dashboard page /patients or /templates
+  // route to selected dashboard page /patients or /users
   function handleDashboardChange(value: string[]): void {
     const selectedDashboard = value[0];
 
@@ -136,8 +137,8 @@ export default function UsersPage(): JSX.Element {
       router.push('/patients');
     }
 
-    if (selectedDashboard === 'Templates Dashboard') {
-      router.push('/templates');
+    if (selectedDashboard === 'Users Dashboard') {
+      router.push('/users');
     }
 
     // do nothing if already on patients dashboard
@@ -148,17 +149,17 @@ export default function UsersPage(): JSX.Element {
       <Surface width="100%" height="100%">
         {/* page toolbar */}
         <DashboardToolbar
-          title="Users"
+          title="Templates"
           group={group}
           searchFilters={userSearchFilters}
           selectedSearchFilter={searchFilter}
           isSearchInvalid={isSearchInvalid}
           searchValue={searchValue}
-          searchPlaceholder="Search Users"
+          searchPlaceholder="Search Templates"
           searchInputType={searchFilter.inputType}
           dropdownSearchOptions={dropdownSearchOptions}
           dropdownSearchValue={dropdownSearchValueDisplay}
-          addButtonText="Add User"
+          addButtonText="Add Template"
           selectedDashboard={['Users Dashboard']}
           onSearchFilterChange={(newSearchFilter) => {
             handleNewSearchFilter(newSearchFilter);
@@ -168,28 +169,26 @@ export default function UsersPage(): JSX.Element {
             setIsSearchInvalid(false);
           }}
           onDropdownSearchChange={(webValue) => {
-            if (searchFilter.webValue === 'Group') {
-              const selectedGroups = userGroups.filter((apiGroupValue) =>
-                webValue.includes(userGroupLabels[apiGroupValue]),
+            if (searchFilter.webValue === 'Type') {
+              const selectedTypes = templateTypeOptions.filter((apiTypeValue) =>
+                webValue.includes(presetLabels[apiTypeValue].text),
               );
-              setDropdownSearchValue(selectedGroups);
-            }
-
-            if (searchFilter.webValue === 'Status') {
-              const selectedStatuses = userStatusOptions.filter(
+              setDropdownSearchValue(selectedTypes);
+            } else if (searchFilter.webValue === 'Status') {
+              const selectedStatuses = templateStatuses.filter(
                 (apiStatusValue) =>
-                  webValue.includes(presetLabels[apiStatusValue].text),
+                  webValue.includes(templateStatusLabels[apiStatusValue]),
               );
               setDropdownSearchValue(selectedStatuses);
             }
           }}
           onSearch={handleSearch}
-          onAdd={handleAddUser}
+          onAdd={handleCreateTemplate}
           onDashboardChange={handleDashboardChange}
         />
 
         {/* table */}
-        <Table columns={userColumns} rows={userRows} />
+        <Table columns={templateColumns} rows={templateRows} />
 
         {/* pagination */}
         <div className="pb-35">
