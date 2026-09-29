@@ -416,7 +416,6 @@ export default function CreateUserPage(): JSX.Element {
             iconProps: { name: 'circle-arrow' },
             backgroundColor: 'bg-rehua-green',
             onClick: () => {
-              // TODO: make sure route is correct
               router.push(`/users/profile?id=${createdUserId ?? ''}`);
             },
           }}

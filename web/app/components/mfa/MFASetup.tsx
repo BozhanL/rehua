@@ -88,8 +88,9 @@ export default function MFASetUp({
               "
             >
               <li>
-                Install an Authenticator App on your personal device (e.g.
-                Microsoft Authenticator or Google Authenticator)
+                {/* prettier-ignore */}
+                Install an Authenticator App on your personal device <br></br>
+                (e.g. Microsoft Authenticator or Google Authenticator)
               </li>
               <li>Set up an account on the authenticator app if required</li>
               <li>

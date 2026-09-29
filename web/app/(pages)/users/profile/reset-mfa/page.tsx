@@ -74,7 +74,6 @@ export default function ResetUserMFAPage(): JSX.Element {
     return <h1>Redirecting...</h1>;
   }
 
-  // TODO: make sure the route is correct
   function goToProfile(): void {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     router.push(`/users/profile?id=${id}`);
