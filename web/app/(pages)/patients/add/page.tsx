@@ -2,10 +2,13 @@
 import PatientFormPage from '@/app/components/patient/PatientFormPage';
 import type { PatientListInformation } from '@/app/components/patient/PatientProfileList';
 import dayjs from '@/app/utils/dayjs';
+import { useRouter } from 'next/router';
 import type { JSX } from 'react';
 
 // React page to display the form for adding a new patient, using PatientFormPage to render the page
 export default function AddPatientPage(): JSX.Element {
+  const router = useRouter();
+
   // default values for new patients
   const newPatient: PatientListInformation = {
     firstName: '',
@@ -39,6 +42,9 @@ export default function AddPatientPage(): JSX.Element {
       onSave={(patient) => {
         // TODO: backend POST new patient here
         console.log(patient);
+      }}
+      onSuccess={() => {
+        router.back();
       }}
     />
   );
