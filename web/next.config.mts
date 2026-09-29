@@ -7,6 +7,7 @@ import { env } from 'node:process';
 const nextConfig: NextConfig = {
   basePath: env['BASE_URL'] ?? '',
   output: 'export',
+  images: { unoptimized: true },
 
   // Config this for your own network
   allowedDevOrigins: [],

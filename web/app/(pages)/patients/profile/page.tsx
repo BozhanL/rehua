@@ -16,6 +16,7 @@ import {
   useQuery,
   type QueryFunctionContext,
 } from '@tanstack/react-query';
+import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import type { JSX } from 'react';
@@ -56,8 +57,6 @@ export default function PatientProfilePage(): JSX.Element {
     notFound();
   }
 
-  console.log('loaded patient:', patient);
-
   const patientRows: ListRow[] = getPatientListRows(patient);
 
   return (
@@ -95,21 +94,18 @@ export default function PatientProfilePage(): JSX.Element {
               "
               style={{ boxShadow: 'inset 0 5px 8px rgb(0 0 0 / 0.2)' }}
             >
-              {/* {
-                // TODO: backend - ignore this until backend is completed to provide a photoUrl for the patient
-                patient.profilePicture ? (
-                  <Image
-                    src={patient.profilePicture}
-                    alt={`${patient.firstName} ${patient.lastName} profile photo`}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex size-full items-center justify-center">
-                    <Icon name="user" width={85} className="text-rehua-white" />
-                  </div>
-                )
-              } */}
+              {patient.photoUrl === undefined || patient.photoUrl === '' ? (
+                <div className="flex size-full items-center justify-center">
+                  <Icon name="user" width={85} className="text-rehua-white" />
+                </div>
+              ) : (
+                <Image
+                  src={patient.photoUrl}
+                  alt={`${patient.firstName} ${patient.lastName} profile photo`}
+                  fill
+                  className="object-cover"
+                />
+              )}
             </div>
 
             {/* patient information*/}
@@ -146,7 +142,7 @@ export default function PatientProfilePage(): JSX.Element {
                   backgroundColor="bg-rehua-tangerine"
                   className="text-xl"
                   onClick={() => {
-                    router.push(`/patients/edit`); // TODO: backend update the URL if needed
+                    router.push(`/patients/profile/edit?id=${patientId}`);
                   }}
                 />
 
