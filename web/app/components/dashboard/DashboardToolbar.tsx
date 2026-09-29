@@ -168,7 +168,7 @@ function DashboardToolbar({
           <DropdownBar
             selectedValues={dropdownSearchValue ?? []}
             options={dropdownSearchOptions ?? []}
-            defaultText="Select Status"
+            defaultText="Select Filter"
             width={300}
             size={17}
             onChange={(value) => {
