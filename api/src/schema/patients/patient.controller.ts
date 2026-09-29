@@ -5,7 +5,6 @@ import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
 import { PatientService } from './patient.service';
-import { Public } from '@/auth/public.decorator';
 import { Roles } from '@/auth/roles.decorator';
 import { getFilesFromRequest } from '@/utils/helpers';
 import {
@@ -166,7 +165,6 @@ export class PatientController {
     };
   }
 
-  @Public()
   @TypedRoute.Patch(':id')
   async update(
     @Req() request: Request,
