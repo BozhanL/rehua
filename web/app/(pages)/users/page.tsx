@@ -1,10 +1,5 @@
 'use client';
-import {
-  userColumns,
-  userGroupLabels,
-  userGroups,
-  userRows,
-} from './rowsandcolumns';
+import { userColumns, userGroups, userRows } from './rowsandcolumns';
 import {
   presetLabels,
   type MiniPresetLabel,
@@ -16,6 +11,7 @@ import type { SearchFilterOption } from '@/app/components/dashboard/DashboardToo
 import DashboardToolbar, {
   getSearchValue,
 } from '@/app/components/dashboard/DashboardToolbar';
+import { userGroupLabels } from '@/app/utils/types';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';
 
@@ -42,7 +38,7 @@ export default function UsersPage(): JSX.Element {
     userSearchFilters[0],
   ); // by default no search filter is applied
   const [searchValue, setSearchValue] = useState('');
-  const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // filter by status uses this
+  const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // dropdown search filters use this
   const [isSearchInvalid, setIsSearchInvalid] = useState(false); // state for showing pop up for no search value
 
   const [currentPage, setCurrentPage] = useState(1);

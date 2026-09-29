@@ -3,9 +3,8 @@ import DropdownBar from '@/app/components/common/DropdownBar';
 import PopUp from '@/app/components/common/PopUp';
 import SingleLineInput from '@/app/components/common/SingleLineInput';
 import dayjs from '@/app/utils/dayjs';
+import type { UserGroup } from '@/app/utils/types';
 import type { ChangeEvent, JSX } from 'react';
-
-export type UserGroup = 'nurse' | 'admin';
 
 // different components are rendered depending on the type of filter selected
 export type SearchInputType = 'none' | 'text' | 'date' | 'dropdown';

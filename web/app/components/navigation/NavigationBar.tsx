@@ -4,12 +4,13 @@ import Logo from '../common/Logo';
 import { LogoutButton } from './LogoutButton';
 import { UploadManualButton, ShowManualButton } from './ManualButtons';
 import dayjs from '@/app/utils/dayjs';
+import type { UserGroup } from '@/app/utils/types';
 import type { JSX } from 'react';
 
 interface NavigationBarProps {
   firstName: string;
   lastName: string;
-  group: 'admin' | 'nurse'; // different navbar will be rendered based on user group
+  group: UserGroup; // different navbar will be rendered based on user group
 }
 
 // React component that renders the navbar for the whole program
