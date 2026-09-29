@@ -8,6 +8,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  type QueryFunctionContext,
 } from '@tanstack/react-query';
 import Form from 'next/form';
 import { useContext, type JSX } from 'react';
@@ -19,11 +20,11 @@ function useHelloOptions() {
 
   return queryOptions({
     queryKey: ['hello', host],
-    queryFn: async () =>
+    queryFn: async ({ signal }: QueryFunctionContext) =>
       findAll({
         host: host,
         simulate: isTesting,
-        options: { credentials: 'include' },
+        options: { signal, credentials: 'include' },
       }),
   });
 }

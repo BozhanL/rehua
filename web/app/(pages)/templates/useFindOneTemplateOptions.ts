@@ -14,7 +14,7 @@ export default function useFindOneTemplateOptions(id: string) {
         {
           host: host,
           simulate: isTesting,
-          options: { signal },
+          options: { signal, credentials: 'include' },
         },
         id,
       );

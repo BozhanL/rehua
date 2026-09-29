@@ -4,7 +4,11 @@ import useApiUrl from '@/app/hooks/useApiUrl';
 import { isTesting } from '@/app/utils/env';
 import { HttpError } from '@rehua/sdk';
 import { getTotpSecret } from '@rehua/sdk/functional/auth/totp';
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, type JSX } from 'react';
@@ -21,11 +25,11 @@ function useGetTotpSecretOptions() {
 
   return queryOptions({
     queryKey: ['getTotpSecret', host],
-    queryFn: async () => {
+    queryFn: async ({ signal }: QueryFunctionContext) => {
       const response = await getTotpSecret({
         host: host,
         simulate: isTesting,
-        options: { credentials: 'include' },
+        options: { signal, credentials: 'include' },
       });
       return response as unknown as TotpSecretResponse;
     },

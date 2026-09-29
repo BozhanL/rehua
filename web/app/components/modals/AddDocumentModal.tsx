@@ -10,7 +10,12 @@ import { TemplateDocumentType } from '@/app/utils/types';
 import type { createFile } from '@rehua/sdk/functional/documents/file';
 import { createForm as createFormSdk } from '@rehua/sdk/functional/documents/form';
 import { findTemplatesWithType } from '@rehua/sdk/functional/templates/type';
-import { queryOptions, useMutation, useQuery } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState, type ChangeEvent, type JSX } from 'react';
 
@@ -21,7 +26,7 @@ function useGetTemplateOptions(type: TemplateDocumentType | null) {
   return queryOptions({
     queryKey: [findTemplatesWithType.path(type ?? 'Short Term'), host],
     enabled: type !== null,
-    queryFn: async () => {
+    queryFn: async ({ signal }: QueryFunctionContext) => {
       if (type === null) {
         throw new Error('Unreachable: query is disabled');
       }
@@ -30,7 +35,7 @@ function useGetTemplateOptions(type: TemplateDocumentType | null) {
         {
           host: host,
           simulate: isTesting,
-          options: { credentials: 'include' },
+          options: { signal, credentials: 'include' },
         },
         type,
       );
@@ -45,7 +50,10 @@ async function createForm({
   host: string;
   docData: createFormSdk.Body;
 }): Promise<createFormSdk.Output> {
-  return createFormSdk({ host, simulate: isTesting }, docData);
+  return createFormSdk(
+    { host, simulate: isTesting, options: { credentials: 'include' } },
+    docData,
+  );
 }
 
 interface AddDocumentModalProps {

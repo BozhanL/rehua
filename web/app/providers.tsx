@@ -9,6 +9,7 @@ import {
   QueryClientProvider,
   queryOptions,
   useQuery,
+  type QueryFunctionContext,
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useRouter } from 'next/navigation';
@@ -52,11 +53,11 @@ export const queryClient = new QueryClient({
 export function useRefreshOptions(host: string) {
   return queryOptions({
     queryKey: [refresh.path(), host],
-    queryFn: async () =>
+    queryFn: async ({ signal }: QueryFunctionContext) =>
       refresh({
         host: host,
         simulate: isTesting,
-        options: { credentials: 'include' },
+        options: { signal, credentials: 'include' },
       }),
 
     // eslint-disable-next-line sonarjs/function-return-type
