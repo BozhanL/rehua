@@ -6,11 +6,11 @@ import {
 } from '@/app/components/common/MiniLabel';
 import SingleLineInput from '@/app/components/common/SingleLineInput';
 import type { PatientListInformation } from '@/app/components/patient/PatientProfileList';
+import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import dayjs from '@/app/utils/dayjs';
 import type { ChangeEvent } from 'react';
 
-// TODO: backend - replace this with currently logged in user's group
-export const group: 'nurse' | 'admin' = 'admin';
+export const group: 'nurse' | 'admin' = sessionStorageGetUserInfo().group;
 
 // TODO: backend - fetch all nurses in the system
 function getNurses(): string[] {
@@ -34,7 +34,7 @@ export const patientStatuses = [
   presetLabels.daycare,
   presetLabels.palliative,
   // TODO: delete this line when backend is implemented
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
   ...(group === 'admin' ? [presetLabels.deceased] : []),
 ];
 

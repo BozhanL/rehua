@@ -20,6 +20,7 @@ interface PatientFormPageProps {
   backToPatients?: boolean; // if true, the back button will navigate to the patients dashboard
   patientInfo: PatientListInformation;
   onSave: (patient: PatientListInformation) => void;
+  onSuccess: () => void;
 }
 
 // React page to display the form for adding/editting a new patient, using ListView to render the form fields
@@ -29,6 +30,7 @@ export default function PatientFormPage({
   backToPatients = false,
   patientInfo,
   onSave,
+  onSuccess,
 }: Readonly<PatientFormPageProps>): JSX.Element {
   const router = useRouter(); // router for navigation
 
@@ -37,7 +39,6 @@ export default function PatientFormPage({
   const [showValidationPopup, setShowValidationPopup] = useState(false);
   const [showLeavePagePopup, setShowLeavePagePopup] = useState(false);
   const [showSaveSuccessPopup, setShowSaveSuccessPopup] = useState(false);
-  const [showSaveErrorPopup, setShowSaveErrorPopup] = useState(false);
 
   // rows for the ListView component
   const rows = buildPatientFormRows(patient, updateField);
@@ -76,7 +77,6 @@ export default function PatientFormPage({
     }
 
     // additional validation for deceased patients when admin is editting the form
-    // TODO: backend be aware of user group being used here (temporary solution until backend is implemented)
     if (
       group === 'admin' &&
       patient.status === 'deceased' &&
@@ -86,8 +86,6 @@ export default function PatientFormPage({
       return;
     }
 
-    // TODO: backend implement logic where if an error comes back it is handled here
-    // setShowSaveErrorPopup(true) should be called if the save fails
     // call the onSave prop function to save the patient data and show the success popup
     onSave(patient);
     setShowSaveSuccessPopup(true);
@@ -249,28 +247,11 @@ export default function PatientFormPage({
             backgroundColor: 'bg-rehua-green',
             onClick: () => {
               setShowSaveSuccessPopup(false);
+              onSuccess();
             },
           }}
           modalProps={{
             open: showSaveSuccessPopup,
-            surfaceProps: { style: { height: 550 } },
-          }}
-        />
-
-        {/* popup for unsuccessful save */}
-        <PopUp
-          isAlertPopup={true}
-          text1={'Failed to save patient information.\nPlease try again.'}
-          button1Props={{
-            text1: 'OK',
-            iconProps: { name: 'circle-arrow' },
-            backgroundColor: 'bg-rehua-green',
-            onClick: () => {
-              setShowSaveErrorPopup(false);
-            },
-          }}
-          modalProps={{
-            open: showSaveErrorPopup,
             surfaceProps: { style: { height: 550 } },
           }}
         />
