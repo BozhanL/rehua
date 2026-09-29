@@ -6,7 +6,12 @@ import { isTesting } from '@/app/utils/env';
 import type { HttpError } from '@rehua/sdk';
 import { create } from '@rehua/sdk/functional/manual';
 import { hasManual } from '@rehua/sdk/functional/manual/exists';
-import { queryOptions, useMutation, useQuery } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useContext, useRef, useState, type JSX } from 'react';
 import typia, { json } from 'typia';
@@ -141,11 +146,11 @@ function useHasManualOptions() {
 
   return queryOptions({
     queryKey: [hasManual.path(), host],
-    queryFn: async () =>
+    queryFn: async ({ signal }: QueryFunctionContext) =>
       hasManual({
         host: host,
         simulate: isTesting,
-        options: { credentials: 'include' },
+        options: { signal, credentials: 'include' },
       }),
     enabled: false,
   });
