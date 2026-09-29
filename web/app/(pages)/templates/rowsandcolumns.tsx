@@ -36,7 +36,7 @@ export const templateColumns: TableColumn[] = [
   {
     rowKey: 'templateId',
     header: 'Template ID',
-    width: 250,
+    width: 310,
     columnClassName: 'pl-15',
   },
   {
@@ -58,6 +58,7 @@ export const templateColumns: TableColumn[] = [
     rowKey: 'modifyTemplate',
     header: 'Modify Template',
     width: columnWidth,
+    contentAlignment: 'center',
   },
 ];
 
@@ -116,7 +117,10 @@ function TemplateStatusDropdown({
       return;
     }
 
-    // TODO: backend  send newStatus to the API for this template
+    // TODO: backend send newStatus to the API for this template
+    console.log(
+      `Changing status for template ${template.templateId} to ${newStatus}`,
+    );
     setSelectedStatus(newStatus);
   }
 
@@ -125,7 +129,7 @@ function TemplateStatusDropdown({
       options={templateStatusOptions}
       selectedValues={[templateStatusLabels[selectedStatus]]}
       onChange={handleStatusChange}
-      width={400}
+      width={150}
     />
   );
 }
@@ -147,19 +151,19 @@ function createTemplateRow(template: Template, rowIndex: number): TemplateRow {
 // sample template data, what is expected from backend - TODO: backend replace this with actual data
 export const templates: Template[] = [
   {
-    templateId: '1',
+    templateId: '6a8fbd27f887e19388db5828',
     name: 'Infection Report',
     type: 'longTerm',
     status: 'active',
   },
   {
-    templateId: '2',
+    templateId: '6a8fbd27f887e19388db5829',
     name: 'Pain Assessment',
     type: 'palliative',
     status: 'active',
   },
   {
-    templateId: '3',
+    templateId: '6a8fbd27f887e19388db5830',
     name: 'Consent Form',
     type: 'shortTerm',
     status: 'active',
