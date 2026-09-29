@@ -25,9 +25,9 @@ export default function AddPatientPage(): JSX.Element {
     maritalStatus: '',
     ethnicity: '',
     allergies: '',
-    photoUrl: null,
+    photoUrl: undefined,
     dateAdmitted: dayjs().tz().toISOString(), // TODO: backend take this away if desirable
-    timeOfDeath: null,
+    timeOfDeath: undefined,
   };
 
   return (

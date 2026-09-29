@@ -24,9 +24,9 @@ export default function EditPatientPage(): JSX.Element {
     maritalStatus: 'Single',
     ethnicity: 'Māori',
     allergies: '',
-    photoUrl: null,
+    photoUrl: undefined,
     dateAdmitted: '1990-10-02',
-    timeOfDeath: null,
+    timeOfDeath: undefined,
   };
 
   return (

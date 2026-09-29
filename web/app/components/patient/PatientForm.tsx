@@ -198,7 +198,7 @@ export function buildPatientFormRows(
                 updateField('status', status);
                 // TODO: backend, just a note, time of death should be cleared when status is changed from deceased
                 if (status !== 'deceased') {
-                  updateField('timeOfDeath', null);
+                  updateField('timeOfDeath', undefined);
                 }
               }
             }
@@ -225,7 +225,7 @@ export function buildPatientFormRows(
                     'timeOfDeath',
                     event.target.value
                       ? dayjs(event.target.value).toISOString()
-                      : null,
+                      : undefined,
                   );
                 }}
                 placeholder="Enter time of death"
