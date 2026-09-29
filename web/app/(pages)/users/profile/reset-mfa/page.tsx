@@ -125,8 +125,9 @@ export default function ResetUserMFAPage(): JSX.Element {
 
         {/* popup for successful save */}
         <PopUp
-          text1={
-            'Set-up complete. Your multi-factor\nauthentication has been successfully activated.'
+          text1={'Set-up complete. '}
+          text2={
+            'Your multi-factor authentication \nhas been successfully activated.'
           }
           button1Props={{
             text1: 'OK',

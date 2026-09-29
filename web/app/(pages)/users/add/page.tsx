@@ -410,7 +410,8 @@ export default function CreateUserPage(): JSX.Element {
 
         {/* popup for successful save */}
         <PopUp
-          text1={'Done! The user has been\nsuccessfully added to the system.'}
+          text1={'Done! '}
+          text2={'The user has been \nsuccessfully added to the system.'}
           button1Props={{
             text1: 'OK',
             iconProps: { name: 'circle-arrow' },
