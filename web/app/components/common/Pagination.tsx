@@ -6,9 +6,9 @@ import Surface from './Surface';
 import { useState, type ChangeEvent, type JSX } from 'react';
 
 interface PaginationProps {
-  totalRows: number;
   currentPage: number;
   rowsPerPage: number; // how many rows to display per page
+  totalPages: number; // api retuns total pages
   onPageChange: (page: number) => void; // handled by parent, updates currentPage state
   onRowsPerPageChange: (rows: number) => void; // handled by parent, updates rowsPerPage state, e.g. reset to page 1 and request 15 rows
 }
@@ -24,9 +24,9 @@ function backgroundColorPicker(selectedCondition: boolean): string {
 
 // React component that renders pagination controls for a table
 function Pagination({
-  totalRows,
   currentPage,
   rowsPerPage,
+  totalPages,
   onPageChange,
   onRowsPerPageChange,
 }: Readonly<PaginationProps>): JSX.Element {
@@ -35,7 +35,7 @@ function Pagination({
   const [enteredPage, setEnteredPage] = useState<number | null>(null); // last page number entered by user
 
   // calculate how many pages there are based on totalRows and rowsPerPage
-  const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
+  // const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
 
   // clamp page number to be within valid range (1 to totalPages)
   function clamp(page: number): number {
