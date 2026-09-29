@@ -10,7 +10,7 @@ import type { JSX, ReactNode } from 'react';
 // interface for a patient
 export interface Patient {
   _id: string; // unique identifier for the patient
-  roomNumber: string;
+  roomNumber?: string | undefined;
   firstName: string;
   lastName: string;
   dateOfBirth: string; // ISO string
@@ -124,7 +124,7 @@ export function createPatientRow(
   return {
     id: rowIndex,
     content: {
-      roomNo: patient.roomNumber ? patient.roomNumber : '-',
+      roomNo: patient.roomNumber ?? '-',
       name: `${patient.firstName} ${patient.lastName}`,
       dob: dayjs(patient.dateOfBirth).tz().format('DD/MM/YYYY'),
       gender:
