@@ -1,11 +1,15 @@
 'use client';
 import PatientFormPage from '@/app/components/patient/PatientFormPage';
 import type { PatientListInformation } from '@/app/components/patient/PatientProfileList';
+import { useSearchParams } from 'next/navigation';
 import type { JSX } from 'react';
 
 // React page to display the form for editing an existing patient, using PatientFormPage to render the page
 export default function EditPatientPage(): JSX.Element {
-  // TODO: backend GET patient here
+  const searchParams = useSearchParams();
+  const patientId = searchParams.get('id') ?? '';
+
+  // TODO: backend GET patient here api request
   const patient: PatientListInformation = {
     firstName: 'Tama',
     lastName: 'Manaaki',
@@ -29,6 +33,8 @@ export default function EditPatientPage(): JSX.Element {
     timeOfDeath: undefined,
   };
 
+  // TODO: backend patch patient api function
+
   return (
     <PatientFormPage
       title="Edit Patient Information"
@@ -36,7 +42,7 @@ export default function EditPatientPage(): JSX.Element {
       patientInfo={patient}
       onSave={(patient) => {
         // TODO: backend PATCH/PUT patient here
-        console.log(patient);
+        console.log(patient, patientId);
       }}
     />
   );
