@@ -31,7 +31,7 @@ function useGetDocumentOptions(id: string) {
         {
           host: host,
           simulate: isTesting,
-          options: { signal },
+          options: { signal, credentials: 'include' },
         },
         id,
       ),

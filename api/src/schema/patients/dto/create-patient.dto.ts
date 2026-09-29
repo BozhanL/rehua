@@ -4,12 +4,21 @@ export class CreatePatientDto {
     public lastName: string,
     public dateOfBirth: string,
     public address: string,
-    public nhi: number,
+    public nhi: string,
     public dateAdmitted: string,
     public gpNameAndMedicalCenter: string,
     public nurse: string,
     public roomNumber: number,
-    public status: string,
+    public status:
+      | 'active'
+      | 'disabled'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload',
     public email: string,
     public homePhoneNumber: string,
     public gender: string,
