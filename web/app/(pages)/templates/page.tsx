@@ -160,7 +160,7 @@ export default function TemplatesPage(): JSX.Element {
           dropdownSearchOptions={dropdownSearchOptions}
           dropdownSearchValue={dropdownSearchValueDisplay}
           addButtonText="Add Template"
-          selectedDashboard={['Users Dashboard']}
+          selectedDashboard={['Templates Dashboard']}
           onSearchFilterChange={(newSearchFilter) => {
             handleNewSearchFilter(newSearchFilter);
           }}
