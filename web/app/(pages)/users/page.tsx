@@ -47,7 +47,7 @@ export default function UsersPage(): JSX.Element {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const totalRows = 5; // TODO: backend replace this, provide totalPages
+  const totalPages = 5; // TODO: backend replace this, provide totalPages
 
   // frontend dropdown options for the currently selected search filter
   const dropdownSearchOptions =
@@ -200,7 +200,7 @@ export default function UsersPage(): JSX.Element {
           <Pagination
             currentPage={currentPage}
             rowsPerPage={rowsPerPage}
-            totalRows={totalRows}
+            totalPages={totalPages}
             onPageChange={handlePageChange}
             onRowsPerPageChange={handleRowsPerPageChange}
           />
