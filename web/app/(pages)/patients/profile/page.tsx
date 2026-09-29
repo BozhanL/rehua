@@ -17,8 +17,7 @@ import {
   type QueryFunctionContext,
 } from '@tanstack/react-query';
 import Image from 'next/image';
-import { notFound, useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
+import { notFound, useRouter, useSearchParams } from 'next/navigation';
 import type { JSX } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
