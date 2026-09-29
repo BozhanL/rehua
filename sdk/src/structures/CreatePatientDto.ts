@@ -7,7 +7,6 @@ export type CreatePatientDto = {
   dateAdmitted: string;
   gpNameAndMedicalCentre: string;
   nurse: string;
-  roomNumber: string;
   status:
     | 'active'
     | 'disabled'
@@ -21,11 +20,12 @@ export type CreatePatientDto = {
   email: string;
   homePhoneNumber: string;
   gender: string;
-  primaryLanguage: string;
-  maritalStatus: string;
   ethnicity: string;
   allergies: string;
   profilePicture?: undefined | File;
   funding?: undefined | string;
   timeOfDeath?: undefined | string;
+  primaryLanguage?: undefined | string;
+  maritalStatus?: undefined | string;
+  roomNumber?: undefined | string;
 };

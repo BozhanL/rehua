@@ -7,7 +7,6 @@ export type Patient_idstring = {
   dateAdmitted: string;
   gpNameAndMedicalCentre: string;
   nurse: string;
-  roomNumber: string;
   status:
     | 'disabled'
     | 'active'
@@ -21,10 +20,11 @@ export type Patient_idstring = {
   email: string;
   homePhoneNumber: string;
   gender: string;
-  primaryLanguage: string;
-  maritalStatus: string;
   ethnicity: string;
   allergies: string;
+  primaryLanguage?: undefined | string;
+  maritalStatus?: undefined | string;
+  roomNumber?: undefined | string;
   photoUrl?: undefined | string;
   funding?: undefined | string;
   timeOfDeath?: undefined | string;
@@ -40,7 +40,6 @@ export namespace Patient_idstring {
     dateAdmitted: string;
     gpNameAndMedicalCentre: string;
     nurse: string;
-    roomNumber: string;
     status:
       | 'disabled'
       | 'active'
@@ -54,10 +53,11 @@ export namespace Patient_idstring {
     email: string;
     homePhoneNumber: string;
     gender: string;
-    primaryLanguage: string;
-    maritalStatus: string;
     ethnicity: string;
     allergies: string;
+    primaryLanguage?: undefined | string;
+    maritalStatus?: undefined | string;
+    roomNumber?: undefined | string;
     photoUrl?: undefined | string;
     funding?: undefined | string;
     timeOfDeath?: undefined | string;
@@ -72,7 +72,6 @@ export namespace Patient_idstring {
     dateAdmitted: string;
     gpNameAndMedicalCentre: string;
     nurse: string;
-    roomNumber: string;
     status:
       | 'disabled'
       | 'active'
@@ -86,10 +85,11 @@ export namespace Patient_idstring {
     email: string;
     homePhoneNumber: string;
     gender: string;
-    primaryLanguage: string;
-    maritalStatus: string;
     ethnicity: string;
     allergies: string;
+    primaryLanguage?: undefined | string;
+    maritalStatus?: undefined | string;
+    roomNumber?: undefined | string;
     photoUrl?: undefined | string;
     funding?: undefined | string;
     timeOfDeath?: undefined | string;
@@ -104,7 +104,6 @@ export namespace Patient_idstring {
     dateAdmitted: string;
     gpNameAndMedicalCentre: string;
     nurse: string;
-    roomNumber: string;
     status:
       | 'disabled'
       | 'active'
@@ -118,10 +117,11 @@ export namespace Patient_idstring {
     email: string;
     homePhoneNumber: string;
     gender: string;
-    primaryLanguage: string;
-    maritalStatus: string;
     ethnicity: string;
     allergies: string;
+    primaryLanguage?: undefined | string;
+    maritalStatus?: undefined | string;
+    roomNumber?: undefined | string;
     photoUrl?: undefined | string;
     funding?: undefined | string;
     timeOfDeath?: undefined | string;

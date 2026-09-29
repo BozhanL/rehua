@@ -95,7 +95,6 @@ export class PatientController {
       '2026-06-20',
       'David at Main Hospital',
       'Sarah Smith',
-      'A123',
       'longTerm',
       'email@domain.com',
       '+64 123 456789',

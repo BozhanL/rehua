@@ -30,9 +30,6 @@ export class Patient {
   nurse: string;
 
   @Prop({ type: String, required: true })
-  roomNumber: string;
-
-  @Prop({ type: String, required: true })
   status:
     | 'active'
     | 'disabled'
@@ -54,16 +51,19 @@ export class Patient {
   gender: string;
 
   @Prop({ type: String, required: true })
-  primaryLanguage: string;
-
-  @Prop({ type: String, required: true })
-  maritalStatus: string;
-
-  @Prop({ type: String, required: true })
   ethnicity: string;
 
   @Prop({ type: String, required: true })
   allergies: string;
+
+  @Prop({ type: String, required: false })
+  primaryLanguage: string | undefined; //not required
+
+  @Prop({ type: String, required: false })
+  maritalStatus: string | undefined; //not required
+
+  @Prop({ type: String, required: false })
+  roomNumber: string | undefined; //not required
 
   @Prop({ type: String, required: false })
   photoUrl?: string | undefined; //not required
@@ -83,7 +83,7 @@ export class Patient {
     dateAdmitted: string,
     gpNameAndMedicalCentre: string,
     nurse: string,
-    roomNumber: string,
+
     status:
       | 'active'
       | 'disabled'
@@ -97,8 +97,6 @@ export class Patient {
     email: string,
     homePhoneNumber: string,
     gender: string,
-    primaryLanguage: string,
-    maritalStatus: string,
     ethnicity: string,
     allergies: string,
 
@@ -106,6 +104,9 @@ export class Patient {
     photoUrl?: string,
     funding?: string, //Admin only
     timeOfDeath?: string, //Admin only
+    roomNumber?: string,
+    primaryLanguage?: string,
+    maritalStatus?: string,
   ) {
     this.photoUrl = photoUrl;
     this.firstName = firstName;
