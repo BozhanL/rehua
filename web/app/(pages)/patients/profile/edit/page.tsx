@@ -127,11 +127,11 @@ export default function EditPatientPage(): JSX.Element {
               onError: () => {
                 setShowSaveErrorPopup(true);
               },
+              onSuccess: () => {
+                router.back();
+              },
             },
           );
-        }}
-        onSuccess={() => {
-          router.back();
         }}
       />
     </>

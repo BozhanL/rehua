@@ -20,7 +20,6 @@ interface PatientFormPageProps {
   backToPatients?: boolean; // if true, the back button will navigate to the patients dashboard
   patientInfo: PatientListInformation;
   onSave: (patient: PatientListInformation) => void;
-  onSuccess: () => void;
 }
 
 // React page to display the form for adding/editting a new patient, using ListView to render the form fields
@@ -30,7 +29,6 @@ export default function PatientFormPage({
   backToPatients = false,
   patientInfo,
   onSave,
-  onSuccess,
 }: Readonly<PatientFormPageProps>): JSX.Element {
   const router = useRouter(); // router for navigation
 
@@ -38,7 +36,6 @@ export default function PatientFormPage({
   const [patient, setPatient] = useState(patientInfo);
   const [showValidationPopup, setShowValidationPopup] = useState(false);
   const [showLeavePagePopup, setShowLeavePagePopup] = useState(false);
-  const [showSaveSuccessPopup, setShowSaveSuccessPopup] = useState(false);
 
   // rows for the ListView component
   const rows = buildPatientFormRows(patient, updateField);
@@ -88,7 +85,6 @@ export default function PatientFormPage({
 
     // call the onSave prop function to save the patient data and show the success popup
     onSave(patient);
-    setShowSaveSuccessPopup(true);
   }
 
   function handleUploadPhoto(): void {
@@ -236,24 +232,6 @@ export default function PatientFormPage({
           }}
           defaultButtonHeight={65}
           modalProps={{ open: showLeavePagePopup }}
-        />
-
-        {/* popup for successful save */}
-        <PopUp
-          text1={'Patient information saved successfully.'}
-          button1Props={{
-            text1: 'OK',
-            iconProps: { name: 'circle-arrow' },
-            backgroundColor: 'bg-rehua-green',
-            onClick: () => {
-              setShowSaveSuccessPopup(false);
-              onSuccess();
-            },
-          }}
-          modalProps={{
-            open: showSaveSuccessPopup,
-            surfaceProps: { style: { height: 550 } },
-          }}
         />
       </Surface>
     </div>

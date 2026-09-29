@@ -18,15 +18,15 @@ export interface PatientListInformation {
   dateAdmitted: string; // ISO string
   gpNameAndMedicalCentre: string;
   nurse: string; // fullname of nurse
-  roomNumber: string; // string in case we have room numbers like "101A" or "B12"
+  roomNumber?: string | undefined; // string in case we have room numbers like "101A" or "B12"
   status: MiniPresetLabel;
   timeOfDeath?: string | undefined; // ISO string, required if status is "deceased", otherwise null
   funding?: string | undefined;
   email: string;
   homePhoneNumber: string; // string in case we have + country codes
   gender: string;
-  primaryLanguage: string;
-  maritalStatus: string;
+  primaryLanguage?: string | undefined;
+  maritalStatus?: string | undefined;
   ethnicity: string;
   allergies: string; // if empty = frontend will display "None"
 }
