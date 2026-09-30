@@ -83,7 +83,7 @@
     "pure-rand": "8.4.2",
     "serve": "14.2.6",
     "tailwindcss": "4.3.3",
-    "ts-jest": "29.4.12",
+    "ts-jest": "29.4.13",
     "ts-node": "10.9.2",
     "ts-patch": "3.3.0",
     "type-fest": "5.9.0",
