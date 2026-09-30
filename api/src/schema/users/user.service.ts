@@ -5,7 +5,7 @@ import { User, UserDocument } from './entities/user.entity';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import bcrypt from 'bcrypt';
-import { Model, UpdateWriteOpResult } from 'mongoose';
+import { Model, QueryFilter, UpdateWriteOpResult } from 'mongoose';
 import { hash } from 'node:crypto';
 import { verify } from 'otplib';
 
@@ -53,6 +53,69 @@ export class UserService {
 
   async findOneUserNameForAuth(userName: string): Promise<UserDocument | null> {
     return this.userModel.findOne({ userName: userName }).exec();
+  }
+
+  async findPageByFilter(
+    numberOfRows: number,
+    pageNumber: number,
+    filter: string,
+    search: string,
+  ): Promise<PaginatedResponseDto<UserDocument>> {
+    const searchFilter: Record<string, unknown> = {};
+
+    if (filter && search) {
+      const escapedValue = search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+
+      searchFilter[filter] = {
+        $regex: escapedValue,
+        $options: 'i',
+      };
+    }
+
+    const query = searchFilter as QueryFilter<UserDocument>;
+
+    interface UserAggregateResult {
+      data: UserDocument[];
+      total: number;
+    }
+
+    const [result] = await this.userModel
+      .aggregate<UserAggregateResult>([
+        { $match: query },
+        {
+          $facet: {
+            totalCount: [{ $count: 'count' }],
+            paginatedResults: [
+              { $sort: { status: -1 } },
+              { $skip: (pageNumber - 1) * numberOfRows },
+              { $limit: numberOfRows },
+            ],
+          },
+        },
+        {
+          $project: {
+            data: '$paginatedResults',
+            total: { $ifNull: [{ $arrayElemAt: ['$totalCount.count', 0] }, 0] },
+          },
+        },
+      ])
+      .exec();
+
+    const rawData = result?.data ?? [];
+    const total = result?.total ?? 0;
+
+    // rehydrate the raw objects into full Mongoose documents, to allow contorller to add _id
+    const data = rawData.map((doc) => this.userModel.hydrate(doc));
+
+    const totalFilteredDocuments = total;
+    const totalPages = Math.ceil(totalFilteredDocuments / numberOfRows);
+
+    return {
+      data: data,
+      meta: {
+        totalPages,
+      },
+    };
   }
 
   async findPage(

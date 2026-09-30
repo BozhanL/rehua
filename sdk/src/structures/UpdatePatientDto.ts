@@ -10,8 +10,8 @@ export type UpdatePatientDto = {
   roomNumber?: undefined | number;
   status?:
     | undefined
-    | 'active'
     | 'disabled'
+    | 'active'
     | 'longTerm'
     | 'palliative'
     | 'shortTerm'

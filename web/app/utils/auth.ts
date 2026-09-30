@@ -3,7 +3,10 @@ import {
   login as loginSdk,
   logout as logoutSdk,
 } from '@rehua/sdk/functional/auth';
-import { create as createSdk } from '@rehua/sdk/functional/user';
+import {
+  create as createSdk,
+  update as updateSdk,
+} from '@rehua/sdk/functional/user';
 import { generateSecret, generateURI } from 'otplib';
 import typia from 'typia';
 
@@ -98,6 +101,22 @@ export async function signup({
 }): Promise<createSdk.Output> {
   return createSdk(
     { host, simulate: isTesting, options: { credentials: 'include' } },
+    data,
+  );
+}
+
+export async function updateUser({
+  host,
+  id,
+  data,
+}: {
+  host: string;
+  id: string;
+  data: updateSdk.Body;
+}): Promise<updateSdk.Output> {
+  return updateSdk(
+    { host, simulate: isTesting, options: { credentials: 'include' } },
+    id,
     data,
   );
 }

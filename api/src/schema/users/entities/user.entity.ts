@@ -24,7 +24,16 @@ export class User {
   email: string;
 
   @Prop({ required: true })
-  status: 'active' | 'disabled';
+  status:
+    | 'disabled'
+    | 'active'
+    | 'longTerm'
+    | 'palliative'
+    | 'shortTerm'
+    | 'daycare'
+    | 'discharged'
+    | 'deceased'
+    | 'upload';
 
   @Prop({ required: true })
   homePhoneNumber: string;
@@ -42,7 +51,16 @@ export class User {
     password: string,
     totpSecret: string,
     email: string,
-    status: 'active' | 'disabled',
+    status:
+      | 'disabled'
+      | 'active'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload',
     homePhoneNumber: string,
     address: string,
     group: 'admin' | 'nurse',
