@@ -160,6 +160,7 @@ export default function EditFormPage({
           text1: 'OK',
           backgroundColor: 'bg-rehua-green',
           iconProps: { name: 'circle-arrow' },
+          textIconGap: 0.5,
         }}
         modalProps={{ open: saveEmptyFieldsPopupOpen }}
       />
