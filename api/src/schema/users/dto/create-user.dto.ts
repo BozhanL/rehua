@@ -8,7 +8,16 @@ export class CreateUserDto {
     // Required to ensure user has setup TOTP correctly
     public totpCode: string,
     public email: string,
-    public status: 'active' | 'disabled',
+    public status:
+      | 'disabled'
+      | 'active'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload',
     public homePhoneNumber: string,
     public address: string,
     public group: 'admin' | 'nurse',
