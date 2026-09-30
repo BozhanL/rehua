@@ -8,18 +8,22 @@ import {
   buildPatientFormRows,
   group,
 } from '@/app/components/patient/PatientForm';
-import type { PatientListInformation } from '@/app/components/patient/PatientProfileList';
+import type {
+  PatientListInformationIn,
+  PatientListInformationOut,
+} from '@/app/components/patient/PatientProfileList';
+import useApiUrl from '@/app/hooks/useApiUrl';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState, type JSX } from 'react';
+import { useRef, useState, type JSX } from 'react';
 
 // interface to define the props for the PatientFormPage component
 interface PatientFormPageProps {
   title: string;
   titleIcon: 'user-profile' | 'pencil-note';
   backToPatients?: boolean; // if true, the back button will navigate to the patients dashboard
-  patientInfo: PatientListInformation;
-  onSave: (patient: PatientListInformation) => void;
+  patientInfo: PatientListInformationIn;
+  onSave: (patient: PatientListInformationOut) => void;
 }
 
 // React page to display the form for adding/editting a new patient, using ListView to render the form fields
@@ -31,22 +35,32 @@ export default function PatientFormPage({
   onSave,
 }: Readonly<PatientFormPageProps>): JSX.Element {
   const router = useRouter(); // router for navigation
+  const apiUrl = useApiUrl();
 
   // state to hold the new patient data + the visibility of the validation and leave page popups
-  const [patient, setPatient] = useState(patientInfo);
+  const [patient, setPatient] = useState<PatientListInformationOut>({
+    ...patientInfo,
+    profilePicture: undefined,
+  });
   const [showValidationPopup, setShowValidationPopup] = useState(false);
   const [showLeavePagePopup, setShowLeavePagePopup] = useState(false);
+  const [showUploadSuccessPopup, setShowUploadSuccessPopup] = useState(false);
+  // const [, setErrorText] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // rows for the ListView component
   const rows = buildPatientFormRows(patient, updateField);
 
   // function to update a specific field in the patient state
-  function updateField<K extends keyof PatientListInformation>(
+  function updateField<K extends keyof PatientListInformationOut>(
     field: K,
-    value: PatientListInformation[K],
+    value: PatientListInformationOut[K],
   ): void {
     setPatient((prev) => ({ ...prev, [field]: value }));
   }
+
+  console.log(patientInfo);
 
   // helper functions to handle button clicks for saving the patient and uploading a photo
   function handleSavePatient(): void {
@@ -85,11 +99,6 @@ export default function PatientFormPage({
 
     // call the onSave prop function to save the patient data and show the success popup
     onSave(patient);
-  }
-
-  function handleUploadPhoto(): void {
-    // TODO: backend connect image upload
-    console.log('Upload photo clicked');
   }
 
   return (
@@ -132,9 +141,9 @@ export default function PatientFormPage({
               style={{ boxShadow: 'inset 0 5px 8px rgb(0 0 0 / 0.2)' }}
             >
               {/* placeholder for the patient's profile photo */}
-              {patient.profilePicture ? (
+              {patientInfo.profilePicture ? (
                 <Image
-                  src={patient.profilePicture}
+                  src={`${apiUrl}/patient/picture/${patientInfo._id}?t=${String(new Date().getTime())}`}
                   alt={`${patient.firstName} ${patient.lastName} profile photo`}
                   fill
                   className="object-cover"
@@ -145,6 +154,21 @@ export default function PatientFormPage({
                 </div>
               )}
             </div>
+
+            <input
+              // TODO: update image after selecting
+              ref={fileInputRef}
+              type="file"
+              hidden
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (!file) {
+                  return;
+                }
+
+                setPatient((d) => ({ ...d, profilePicture: file }));
+              }}
+            />
 
             {/* buttons: photo upload + save new patient */}
             <div className="flex justify-center gap-6">
@@ -157,7 +181,9 @@ export default function PatientFormPage({
                 textIconGap={0.3}
                 backgroundColor="bg-rehua-jordy"
                 className="text-xl"
-                onClick={handleUploadPhoto}
+                onClick={() => {
+                  fileInputRef.current?.click();
+                }}
               />
 
               <ContentButton
@@ -196,6 +222,23 @@ export default function PatientFormPage({
           }}
           modalProps={{
             open: showValidationPopup,
+            surfaceProps: { style: { height: 550 } },
+          }}
+        />
+
+        {/* successful upload popup */}
+        <PopUp
+          text1={'Photo uploaded successfully!'}
+          button1Props={{
+            text1: 'OK',
+            iconProps: { name: 'circle-arrow' },
+            backgroundColor: 'bg-rehua-green',
+            onClick: () => {
+              setShowUploadSuccessPopup(false);
+            },
+          }}
+          modalProps={{
+            open: showUploadSuccessPopup,
             surfaceProps: { style: { height: 550 } },
           }}
         />

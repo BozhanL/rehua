@@ -3,17 +3,19 @@ import MiniLabel, {
   type MiniPresetLabel,
 } from '@/app/components/common/MiniLabel';
 import dayjs from '@/app/utils/dayjs';
+import type { SetFieldType } from 'type-fest';
 
 // TODO: backend replace this info with currently logged in user's group (nurse or admin)
 const group: 'nurse' | 'admin' = 'admin';
 
 // interface to enforce and define the structure of the patient information
-export interface PatientListInformation {
+interface PatientListInformation {
+  _id: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string; // ISO string
   address: string;
-  profilePicture?: string | undefined;
+  profilePicture?: undefined;
   nhi: string;
   dateAdmitted: string; // ISO string
   gpNameAndMedicalCentre: string;
@@ -31,8 +33,21 @@ export interface PatientListInformation {
   allergies: string; // if empty = frontend will display "None"
 }
 
+export type PatientListInformationIn = SetFieldType<
+  PatientListInformation,
+  'profilePicture',
+  string | undefined
+>;
+export type PatientListInformationOut = SetFieldType<
+  PatientListInformation,
+  'profilePicture',
+  File | undefined
+>;
+
 // function for defined rows for the ListView component to display patient information
-export function getPatientListRows(patient: PatientListInformation): ListRow[] {
+export function getPatientListRows(
+  patient: PatientListInformationIn,
+): ListRow[] {
   return [
     { heading: 'NHI', content: patient.nhi },
     {

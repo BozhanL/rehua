@@ -5,7 +5,7 @@ import {
   type MiniPresetLabel,
 } from '@/app/components/common/MiniLabel';
 import SingleLineInput from '@/app/components/common/SingleLineInput';
-import type { PatientListInformation } from '@/app/components/patient/PatientProfileList';
+import type { PatientListInformationOut } from '@/app/components/patient/PatientProfileList';
 import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import dayjs from '@/app/utils/dayjs';
 import type { ChangeEvent } from 'react';
@@ -40,10 +40,10 @@ export const patientStatuses = [
 
 // function to build the rows for the patient form
 export function buildPatientFormRows(
-  patient: PatientListInformation,
-  updateField: <K extends keyof PatientListInformation>(
+  patient: PatientListInformationOut,
+  updateField: <K extends keyof PatientListInformationOut>(
     field: K,
-    value: PatientListInformation[K],
+    value: PatientListInformationOut[K],
   ) => void,
 ): ListRow[] {
   // define iconProps for required fields (asterisk icon in red)

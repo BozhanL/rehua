@@ -40,6 +40,7 @@ function useFindOne(id: string) {
 
 export default function PatientProfilePage(): JSX.Element {
   const router = useRouter();
+  const apiUrl = useApiUrl();
 
   const searchParams = useSearchParams();
   const patientId = searchParams.get('id') ?? '';
@@ -100,7 +101,7 @@ export default function PatientProfilePage(): JSX.Element {
                 </div>
               ) : (
                 <Image
-                  src={patient.profilePicture}
+                  src={`${apiUrl}/patient/picture/${patient._id}?t=${String(new Date().getTime())}`}
                   alt={`${patient.firstName} ${patient.lastName} profile photo`}
                   fill
                   className="object-cover"

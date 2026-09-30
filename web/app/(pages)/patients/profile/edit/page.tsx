@@ -115,7 +115,7 @@ export default function EditPatientPage(): JSX.Element {
             maritalStatus: formData.maritalStatus,
             ethnicity: formData.ethnicity,
             allergies: formData.allergies,
-            //profilePicture: formData.profilePicture,
+            profilePicture: formData.profilePicture,
             funding: formData.funding,
             timeOfDeath: formData.timeOfDeath,
           };
@@ -128,7 +128,7 @@ export default function EditPatientPage(): JSX.Element {
                 setShowSaveErrorPopup(true);
               },
               onSuccess: () => {
-                router.back();
+                router.push(`/patients/profile?id=${patientId}`);
               },
             },
           );

@@ -1,7 +1,7 @@
 'use client';
 import PopUp from '@/app/components/common/PopUp';
 import PatientFormPage from '@/app/components/patient/PatientFormPage';
-import type { PatientListInformation } from '@/app/components/patient/PatientProfileList';
+import type { PatientListInformationIn } from '@/app/components/patient/PatientProfileList';
 import useApiUrl from '@/app/hooks/useApiUrl';
 import dayjs from '@/app/utils/dayjs';
 import { isTesting } from '@/app/utils/env';
@@ -34,7 +34,8 @@ export default function AddPatientPage(): JSX.Element {
   });
 
   // default values for new patients
-  const newPatient: PatientListInformation = {
+  const newPatient: PatientListInformationIn = {
+    _id: '',
     firstName: '',
     lastName: '',
     dateOfBirth: '',
@@ -101,7 +102,7 @@ export default function AddPatientPage(): JSX.Element {
             maritalStatus: formData.maritalStatus,
             ethnicity: formData.ethnicity,
             allergies: formData.allergies,
-            //profilePicture: formData.profilePicture,
+            profilePicture: formData.profilePicture,
             funding: formData.funding,
             timeOfDeath: formData.timeOfDeath,
           };
