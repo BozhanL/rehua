@@ -32,8 +32,6 @@ export default function UserFormPage({
   const [user, setUser] = useState(userInfo);
   const [showValidationPopup, setShowValidationPopup] = useState(false);
   const [showLeavePagePopup, setShowLeavePagePopup] = useState(false);
-  const [showSaveSuccessPopup, setShowSaveSuccessPopup] = useState(false);
-  const [showSaveErrorPopup, setShowSaveErrorPopup] = useState(false);
 
   // rows for the ListView component
   const rows = buildUserFormRows(user, updateField);
@@ -65,11 +63,8 @@ export default function UserFormPage({
       return;
     }
 
-    // TODO: backend implement logic where if an error comes back it is handled here
-    // setShowSaveErrorPopup(true) should be called if the save fails
-    // call the onSave prop function to save the user data and show the success popup
+    // call the onSave prop function to save the user data
     onSave(user);
-    setShowSaveSuccessPopup(true);
   }
 
   return (
@@ -174,41 +169,6 @@ export default function UserFormPage({
           }}
           defaultButtonHeight={65}
           modalProps={{ open: showLeavePagePopup }}
-        />
-
-        {/* popup for successful save */}
-        <PopUp
-          text1={'User information saved successfully.'}
-          button1Props={{
-            text1: 'OK',
-            iconProps: { name: 'circle-arrow' },
-            backgroundColor: 'bg-rehua-green',
-            onClick: () => {
-              setShowSaveSuccessPopup(false);
-            },
-          }}
-          modalProps={{
-            open: showSaveSuccessPopup,
-            surfaceProps: { style: { height: 550 } },
-          }}
-        />
-
-        {/* popup for unsuccessful save */}
-        <PopUp
-          isAlertPopup={true}
-          text1={'Failed to save user information.\nPlease try again.'}
-          button1Props={{
-            text1: 'OK',
-            iconProps: { name: 'circle-arrow' },
-            backgroundColor: 'bg-rehua-green',
-            onClick: () => {
-              setShowSaveErrorPopup(false);
-            },
-          }}
-          modalProps={{
-            open: showSaveErrorPopup,
-            surfaceProps: { style: { height: 550 } },
-          }}
         />
       </Surface>
     </div>

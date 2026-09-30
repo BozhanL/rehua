@@ -55,23 +55,18 @@ export default function MFASetUp({
   }
 
   return (
-    <div className="h-full overflow-auto">
+    <>
       {/* heading and content scroll together, w-max keeps them from shrinking */}
-      <div className="w-max pb-10">
+      <div className="mx-6 mt-6 mb-5 overflow-auto">
         {/* back button and title */}
-        <div className="mx-6 mt-6 mb-5 flex items-center gap-6 bg-rehua-white">
-          <button
-            type="button"
-            aria-label="Go back"
-            onClick={onBack}
-            className="shrink-0 cursor-pointer"
-          >
-            <Icon name="circle-arrow" width={40} className="text-rehua-navy" />
+        <div className="flex min-w-max items-center gap-6 bg-rehua-white pb-10">
+          <button type="button" onClick={onBack} className="cursor-pointer">
+            <Icon name="circle-arrow" width={50} className="text-rehua-navy" />
           </button>
 
-          <div className="flex items-center gap-3">
-            <Icon name="lock-time" width={35} className="shrink-0" />
-            <span className="text-3xl font-bold">{title}</span>
+          <div className="flex gap-3">
+            <Icon name="lock-time" width={40} />
+            <span className="translate-y-1 text-3xl font-bold">{title}</span>
           </div>
         </div>
 
@@ -153,6 +148,6 @@ export default function MFASetUp({
           setMfaError(null);
         }}
       />
-    </div>
+    </>
   );
 }

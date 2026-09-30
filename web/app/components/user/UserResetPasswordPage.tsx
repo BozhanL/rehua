@@ -28,8 +28,6 @@ export default function UserResetPasswordPage({
   const [showPasswordMismatchPopup, setShowPasswordMismatchPopup] =
     useState(false);
   const [showLeavePagePopup, setShowLeavePagePopup] = useState(false);
-  const [showSaveSuccessPopup, setShowSaveSuccessPopup] = useState(false);
-  const [showSaveErrorPopup, setShowSaveErrorPopup] = useState(false);
 
   // define iconProps for required fields (asterisk icon in red)
   const iconProps = {
@@ -132,10 +130,8 @@ export default function UserResetPasswordPage({
       return;
     }
 
-    // TODO: backend implement password reset logic here
-    // setShowSaveErrorPopup(true) should be called if the save fails
+    // call the onSave prop function to save the new user password
     onSave(password);
-    setShowSaveSuccessPopup(true);
   }
 
   return (
@@ -253,41 +249,6 @@ export default function UserResetPasswordPage({
           }}
           defaultButtonHeight={65}
           modalProps={{ open: showLeavePagePopup }}
-        />
-
-        {/* popup for successful save */}
-        <PopUp
-          text1={'User password reset successfully.'}
-          button1Props={{
-            text1: 'OK',
-            iconProps: { name: 'circle-arrow' },
-            backgroundColor: 'bg-rehua-green',
-            onClick: () => {
-              setShowSaveSuccessPopup(false);
-            },
-          }}
-          modalProps={{
-            open: showSaveSuccessPopup,
-            surfaceProps: { style: { height: 550 } },
-          }}
-        />
-
-        {/* popup for unsuccessful save */}
-        <PopUp
-          isAlertPopup={true}
-          text1={'Failed to reset user password.\nPlease try again.'}
-          button1Props={{
-            text1: 'OK',
-            iconProps: { name: 'circle-arrow' },
-            backgroundColor: 'bg-rehua-green',
-            onClick: () => {
-              setShowSaveErrorPopup(false);
-            },
-          }}
-          modalProps={{
-            open: showSaveErrorPopup,
-            surfaceProps: { style: { height: 550 } },
-          }}
         />
       </Surface>
     </div>

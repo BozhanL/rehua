@@ -243,8 +243,8 @@ export default function CreateUserPage(): JSX.Element {
   ];
 
   return (
-    <div className="flex h-dvh flex-col">
-      <Surface width="100%" height="100%">
+    <div className="flex min-h-dvh flex-col">
+      <Surface width="100%" height="100%" style={{ flexGrow: 1 }}>
         {step === 'mfa' ? (
           <MFASetUp
             title="Multi-Factor Authentication Set-Up"
@@ -279,12 +279,11 @@ export default function CreateUserPage(): JSX.Element {
             {/* page back button, title and next button */}
             <div
               className="
-                mx-6 mt-6 mb-5 flex min-w-max items-center gap-6 bg-rehua-white
+                mx-6 my-5 flex min-w-max items-center gap-6 bg-rehua-white
               "
             >
               <button
                 type="button"
-                aria-label="Go back"
                 onClick={() => {
                   setShowLeavePagePopup(true);
                 }}
@@ -292,28 +291,30 @@ export default function CreateUserPage(): JSX.Element {
               >
                 <Icon
                   name="circle-arrow"
-                  width={40}
+                  width={50}
                   className="text-rehua-navy"
                 />
               </button>
 
               <div className="flex gap-3">
-                <Icon name="user-profile" width={30} />
-                <span className="text-3xl font-bold">Add New User</span>
+                <Icon name="user-profile" width={35} />
+                <span className="translate-y-1 text-3xl font-bold">
+                  Add New User
+                </span>
               </div>
 
               <ContentButton
                 text1="Next"
                 text2="(MFA Set-Up)"
                 textAlign="left"
-                lineHeight={1.1}
+                lineHeight={1.25}
                 iconProps={{ name: 'lock-time', width: 0.8 }}
                 iconPosition="right"
                 verticalPadding={0.2}
                 horizontalPadding={0.4}
                 textIconGap={0.4}
                 backgroundColor="bg-rehua-navy"
-                className="text-xl"
+                className="text-lg"
                 onClick={handleNext}
               />
             </div>
