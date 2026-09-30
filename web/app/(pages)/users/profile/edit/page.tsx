@@ -72,8 +72,6 @@ export default function EditUserPage(): JSX.Element {
     notFound();
   }
 
-  // TODO: patch user api route
-
   return (
     <>
       {/* popup for unsuccessful save */}
