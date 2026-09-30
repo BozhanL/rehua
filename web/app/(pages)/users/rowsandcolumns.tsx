@@ -11,7 +11,7 @@ export const userGroups: UserGroup[] = ['admin', 'nurse'];
 
 // interface for a user
 export interface User {
-  id: string; // unique identifier for the user
+  _id: string; // unique identifier for the user
   userName: string;
   firstName: string;
   lastName: string;
@@ -21,7 +21,7 @@ export interface User {
 }
 
 // interface for a user row in the table
-interface UserRow extends TableRow {
+export interface UserRow extends TableRow {
   id: number; // unique identifier for the row
   content: {
     userName: string;
@@ -39,7 +39,7 @@ const columnWidth = 200;
 // column definition for the user table
 export const userColumns: TableColumn[] = [
   {
-    rowKey: 'username',
+    rowKey: 'userName',
     header: 'Username',
     width: 250,
     columnClassName: 'pl-15',
@@ -77,7 +77,9 @@ export const userColumns: TableColumn[] = [
 ];
 
 // React icon component for routing to user profiles
-function UserViewButton({ userId }: Readonly<{ userId: string }>): JSX.Element {
+export function UserViewButton({
+  userId,
+}: Readonly<{ userId: string }>): JSX.Element {
   const router = useRouter();
   return (
     <button
@@ -97,7 +99,7 @@ function UserViewButton({ userId }: Readonly<{ userId: string }>): JSX.Element {
 }
 
 // function to create a user row from a user object that will be rendered within the table
-function createUserRow(user: User, rowIndex: number): UserRow {
+export function createUserRow(user: User, rowIndex: number): UserRow {
   return {
     id: rowIndex,
     content: {
@@ -106,43 +108,7 @@ function createUserRow(user: User, rowIndex: number): UserRow {
       email: user.email ? user.email : '-',
       group: userGroupLabels[user.group],
       status: <MiniLabel name={user.status} />,
-      view: <UserViewButton userId={user.id} />,
+      view: <UserViewButton userId={user._id} />,
     },
   };
 }
-
-// sample patient data, what is expected from backend - TODO: backend replace this with actual data
-export const users: User[] = [
-  {
-    id: '1',
-    userName: 'johndoe',
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    group: 'admin',
-    status: 'active',
-  },
-  {
-    id: '2',
-    userName: 'janedoe',
-    firstName: 'Jane',
-    lastName: 'Doe',
-    email: 'jane.doe@example.com',
-    group: 'nurse',
-    status: 'active',
-  },
-  {
-    id: '3',
-    userName: 'bobsmith',
-    firstName: 'Bob',
-    lastName: 'Smith',
-    email: 'bob.smith@example.com',
-    group: 'admin',
-    status: 'disabled',
-  },
-];
-
-// create user rows from the sample user data
-export const userRows: UserRow[] = users.map((user, rowIndex) =>
-  createUserRow(user, rowIndex),
-);
