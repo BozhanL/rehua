@@ -11,13 +11,13 @@ import type { SearchFilterOption } from '@/app/components/dashboard/DashboardToo
 import DashboardToolbar, {
   getSearchValue,
 } from '@/app/components/dashboard/DashboardToolbar';
+import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import { userGroupLabels } from '@/app/utils/types';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';
 
 export default function UsersPage(): JSX.Element {
-  // TODO: backend replace this with currently logged in user's group
-  const group: 'nurse' | 'admin' = 'admin';
+  const group: 'nurse' | 'admin' = sessionStorageGetUserInfo().group;
   const router = useRouter();
 
   // values for the dropdown options of status search filters
@@ -26,7 +26,7 @@ export default function UsersPage(): JSX.Element {
   // search filters for the users dashboard
   const userSearchFilters: [SearchFilterOption, ...SearchFilterOption[]] = [
     { webValue: 'No Filter', apiValue: '', inputType: 'none' },
-    { webValue: 'Username', apiValue: 'username', inputType: 'text' },
+    { webValue: 'Username', apiValue: 'userName', inputType: 'text' },
     { webValue: 'First Name', apiValue: 'firstName', inputType: 'text' },
     { webValue: 'Last Name', apiValue: 'lastName', inputType: 'text' },
     { webValue: 'Email', apiValue: 'email', inputType: 'text' },
