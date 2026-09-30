@@ -1,6 +1,6 @@
+import * as paginationRequestDto from '../patients/dto/pagination-request.dto';
 import { CurrentUser } from '../users/users.decorator';
 import type { CreatePatientDto } from './dto/create-patient.dto';
-import type { PatientPageQueryDto } from './dto/pagination-request.dto';
 import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
@@ -91,7 +91,7 @@ export class PatientController {
     @CurrentUser() user: { group: string },
     @TypedParam('numberOfRows') numberOfRows: number,
     @TypedParam('pageNumber') pageNumber: number,
-    @TypedQuery() query: PatientPageQueryDto,
+    @TypedQuery() query: paginationRequestDto.PaginationQueryDto,
   ): Promise<PaginatedResponseDto<Patient & { _id: string }>> {
     const { filter, search } = query;
 
