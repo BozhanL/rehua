@@ -12,7 +12,7 @@ export const userGroups: UserGroup[] = ['admin', 'nurse'];
 // interface for a user
 export interface User {
   id: string; // unique identifier for the user
-  username: string;
+  userName: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -24,7 +24,7 @@ export interface User {
 interface UserRow extends TableRow {
   id: number; // unique identifier for the row
   content: {
-    username: string;
+    userName: string;
     fullName: string;
     email: string;
     group: string;
@@ -101,7 +101,7 @@ function createUserRow(user: User, rowIndex: number): UserRow {
   return {
     id: rowIndex,
     content: {
-      username: user.username ? user.username : '-',
+      userName: user.userName ? user.userName : '-',
       fullName: `${user.firstName} ${user.lastName}`,
       email: user.email ? user.email : '-',
       group: userGroupLabels[user.group],
@@ -115,7 +115,7 @@ function createUserRow(user: User, rowIndex: number): UserRow {
 export const users: User[] = [
   {
     id: '1',
-    username: 'johndoe',
+    userName: 'johndoe',
     firstName: 'John',
     lastName: 'Doe',
     email: 'john.doe@example.com',
@@ -124,7 +124,7 @@ export const users: User[] = [
   },
   {
     id: '2',
-    username: 'janedoe',
+    userName: 'janedoe',
     firstName: 'Jane',
     lastName: 'Doe',
     email: 'jane.doe@example.com',
@@ -133,7 +133,7 @@ export const users: User[] = [
   },
   {
     id: '3',
-    username: 'bobsmith',
+    userName: 'bobsmith',
     firstName: 'Bob',
     lastName: 'Smith',
     email: 'bob.smith@example.com',
