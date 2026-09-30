@@ -26,7 +26,7 @@ export type UpdatePatientDto = {
   maritalStatus?: undefined | string;
   ethnicity?: undefined | string;
   allergies?: undefined | string;
-  profilePicture?: undefined | string;
+  profilePicture?: undefined | File;
   funding?: undefined | string;
   timeOfDeath?: undefined | string;
 };
