@@ -23,3 +23,6 @@
 !web/tsconfig.json
 !web/app/**
 !web/public/**
+
+# For the type of test files
+!web/jest.setup.ts
