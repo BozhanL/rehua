@@ -52,7 +52,7 @@ export default function AddPatientPage(): JSX.Element {
     maritalStatus: '',
     ethnicity: '',
     allergies: '',
-    photoUrl: undefined,
+    profilePicture: undefined,
     dateAdmitted: dayjs().tz().toISOString(), // TODO: backend take this away if desirable
     timeOfDeath: undefined,
   };
@@ -101,7 +101,7 @@ export default function AddPatientPage(): JSX.Element {
             maritalStatus: formData.maritalStatus,
             ethnicity: formData.ethnicity,
             allergies: formData.allergies,
-            photoUrl: formData.photoUrl,
+            //profilePicture: formData.profilePicture,
             funding: formData.funding,
             timeOfDeath: formData.timeOfDeath,
           };

@@ -93,13 +93,14 @@ export default function PatientProfilePage(): JSX.Element {
               "
               style={{ boxShadow: 'inset 0 5px 8px rgb(0 0 0 / 0.2)' }}
             >
-              {patient.photoUrl === undefined || patient.photoUrl === '' ? (
+              {patient.profilePicture === undefined ||
+              patient.profilePicture === '' ? (
                 <div className="flex size-full items-center justify-center">
                   <Icon name="user" width={85} className="text-rehua-white" />
                 </div>
               ) : (
                 <Image
-                  src={patient.photoUrl}
+                  src={patient.profilePicture}
                   alt={`${patient.firstName} ${patient.lastName} profile photo`}
                   fill
                   className="object-cover"

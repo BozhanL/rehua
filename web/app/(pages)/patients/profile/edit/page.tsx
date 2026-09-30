@@ -115,7 +115,7 @@ export default function EditPatientPage(): JSX.Element {
             maritalStatus: formData.maritalStatus,
             ethnicity: formData.ethnicity,
             allergies: formData.allergies,
-            photoUrl: formData.photoUrl,
+            //profilePicture: formData.profilePicture,
             funding: formData.funding,
             timeOfDeath: formData.timeOfDeath,
           };

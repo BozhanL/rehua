@@ -132,9 +132,9 @@ export default function PatientFormPage({
               style={{ boxShadow: 'inset 0 5px 8px rgb(0 0 0 / 0.2)' }}
             >
               {/* placeholder for the patient's profile photo */}
-              {patient.photoUrl ? (
+              {patient.profilePicture ? (
                 <Image
-                  src={patient.photoUrl}
+                  src={patient.profilePicture}
                   alt={`${patient.firstName} ${patient.lastName} profile photo`}
                   fill
                   className="object-cover"

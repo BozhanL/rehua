@@ -13,7 +13,7 @@ export interface PatientListInformation {
   lastName: string;
   dateOfBirth: string; // ISO string
   address: string;
-  photoUrl?: string | undefined;
+  profilePicture?: string | undefined;
   nhi: string;
   dateAdmitted: string; // ISO string
   gpNameAndMedicalCentre: string;
