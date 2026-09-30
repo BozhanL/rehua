@@ -7,6 +7,13 @@ export enum TemplateDocumentType {
   Daycare = 'Daycare',
 }
 
+export type TemplateStatus = 'active' | 'archived';
+export const templateStatuses: TemplateStatus[] = ['active', 'archived'];
+export const templateStatusLabels: Record<TemplateStatus, string> = {
+  active: 'Active',
+  archived: 'Archived',
+};
+
 export const TemplateDocumentTypeValues = Object.values(TemplateDocumentType);
 
 TemplateDocumentTypeValues satisfies createTemplateSDK.Body['templateType'];
