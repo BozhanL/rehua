@@ -3,12 +3,22 @@ export type UpdatePatientDto = {
   lastName?: undefined | string;
   dateOfBirth?: undefined | string;
   address?: undefined | string;
-  nhi?: undefined | number;
+  nhi?: undefined | string;
   dateAdmitted?: undefined | string;
   gpNameAndMedicalCenter?: undefined | string;
   nurse?: undefined | string;
   roomNumber?: undefined | number;
-  status?: undefined | string;
+  status?:
+    | undefined
+    | 'active'
+    | 'disabled'
+    | 'longTerm'
+    | 'palliative'
+    | 'shortTerm'
+    | 'daycare'
+    | 'discharged'
+    | 'deceased'
+    | 'upload';
   email?: undefined | string;
   homePhoneNumber?: undefined | string;
   gender?: undefined | string;

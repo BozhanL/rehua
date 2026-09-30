@@ -31,7 +31,7 @@ function useGetDocumentOptions(id: string) {
         {
           host: host,
           simulate: isTesting,
-          options: { signal },
+          options: { signal, credentials: 'include' },
         },
         id,
       ),
@@ -47,7 +47,11 @@ async function updateForm({
   id: string;
   docData: updateFormSdk.Body;
 }): Promise<updateFormSdk.Output> {
-  return updateFormSdk({ host, simulate: isTesting }, id, docData);
+  return updateFormSdk(
+    { host, simulate: isTesting, options: { credentials: 'include' } },
+    id,
+    docData,
+  );
 }
 
 export default function Home(): JSX.Element {

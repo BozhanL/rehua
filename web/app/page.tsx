@@ -11,7 +11,11 @@ import {
 } from '@/app/components/navigation/ManualButtons';
 import { isTesting } from '@/app/utils/env';
 import { getHello } from '@rehua/sdk/functional';
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import Link from 'next/link';
 import { useContext, useState, type JSX } from 'react';
 import { functional } from 'typia';
@@ -22,10 +26,11 @@ function useHelloOptions() {
 
   return queryOptions({
     queryKey: ['hello', host],
-    queryFn: async () =>
+    queryFn: async ({ signal }: QueryFunctionContext) =>
       getHello({
         host: host,
         simulate: isTesting,
+        options: { signal, credentials: 'include' },
       }),
   });
 }

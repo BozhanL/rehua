@@ -1,9 +1,10 @@
 import type { CreatePatientDto } from './dto/create-patient.dto';
+import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient, PatientDocument } from './entities/patient.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateWriteOpResult } from 'mongoose';
+import { Model, QueryFilter, UpdateWriteOpResult } from 'mongoose';
 
 @Injectable()
 export class PatientService {
@@ -27,13 +28,98 @@ export class PatientService {
   async findPage(
     numberOfRows: number,
     pageNumber: number,
-  ): Promise<PatientDocument[]> {
-    return this.patientModel
-      .find()
+    userGroup: string,
+  ): Promise<PaginatedResponseDto<PatientDocument>> {
+    const searchFilter: Record<string, unknown> = {};
+
+    if (userGroup === 'nurse') {
+      searchFilter['status'] = { $ne: 'deceased' };
+    }
+
+    const docs = await this.patientModel
+      .find(searchFilter)
       .sort({ dateAdmitted: 'desc' })
       .skip((pageNumber - 1) * numberOfRows)
       .limit(numberOfRows)
       .exec();
+
+    const totalDocuments = await this.patientModel.countDocuments();
+    const totalPages = Math.ceil(totalDocuments / numberOfRows);
+
+    return {
+      data: docs,
+      meta: {
+        totalPages,
+      },
+    };
+  }
+
+  async findPageByFilter(
+    numberOfRows: number,
+    pageNumber: number,
+    filter: string,
+    search: string,
+    userGroup: string,
+  ): Promise<PaginatedResponseDto<PatientDocument>> {
+    const searchFilter: Record<string, unknown> = {};
+
+    if (userGroup === 'nurse') {
+      searchFilter['status'] = { $ne: 'deceased' };
+    }
+
+    if (filter && search) {
+      const escapedValue = search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+
+      searchFilter[filter] = {
+        $regex: escapedValue,
+        $options: 'i',
+      };
+    }
+
+    const query = searchFilter as QueryFilter<PatientDocument>;
+
+    interface PatientAggregateResult {
+      data: PatientDocument[];
+      total: number;
+    }
+
+    const [result] = await this.patientModel
+      .aggregate<PatientAggregateResult>([
+        { $match: query },
+        {
+          $facet: {
+            totalCount: [{ $count: 'count' }],
+            paginatedResults: [
+              { $sort: { dateAdmitted: -1 } },
+              { $skip: (pageNumber - 1) * numberOfRows },
+              { $limit: numberOfRows },
+            ],
+          },
+        },
+        {
+          $project: {
+            data: '$paginatedResults',
+            total: { $ifNull: [{ $arrayElemAt: ['$totalCount.count', 0] }, 0] },
+          },
+        },
+      ])
+      .exec();
+
+    const rawData = result?.data ?? [];
+    const total = result?.total ?? 0;
+
+    // rehydrate the raw objects into full Mongoose documents, to allow contorller to add _id
+    const data = rawData.map((doc) => this.patientModel.hydrate(doc));
+
+    const totalFilteredDocuments = total;
+    const totalPages = Math.ceil(totalFilteredDocuments / numberOfRows);
+
+    return {
+      data: data,
+      meta: {
+        totalPages,
+      },
+    };
   }
 
   async update(

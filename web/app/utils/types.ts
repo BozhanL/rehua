@@ -10,3 +10,9 @@ export enum TemplateDocumentType {
 export const TemplateDocumentTypeValues = Object.values(TemplateDocumentType);
 
 TemplateDocumentTypeValues satisfies createTemplateSDK.Body['templateType'];
+
+export type UserGroup = 'admin' | 'nurse';
+export const userGroupLabels: Record<UserGroup, string> = {
+  admin: 'Admin',
+  nurse: 'Nurse',
+};
