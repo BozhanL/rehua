@@ -99,9 +99,11 @@ export default function EditFormPage({
             setSavePopupOpen(false);
           },
           text1: 'CREATE',
+          textAlign: 'right',
           text2: 'TEMPLATE',
           backgroundColor: 'bg-rehua-green',
-          iconProps: { name: 'save' },
+          iconProps: { name: 'save', width: 0.5 },
+          className: 'text-2xl',
         }}
         button2Props={{
           onClick: () => {
@@ -109,7 +111,8 @@ export default function EditFormPage({
           },
           text1: 'GO BACK',
           backgroundColor: 'bg-rehua-red',
-          iconProps: { name: 'circle-arrow' },
+          iconProps: { name: 'circle-arrow', width: 0.6 },
+          className: 'text-2xl',
         }}
         modalProps={{ open: savePopupOpen }}
       />
@@ -118,13 +121,16 @@ export default function EditFormPage({
       <PopUp
         isAlertPopup
         text1={'Are you sure you\nwant to leave this page?'}
+        text2={'UNSAVED CHANGES WILL BE LOST'}
+        text2Style={{ textDecoration: 'underline' }}
         button1Props={{
           onClick: () => {
             setExitPopupOpen(false);
           },
           text1: 'STAY',
           backgroundColor: 'bg-rehua-green',
-          iconProps: { name: 'circle-arrow' },
+          iconProps: { name: 'circle-arrow', width: 0.6, rotation: 270 },
+          className: 'text-2xl',
         }}
         button2Props={{
           onClick: () => {
@@ -132,14 +138,14 @@ export default function EditFormPage({
           },
           text1: 'LEAVE',
           backgroundColor: 'bg-rehua-red',
-          iconProps: { name: 'circle-arrow' },
+          iconProps: { name: 'circle-arrow', width: 0.6 },
+          className: 'text-2xl',
         }}
         modalProps={{ open: exitPopupOpen }}
       />
 
       {/* Save with empty fields PopUp */}
       <PopUp
-        isAlertPopup
         text1={
           'Please fill in the template name and \nselect at least one template type before saving.'
         }
@@ -154,81 +160,81 @@ export default function EditFormPage({
         modalProps={{ open: saveEmptyFieldsPopupOpen }}
       />
 
-      <div className={`flex flex-wrap items-center gap-3 px-4 py-3`}>
-        <ContentButton
-          type="button"
-          iconProps={{ name: 'circle-arrow' }}
-          foregroundColor="text-rehua-navy"
-          backgroundColor="bg-rehua-white"
-          height={72}
-          style={{
-            boxShadow: 'none',
-          }}
-
-          onClick={() => {
-            setExitPopupOpen(true);
-          }}
-        />
-
-        <div className="flex min-w-0 items-center gap-3">
-          <Icon
-            name="folder-open"
-            width={61}
-            className="shrink-0 text-rehua-black"
-          />
-          <span
-            className={`
-              truncate text-[35px] leading-none font-bold text-rehua-black
-            `}
-          >
-            {title}
-          </span>
-        </div>
-
-        <div
-          className={`
-            ml-0 flex min-w-0 flex-1 flex-row flex-wrap items-center justify-end
-            gap-3
-          `}
-        >
-          <div className="min-w-0 flex-1">
-            <SingleLineInput
-              aria-label="Template name"
-              placeholder="Enter New Template Name here . . ."
-              value={templateName}
-              onChange={(event) => {
-                setTemplateName(event.currentTarget.value);
+      {/* title row: back button, title, template name, template type and save */}
+      <div className="mx-6 mt-6 mb-5 overflow-x-auto py-4">
+        <div className="flex min-w-max items-center gap-3">
+          {/* back button */}
+          <div className="shrink-0">
+            <ContentButton
+              type="button"
+              iconProps={{ name: 'circle-arrow' }}
+              foregroundColor="text-rehua-navy"
+              backgroundColor="bg-rehua-white"
+              height={72}
+              style={{ boxShadow: 'none' }}
+              onClick={() => {
+                setExitPopupOpen(true);
               }}
             />
           </div>
 
-          <DropdownBar
-            options={TemplateDocumentTypeValues}
-            selectedValues={templateType}
-            multiple
-            onChange={setTemplateType}
-            defaultText="Template Type"
-          />
+          {/* page icon and title */}
+          <div className="flex shrink-0 items-center gap-6">
+            <Icon
+              name="folder-open"
+              width={61}
+              className="shrink-0 text-rehua-black"
+            />
+            <span className="text-3xl font-bold text-rehua-black">{title}</span>
+          </div>
+          {/* right side */}
+          <div className="ml-auto flex shrink-0 items-center gap-8">
+            {/* template name input */}
+            <div className="pl-5">
+              <SingleLineInput
+                aria-label="Template name"
+                placeholder="Enter New Template Name here . . ."
+                value={templateName}
+                style={{ width: 350, height: 50 }}
+                onChange={(event) => {
+                  setTemplateName(event.currentTarget.value);
+                }}
+              />
+            </div>
+            {/* template type dropdown */}
+            <DropdownBar
+              options={TemplateDocumentTypeValues}
+              selectedValues={templateType}
+              multiple
+              onChange={setTemplateType}
+              defaultText="Template Type"
+              width={250}
+              size={25}
+            />
 
-          <ContentButton
-            type="button"
-            text1="Save"
-            text2="Template"
-            iconProps={{ name: 'save' }}
-            iconPosition="left"
-            textAlign="right"
-            foregroundColor="text-rehua-white"
-            backgroundColor="bg-rehua-green"
-            height={50}
-            onClick={() => {
-              if (templateName === '' || templateType.length === 0) {
-                setSaveEmptyFieldsPopupOpen(true);
-                return;
-              }
+            {/* save template button */}
+            <ContentButton
+              type="button"
+              text1="Save"
+              text2="Template"
+              iconProps={{ name: 'save', width: 0.6 }}
+              verticalPadding={0.2}
+              horizontalPadding={0.5}
+              iconPosition="left"
+              textAlign="right"
+              foregroundColor="text-rehua-white"
+              backgroundColor="bg-rehua-green"
+              height={60}
+              onClick={() => {
+                if (templateName === '' || templateType.length === 0) {
+                  setSaveEmptyFieldsPopupOpen(true);
+                  return;
+                }
 
-              setSavePopupOpen(true);
-            }}
-          />
+                setSavePopupOpen(true);
+              }}
+            />
+          </div>
         </div>
       </div>
 
