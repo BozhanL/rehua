@@ -28,7 +28,7 @@ export class CreatePatientDto {
     public allergies: string,
 
     //Not required
-    public profilePicture?: string,
+    public profilePicture?: File,
     public funding?: string, //Admin only
     public timeOfDeath?: string, //Admin only
   ) {}

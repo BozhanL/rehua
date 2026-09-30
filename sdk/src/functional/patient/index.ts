@@ -8,7 +8,7 @@ import type { CreatePatientDto } from '../../structures/CreatePatientDto';
 import type { Patient_idstring } from '../../structures/Patient_idstring';
 import type { UpdatePatientDto } from '../../structures/UpdatePatientDto';
 import type { mongoose } from '../../structures/mongoose';
-import type { IConnection } from '@nestia/fetcher';
+import type { FormDataInput, IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
 import typia from 'typia';
 import type { Resolved } from 'typia';
@@ -29,13 +29,7 @@ export async function create(
   return true === connection.simulate
     ? create.simulate(connection, createPatientDto)
     : PlainFetcher.fetch(
-        {
-          ...connection,
-          headers: {
-            ...connection.headers,
-            'Content-Type': 'application/json',
-          },
-        },
+        connection,
         {
           ...create.METADATA,
           template: create.METADATA.path,
@@ -45,14 +39,14 @@ export async function create(
       );
 }
 export namespace create {
-  export type Body = CreatePatientDto;
+  export type Body = FormDataInput<CreatePatientDto>;
   export type Output = Patient_idstring;
 
   export const METADATA = {
     method: 'POST',
     path: '/patient',
     request: {
-      type: 'application/json',
+      type: 'multipart/form-data',
       encrypted: false,
     },
     response: {
@@ -184,13 +178,7 @@ export async function update(
   return true === connection.simulate
     ? update.simulate(connection, id, updatePatientDto)
     : PlainFetcher.fetch(
-        {
-          ...connection,
-          headers: {
-            ...connection.headers,
-            'Content-Type': 'application/json',
-          },
-        },
+        connection,
         {
           ...update.METADATA,
           template: update.METADATA.path,
@@ -200,14 +188,14 @@ export async function update(
       );
 }
 export namespace update {
-  export type Body = UpdatePatientDto;
+  export type Body = FormDataInput<UpdatePatientDto>;
   export type Output = mongoose.UpdateWriteOpResult;
 
   export const METADATA = {
     method: 'PATCH',
     path: '/patient/:id',
     request: {
-      type: 'application/json',
+      type: 'multipart/form-data',
       encrypted: false,
     },
     response: {
