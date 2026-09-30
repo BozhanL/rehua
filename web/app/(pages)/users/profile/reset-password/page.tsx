@@ -62,7 +62,6 @@ export default function EditUserPage(): JSX.Element {
           const updatedValues: update.Body = {
             password: newUserPassword,
           };
-          // TODO: backend PATCH/PUT user here
           console.log(userId, newUserPassword);
           updateUserMutation.mutate(
             { host, userId, updatedValues },
