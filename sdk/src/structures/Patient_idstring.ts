@@ -9,8 +9,8 @@ export type Patient_idstring = {
   nurse: string;
   roomNumber: string;
   status:
-    | 'active'
     | 'disabled'
+    | 'active'
     | 'longTerm'
     | 'palliative'
     | 'shortTerm'
@@ -42,8 +42,8 @@ export namespace Patient_idstring {
     nurse: string;
     roomNumber: string;
     status:
-      | 'active'
       | 'disabled'
+      | 'active'
       | 'longTerm'
       | 'palliative'
       | 'shortTerm'
@@ -74,8 +74,8 @@ export namespace Patient_idstring {
     nurse: string;
     roomNumber: string;
     status:
-      | 'active'
       | 'disabled'
+      | 'active'
       | 'longTerm'
       | 'palliative'
       | 'shortTerm'
@@ -106,8 +106,8 @@ export namespace Patient_idstring {
     nurse: string;
     roomNumber: string;
     status:
-      | 'active'
       | 'disabled'
+      | 'active'
       | 'longTerm'
       | 'palliative'
       | 'shortTerm'
