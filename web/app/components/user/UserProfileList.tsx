@@ -6,7 +6,7 @@ import { userGroupLabels, type UserGroup } from '@/app/utils/types';
 
 // interface to enforce and define the structure of the user information
 export interface UserListInformation {
-  username: string;
+  userName: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -19,7 +19,7 @@ export interface UserListInformation {
 // function to return rows for the ListView component to display user information
 export function getUserListRows(user: UserListInformation): ListRow[] {
   return [
-    { heading: 'Username', content: user.username },
+    { heading: 'Username', content: user.userName },
     { heading: 'First Name', content: user.firstName },
     { heading: 'Last Name', content: user.lastName },
     { heading: 'Email', content: user.email },
@@ -35,7 +35,7 @@ export function getUserListRows(user: UserListInformation): ListRow[] {
 
 // TODO: backend delete the stuff below when done with integration
 export const user: UserListInformation = {
-  username: 'DEF4567',
+  userName: 'DEF4567',
   firstName: 'Tama',
   lastName: 'Manaaki',
   email: 'tama.manaaki@example.com',
@@ -47,7 +47,7 @@ export const user: UserListInformation = {
 
 // defined rows for the ListView component to display user information
 export const UserListRows: ListRow[] = [
-  { heading: 'Username', content: user.username },
+  { heading: 'Username', content: user.userName },
   { heading: 'First Name', content: user.firstName },
   { heading: 'Last Name', content: user.lastName },
   { heading: 'Email', content: user.email },
