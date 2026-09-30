@@ -25,7 +25,7 @@ export type Patient_idstring = {
   primaryLanguage?: undefined | string;
   maritalStatus?: undefined | string;
   roomNumber?: undefined | string;
-  photoUrl?: undefined | string;
+  profilePicture?: undefined | string;
   funding?: undefined | string;
   timeOfDeath?: undefined | string;
   _id: string;
@@ -58,7 +58,7 @@ export namespace Patient_idstring {
     primaryLanguage?: undefined | string;
     maritalStatus?: undefined | string;
     roomNumber?: undefined | string;
-    photoUrl?: undefined | string;
+    profilePicture?: undefined | string;
     funding?: undefined | string;
     timeOfDeath?: undefined | string;
     _id: string;
@@ -90,7 +90,7 @@ export namespace Patient_idstring {
     primaryLanguage?: undefined | string;
     maritalStatus?: undefined | string;
     roomNumber?: undefined | string;
-    photoUrl?: undefined | string;
+    profilePicture?: undefined | string;
     funding?: undefined | string;
     timeOfDeath?: undefined | string;
     _id: string;
@@ -122,7 +122,7 @@ export namespace Patient_idstring {
     primaryLanguage?: undefined | string;
     maritalStatus?: undefined | string;
     roomNumber?: undefined | string;
-    photoUrl?: undefined | string;
+    profilePicture?: undefined | string;
     funding?: undefined | string;
     timeOfDeath?: undefined | string;
     _id: string;

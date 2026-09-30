@@ -66,7 +66,7 @@ export class Patient {
   roomNumber: string | undefined; //not required
 
   @Prop({ type: String, required: false })
-  photoUrl?: string | undefined; //not required
+  profilePicture?: string | undefined; //not required
 
   @Prop({ type: String, required: false })
   funding: string | undefined; //not required, admin only
@@ -101,14 +101,14 @@ export class Patient {
     allergies: string,
 
     //Not required
-    photoUrl?: string,
+    profilePicture?: string,
     funding?: string, //Admin only
     timeOfDeath?: string, //Admin only
     roomNumber?: string,
     primaryLanguage?: string,
     maritalStatus?: string,
   ) {
-    this.photoUrl = photoUrl;
+    this.profilePicture = profilePicture;
     this.firstName = firstName;
     this.lastName = lastName;
     this.dateOfBirth = dateOfBirth;
