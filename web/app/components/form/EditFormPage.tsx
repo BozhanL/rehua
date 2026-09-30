@@ -131,6 +131,8 @@ export default function EditFormPage({
           backgroundColor: 'bg-rehua-green',
           iconProps: { name: 'circle-arrow', width: 0.6, rotation: 270 },
           className: 'text-2xl',
+          textIconGap: 0.45,
+          horizontalPadding: 0.6,
         }}
         button2Props={{
           onClick: () => {
@@ -140,6 +142,8 @@ export default function EditFormPage({
           backgroundColor: 'bg-rehua-red',
           iconProps: { name: 'circle-arrow', width: 0.6 },
           className: 'text-2xl',
+          textIconGap: 0.45,
+          horizontalPadding: 0.5,
         }}
         modalProps={{ open: exitPopupOpen }}
       />
