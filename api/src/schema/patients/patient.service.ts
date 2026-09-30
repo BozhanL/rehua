@@ -3,7 +3,12 @@ import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient, PatientDocument } from './entities/patient.entity';
 import { Config } from '@/utils/config';
-import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  StreamableFile,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { access, constants, createReadStream, move } from 'fs-extra';
@@ -29,7 +34,10 @@ export class PatientService {
     PatientService.multerInstance ??= multer({
       storage: diskStorage({ destination: this._filePath }),
 
-      limits: { fileSize: this.configService.getOrThrow('MAX_FILE_SIZE') },
+      limits: {
+        fileSize: this.configService.getOrThrow('MAX_FILE_SIZE'),
+        files: 1,
+      },
     });
   }
 
@@ -52,6 +60,9 @@ export class PatientService {
     const { profilePicture, ...other } = createPatientDto;
 
     const createdPatient = new this.patientModel(other);
+    // Ensure the _id has been created
+    await createdPatient.save();
+
     createdPatient.profilePicture = await this.handleProfilePicture(
       createdPatient._id.toString(),
       profilePicture,
@@ -60,12 +71,24 @@ export class PatientService {
     return createdPatient.save();
   }
 
+  // TODO: remove old picture
   async handleProfilePicture(
     id: string,
     file: Express.Multer.File | undefined,
   ): Promise<string | undefined> {
     if (!file) {
       return undefined;
+    }
+
+    const inferredType = lookup(file.originalname);
+    if (
+      !inferredType ||
+      !inferredType.startsWith('image/') ||
+      !file.mimetype.startsWith('image/')
+    ) {
+      throw new BadRequestException(
+        'Invalid file type. Only image files are allowed.',
+      );
     }
 
     const fileName = `${id}${extname(file.originalname)}`;
@@ -80,7 +103,7 @@ export class PatientService {
   async getProfilePicture(id: string): Promise<StreamableFile> {
     const fileName = await this.patientModel
       .findById(id)
-      .orFail()
+      .orFail(() => new NotFoundException('patient not found'))
       .select({ profilePicture: true })
       .lean()
       .transform((d) => d.profilePicture)
@@ -227,7 +250,7 @@ export class PatientService {
         {
           $set: {
             ...updatePatientDto,
-            profilePicture: this.handleProfilePicture(
+            profilePicture: await this.handleProfilePicture(
               id,
               updatePatientDto.profilePicture,
             ),
