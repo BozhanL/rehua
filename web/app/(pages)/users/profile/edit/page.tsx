@@ -79,7 +79,7 @@ export default function EditUserPage(): JSX.Element {
       {/* popup for unsuccessful save */}
       <PopUp
         isAlertPopup={true}
-        text1={'Failed to save patient information.\nPlease try again.'}
+        text1={'Failed to save user information.\nPlease try again.'}
         button1Props={{
           text1: 'OK',
           iconProps: { name: 'circle-arrow' },
