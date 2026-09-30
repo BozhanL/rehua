@@ -58,6 +58,7 @@
     "dayjs": "1.11.23",
     "fs-extra": "10.1.0",
     "joi": "18.2.9",
+    "mime-types": "3.0.2",
     "mongoose": "9.9.5",
     "multer": "2.4.0",
     "otplib": "13.5.0",
@@ -79,6 +80,7 @@
     "@types/bcrypt": "6.0.0",
     "@types/cookie-parser": "1.4.10",
     "@types/express": "5.0.6",
+    "@types/mime-types": "3.0.1",
     "@types/multer": "2.2.0",
     "@types/node": "24.13.6",
     "@types/passport-jwt": "4.0.1",
@@ -104,6 +106,7 @@
     "ts-node": "10.9.2",
     "ts-patch": "3.3.0",
     "tsconfig-paths": "4.2.0",
+    "type-fest": "5.9.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.70.1"
   }
