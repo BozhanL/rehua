@@ -13,7 +13,12 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { access, constants, createReadStream, move } from 'fs-extra';
 import { lookup } from 'mime-types';
-import { Model, QueryFilter, UpdateWriteOpResult } from 'mongoose';
+import {
+  isObjectIdOrHexString,
+  Model,
+  QueryFilter,
+  UpdateWriteOpResult,
+} from 'mongoose';
 import multer, { diskStorage, Multer } from 'multer';
 import { extname, join } from 'node:path';
 import type { SetFieldType } from 'type-fest';
@@ -36,7 +41,6 @@ export class PatientService {
 
       limits: {
         fileSize: this.configService.getOrThrow('MAX_FILE_SIZE'),
-        files: 1,
       },
     });
   }
@@ -80,11 +84,18 @@ export class PatientService {
       return undefined;
     }
 
+    if (!isObjectIdOrHexString(id)) {
+      throw new BadRequestException('Invalid patient ID');
+    }
+
     const inferredType = lookup(file.originalname);
     if (
       !inferredType ||
       !inferredType.startsWith('image/') ||
-      !file.mimetype.startsWith('image/')
+      !file.mimetype.startsWith('image/') ||
+      // Reject SVG
+      inferredType.startsWith('image/svg') ||
+      file.mimetype.startsWith('image/svg')
     ) {
       throw new BadRequestException(
         'Invalid file type. Only image files are allowed.',
@@ -244,6 +255,10 @@ export class PatientService {
       Express.Multer.File | undefined
     >,
   ): Promise<UpdateWriteOpResult> {
+    if (!(await this.patientModel.exists({ _id: id }))) {
+      throw new NotFoundException('Patient not found');
+    }
+
     return this.patientModel
       .updateOne(
         { _id: id },
