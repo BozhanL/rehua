@@ -1,5 +1,10 @@
 'use client';
-import { templateColumns, templateRows } from './rowsandcolumns';
+import {
+  createTemplateRow,
+  templateColumns,
+  type Template,
+  type TemplateRow,
+} from './rowsandcolumns';
 import {
   presetLabels,
   type MiniPresetLabel,
@@ -11,13 +16,22 @@ import type { SearchFilterOption } from '@/app/components/dashboard/DashboardToo
 import DashboardToolbar, {
   getSearchValue,
 } from '@/app/components/dashboard/DashboardToolbar';
+import { APIUrlContext } from '@/app/providers';
+import { sessionStorageGetUserInfo } from '@/app/utils/auth';
+import { isTesting } from '@/app/utils/env';
 import { templateStatuses, templateStatusLabels } from '@/app/utils/types';
+import { findPage } from '@rehua/sdk/functional/templates/page';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState, type JSX } from 'react';
+import { useContext, useState, type JSX } from 'react';
 
 export default function TemplatesPage(): JSX.Element {
-  // TODO: backend replace this with currently logged in user's group
-  const group: 'nurse' | 'admin' = 'admin';
+  const group: 'nurse' | 'admin' = sessionStorageGetUserInfo().group;
+  const host = useContext(APIUrlContext);
   const router = useRouter();
 
   // convert preset keys into frontend text for the type search filter dropdown
@@ -44,9 +58,60 @@ export default function TemplatesPage(): JSX.Element {
   const [dropdownSearchValue, setDropdownSearchValue] = useState<string[]>([]); // dropdown search filters use this
   const [isSearchInvalid, setIsSearchInvalid] = useState(false); // state for showing pop up for no search value
 
+  const [activeSearchFilter, setActiveSearchFilter] = useState<string>('');
+  const [activeSearchValue, setActiveSearchValue] = useState<string>('');
+
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const totalPages = 5; // TODO: backend replace this, provide totalPages
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  function usePatientOptions(
+    rowsPerPage: number,
+    currentPage: number,
+    filter?: string,
+    search?: string,
+  ) {
+    return queryOptions({
+      queryKey: ['templates', host, rowsPerPage, currentPage, filter, search],
+      queryFn: async ({ signal }: QueryFunctionContext) =>
+        findPage(
+          {
+            host: host,
+            simulate: isTesting,
+            options: { signal, credentials: 'include' },
+          },
+          rowsPerPage,
+          currentPage,
+          {
+            filter,
+            search,
+          },
+        ),
+    });
+  }
+
+  const templateQuery = usePatientOptions(
+    rowsPerPage,
+    currentPage,
+    activeSearchFilter,
+    activeSearchValue,
+  );
+  const doc = useQuery(templateQuery);
+
+  //check if docs has loaded, returns loading of not done
+  if (doc.isError) {
+    throw doc.error;
+  } else if (!doc.isSuccess) {
+    return <h1>Loading...</h1>;
+  }
+
+  const templates: Template[] = doc.data.data;
+  const totalPages = doc.data.meta.totalPages;
+
+  // create template rows from the sample template data
+  const templateRows: TemplateRow[] = templates.map((template, rowIndex) =>
+    createTemplateRow(template, rowIndex),
+  );
 
   // frontend dropdown options for the currently selected search filter
   const dropdownSearchOptions =
@@ -75,22 +140,21 @@ export default function TemplatesPage(): JSX.Element {
     setSearchFilter(newSearchFilter);
 
     if (newSearchFilter.webValue === 'No Filter') {
-      // TODO: backend handle if filter is reset to "No Filter"
-      console.log('searchFilter: No Filter');
+      setActiveSearchFilter('');
+      setActiveSearchValue('');
+      setCurrentPage(1);
     }
   }
 
-  // TODO: backend to handle search/filter and pagination based on these values being passed to it
   function handleSearch(): void {
     const searchValueToSend = getSearchValue(
       searchFilter.inputType,
       searchValue,
       dropdownSearchValue,
     );
-    console.log('searchFilter:', searchValueToSend);
 
     // dont search if there is no search value
-    if (searchFilter.inputType === 'none' || !searchValueToSend) {
+    if (searchFilter.inputType !== 'none' && !searchValueToSend) {
       setIsSearchInvalid(true);
       return;
     }
@@ -98,11 +162,14 @@ export default function TemplatesPage(): JSX.Element {
     // else, search is valid, reset pop up state
     setIsSearchInvalid(false);
 
+    // update searchFilter.apiValue and searchValueToSend for the query
+    setActiveSearchFilter(searchFilter.apiValue);
+    setActiveSearchValue(searchValueToSend);
+
     // a new search/filter should start from page 1
     setCurrentPage(1);
   }
 
-  // TODO: backend handle page change; request new page with current filter/search values
   function handlePageChange(newPage: number): void {
     // set current page to newPage
     setCurrentPage(newPage);
@@ -112,16 +179,6 @@ export default function TemplatesPage(): JSX.Element {
   function handleRowsPerPageChange(newRowsPerPage: number): void {
     setRowsPerPage(newRowsPerPage);
     setCurrentPage(1);
-
-    // TODO: backend request page 1 using the new rowsPerPage value
-    //
-    // send:
-    // {
-    //   filter: searchFilter,
-    //   search: searchValue,
-    //   page: 1,
-    //   rowsPerPage: newRowsPerPage
-    // }
   }
 
   // route to create template page

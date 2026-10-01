@@ -36,7 +36,7 @@ async function createTemplate({
 }): Promise<createTemplateSDK.Output> {
   return createTemplateSDK(
     { host, simulate: isTesting, options: { credentials: 'include' } },
-    { templateName, templateType, schema, uiSchema },
+    { templateName, status: 'active', templateType, schema, uiSchema },
   );
 }
 
