@@ -1,3 +1,4 @@
+import * as paginationRequestDto from '../patients/dto/pagination-request.dto';
 import { PaginatedResponseDto } from '../patients/dto/pagination-response.dto';
 import type { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,6 +9,7 @@ import {
   SwaggerExample,
   TypedBody,
   TypedParam,
+  TypedQuery,
   TypedRoute,
 } from '@nestia/core';
 import { Controller } from '@nestjs/common';
@@ -78,11 +80,25 @@ export class UserController {
   async findPage(
     @TypedParam('pageNumber') pageNumber: number,
     @TypedParam('numberOfRows') numberOfRows: number,
+    @TypedQuery() query: paginationRequestDto.PaginationQueryDto,
   ): Promise<PaginatedResponseDto<User & { _id: string }>> {
-    const paginatedResult = await this.userService.findPage(
-      numberOfRows,
-      pageNumber,
-    );
+    const { filter, search } = query;
+
+    let paginatedResult;
+
+    if (filter || search) {
+      paginatedResult = await this.userService.findPageByFilter(
+        numberOfRows,
+        pageNumber,
+        filter ?? '',
+        search ?? '',
+      );
+    } else {
+      paginatedResult = await this.userService.findPage(
+        numberOfRows,
+        pageNumber,
+      );
+    }
 
     const formattedDocs = paginatedResult.data.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread

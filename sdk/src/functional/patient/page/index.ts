@@ -5,7 +5,7 @@
  */
 //================================================================
 import type { PaginatedResponseDtoPatient_idstring } from '../../../structures/PaginatedResponseDtoPatient_idstring';
-import type { PatientPageQueryDto } from '../../../structures/PatientPageQueryDto';
+import type { PaginationQueryDto } from '../../../structures/PaginationQueryDto';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
 import typia from 'typia';
@@ -35,7 +35,7 @@ export async function findPage(
       });
 }
 export namespace findPage {
-  export type Query = PatientPageQueryDto;
+  export type Query = PaginationQueryDto;
   export type Output = PaginatedResponseDtoPatient_idstring;
 
   export const METADATA = {

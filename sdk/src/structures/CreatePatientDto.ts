@@ -9,8 +9,8 @@ export type CreatePatientDto = {
   nurse: string;
   roomNumber: number;
   status:
-    | 'active'
     | 'disabled'
+    | 'active'
     | 'longTerm'
     | 'palliative'
     | 'shortTerm'
@@ -25,7 +25,7 @@ export type CreatePatientDto = {
   maritalStatus: string;
   ethnicity: string;
   allergies: string;
-  profilePicture?: undefined | string;
+  profilePicture?: undefined | File;
   funding?: undefined | string;
   timeOfDeath?: undefined | string;
 };

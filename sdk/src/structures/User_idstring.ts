@@ -5,7 +5,16 @@ export type User_idstring = {
   password: string;
   totpSecret: string;
   email: string;
-  status: 'active' | 'disabled';
+  status:
+    | 'disabled'
+    | 'active'
+    | 'longTerm'
+    | 'palliative'
+    | 'shortTerm'
+    | 'daycare'
+    | 'discharged'
+    | 'deceased'
+    | 'upload';
   homePhoneNumber: string;
   address: string;
   group: 'admin' | 'nurse';
@@ -19,7 +28,16 @@ export namespace User_idstring {
     password: string;
     totpSecret: string;
     email: string;
-    status: 'active' | 'disabled';
+    status:
+      | 'disabled'
+      | 'active'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload';
     homePhoneNumber: string;
     address: string;
     group: 'admin' | 'nurse';
@@ -32,7 +50,16 @@ export namespace User_idstring {
     password: string;
     totpSecret: string;
     email: string;
-    status: 'active' | 'disabled';
+    status:
+      | 'disabled'
+      | 'active'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload';
     homePhoneNumber: string;
     address: string;
     group: 'admin' | 'nurse';
@@ -45,7 +72,16 @@ export namespace User_idstring {
     password: string;
     totpSecret: string;
     email: string;
-    status: 'active' | 'disabled';
+    status:
+      | 'disabled'
+      | 'active'
+      | 'longTerm'
+      | 'palliative'
+      | 'shortTerm'
+      | 'daycare'
+      | 'discharged'
+      | 'deceased'
+      | 'upload';
     homePhoneNumber: string;
     address: string;
     group: 'admin' | 'nurse';

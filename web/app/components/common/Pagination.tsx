@@ -34,9 +34,6 @@ function Pagination({
   const [pageInput, setPageInput] = useState(''); // value of page input field when user types a page number
   const [enteredPage, setEnteredPage] = useState<number | null>(null); // last page number entered by user
 
-  // calculate how many pages there are based on totalRows and rowsPerPage
-  // const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
-
   // clamp page number to be within valid range (1 to totalPages)
   function clamp(page: number): number {
     return Math.min(Math.max(page, 1), totalPages);

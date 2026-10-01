@@ -6,7 +6,17 @@ export type UpdateUserDto = {
   totpSecret?: undefined | string;
   totpCode?: undefined | string;
   email?: undefined | string;
-  status?: undefined | 'active' | 'disabled';
+  status?:
+    | undefined
+    | 'disabled'
+    | 'active'
+    | 'longTerm'
+    | 'palliative'
+    | 'shortTerm'
+    | 'daycare'
+    | 'discharged'
+    | 'deceased'
+    | 'upload';
   homePhoneNumber?: undefined | string;
   address?: undefined | string;
   group?: undefined | 'admin' | 'nurse';

@@ -5,6 +5,7 @@
  */
 //================================================================
 import type { PaginatedResponseDtoUser_idstring } from '../../../structures/PaginatedResponseDtoUser_idstring';
+import type { PaginationQueryDto } from '../../../structures/PaginationQueryDto';
 import type { IConnection } from '@nestia/fetcher';
 import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
 import typia from 'typia';
@@ -20,18 +21,21 @@ export async function findPage(
   connection: IConnection,
   pageNumber: number,
   numberOfRows: number,
+  query: findPage.Query,
 ): Promise<findPage.Output> {
   typia.assert<typeof pageNumber>(pageNumber);
   typia.assert<typeof numberOfRows>(numberOfRows);
+  typia.assert<typeof query>(query);
   return true === connection.simulate
-    ? findPage.simulate(connection, pageNumber, numberOfRows)
+    ? findPage.simulate(connection, pageNumber, numberOfRows, query)
     : PlainFetcher.fetch(connection, {
         ...findPage.METADATA,
         template: findPage.METADATA.path,
-        path: findPage.path(pageNumber, numberOfRows),
+        path: findPage.path(pageNumber, numberOfRows, query),
       });
 }
 export namespace findPage {
+  export type Query = PaginationQueryDto;
   export type Output = PaginatedResponseDtoUser_idstring;
 
   export const METADATA = {
@@ -45,23 +49,39 @@ export namespace findPage {
     status: 200,
   } as const;
 
-  export const path = (pageNumber: number, numberOfRows: number) =>
-    `/user/page/${encodeURIComponent(pageNumber?.toString() ?? 'null')}/${encodeURIComponent(numberOfRows?.toString() ?? 'null')}`;
+  export const path = (
+    pageNumber: number,
+    numberOfRows: number,
+    query: Query,
+  ) => {
+    const variables: URLSearchParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(query as any))
+      if (undefined === value) continue;
+      else if (Array.isArray(value))
+        value.forEach((elem: any) => variables.append(key, String(elem)));
+      else variables.set(key, String(value));
+    const location: string = `/user/page/${encodeURIComponent(pageNumber?.toString() ?? 'null')}/${encodeURIComponent(numberOfRows?.toString() ?? 'null')}`;
+    return 0 === variables.size
+      ? location
+      : `${location}?${variables.toString()}`;
+  };
   export const random = (): Resolved<PaginatedResponseDtoUser_idstring> =>
     typia.random<PaginatedResponseDtoUser_idstring>();
   export const simulate = (
     connection: IConnection,
     pageNumber: number,
     numberOfRows: number,
+    query: Query,
   ): Output => {
     const assert = NestiaSimulator.assert({
       method: METADATA.method,
       host: connection.host,
-      path: path(pageNumber, numberOfRows),
+      path: path(pageNumber, numberOfRows, query),
       contentType: 'application/json',
     });
     assert.param('pageNumber')(() => typia.assert(pageNumber));
     assert.param('numberOfRows')(() => typia.assert(numberOfRows));
+    assert.query(() => typia.assert(query));
     return random();
   };
 }

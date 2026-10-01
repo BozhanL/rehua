@@ -6,7 +6,16 @@ export type CreateUserDto = {
   totpSecret: string;
   totpCode: string;
   email: string;
-  status: 'active' | 'disabled';
+  status:
+    | 'disabled'
+    | 'active'
+    | 'longTerm'
+    | 'palliative'
+    | 'shortTerm'
+    | 'daycare'
+    | 'discharged'
+    | 'deceased'
+    | 'upload';
   homePhoneNumber: string;
   address: string;
   group: 'admin' | 'nurse';
