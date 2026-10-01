@@ -18,7 +18,8 @@
 !sdk/src/**
 
 !web/package.json
-!web/postcss.config.ts
+!web/postcss.config.mjs
+!web/svgr.d.ts
 !web/next.config.mts
 !web/tsconfig.json
 !web/app/**
