@@ -5,6 +5,7 @@ export type Template_idMongoId = {
   version: number;
   templateName: string;
   templateType: ('Long Term' | 'Short Term' | 'Palliative' | 'Daycare')[];
+  status: 'active' | 'archived';
   schema: Recordstringunknown;
   uiSchema: Recordstringunknown;
   _id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>;
@@ -14,6 +15,7 @@ export namespace Template_idMongoId {
     version: number;
     templateName: string;
     templateType: ('Long Term' | 'Short Term' | 'Palliative' | 'Daycare')[];
+    status: 'active' | 'archived';
     schema: Recordstringunknown;
     uiSchema: Recordstringunknown;
     _id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>;
@@ -22,6 +24,7 @@ export namespace Template_idMongoId {
     version: number;
     templateName: string;
     templateType: ('Long Term' | 'Short Term' | 'Palliative' | 'Daycare')[];
+    status: 'active' | 'archived';
     schema: Recordstringunknown;
     uiSchema: Recordstringunknown;
     _id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>;
@@ -30,6 +33,7 @@ export namespace Template_idMongoId {
     version: number;
     templateName: string;
     templateType: ('Long Term' | 'Short Term' | 'Palliative' | 'Daycare')[];
+    status: 'active' | 'archived';
     schema: Recordstringunknown;
     uiSchema: Recordstringunknown;
     _id: string & tags.Pattern<'^[0-9a-fA-F]{24}$'>;

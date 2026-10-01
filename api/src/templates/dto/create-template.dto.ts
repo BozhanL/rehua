@@ -4,6 +4,7 @@ export class CreateTemplateDto {
   constructor(
     public templateName: string,
     public templateType: TemplateType[],
+    public status: 'active' | 'archived',
 
     public schema: Record<string, unknown>,
     public uiSchema: Record<string, unknown>,
