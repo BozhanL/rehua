@@ -128,7 +128,8 @@ export function createPatientRow(
       name: `${patient.firstName} ${patient.lastName}`,
       dob: dayjs(patient.dateOfBirth).tz().format('DD/MM/YYYY'),
       gender:
-        patient.gender === 'Male' || patient.gender === 'Female'
+        patient.gender.toLowerCase() === 'male' ||
+        patient.gender.toLowerCase() === 'female'
           ? patient.gender.charAt(0).toUpperCase()
           : 'O', // O for Other
       nhi: patient.nhi ? patient.nhi : '-',
