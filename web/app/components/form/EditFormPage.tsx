@@ -122,29 +122,25 @@ export default function EditFormPage({
       <PopUp
         isAlertPopup
         text1={'Are you sure you\nwant to leave this page?'}
-        text2={'UNSAVED CHANGES WILL BE LOST'}
-        text2Style={{ textDecoration: 'underline' }}
+        text2={<u>UNSAVED CHANGES WILL BE LOST</u>}
+        text2ClassName={'text-rehua-ruby'}
         button1Props={{
           onClick: () => {
             setExitPopupOpen(false);
           },
           text1: 'STAY',
+          iconProps: { name: 'circle-arrow', rotation: -90 },
           backgroundColor: 'bg-rehua-green',
-          iconProps: { name: 'circle-arrow', width: 0.6, rotation: 270 },
-          className: 'text-2xl',
-          textIconGap: 0.45,
-          horizontalPadding: 0.6,
+          horizontalPadding: 0.5,
         }}
         button2Props={{
           onClick: () => {
             router.back();
           },
           text1: 'LEAVE',
+          iconProps: { name: 'circle-arrow' },
           backgroundColor: 'bg-rehua-red',
-          iconProps: { name: 'circle-arrow', width: 0.6 },
-          className: 'text-2xl',
-          textIconGap: 0.45,
-          horizontalPadding: 0.5,
+          horizontalPadding: 0.4,
         }}
         modalProps={{ open: exitPopupOpen }}
       />
@@ -167,22 +163,20 @@ export default function EditFormPage({
       />
 
       {/* title row: back button, title, template name, template type and save */}
-      <div className="mx-6 mt-6 mb-5 overflow-x-auto py-4">
+      <div className="mx-6 mt-6 mb-5 overflow-x-auto">
         <div className="flex min-w-max items-center gap-3">
           {/* back button */}
-          <div className="shrink-0">
-            <ContentButton
-              type="button"
-              iconProps={{ name: 'circle-arrow' }}
-              foregroundColor="text-rehua-navy"
-              backgroundColor="bg-rehua-white"
-              height={72}
-              style={{ boxShadow: 'none' }}
-              onClick={() => {
-                setExitPopupOpen(true);
-              }}
-            />
-          </div>
+          <ContentButton
+            type="button"
+            iconProps={{ name: 'circle-arrow' }}
+            foregroundColor="text-rehua-navy"
+            backgroundColor="bg-rehua-white"
+            height={72}
+            style={{ boxShadow: 'none' }}
+            onClick={() => {
+              setExitPopupOpen(true);
+            }}
+          />
 
           {/* page icon and title */}
           <div className="flex shrink-0 items-center gap-6">
