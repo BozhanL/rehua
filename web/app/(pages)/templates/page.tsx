@@ -5,10 +5,6 @@ import {
   type Template,
   type TemplateRow,
 } from './rowsandcolumns';
-import {
-  presetLabels,
-  type MiniPresetLabel,
-} from '@/app/components/common/MiniLabel';
 import Pagination from '@/app/components/common/Pagination';
 import Surface from '@/app/components/common/Surface';
 import Table from '@/app/components/common/Table';
@@ -35,19 +31,19 @@ export default function TemplatesPage(): JSX.Element {
   const router = useRouter();
 
   // convert preset keys into frontend text for the type search filter dropdown
-  const templateTypeOptions: MiniPresetLabel[] = [
-    'longTerm',
-    'shortTerm',
-    'daycare',
-    'palliative',
+  const templateTypeOptions: string[] = [
+    'Long Term',
+    'Short Term',
+    'Daycare',
+    'Palliative',
   ];
 
   // search filters for the users dashboard
   const userSearchFilters: [SearchFilterOption, ...SearchFilterOption[]] = [
     { webValue: 'No Filter', apiValue: '', inputType: 'none' },
-    { webValue: 'Template ID', apiValue: 'templateId', inputType: 'text' },
-    { webValue: 'Template Name', apiValue: 'name', inputType: 'text' },
-    { webValue: 'Type', apiValue: 'type', inputType: 'dropdown' },
+    { webValue: 'Template ID', apiValue: '_id', inputType: 'text' },
+    { webValue: 'Template Name', apiValue: 'templateName', inputType: 'text' },
+    { webValue: 'Type', apiValue: 'templateType', inputType: 'dropdown' },
     { webValue: 'Status', apiValue: 'status', inputType: 'dropdown' },
   ];
 
@@ -116,17 +112,15 @@ export default function TemplatesPage(): JSX.Element {
   // frontend dropdown options for the currently selected search filter
   const dropdownSearchOptions =
     searchFilter.webValue === 'Type'
-      ? templateTypeOptions.map(
-          (apiTypeValue) => presetLabels[apiTypeValue].text,
-        )
+      ? templateTypeOptions
       : Object.values(templateStatusLabels);
 
   // frontend dropdown display values for the currently selected search filter
   const dropdownSearchValueDisplay =
     searchFilter.webValue === 'Type'
-      ? templateTypeOptions
-          .filter((apiTypeValue) => dropdownSearchValue.includes(apiTypeValue))
-          .map((apiTypeValue) => presetLabels[apiTypeValue].text)
+      ? templateTypeOptions.filter((apiTypeValue) =>
+          dropdownSearchValue.includes(apiTypeValue),
+        )
       : templateStatuses
           .filter((apiStatusValue) =>
             dropdownSearchValue.includes(apiStatusValue),
@@ -152,6 +146,8 @@ export default function TemplatesPage(): JSX.Element {
       searchValue,
       dropdownSearchValue,
     );
+
+    console.log(searchFilter, searchValueToSend);
 
     // dont search if there is no search value
     if (searchFilter.inputType !== 'none' && !searchValueToSend) {
@@ -228,7 +224,7 @@ export default function TemplatesPage(): JSX.Element {
           onDropdownSearchChange={(webValue) => {
             if (searchFilter.webValue === 'Type') {
               const selectedTypes = templateTypeOptions.filter((apiTypeValue) =>
-                webValue.includes(presetLabels[apiTypeValue].text),
+                webValue.includes(apiTypeValue),
               );
               setDropdownSearchValue(selectedTypes);
             } else if (searchFilter.webValue === 'Status') {

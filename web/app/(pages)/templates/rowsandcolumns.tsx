@@ -65,17 +65,16 @@ export const templateColumns: TableColumn[] = [
   {
     rowKey: 'version',
     header: 'Version',
-    width: columnWidth,
   },
   {
     rowKey: 'type',
     header: 'Type',
-    width: columnWidth,
+    width: 220,
   },
   {
     rowKey: 'status',
     header: 'Status',
-    width: columnWidth,
+    width: 150,
   },
   {
     rowKey: 'modifyTemplate',
