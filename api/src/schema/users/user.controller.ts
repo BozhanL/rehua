@@ -1,6 +1,7 @@
 import * as paginationRequestDto from '../patients/dto/pagination-request.dto';
 import { PaginatedResponseDto } from '../patients/dto/pagination-response.dto';
 import type { CreateUserDto } from './dto/create-user.dto';
+import { NurseListDto } from './dto/nurselist.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
@@ -36,6 +37,18 @@ export class UserController {
   @TypedRoute.Get()
   async findAll(): Promise<(User & { _id: string })[]> {
     const docs = await this.userService.findAll();
+
+    return docs.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
+  }
+
+  @Roles('admin', 'nurse')
+  @TypedRoute.Get('/nurses')
+  async findNurses(): Promise<(NurseListDto & { _id: string })[]> {
+    const docs = await this.userService.findNurses();
 
     return docs.map((doc) => ({
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
