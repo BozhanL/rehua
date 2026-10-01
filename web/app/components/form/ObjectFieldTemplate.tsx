@@ -189,7 +189,7 @@ export default function ObjectFieldTemplate(
             justify-center gap-14 px-6 py-24 text-center
           `}
         >
-          <span className="text-5xl/tight font-bold text-rehua-navy">
+          <span className="text-4xl font-bold text-rehua-navy">
             Click the button below to get
             <br />
             started on your new template:
@@ -205,7 +205,7 @@ export default function ObjectFieldTemplate(
             textIconGap={0.05}
             iconPosition="left"
             textAlign="right"
-            height={89}
+            height={55}
             foregroundColor="text-rehua-white"
             backgroundColor="bg-rehua-blue"
             onClick={() => {
