@@ -12,11 +12,6 @@ import type { ChangeEvent } from 'react';
 
 export const group: 'nurse' | 'admin' = sessionStorageGetUserInfo().group;
 
-// TODO: backend - fetch all nurses in the system
-function getNurses(): string[] {
-  return ['Nurse 1', 'Nurse 2', 'Nurse 3'];
-}
-
 // helper functions to convert between status and text for the dropdown
 export function statusToText(status: MiniPresetLabel): string {
   return presetLabels[status].text;
@@ -33,14 +28,13 @@ export const patientStatuses = [
   presetLabels.shortTerm,
   presetLabels.daycare,
   presetLabels.palliative,
-  // TODO: delete this line when backend is implemented
-
   ...(group === 'admin' ? [presetLabels.deceased] : []),
 ];
 
 // function to build the rows for the patient form
 export function buildPatientFormRows(
   patient: PatientListInformationOut,
+  nurses: string[],
   updateField: <K extends keyof PatientListInformationOut>(
     field: K,
     value: PatientListInformationOut[K],
@@ -153,10 +147,8 @@ export function buildPatientFormRows(
       heading: 'Nurse',
       content: (
         <DropdownBar
-          options={getNurses()}
-          selectedValues={[patient.nurse ? patient.nurse : 'Nurse 1']}
-          // TODO: backend uncomment the line below when finished, delete line above, dont need the fake 'Nurse 1' fallback
-          // selectedValues={[patient.nurse]}
+          options={nurses}
+          selectedValues={[patient.nurse ? patient.nurse : 'None']}
           search={true}
           size={19}
           width={550}

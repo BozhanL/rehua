@@ -13,6 +13,7 @@ import { NestiaSimulator, PlainFetcher } from '@nestia/fetcher';
 import typia from 'typia';
 import type { Resolved } from 'typia';
 
+export * as nurses from './nurses/index';
 export * as page from './page/index';
 
 /**

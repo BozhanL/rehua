@@ -13,6 +13,13 @@ import type {
   PatientListInformationOut,
 } from '@/app/components/patient/PatientProfileList';
 import useApiUrl from '@/app/hooks/useApiUrl';
+import { isTesting } from '@/app/utils/env';
+import { findNurses } from '@rehua/sdk/functional/user/nurses';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useRef, useState, type JSX } from 'react';
@@ -45,12 +52,35 @@ export default function PatientFormPage({
   const [showValidationPopup, setShowValidationPopup] = useState(false);
   const [showLeavePagePopup, setShowLeavePagePopup] = useState(false);
   const [showUploadSuccessPopup, setShowUploadSuccessPopup] = useState(false);
-  // const [, setErrorText] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // rows for the ListView component
-  const rows = buildPatientFormRows(patient, updateField);
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  function getNurses() {
+    return queryOptions({
+      queryKey: ['nurses', apiUrl],
+      queryFn: async ({ signal }: QueryFunctionContext) =>
+        findNurses({
+          host: apiUrl,
+          simulate: isTesting,
+          options: { signal, credentials: 'include' },
+        }),
+    });
+  }
+
+  const nursesQuery = getNurses();
+  const doc = useQuery(nursesQuery);
+
+  if (doc.isError) {
+    throw doc.error;
+  } else if (!doc.isSuccess) {
+    return <h1>Loading...</h1>;
+  }
+
+  const nurses = doc.data;
+  const nursesArray: string[] = nurses.map((nurse) => {
+    return `${nurse.firstName} ${nurse.lastName}`;
+  });
 
   // function to update a specific field in the patient state
   function updateField<K extends keyof PatientListInformationOut>(
@@ -60,7 +90,8 @@ export default function PatientFormPage({
     setPatient((prev) => ({ ...prev, [field]: value }));
   }
 
-  console.log(patientInfo);
+  // rows for the ListView component
+  const rows = buildPatientFormRows(patient, nursesArray, updateField);
 
   // helper functions to handle button clicks for saving the patient and uploading a photo
   function handleSavePatient(): void {
