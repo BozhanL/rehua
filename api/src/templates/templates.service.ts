@@ -160,6 +160,75 @@ export class TemplatesService {
     return docs;
   }
 
+  async findByTypeTest(
+    numberOfRows: number,
+    pageNumber: number,
+    type: string,
+  ): Promise<PaginatedResponseDto<TemplateDocument>> {
+    interface UserAggregateResult {
+      data: TemplateDocument[];
+      total: number;
+    }
+
+    const [result] = await this.templateModel
+      .aggregate<UserAggregateResult>([
+        {
+          $sort: {
+            templateName: 1,
+            version: -1,
+          },
+        },
+        {
+          $group: {
+            _id: '$templateName',
+            template: { $first: '$$ROOT' },
+          },
+        },
+        {
+          $replaceRoot: {
+            newRoot: '$template',
+          },
+        },
+        {
+          $match: {
+            templateType: type,
+          },
+        },
+        {
+          $facet: {
+            totalCount: [{ $count: 'count' }],
+            paginatedResults: [
+              { $sort: { templateName: 1 } },
+              { $skip: (pageNumber - 1) * numberOfRows },
+              { $limit: numberOfRows },
+            ],
+          },
+        },
+        {
+          $project: {
+            data: '$paginatedResults',
+            total: { $ifNull: [{ $arrayElemAt: ['$totalCount.count', 0] }, 0] },
+          },
+        },
+      ])
+      .exec();
+
+    const rawData = result?.data ?? [];
+    const total = result?.total ?? 0;
+
+    // Rehydrate into full Mongoose documents if required by your controller/interceptors
+    const data = rawData.map((doc) => this.templateModel.hydrate(doc));
+
+    const totalPages = Math.ceil(total / numberOfRows);
+
+    return {
+      data: data,
+      meta: {
+        totalPages,
+      },
+    };
+  }
+
   async remove(id: string): Promise<TemplateDocument | null> {
     return this.templateModel.findByIdAndDelete(id).exec();
   }
