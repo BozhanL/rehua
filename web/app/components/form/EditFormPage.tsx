@@ -47,11 +47,12 @@ interface EditFormPageProps {
   defaultTemplateType?: TemplateDocumentType[];
   defaultSchema: RJSFSchema;
   defaultUiSchema: UiSchema;
+  mode: 'create' | 'edit'; // Change popups depending on mode
 }
 
 export default function EditFormPage({
   title,
-
+  mode,
   defaultTemplateName,
   defaultTemplateType,
   defaultSchema,
@@ -83,7 +84,7 @@ export default function EditFormPage({
       {/* Save Template PopUp */}
       <PopUp
         isAlertPopup
-        text1={`Are you sure you want to create\nthe following document template:\n“${templateName}”, type “${templateType.join(', ')}”`}
+        text1={`Are you sure you want to ${mode === 'edit' ? 'save' : 'create'}\nthe following document template:\n“${templateName}”, type “${templateType.join(', ')}”`}
         button1Props={{
           onClick: () => {
             createTemplateMutation.mutate(
@@ -98,7 +99,7 @@ export default function EditFormPage({
             );
             setSavePopupOpen(false);
           },
-          text1: 'CREATE',
+          text1: mode === 'edit' ? 'SAVE' : 'CREATE',
           textAlign: 'right',
           text2: 'TEMPLATE',
           backgroundColor: 'bg-rehua-green',
@@ -200,7 +201,7 @@ export default function EditFormPage({
                 aria-label="Template name"
                 placeholder="Enter New Template Name here . . ."
                 value={templateName}
-                style={{ width: 350, height: 50 }}
+                style={{ width: 350, height: 45 }}
                 onChange={(event) => {
                   setTemplateName(event.currentTarget.value);
                 }}
@@ -214,22 +215,23 @@ export default function EditFormPage({
               onChange={setTemplateType}
               defaultText="Template Type"
               width={250}
-              size={25}
+              size={20}
             />
 
-            {/* save template button */}
+            {/* save/create template button */}
             <ContentButton
               type="button"
-              text1="Save"
+              text1={mode === 'edit' ? 'Save' : 'Create'}
               text2="Template"
-              iconProps={{ name: 'save', width: 0.6 }}
+              iconProps={{ name: 'save' }}
               verticalPadding={0.2}
               horizontalPadding={0.5}
+              lineHeight={1.1}
+              textIconGap={0.4}
               iconPosition="left"
               textAlign="right"
               foregroundColor="text-rehua-white"
               backgroundColor="bg-rehua-green"
-              height={60}
               onClick={() => {
                 if (templateName === '' || templateType.length === 0) {
                   setSaveEmptyFieldsPopupOpen(true);
@@ -243,7 +245,8 @@ export default function EditFormPage({
         </div>
       </div>
 
-      <div className="flex flex-1 px-4 py-10">
+      {/* template body - preview display + add sections */}
+      <div className="flex flex-1 p-10">
         <FormTemplate<
           unknown,
           RJSFSchema,
