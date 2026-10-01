@@ -1,9 +1,28 @@
 import DropdownBar from '@/app/components/common/DropdownBar';
 import Icon from '@/app/components/common/Icon';
 import type { TableColumn, TableRow } from '@/app/components/common/Table';
+import useApiUrl from '@/app/hooks/useApiUrl';
+import { isTesting } from '@/app/utils/env';
 import { templateStatusLabels, type TemplateStatus } from '@/app/utils/types';
+import { update } from '@rehua/sdk/functional/templates';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX, type ReactNode } from 'react';
+
+async function updateTemplateStatus({
+  host,
+  templateId,
+  status,
+}: {
+  host: string;
+  templateId: string;
+  status: 'active' | 'archived';
+}): Promise<update.Output> {
+  return update(
+    { host, simulate: isTesting, options: { credentials: 'include' } },
+    templateId,
+    { status },
+  );
+}
 
 // interface for a template
 export interface Template {
@@ -102,7 +121,7 @@ function TemplateStatusDropdown({
   const [selectedStatus, setSelectedStatus] = useState<TemplateStatus>(
     template.status,
   );
-
+  const host = useApiUrl();
   function handleStatusChange(newValues: string[]): void {
     const newStatusLabel = newValues[0];
 
@@ -118,6 +137,11 @@ function TemplateStatusDropdown({
 
     // TODO: backend send newStatus to the API for this template
     console.log(`Changing status for template ${template._id} to ${newStatus}`);
+    void updateTemplateStatus({
+      host,
+      templateId: template._id,
+      status: newStatus,
+    });
     setSelectedStatus(newStatus);
   }
 
