@@ -33,7 +33,7 @@ export default function Home(): JSX.Element {
         <div className="bg-rehua-white">
           <EditFormPage
             title="Modify Template"
-
+            mode="edit"
             defaultTemplateName={data.templateName}
             defaultTemplateType={typia.assert<TemplateDocumentType[]>(
               data.templateType,

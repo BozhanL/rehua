@@ -253,8 +253,8 @@ export default function AddSectionModal({
               setFormData({});
             }}
           />
-          <Icon name="file" width={40} />
-          <h2 className="text-[32px] leading-none font-bold">
+          <Icon name="file" width={35} />
+          <h2 className="pl-2 text-2xl leading-none font-bold">
             Add New Section to Template
           </h2>
         </div>
@@ -262,9 +262,7 @@ export default function AddSectionModal({
         <ol className={`divide-y overflow-y-auto pl-6`}>
           {sectionSchema.map((section) => (
             <li key={section.id} className="py-8">
-              <h3
-                className={`text-[26px] leading-none font-bold text-rehua-black`}
-              >
+              <h3 className={`text-xl leading-none font-bold text-rehua-black`}>
                 {section.id}
               </h3>
 

@@ -25,6 +25,7 @@ export default function Home(): JSX.Element {
             title="Make a New Template"
             defaultSchema={defaultSchema}
             defaultUiSchema={defaultUiSchema}
+            mode="create"
           />
         </div>
       </Surface>

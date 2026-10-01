@@ -47,11 +47,12 @@ interface EditFormPageProps {
   defaultTemplateType?: TemplateDocumentType[];
   defaultSchema: RJSFSchema;
   defaultUiSchema: UiSchema;
+  mode: 'create' | 'edit'; // Change popups depending on mode
 }
 
 export default function EditFormPage({
   title,
-
+  mode,
   defaultTemplateName,
   defaultTemplateType,
   defaultSchema,
@@ -83,7 +84,7 @@ export default function EditFormPage({
       {/* Save Template PopUp */}
       <PopUp
         isAlertPopup
-        text1={`Are you sure you want to create\nthe following document template:\n“${templateName}”, type “${templateType.join(', ')}”`}
+        text1={`Are you sure you want to ${mode === 'edit' ? 'save' : 'create'}\nthe following document template:\n“${templateName}”, type “${templateType.join(', ')}”`}
         button1Props={{
           onClick: () => {
             createTemplateMutation.mutate(
@@ -98,10 +99,12 @@ export default function EditFormPage({
             );
             setSavePopupOpen(false);
           },
-          text1: 'CREATE',
+          text1: mode === 'edit' ? 'SAVE' : 'CREATE',
+          textAlign: 'right',
           text2: 'TEMPLATE',
           backgroundColor: 'bg-rehua-green',
-          iconProps: { name: 'save' },
+          iconProps: { name: 'save', width: 0.5 },
+          className: 'text-2xl',
         }}
         button2Props={{
           onClick: () => {
@@ -109,7 +112,8 @@ export default function EditFormPage({
           },
           text1: 'GO BACK',
           backgroundColor: 'bg-rehua-red',
-          iconProps: { name: 'circle-arrow' },
+          iconProps: { name: 'circle-arrow', width: 0.6 },
+          className: 'text-2xl',
         }}
         modalProps={{ open: savePopupOpen }}
       />
@@ -118,28 +122,31 @@ export default function EditFormPage({
       <PopUp
         isAlertPopup
         text1={'Are you sure you\nwant to leave this page?'}
+        text2={<u>UNSAVED CHANGES WILL BE LOST</u>}
+        text2ClassName={'text-rehua-ruby'}
         button1Props={{
           onClick: () => {
             setExitPopupOpen(false);
           },
           text1: 'STAY',
+          iconProps: { name: 'circle-arrow', rotation: -90 },
           backgroundColor: 'bg-rehua-green',
-          iconProps: { name: 'circle-arrow' },
+          horizontalPadding: 0.5,
         }}
         button2Props={{
           onClick: () => {
             router.back();
           },
           text1: 'LEAVE',
-          backgroundColor: 'bg-rehua-red',
           iconProps: { name: 'circle-arrow' },
+          backgroundColor: 'bg-rehua-red',
+          horizontalPadding: 0.4,
         }}
         modalProps={{ open: exitPopupOpen }}
       />
 
       {/* Save with empty fields PopUp */}
       <PopUp
-        isAlertPopup
         text1={
           'Please fill in the template name and \nselect at least one template type before saving.'
         }
@@ -150,89 +157,90 @@ export default function EditFormPage({
           text1: 'OK',
           backgroundColor: 'bg-rehua-green',
           iconProps: { name: 'circle-arrow' },
+          textIconGap: 0.5,
         }}
         modalProps={{ open: saveEmptyFieldsPopupOpen }}
       />
 
-      <div className={`flex flex-wrap items-center gap-3 px-4 py-3`}>
-        <ContentButton
-          type="button"
-          iconProps={{ name: 'circle-arrow' }}
-          foregroundColor="text-rehua-navy"
-          backgroundColor="bg-rehua-white"
-          height={72}
-          style={{
-            boxShadow: 'none',
-          }}
-
-          onClick={() => {
-            setExitPopupOpen(true);
-          }}
-        />
-
-        <div className="flex min-w-0 items-center gap-3">
-          <Icon
-            name="folder-open"
-            width={61}
-            className="shrink-0 text-rehua-black"
+      {/* title row: back button, title, template name, template type and save */}
+      <div className="mx-6 mt-6 mb-5 overflow-x-auto">
+        <div className="flex min-w-max items-center gap-3">
+          {/* back button */}
+          <ContentButton
+            type="button"
+            iconProps={{ name: 'circle-arrow' }}
+            foregroundColor="text-rehua-navy"
+            backgroundColor="bg-rehua-white"
+            height={72}
+            style={{ boxShadow: 'none' }}
+            onClick={() => {
+              setExitPopupOpen(true);
+            }}
           />
-          <span
-            className={`
-              truncate text-[35px] leading-none font-bold text-rehua-black
-            `}
-          >
-            {title}
-          </span>
-        </div>
 
-        <div
-          className={`
-            ml-0 flex min-w-0 flex-1 flex-row flex-wrap items-center justify-end
-            gap-3
-          `}
-        >
-          <div className="min-w-0 flex-1">
-            <SingleLineInput
-              aria-label="Template name"
-              placeholder="Enter New Template Name here . . ."
-              value={templateName}
-              onChange={(event) => {
-                setTemplateName(event.currentTarget.value);
+          {/* page icon and title */}
+          <div className="flex shrink-0 items-center gap-6">
+            <Icon
+              name="folder-open"
+              width={61}
+              className="shrink-0 text-rehua-black"
+            />
+            <span className="text-3xl font-bold text-rehua-black">{title}</span>
+          </div>
+          {/* right side */}
+          <div className="ml-auto flex shrink-0 items-center gap-8">
+            {/* template name input */}
+            <div className="pl-5">
+              <SingleLineInput
+                aria-label="Template name"
+                placeholder="Enter New Template Name here . . ."
+                value={templateName}
+                style={{ width: 350, height: 45 }}
+                onChange={(event) => {
+                  setTemplateName(event.currentTarget.value);
+                }}
+              />
+            </div>
+            {/* template type dropdown */}
+            <DropdownBar
+              options={TemplateDocumentTypeValues}
+              selectedValues={templateType}
+              multiple
+              onChange={setTemplateType}
+              defaultText="Template Type"
+              width={250}
+              size={20}
+            />
+
+            {/* save/create template button */}
+            <ContentButton
+              type="button"
+              text1={mode === 'edit' ? 'Save' : 'Create'}
+              text2="Template"
+              iconProps={{ name: 'save' }}
+              verticalPadding={0.2}
+              horizontalPadding={0.5}
+              lineHeight={1.1}
+              textIconGap={0.4}
+              iconPosition="left"
+              textAlign="right"
+              foregroundColor="text-rehua-white"
+              backgroundColor="bg-rehua-green"
+              onClick={() => {
+                if (templateName === '' || templateType.length === 0) {
+                  setSaveEmptyFieldsPopupOpen(true);
+                  return;
+                }
+
+                setSavePopupOpen(true);
               }}
             />
           </div>
-
-          <DropdownBar
-            options={TemplateDocumentTypeValues}
-            selectedValues={templateType}
-            multiple
-            onChange={setTemplateType}
-            defaultText="Template Type"
-          />
-
-          <ContentButton
-            type="button"
-            text1="Save"
-            text2="Template"
-            iconProps={{ name: 'save' }}
-            iconPosition="left"
-            textAlign="right"
-            foregroundColor="text-rehua-white"
-            backgroundColor="bg-rehua-green"
-            height={50}
-            onClick={() => {
-              if (templateName === '' || templateType.length === 0) {
-                setSaveEmptyFieldsPopupOpen(true);
-                return;
-              }
-
-              setSavePopupOpen(true);
-            }}
-          />
         </div>
       </div>
 
-      <div className="flex flex-1 px-4 py-10">
+      {/* template body - preview display + add sections */}
+      <div className="flex flex-1 p-10">
         <FormTemplate<
           unknown,
           RJSFSchema,
