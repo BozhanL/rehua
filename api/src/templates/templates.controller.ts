@@ -1,4 +1,5 @@
 import type { CreateTemplateDto } from './dto/create-template.dto';
+import * as updateStatusTemplateDto from './dto/update-status-template.dto';
 import { TemplateType } from './entities/template-type.enum';
 import type { Template } from './entities/template.entity';
 import { TemplatesService } from './templates.service';
@@ -8,6 +9,7 @@ import { PaginatedResponseDto } from '@/schema/patients/dto/pagination-response.
 import type { MongoId } from '@/utils/types';
 import { TypedBody, TypedParam, TypedQuery, TypedRoute } from '@nestia/core';
 import { Controller } from '@nestjs/common';
+import { UpdateWriteOpResult } from 'mongoose';
 
 @Roles('admin', 'nurse')
 @Controller('templates')
@@ -91,5 +93,13 @@ export class TemplatesController {
       ...doc,
       _id: doc._id.toString(),
     }));
+  }
+
+  @TypedRoute.Patch(':id')
+  async update(
+    @TypedParam('id') id: string,
+    @TypedBody() updateDto: updateStatusTemplateDto.UpdateStatusDto,
+  ): Promise<UpdateWriteOpResult> {
+    return this.templatesService.update(id, updateDto.status);
   }
 }

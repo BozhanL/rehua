@@ -4,7 +4,12 @@ import { Template, TemplateDocument } from './entities/template.entity';
 import { PaginatedResponseDto } from '@/schema/patients/dto/pagination-response.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import type { Model, QueryFilter, Require_id } from 'mongoose';
+import type {
+  Model,
+  QueryFilter,
+  Require_id,
+  UpdateWriteOpResult,
+} from 'mongoose';
 
 @Injectable()
 export class TemplatesService {
@@ -157,5 +162,12 @@ export class TemplatesService {
 
   async remove(id: string): Promise<TemplateDocument | null> {
     return this.templateModel.findByIdAndDelete(id).exec();
+  }
+
+  async update(
+    id: string,
+    newstatus: 'active' | 'archived',
+  ): Promise<UpdateWriteOpResult> {
+    return this.templateModel.updateOne({ _id: id }, { status: newstatus });
   }
 }
