@@ -28,7 +28,7 @@ async function updateTemplateStatus({
 export interface Template {
   _id: string; // unique identifier for the template
   templateName: string;
-  //templateType: MiniPresetLabel;
+  version: number;
   templateType: string[];
   status: TemplateStatus;
 }
@@ -39,8 +39,8 @@ export interface TemplateRow extends TableRow {
   content: {
     templateId: string;
     name: string;
-    //type: ReactNode;
-    type: string[];
+    version: number;
+    type: string;
     status: ReactNode;
     modifyTemplate: ReactNode;
   };
@@ -60,6 +60,11 @@ export const templateColumns: TableColumn[] = [
   {
     rowKey: 'name',
     header: 'Template Name',
+    width: columnWidth,
+  },
+  {
+    rowKey: 'version',
+    header: 'Version',
     width: columnWidth,
   },
   {
@@ -135,7 +140,6 @@ function TemplateStatusDropdown({
       return;
     }
 
-    // TODO: backend send newStatus to the API for this template
     console.log(`Changing status for template ${template._id} to ${newStatus}`);
     void updateTemplateStatus({
       host,
@@ -155,6 +159,10 @@ function TemplateStatusDropdown({
   );
 }
 
+function formatStringArray(items: string[]): string {
+  return items.join(', ');
+}
+
 // function to create a template row from a template object that will be rendered within the table
 export function createTemplateRow(
   template: Template,
@@ -165,8 +173,8 @@ export function createTemplateRow(
     content: {
       templateId: template._id,
       name: template.templateName,
-      //type: <MiniLabel name={template.templateType} />,
-      type: template.templateType,
+      version: template.version,
+      type: formatStringArray(template.templateType),
       status: <TemplateStatusDropdown template={template} />,
       modifyTemplate: <TemplateViewButton templateId={template._id} />,
     },
