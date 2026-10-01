@@ -24,6 +24,10 @@ export class AuthService {
   ): Promise<LoginResponseDto | null> {
     const user = await this.userService.findOneUserNameForAuth(userName);
 
+    if (user?.status === 'disabled') {
+      return null;
+    }
+
     const isCorrectPassword = await bcrypt.compare(
       // Reduce the length to < 72 bytes
       hash('sha512', password, { outputEncoding: 'buffer' }),
