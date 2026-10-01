@@ -12,6 +12,7 @@ import typia from 'typia';
 import type { Resolved } from 'typia';
 
 export * as id from './id/index';
+export * as page from './page/index';
 export * as type from './type/index';
 
 /**

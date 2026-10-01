@@ -30,7 +30,7 @@ export async function findTemplatesWithType(
       });
 }
 export namespace findTemplatesWithType {
-  export type Output = Template_idMongoId.o2[];
+  export type Output = Template_idMongoId.o3[];
 
   export const METADATA = {
     method: 'GET',
@@ -46,8 +46,8 @@ export namespace findTemplatesWithType {
   export const path = (
     type: 'Long Term' | 'Short Term' | 'Palliative' | 'Daycare',
   ) => `/templates/type/${encodeURIComponent(type?.toString() ?? 'null')}`;
-  export const random = (): Resolved<Template_idMongoId.o2[]> =>
-    typia.random<Template_idMongoId.o2[]>();
+  export const random = (): Resolved<Template_idMongoId.o3[]> =>
+    typia.random<Template_idMongoId.o3[]>();
   export const simulate = (
     connection: IConnection,
     type: 'Long Term' | 'Short Term' | 'Palliative' | 'Daycare',

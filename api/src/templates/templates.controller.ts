@@ -3,8 +3,10 @@ import { TemplateType } from './entities/template-type.enum';
 import type { Template } from './entities/template.entity';
 import { TemplatesService } from './templates.service';
 import { Roles } from '@/auth/roles.decorator';
+import * as paginationRequestDto from '@/schema/patients/dto/pagination-request.dto';
+import { PaginatedResponseDto } from '@/schema/patients/dto/pagination-response.dto';
 import type { MongoId } from '@/utils/types';
-import { TypedBody, TypedParam, TypedRoute } from '@nestia/core';
+import { TypedBody, TypedParam, TypedQuery, TypedRoute } from '@nestia/core';
 import { Controller } from '@nestjs/common';
 
 @Roles('admin', 'nurse')
@@ -39,6 +41,42 @@ export class TemplatesController {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...doc.toJSON(),
       _id: doc._id.toString(),
+    };
+  }
+
+  @TypedRoute.Get('page/:pageNumber/:numberOfRows')
+  async findPage(
+    @TypedParam('numberOfRows') numberOfRows: number,
+    @TypedParam('pageNumber') pageNumber: number,
+    @TypedQuery() query: paginationRequestDto.PaginationQueryDto,
+  ): Promise<PaginatedResponseDto<Template & { _id: MongoId }>> {
+    const { filter, search } = query;
+
+    let paginatedResult;
+
+    if (filter || search) {
+      paginatedResult = await this.templatesService.findPageByFilter(
+        numberOfRows,
+        pageNumber,
+        filter ?? '',
+        search ?? '',
+      );
+    } else {
+      paginatedResult = await this.templatesService.findPage(
+        numberOfRows,
+        pageNumber,
+      );
+    }
+
+    const formattedDocs = paginatedResult.data.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    }));
+
+    return {
+      data: formattedDocs,
+      meta: paginatedResult.meta,
     };
   }
 
