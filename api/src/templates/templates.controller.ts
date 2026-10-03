@@ -46,6 +46,7 @@ export class TemplatesController {
     };
   }
 
+  @Roles('admin')
   @TypedRoute.Get('page/:pageNumber/:numberOfRows')
   async findPage(
     @TypedParam('numberOfRows') numberOfRows: number,
@@ -105,6 +106,7 @@ export class TemplatesController {
     }));
   }
 
+  @Roles('admin')
   @TypedRoute.Patch(':id')
   async update(
     @TypedParam('id') id: string,
