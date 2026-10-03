@@ -117,7 +117,7 @@ export class TemplatesService {
           $facet: {
             totalCount: [{ $count: 'count' }],
             paginatedResults: [
-              { $sort: { status: -1 } },
+              { $sort: { status: -1, version: -1 } },
               { $skip: (pageNumber - 1) * numberOfRows },
               { $limit: numberOfRows },
             ],
