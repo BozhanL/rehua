@@ -105,9 +105,13 @@ export default function TemplatesPage(): JSX.Element {
   const totalPages = doc.data.meta.totalPages;
 
   // create template rows from the sample template data
-  const templateRows: TemplateRow[] = templates.map((template, rowIndex) =>
-    createTemplateRow(template, rowIndex),
-  );
+  const templateRows: TemplateRow[] = templates.map((template, rowIndex) => {
+    const row = createTemplateRow(template, rowIndex);
+    return {
+      ...row,
+      id: template._id as unknown as number,
+    };
+  });
 
   // frontend dropdown options for the currently selected search filter
   const dropdownSearchOptions =
