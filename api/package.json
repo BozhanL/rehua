@@ -59,7 +59,7 @@
     "fs-extra": "10.1.0",
     "joi": "18.2.9",
     "mime-types": "3.0.2",
-    "mongoose": "9.9.5",
+    "mongoose": "9.10.2",
     "multer": "2.4.0",
     "otplib": "13.5.0",
     "passport": "0.7.0",
