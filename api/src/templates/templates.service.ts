@@ -39,6 +39,22 @@ export class TemplatesService {
     return this.templateModel.findById(id).exec();
   }
 
+  async findPaginatedOne(
+    id: string,
+  ): Promise<PaginatedResponseDto<TemplateDocument>> {
+    const doc = await this.templateModel.findById(id).exec();
+
+    const data = doc ? [doc] : [];
+    const totalPages = doc ? 1 : 0;
+
+    return {
+      data: data,
+      meta: {
+        totalPages,
+      },
+    };
+  }
+
   async findPage(
     numberOfRows: number,
     pageNumber: number,

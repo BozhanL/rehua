@@ -56,7 +56,11 @@ export class TemplatesController {
 
     let paginatedResult;
 
-    if (filter === 'templateType') {
+    if (filter === '_id') {
+      paginatedResult = await this.templatesService.findPaginatedOne(
+        search ?? '',
+      );
+    } else if (filter === 'templateType') {
       paginatedResult = await this.templatesService.findByTypeTest(
         numberOfRows,
         pageNumber,
