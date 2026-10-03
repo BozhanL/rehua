@@ -217,7 +217,7 @@ export class TemplatesService {
           $facet: {
             totalCount: [{ $count: 'count' }],
             paginatedResults: [
-              { $sort: { templateName: 1 } },
+              { $sort: { templateName: 1, version: -1 } },
               { $skip: (pageNumber - 1) * numberOfRows },
               { $limit: numberOfRows },
             ],
