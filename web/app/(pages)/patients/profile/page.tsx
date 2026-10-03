@@ -1,29 +1,63 @@
 'use client';
 import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';
-import ListView from '@/app/components/common/ListView';
+import ListView, { type ListRow } from '@/app/components/common/ListView';
 import Surface from '@/app/components/common/Surface';
 import Tabs from '@/app/components/common/Tab';
 import { PatientDocuments } from '@/app/components/observations/PatientDocumentsTab';
 import { PatientObservations } from '@/app/components/observations/PatientObservationsTab';
-import {
-  PatientListRows,
-  patient,
-} from '@/app/components/patient/PatientProfileList';
+import { getPatientListRows } from '@/app/components/patient/PatientProfileList';
+import useApiUrl from '@/app/hooks/useApiUrl';
 import dayjs from '@/app/utils/dayjs';
+import { isTesting } from '@/app/utils/env';
+import { findOne } from '@rehua/sdk/functional/patient';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter, useSearchParams } from 'next/navigation';
 import type { JSX } from 'react';
 
-// import { useSearchParams } from 'next/navigation';
-// TODO: backend - variables to get patientId from the URL query parameters, may be used by backend (?)
-// const searchParams = useSearchParams();
-// const patientId = searchParams.get('id');
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function useFindOne(id: string) {
+  const host = useApiUrl();
 
-// TODO frontend - handle button clicks to edit patient info and view emergency contacts
+  return queryOptions({
+    queryKey: [findOne.path(id), host],
+    queryFn: async ({ signal }: QueryFunctionContext) =>
+      findOne(
+        {
+          host: host,
+          simulate: isTesting,
+          options: { signal, credentials: 'include' },
+        },
+        id,
+      ),
+  });
+}
 
 export default function PatientProfilePage(): JSX.Element {
   const router = useRouter();
+  const apiUrl = useApiUrl();
+
+  const searchParams = useSearchParams();
+  const patientId = searchParams.get('id') ?? '';
+  const options = useFindOne(patientId);
+  const doc = useQuery(options);
+  const patient = doc.data;
+
+  if (doc.isError) {
+    throw doc.error;
+  } else if (!doc.isSuccess) {
+    return <h1>Loading...</h1>;
+  } else if (!patient) {
+    console.log(patient);
+    notFound();
+  }
+
+  const patientRows: ListRow[] = getPatientListRows(patient);
 
   return (
     <div className="flex h-dvh flex-col">
@@ -60,21 +94,19 @@ export default function PatientProfilePage(): JSX.Element {
               "
               style={{ boxShadow: 'inset 0 5px 8px rgb(0 0 0 / 0.2)' }}
             >
-              {
-                // TODO: backend - ignore this until backend is completed to provide a photoUrl for the patient
-                patient.photoUrl ? (
-                  <Image
-                    src={patient.photoUrl}
-                    alt={`${patient.firstName} ${patient.lastName} profile photo`}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex size-full items-center justify-center">
-                    <Icon name="user" width={85} className="text-rehua-white" />
-                  </div>
-                )
-              }
+              {patient.profilePicture === undefined ||
+              patient.profilePicture === '' ? (
+                <div className="flex size-full items-center justify-center">
+                  <Icon name="user" width={85} className="text-rehua-white" />
+                </div>
+              ) : (
+                <Image
+                  src={`${apiUrl}/patient/picture/${patient._id}?t=${String(new Date().getTime())}`}
+                  alt={`${patient.firstName} ${patient.lastName} profile photo`}
+                  fill
+                  className="object-cover"
+                />
+              )}
             </div>
 
             {/* patient information*/}
@@ -111,7 +143,7 @@ export default function PatientProfilePage(): JSX.Element {
                   backgroundColor="bg-rehua-tangerine"
                   className="text-xl"
                   onClick={() => {
-                    router.push(`/patients/edit`); // TODO: backend update the URL if needed
+                    router.push(`/patients/profile/edit?id=${patientId}`);
                   }}
                 />
 
@@ -133,7 +165,7 @@ export default function PatientProfilePage(): JSX.Element {
 
         {/* patient information list */}
         <div className="pt-4">
-          <ListView rows={PatientListRows} insidePadding="px-8" />
+          <ListView rows={patientRows} insidePadding="px-8" />
         </div>
 
         {/* tabs: patient documents + observations */}
@@ -147,7 +179,7 @@ export default function PatientProfilePage(): JSX.Element {
                   name: 'user-folder',
                   width: 35,
                 },
-                content: PatientDocuments(),
+                content: <PatientDocuments patientId={patientId} />,
               },
               {
                 id: 'observations',
@@ -156,7 +188,7 @@ export default function PatientProfilePage(): JSX.Element {
                   name: 'heart-pulse',
                   width: 35,
                 },
-                content: PatientObservations(),
+                content: <PatientObservations />,
               },
             ]}
           />

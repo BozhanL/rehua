@@ -8,18 +8,29 @@ import {
   buildPatientFormRows,
   group,
 } from '@/app/components/patient/PatientForm';
-import type { PatientListInformation } from '@/app/components/patient/PatientProfileList';
+import type {
+  PatientListInformationIn,
+  PatientListInformationOut,
+} from '@/app/components/patient/PatientProfileList';
+import useApiUrl from '@/app/hooks/useApiUrl';
+import { isTesting } from '@/app/utils/env';
+import { findNurses } from '@rehua/sdk/functional/user/nurses';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState, type JSX } from 'react';
+import { useRef, useState, type JSX } from 'react';
 
 // interface to define the props for the PatientFormPage component
 interface PatientFormPageProps {
   title: string;
   titleIcon: 'user-profile' | 'pencil-note';
   backToPatients?: boolean; // if true, the back button will navigate to the patients dashboard
-  patientInfo: PatientListInformation;
-  onSave: (patient: PatientListInformation) => void;
+  patientInfo: PatientListInformationIn;
+  onSave: (patient: PatientListInformationOut) => void;
 }
 
 // React page to display the form for adding/editting a new patient, using ListView to render the form fields
@@ -31,24 +42,56 @@ export default function PatientFormPage({
   onSave,
 }: Readonly<PatientFormPageProps>): JSX.Element {
   const router = useRouter(); // router for navigation
+  const apiUrl = useApiUrl();
 
   // state to hold the new patient data + the visibility of the validation and leave page popups
-  const [patient, setPatient] = useState(patientInfo);
+  const [patient, setPatient] = useState<PatientListInformationOut>({
+    ...patientInfo,
+    profilePicture: undefined,
+  });
   const [showValidationPopup, setShowValidationPopup] = useState(false);
   const [showLeavePagePopup, setShowLeavePagePopup] = useState(false);
-  const [showSaveSuccessPopup, setShowSaveSuccessPopup] = useState(false);
-  const [showSaveErrorPopup, setShowSaveErrorPopup] = useState(false);
+  const [showUploadSuccessPopup, setShowUploadSuccessPopup] = useState(false);
 
-  // rows for the ListView component
-  const rows = buildPatientFormRows(patient, updateField);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  function getNurses() {
+    return queryOptions({
+      queryKey: ['nurses', apiUrl],
+      queryFn: async ({ signal }: QueryFunctionContext) =>
+        findNurses({
+          host: apiUrl,
+          simulate: isTesting,
+          options: { signal, credentials: 'include' },
+        }),
+    });
+  }
+
+  const nursesQuery = getNurses();
+  const doc = useQuery(nursesQuery);
+
+  if (doc.isError) {
+    throw doc.error;
+  } else if (!doc.isSuccess) {
+    return <h1>Loading...</h1>;
+  }
+
+  const nurses = doc.data;
+  const nursesArray: string[] = nurses.map((nurse) => {
+    return `${nurse.firstName} ${nurse.lastName}`;
+  });
 
   // function to update a specific field in the patient state
-  function updateField<K extends keyof PatientListInformation>(
+  function updateField<K extends keyof PatientListInformationOut>(
     field: K,
-    value: PatientListInformation[K],
+    value: PatientListInformationOut[K],
   ): void {
     setPatient((prev) => ({ ...prev, [field]: value }));
   }
+
+  // rows for the ListView component
+  const rows = buildPatientFormRows(patient, nursesArray, updateField);
 
   // helper functions to handle button clicks for saving the patient and uploading a photo
   function handleSavePatient(): void {
@@ -76,7 +119,6 @@ export default function PatientFormPage({
     }
 
     // additional validation for deceased patients when admin is editting the form
-    // TODO: backend be aware of user group being used here (temporary solution until backend is implemented)
     if (
       group === 'admin' &&
       patient.status === 'deceased' &&
@@ -86,16 +128,8 @@ export default function PatientFormPage({
       return;
     }
 
-    // TODO: backend implement logic where if an error comes back it is handled here
-    // setShowSaveErrorPopup(true) should be called if the save fails
     // call the onSave prop function to save the patient data and show the success popup
     onSave(patient);
-    setShowSaveSuccessPopup(true);
-  }
-
-  function handleUploadPhoto(): void {
-    // TODO: backend connect image upload
-    console.log('Upload photo clicked');
   }
 
   return (
@@ -138,9 +172,9 @@ export default function PatientFormPage({
               style={{ boxShadow: 'inset 0 5px 8px rgb(0 0 0 / 0.2)' }}
             >
               {/* placeholder for the patient's profile photo */}
-              {patient.photoUrl ? (
+              {patientInfo.profilePicture ? (
                 <Image
-                  src={patient.photoUrl}
+                  src={`${apiUrl}/patient/picture/${patientInfo._id}?t=${String(new Date().getTime())}`}
                   alt={`${patient.firstName} ${patient.lastName} profile photo`}
                   fill
                   className="object-cover"
@@ -151,6 +185,21 @@ export default function PatientFormPage({
                 </div>
               )}
             </div>
+
+            <input
+              // TODO: update image after selecting
+              ref={fileInputRef}
+              type="file"
+              hidden
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (!file) {
+                  return;
+                }
+
+                setPatient((d) => ({ ...d, profilePicture: file }));
+              }}
+            />
 
             {/* buttons: photo upload + save new patient */}
             <div className="flex justify-center gap-6">
@@ -163,7 +212,9 @@ export default function PatientFormPage({
                 textIconGap={0.3}
                 backgroundColor="bg-rehua-jordy"
                 className="text-xl"
-                onClick={handleUploadPhoto}
+                onClick={() => {
+                  fileInputRef.current?.click();
+                }}
               />
 
               <ContentButton
@@ -206,6 +257,23 @@ export default function PatientFormPage({
           }}
         />
 
+        {/* successful upload popup */}
+        <PopUp
+          text1={'Photo uploaded successfully!'}
+          button1Props={{
+            text1: 'OK',
+            iconProps: { name: 'circle-arrow' },
+            backgroundColor: 'bg-rehua-green',
+            onClick: () => {
+              setShowUploadSuccessPopup(false);
+            },
+          }}
+          modalProps={{
+            open: showUploadSuccessPopup,
+            surfaceProps: { style: { height: 550 } },
+          }}
+        />
+
         {/* go back confirmation popup */}
         <PopUp
           isAlertPopup={true}
@@ -238,41 +306,6 @@ export default function PatientFormPage({
           }}
           defaultButtonHeight={65}
           modalProps={{ open: showLeavePagePopup }}
-        />
-
-        {/* popup for successful save */}
-        <PopUp
-          text1={'Patient information saved successfully.'}
-          button1Props={{
-            text1: 'OK',
-            iconProps: { name: 'circle-arrow' },
-            backgroundColor: 'bg-rehua-green',
-            onClick: () => {
-              setShowSaveSuccessPopup(false);
-            },
-          }}
-          modalProps={{
-            open: showSaveSuccessPopup,
-            surfaceProps: { style: { height: 550 } },
-          }}
-        />
-
-        {/* popup for unsuccessful save */}
-        <PopUp
-          isAlertPopup={true}
-          text1={'Failed to save patient information.\nPlease try again.'}
-          button1Props={{
-            text1: 'OK',
-            iconProps: { name: 'circle-arrow' },
-            backgroundColor: 'bg-rehua-green',
-            onClick: () => {
-              setShowSaveErrorPopup(false);
-            },
-          }}
-          modalProps={{
-            open: showSaveErrorPopup,
-            surfaceProps: { style: { height: 550 } },
-          }}
         />
       </Surface>
     </div>

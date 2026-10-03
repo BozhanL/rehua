@@ -5,17 +5,12 @@ import {
   type MiniPresetLabel,
 } from '@/app/components/common/MiniLabel';
 import SingleLineInput from '@/app/components/common/SingleLineInput';
-import type { PatientListInformation } from '@/app/components/patient/PatientProfileList';
+import type { PatientListInformationOut } from '@/app/components/patient/PatientProfileList';
+import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import dayjs from '@/app/utils/dayjs';
 import type { ChangeEvent } from 'react';
 
-// TODO: backend - replace this with currently logged in user's group
-export const group: 'nurse' | 'admin' = 'admin';
-
-// TODO: backend - fetch all nurses in the system
-function getNurses(): string[] {
-  return ['Nurse 1', 'Nurse 2', 'Nurse 3'];
-}
+export const group: 'nurse' | 'admin' = sessionStorageGetUserInfo().group;
 
 // helper functions to convert between status and text for the dropdown
 export function statusToText(status: MiniPresetLabel): string {
@@ -33,17 +28,16 @@ export const patientStatuses = [
   presetLabels.shortTerm,
   presetLabels.daycare,
   presetLabels.palliative,
-  // TODO: delete this line when backend is implemented
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   ...(group === 'admin' ? [presetLabels.deceased] : []),
 ];
 
 // function to build the rows for the patient form
 export function buildPatientFormRows(
-  patient: PatientListInformation,
-  updateField: <K extends keyof PatientListInformation>(
+  patient: PatientListInformationOut,
+  nurses: string[],
+  updateField: <K extends keyof PatientListInformationOut>(
     field: K,
-    value: PatientListInformation[K],
+    value: PatientListInformationOut[K],
   ) => void,
 ): ListRow[] {
   // define iconProps for required fields (asterisk icon in red)
@@ -153,10 +147,8 @@ export function buildPatientFormRows(
       heading: 'Nurse',
       content: (
         <DropdownBar
-          options={getNurses()}
-          selectedValues={[patient.nurse ? patient.nurse : 'Nurse 1']}
-          // TODO: backend uncomment the line below when finished, delete line above, dont need the fake 'Nurse 1' fallback
-          // selectedValues={[patient.nurse]}
+          options={nurses}
+          selectedValues={[patient.nurse ? patient.nurse : 'None']}
           search={true}
           size={19}
           width={550}
@@ -198,7 +190,7 @@ export function buildPatientFormRows(
                 updateField('status', status);
                 // TODO: backend, just a note, time of death should be cleared when status is changed from deceased
                 if (status !== 'deceased') {
-                  updateField('timeOfDeath', null);
+                  updateField('timeOfDeath', undefined);
                 }
               }
             }
@@ -225,7 +217,7 @@ export function buildPatientFormRows(
                     'timeOfDeath',
                     event.target.value
                       ? dayjs(event.target.value).toISOString()
-                      : null,
+                      : undefined,
                   );
                 }}
                 placeholder="Enter time of death"

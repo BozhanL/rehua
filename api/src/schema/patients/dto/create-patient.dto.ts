@@ -6,12 +6,11 @@ export class CreatePatientDto {
     public address: string,
     public nhi: string,
     public dateAdmitted: string,
-    public gpNameAndMedicalCenter: string,
+    public gpNameAndMedicalCentre: string,
     public nurse: string,
-    public roomNumber: number,
     public status:
-      | 'active'
       | 'disabled'
+      | 'active'
       | 'longTerm'
       | 'palliative'
       | 'shortTerm'
@@ -22,8 +21,6 @@ export class CreatePatientDto {
     public email: string,
     public homePhoneNumber: string,
     public gender: string,
-    public primaryLanguage: string,
-    public maritalStatus: string,
     public ethnicity: string,
     public allergies: string,
 
@@ -31,5 +28,8 @@ export class CreatePatientDto {
     public profilePicture?: File,
     public funding?: string, //Admin only
     public timeOfDeath?: string, //Admin only
+    public primaryLanguage?: string,
+    public maritalStatus?: string,
+    public roomNumber?: string,
   ) {}
 }

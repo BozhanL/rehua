@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation';
 import { useState, type JSX } from 'react';
 
 export function LogoutButton(): JSX.Element {
-  const router = useRouter();
   const host = useApiUrl();
+  const router = useRouter();
 
   const [showLogoutWarningPopup, setShowLogoutWarningPopup] = useState(false);
   const [showLogoutErrorPopup, setShowLogoutErrorPopup] = useState(false);
@@ -20,7 +20,13 @@ export function LogoutButton(): JSX.Element {
     onSuccess: () => {
       sessionStorage.clear();
       queryClient.clear();
+
       router.push('/auth/login');
+      // this force refreshes the page, fixing the issue of user group stale rendering
+      // Wait a tick for navigation to initiate, then force a full refresh
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     },
     onError: () => {
       setShowLogoutErrorPopup(true);

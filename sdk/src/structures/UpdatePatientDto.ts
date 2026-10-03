@@ -5,13 +5,12 @@ export type UpdatePatientDto = {
   address?: undefined | string;
   nhi?: undefined | string;
   dateAdmitted?: undefined | string;
-  gpNameAndMedicalCenter?: undefined | string;
+  gpNameAndMedicalCentre?: undefined | string;
   nurse?: undefined | string;
-  roomNumber?: undefined | number;
   status?:
     | undefined
-    | 'disabled'
     | 'active'
+    | 'disabled'
     | 'longTerm'
     | 'palliative'
     | 'shortTerm'
@@ -22,11 +21,12 @@ export type UpdatePatientDto = {
   email?: undefined | string;
   homePhoneNumber?: undefined | string;
   gender?: undefined | string;
-  primaryLanguage?: undefined | string;
-  maritalStatus?: undefined | string;
   ethnicity?: undefined | string;
   allergies?: undefined | string;
   profilePicture?: undefined | File;
   funding?: undefined | string;
   timeOfDeath?: undefined | string;
+  primaryLanguage?: undefined | string;
+  maritalStatus?: undefined | string;
+  roomNumber?: undefined | string;
 };

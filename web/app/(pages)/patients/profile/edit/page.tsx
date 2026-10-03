@@ -1,62 +1,76 @@
 'use client';
 import PopUp from '@/app/components/common/PopUp';
 import PatientFormPage from '@/app/components/patient/PatientFormPage';
-import type { PatientListInformationIn } from '@/app/components/patient/PatientProfileList';
 import useApiUrl from '@/app/hooks/useApiUrl';
-import dayjs from '@/app/utils/dayjs';
 import { isTesting } from '@/app/utils/env';
-import { create } from '@rehua/sdk/functional/patient';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { findOne, update } from '@rehua/sdk/functional/patient';
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
+import { notFound, useRouter, useSearchParams } from 'next/navigation';
 import { useState, type JSX } from 'react';
 
-async function createPatient({
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function useFindOne(id: string) {
+  const host = useApiUrl();
+
+  return queryOptions({
+    queryKey: [findOne.path(id), host],
+    queryFn: async ({ signal }: QueryFunctionContext) =>
+      findOne(
+        {
+          host: host,
+          simulate: isTesting,
+          options: { signal, credentials: 'include' },
+        },
+        id,
+      ),
+  });
+}
+
+async function updatePatient({
   host,
-  data,
+  patientId,
+  updatedValues,
 }: {
   host: string;
-  data: create.Body;
-}): Promise<create.Output> {
-  return create(
+  patientId: string;
+  updatedValues: update.Body;
+}): Promise<update.Output> {
+  return update(
     { host, simulate: isTesting, options: { credentials: 'include' } },
-    data,
+    patientId,
+    updatedValues,
   );
 }
 
-// React page to display the form for adding a new patient, using PatientFormPage to render the page
-export default function AddPatientPage(): JSX.Element {
+// React page to display the form for editing an existing patient, using PatientFormPage to render the page
+export default function EditPatientPage(): JSX.Element {
   const [showSaveErrorPopup, setShowSaveErrorPopup] = useState(false);
+
+  const searchParams = useSearchParams();
+  const patientId = searchParams.get('id') ?? '';
+  const options = useFindOne(patientId);
+  const doc = useQuery(options);
+  const patient = doc.data;
 
   const router = useRouter();
   const host = useApiUrl();
-  const createPatientMutation = useMutation({
-    mutationFn: createPatient,
+  const updatePatientMutation = useMutation({
+    mutationFn: updatePatient,
   });
 
-  // default values for new patients
-  const newPatient: PatientListInformationIn = {
-    _id: '',
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
-    address: '',
-    nhi: '',
-    gpNameAndMedicalCentre: '',
-    nurse: '',
-    roomNumber: '',
-    status: 'longTerm',
-    funding: '',
-    email: '',
-    homePhoneNumber: '',
-    gender: '',
-    primaryLanguage: '',
-    maritalStatus: '',
-    ethnicity: '',
-    allergies: '',
-    profilePicture: undefined,
-    dateAdmitted: dayjs().tz().toISOString(), // TODO: backend take this away if desirable
-    timeOfDeath: undefined,
-  };
+  if (doc.isError) {
+    throw doc.error;
+  } else if (!doc.isSuccess) {
+    return <h1>Loading...</h1>;
+  } else if (!patient) {
+    console.log(patient);
+    notFound();
+  }
 
   return (
     <>
@@ -79,12 +93,11 @@ export default function AddPatientPage(): JSX.Element {
       />
 
       <PatientFormPage
-        title="Add New Patient"
-        titleIcon="user-profile"
-        backToPatients={true}
-        patientInfo={newPatient}
+        title="Edit Patient Information"
+        titleIcon="pencil-note"
+        patientInfo={patient}
         onSave={(formData) => {
-          const createValues: create.Body = {
+          const updatedValues: update.Body = {
             firstName: formData.firstName,
             lastName: formData.lastName,
             dateOfBirth: formData.dateOfBirth,
@@ -107,14 +120,15 @@ export default function AddPatientPage(): JSX.Element {
             timeOfDeath: formData.timeOfDeath,
           };
 
-          createPatientMutation.mutate(
-            { host, data: createValues },
+          console.log(patient, patientId);
+          updatePatientMutation.mutate(
+            { host, patientId, updatedValues },
             {
               onError: () => {
                 setShowSaveErrorPopup(true);
               },
-              onSuccess: (newPatientData) => {
-                router.push(`/patients/profile?id=${newPatientData._id}`);
+              onSuccess: () => {
+                router.push(`/patients/profile?id=${patientId}`);
               },
             },
           );

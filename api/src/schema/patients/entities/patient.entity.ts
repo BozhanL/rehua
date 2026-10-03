@@ -24,13 +24,10 @@ export class Patient {
   dateAdmitted: string;
 
   @Prop({ type: String, required: true })
-  gpNameAndMedicalCenter: string;
+  gpNameAndMedicalCentre: string;
 
   @Prop({ type: String, required: true })
   nurse: string;
-
-  @Prop({ type: String, required: true })
-  roomNumber: string;
 
   @Prop({ type: String, required: true })
   status:
@@ -54,16 +51,19 @@ export class Patient {
   gender: string;
 
   @Prop({ type: String, required: true })
-  primaryLanguage: string;
-
-  @Prop({ type: String, required: true })
-  maritalStatus: string;
-
-  @Prop({ type: String, required: true })
   ethnicity: string;
 
   @Prop({ type: String, required: true })
   allergies: string;
+
+  @Prop({ type: String, required: false })
+  primaryLanguage: string | undefined; //not required
+
+  @Prop({ type: String, required: false })
+  maritalStatus: string | undefined; //not required
+
+  @Prop({ type: String, required: false })
+  roomNumber: string | undefined; //not required
 
   @Prop({ type: String, required: false })
   profilePicture?: string | undefined; //not required
@@ -81,9 +81,9 @@ export class Patient {
     address: string,
     nhi: string,
     dateAdmitted: string,
-    gpNameAndMedicalCenter: string,
+    gpNameAndMedicalCentre: string,
     nurse: string,
-    roomNumber: string,
+
     status:
       | 'active'
       | 'disabled'
@@ -97,8 +97,6 @@ export class Patient {
     email: string,
     homePhoneNumber: string,
     gender: string,
-    primaryLanguage: string,
-    maritalStatus: string,
     ethnicity: string,
     allergies: string,
 
@@ -106,6 +104,9 @@ export class Patient {
     profilePicture?: string,
     funding?: string, //Admin only
     timeOfDeath?: string, //Admin only
+    roomNumber?: string,
+    primaryLanguage?: string,
+    maritalStatus?: string,
   ) {
     this.profilePicture = profilePicture;
     this.firstName = firstName;
@@ -115,7 +116,7 @@ export class Patient {
     this.address = address;
     this.nhi = nhi;
     this.dateAdmitted = dateAdmitted;
-    this.gpNameAndMedicalCenter = gpNameAndMedicalCenter;
+    this.gpNameAndMedicalCentre = gpNameAndMedicalCentre;
     this.nurse = nurse;
     this.roomNumber = roomNumber;
     this.status = status;

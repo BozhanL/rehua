@@ -14,6 +14,9 @@ export class Template {
   @Prop({ required: true, type: [String], enum: TemplateTypeValues })
   public templateType: TemplateType[];
 
+  @Prop({ required: true })
+  public status: 'active' | 'archived';
+
   @Prop({ required: true, type: MongoSchema.Types.Map })
   public schema: Record<string, unknown>;
 
@@ -24,6 +27,7 @@ export class Template {
     this.version = version;
     this.templateName = data.templateName;
     this.templateType = data.templateType;
+    this.status = data.status;
     this.schema = data.schema;
     this.uiSchema = data.uiSchema;
   }

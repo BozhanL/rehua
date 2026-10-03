@@ -55,6 +55,12 @@ export class UserService {
     return this.userModel.findOne({ userName: userName }).exec();
   }
 
+  async findNurses(): Promise<UserDocument[]> {
+    return this.userModel
+      .find({ group: 'nurse', status: 'active' }, 'firstName lastName')
+      .exec();
+  }
+
   async findPageByFilter(
     numberOfRows: number,
     pageNumber: number,

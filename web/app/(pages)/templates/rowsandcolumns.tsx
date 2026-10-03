@@ -1,28 +1,47 @@
 import DropdownBar from '@/app/components/common/DropdownBar';
 import Icon from '@/app/components/common/Icon';
-import MiniLabel, {
-  type MiniPresetLabel,
-} from '@/app/components/common/MiniLabel';
 import type { TableColumn, TableRow } from '@/app/components/common/Table';
+import useApiUrl from '@/app/hooks/useApiUrl';
+import { isTesting } from '@/app/utils/env';
 import { templateStatusLabels, type TemplateStatus } from '@/app/utils/types';
+import { update } from '@rehua/sdk/functional/templates';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX, type ReactNode } from 'react';
 
+async function updateTemplateStatus({
+  host,
+  templateId,
+  status,
+}: {
+  host: string;
+  templateId: string;
+  status: 'active' | 'archived';
+}): Promise<update.Output> {
+  return update(
+    { host, simulate: isTesting, options: { credentials: 'include' } },
+    templateId,
+    { status },
+  );
+}
+
 // interface for a template
 export interface Template {
-  templateId: string; // unique identifier for the template
-  name: string;
-  type: MiniPresetLabel;
+  _id: string; // unique identifier for the template
+  templateName: string;
+  version: number;
+  templateType: string[];
   status: TemplateStatus;
 }
 
 // interface for a template row in the table
-interface TemplateRow extends TableRow {
+export interface TemplateRow extends TableRow {
   id: number; // unique identifier for the row
   content: {
     templateId: string;
     name: string;
-    type: ReactNode;
+    version: number;
+    type: string;
     status: ReactNode;
     modifyTemplate: ReactNode;
   };
@@ -45,14 +64,18 @@ export const templateColumns: TableColumn[] = [
     width: columnWidth,
   },
   {
+    rowKey: 'version',
+    header: 'Version',
+  },
+  {
     rowKey: 'type',
     header: 'Type',
-    width: columnWidth,
+    width: 220,
   },
   {
     rowKey: 'status',
     header: 'Status',
-    width: columnWidth,
+    width: 150,
   },
   {
     rowKey: 'modifyTemplate',
@@ -100,9 +123,33 @@ function getTemplateStatusFromLabel(label: string): TemplateStatus | undefined {
 function TemplateStatusDropdown({
   template,
 }: Readonly<{ template: Template }>): JSX.Element {
+  const host = useApiUrl();
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (newStatus: 'active' | 'archived') => {
+      return updateTemplateStatus({
+        host,
+        templateId: template._id,
+        status: newStatus,
+      });
+    },
+    onSuccess: () => {
+      // eslint-disable-next-line @tanstack/query/prefer-query-options
+      void queryClient.invalidateQueries({ queryKey: ['templates'] });
+    },
+    onError: (error) => {
+      console.error('Failed to update template status:', error);
+    },
+  });
+
   const [selectedStatus, setSelectedStatus] = useState<TemplateStatus>(
     template.status,
   );
+
+  if (selectedStatus !== template.status && !isPending) {
+    setSelectedStatus(template.status);
+  }
 
   function handleStatusChange(newValues: string[]): void {
     const newStatusLabel = newValues[0];
@@ -117,11 +164,14 @@ function TemplateStatusDropdown({
       return;
     }
 
-    // TODO: backend send newStatus to the API for this template
-    console.log(
-      `Changing status for template ${template.templateId} to ${newStatus}`,
-    );
+    const rollbackStatus = selectedStatus;
     setSelectedStatus(newStatus);
+
+    mutate(newStatus, {
+      onError: () => {
+        setSelectedStatus(rollbackStatus);
+      },
+    });
   }
 
   return (
@@ -134,43 +184,24 @@ function TemplateStatusDropdown({
   );
 }
 
+function formatStringArray(items: string[]): string {
+  return items.join(', ');
+}
+
 // function to create a template row from a template object that will be rendered within the table
-function createTemplateRow(template: Template, rowIndex: number): TemplateRow {
+export function createTemplateRow(
+  template: Template,
+  rowIndex: number,
+): TemplateRow {
   return {
     id: rowIndex,
     content: {
-      templateId: template.templateId,
-      name: template.name,
-      type: <MiniLabel name={template.type} />,
+      templateId: template._id,
+      name: template.templateName,
+      version: template.version,
+      type: formatStringArray(template.templateType),
       status: <TemplateStatusDropdown template={template} />,
-      modifyTemplate: <TemplateViewButton templateId={template.templateId} />,
+      modifyTemplate: <TemplateViewButton templateId={template._id} />,
     },
   };
 }
-
-// sample template data, what is expected from backend - TODO: backend replace this with actual data
-export const templates: Template[] = [
-  {
-    templateId: '6a8fbd27f887e19388db5828',
-    name: 'Infection Report',
-    type: 'longTerm',
-    status: 'active',
-  },
-  {
-    templateId: '6a8fbd27f887e19388db5829',
-    name: 'Pain Assessment',
-    type: 'palliative',
-    status: 'active',
-  },
-  {
-    templateId: '6a8fbd27f887e19388db5830',
-    name: 'Consent Form',
-    type: 'shortTerm',
-    status: 'active',
-  },
-];
-
-// create template rows from the sample template data
-export const templateRows: TemplateRow[] = templates.map((template, rowIndex) =>
-  createTemplateRow(template, rowIndex),
-);

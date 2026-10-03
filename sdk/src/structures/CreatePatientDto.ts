@@ -5,12 +5,11 @@ export type CreatePatientDto = {
   address: string;
   nhi: string;
   dateAdmitted: string;
-  gpNameAndMedicalCenter: string;
+  gpNameAndMedicalCentre: string;
   nurse: string;
-  roomNumber: number;
   status:
-    | 'disabled'
     | 'active'
+    | 'disabled'
     | 'longTerm'
     | 'palliative'
     | 'shortTerm'
@@ -21,11 +20,12 @@ export type CreatePatientDto = {
   email: string;
   homePhoneNumber: string;
   gender: string;
-  primaryLanguage: string;
-  maritalStatus: string;
   ethnicity: string;
   allergies: string;
   profilePicture?: undefined | File;
   funding?: undefined | string;
   timeOfDeath?: undefined | string;
+  primaryLanguage?: undefined | string;
+  maritalStatus?: undefined | string;
+  roomNumber?: undefined | string;
 };

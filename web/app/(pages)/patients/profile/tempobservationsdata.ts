@@ -5,7 +5,7 @@ import type { Observation_idstring } from '@rehua/sdk/structures/Observation_ids
 // TODO: backend delete this file when done with integration
 
 // TODO: backend delete this and replace with patient ID
-export const patientId = '123';
+export const patientId = '6ab3b69eec9e7309ea9a6b88';
 
 // TODO: backend delete this and replace with patient's observations
 export const DEMO_OBSERVATIONS: Observation_idstring[] = [
