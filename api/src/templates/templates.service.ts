@@ -144,6 +144,11 @@ export class TemplatesService {
     const docs = await this.templateModel
       .aggregate<Require_id<Template>>([
         {
+          $match: {
+            status: 'active',
+          },
+        },
+        {
           $sort: {
             templateName: 1,
             version: -1,
@@ -176,7 +181,7 @@ export class TemplatesService {
     return docs;
   }
 
-  async findByTypeTest(
+  async findByTypePagination(
     numberOfRows: number,
     pageNumber: number,
     type: string,

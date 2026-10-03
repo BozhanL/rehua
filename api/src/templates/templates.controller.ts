@@ -62,7 +62,7 @@ export class TemplatesController {
         search ?? '',
       );
     } else if (filter === 'templateType') {
-      paginatedResult = await this.templatesService.findByTypeTest(
+      paginatedResult = await this.templatesService.findByTypePagination(
         numberOfRows,
         pageNumber,
         search ?? '',
