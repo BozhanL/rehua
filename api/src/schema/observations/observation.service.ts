@@ -43,7 +43,6 @@ export class ObservationService {
   }
 
   //Return custom period, but date value is needed
-  /*
   async getObservationByDate(
     patientId: string,
     type: ObservationType,
@@ -56,18 +55,16 @@ export class ObservationService {
     start.setUTCHours(0, 0, 0, 0);
     end.setUTCHours(23, 59, 59, 999);
 
-    
     return this.observationModel
       .find({
         patientId,
         type,
         dateTime: {
-          $gte: start,
-          $lte: end,
+          $gte: start.toISOString(),
+          $lte: end.toISOString(),
         },
       })
       .sort({ dateTime: -1 })
       .exec();
   }
-  */
 }

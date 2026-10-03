@@ -29,12 +29,11 @@ export class ObservationsController {
       _id: doc._id.toString(),
     };
   }
-
-  @TypedRoute.Get(':patientId')
   @SwaggerExample.Response('Found', {
     value: new Observation('1', '2026-01-01', ObservationType.HEART_RATE, 80),
   })
   @SwaggerExample.Response('Not Found', { value: null })
+  @TypedRoute.Get(':patientId')
   async findAllObservations(
     @TypedParam('patientId') patientId: string,
   ): Promise<(Observation & { _id: string })[]> {
@@ -64,34 +63,14 @@ export class ObservationsController {
     }));
   }
 
-  /*
-  @TypedRoute.Get(':id/type/date')
-  async findObservationByDate(
-    @TypedParam('id') id: string,
-    @Query('type') type: ObservationType,
-    @Query('startDate') date: string,
-  ): Promise<(Observation & { _id: string })[]> {
-    const docs = await this.observationService.getObservationByDate(
-      id,
-      type,
-      date,
-      date,
-    );
-
-    return docs.map((doc) => ({
-      // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      ...doc.toJSON(),
-      _id: doc._id.toString(),
-    }));
-  }
-
   @TypedRoute.Get(':id/type/startDate/endDate')
   async findObservationByDateRange(
     @TypedParam('id') id: string,
-    @Query('type') type: ObservationType,
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
+    @TypedQuery()
+    query: { type: ObservationType; startDate: string; endDate: string },
   ): Promise<(Observation & { _id: string })[]> {
+    const { type, startDate, endDate } = query;
+
     const docs = await this.observationService.getObservationByDate(
       id,
       type,
@@ -105,5 +84,4 @@ export class ObservationsController {
       _id: doc._id.toString(),
     }));
   }
-    */
 }

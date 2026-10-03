@@ -9,8 +9,8 @@ export type UpdatePatientDto = {
   nurse?: undefined | string;
   status?:
     | undefined
-    | 'active'
     | 'disabled'
+    | 'active'
     | 'longTerm'
     | 'palliative'
     | 'shortTerm'
