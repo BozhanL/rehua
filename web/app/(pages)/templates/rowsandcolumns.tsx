@@ -5,6 +5,7 @@ import useApiUrl from '@/app/hooks/useApiUrl';
 import { isTesting } from '@/app/utils/env';
 import { templateStatusLabels, type TemplateStatus } from '@/app/utils/types';
 import { update } from '@rehua/sdk/functional/templates';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState, type JSX, type ReactNode } from 'react';
 
@@ -122,10 +123,34 @@ function getTemplateStatusFromLabel(label: string): TemplateStatus | undefined {
 function TemplateStatusDropdown({
   template,
 }: Readonly<{ template: Template }>): JSX.Element {
+  const host = useApiUrl();
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (newStatus: 'active' | 'archived') => {
+      return updateTemplateStatus({
+        host,
+        templateId: template._id,
+        status: newStatus,
+      });
+    },
+    onSuccess: () => {
+      // eslint-disable-next-line @tanstack/query/prefer-query-options
+      void queryClient.invalidateQueries({ queryKey: ['templates'] });
+    },
+    onError: (error) => {
+      console.error('Failed to update template status:', error);
+    },
+  });
+
   const [selectedStatus, setSelectedStatus] = useState<TemplateStatus>(
     template.status,
   );
-  const host = useApiUrl();
+
+  if (selectedStatus !== template.status && !isPending) {
+    setSelectedStatus(template.status);
+  }
+
   function handleStatusChange(newValues: string[]): void {
     const newStatusLabel = newValues[0];
 
@@ -139,13 +164,14 @@ function TemplateStatusDropdown({
       return;
     }
 
-    console.log(`Changing status for template ${template._id} to ${newStatus}`);
-    void updateTemplateStatus({
-      host,
-      templateId: template._id,
-      status: newStatus,
-    });
+    const rollbackStatus = selectedStatus;
     setSelectedStatus(newStatus);
+
+    mutate(newStatus, {
+      onError: () => {
+        setSelectedStatus(rollbackStatus);
+      },
+    });
   }
 
   return (
