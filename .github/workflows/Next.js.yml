@@ -64,7 +64,7 @@ jobs:
         run: npm run test:cov -w web | tee ./web/coverage.txt && exit ${PIPESTATUS[0]}
 
       - name: 🧪 Run Jest Coverage Comment
-        uses: MishaKav/jest-coverage-comment@642ef024cc554a34b7082cea12c7bf63575ae151 # v1.0.36
+        uses: MishaKav/jest-coverage-comment@1b5d15445c8afba0c13bd00167bd31130b812d0a # v1.0.37
         if: ${{ success() || (failure() && steps.install.conclusion == 'success') }}
         with:
           create-new-comment: false
