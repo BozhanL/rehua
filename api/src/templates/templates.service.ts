@@ -173,25 +173,14 @@ export class TemplatesService {
     const [result] = await this.templateModel
       .aggregate<UserAggregateResult>([
         {
+          $match: {
+            templateType: type,
+          },
+        },
+        {
           $sort: {
             templateName: 1,
             version: -1,
-          },
-        },
-        {
-          $group: {
-            _id: '$templateName',
-            template: { $first: '$$ROOT' },
-          },
-        },
-        {
-          $replaceRoot: {
-            newRoot: '$template',
-          },
-        },
-        {
-          $match: {
-            templateType: type,
           },
         },
         {
