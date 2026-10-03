@@ -188,7 +188,7 @@ export default function PatientProfilePage(): JSX.Element {
                   name: 'heart-pulse',
                   width: 35,
                 },
-                content: <PatientObservations />,
+                content: <PatientObservations patientId={patientId} />,
               },
             ]}
           />

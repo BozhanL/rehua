@@ -1,7 +1,4 @@
-import {
-  INITIAL_NOTES,
-  patientId,
-} from '../(pages)/patients/profile/tempobservationsdata';
+import { INITIAL_NOTES } from '../(pages)/patients/profile/tempobservationsdata';
 import type {
   Note,
   NoteAuditEntry,
@@ -35,6 +32,7 @@ interface UseRunningNotesReturn {
 
 // React hook for managing state and logic related to patient's running notes
 export function useRunningNotes(
+  patientId: string,
   startDate: string,
   endDate: string,
 ): UseRunningNotesReturn {

@@ -1,7 +1,4 @@
-import {
-  DEMO_OBSERVATIONS,
-  patientId,
-} from '../(pages)/patients/profile/tempobservationsdata';
+import { DEMO_OBSERVATIONS } from '../(pages)/patients/profile/tempobservationsdata';
 import {
   isGraphableObservationType,
   OBSERVATION_GRAPH_CONFIG,
@@ -53,7 +50,7 @@ interface UseObservationsReturn {
 }
 
 // React hook for managing state and logic related to patient observations
-export function useObservations(): UseObservationsReturn {
+export function useObservations(patientId: string): UseObservationsReturn {
   // selected observation type, defaulting to the first option in OBSERVATION_OPTIONS
   const [selectedObservation, setSelectedObservation] =
     useState<ObservationViewType>('RUNNING_NOTES');

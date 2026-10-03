@@ -11,12 +11,21 @@ import FormatNoteModal from '@/app/components/observations/notes/FormatNoteModal
 import NoteList from '@/app/components/observations/notes/NoteList';
 import { useObservations } from '@/app/hooks/useObservations';
 import { useRunningNotes } from '@/app/hooks/useRunningNotes';
+import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import dayjs from '@/app/utils/dayjs';
 import { isGraphableType, isNonGraphableType } from '@/app/utils/observations';
 import { useState, type ChangeEvent, type JSX } from 'react';
 
+const userName = `${sessionStorageGetUserInfo().firstName} ${sessionStorageGetUserInfo().lastName}`;
+
+interface PatientObservationsProps {
+  patientId: string;
+}
+
 // React component for displaying patient's observations
-export function PatientObservations(): JSX.Element {
+export function PatientObservations({
+  patientId,
+}: Readonly<PatientObservationsProps>): JSX.Element {
   // state for managing the visibility of confirmation and invalid measurement popups
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
   const [isInvalidEntryPopupOpen, setIsInvalidEntryPopupOpen] = useState(false);
@@ -46,7 +55,7 @@ export function PatientObservations(): JSX.Element {
     handleAddNonGraphableEntry,
     onAddNonGraphableEntry,
     handleObservationChange,
-  } = useObservations();
+  } = useObservations(patientId);
 
   const {
     filteredNotes,
@@ -56,7 +65,7 @@ export function PatientObservations(): JSX.Element {
     setEditingNoteId,
     handleAddRunningNote,
     handleSaveFormatting,
-  } = useRunningNotes(startDate, endDate);
+  } = useRunningNotes(patientId, startDate, endDate);
 
   return (
     <>
@@ -319,7 +328,7 @@ export function PatientObservations(): JSX.Element {
         <FormatNoteModal
           open={true}
           note={editingNote}
-          currentUser="Jane Smith" // TODO: backend use authenticated user
+          currentUser={userName}
           onClose={() => {
             setEditingNoteId(null);
           }}
