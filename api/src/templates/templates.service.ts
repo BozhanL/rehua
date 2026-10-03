@@ -4,11 +4,12 @@ import { Template, TemplateDocument } from './entities/template.entity';
 import { PaginatedResponseDto } from '@/schema/patients/dto/pagination-response.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import type {
-  Model,
-  QueryFilter,
-  Require_id,
-  UpdateWriteOpResult,
+import {
+  Types,
+  type Model,
+  type QueryFilter,
+  type Require_id,
+  type UpdateWriteOpResult,
 } from 'mongoose';
 
 @Injectable()
@@ -42,6 +43,14 @@ export class TemplatesService {
   async findPaginatedOne(
     id: string,
   ): Promise<PaginatedResponseDto<TemplateDocument>> {
+    // return if id is invalid
+    if (!Types.ObjectId.isValid(id)) {
+      return {
+        data: [],
+        meta: { totalPages: 0 },
+      };
+    }
+
     const doc = await this.templateModel.findById(id).exec();
 
     const data = doc ? [doc] : [];
