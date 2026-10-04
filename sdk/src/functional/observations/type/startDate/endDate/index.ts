@@ -34,6 +34,7 @@ export async function findObservationByDateRange(
 export namespace findObservationByDateRange {
   export type Query = {
     type:
+      | 'RUNNING_NOTES'
       | 'OXYGEN_RATE'
       | 'RESPIRATION_RATE'
       | 'BLOOD_PRESSURE'

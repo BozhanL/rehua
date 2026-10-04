@@ -36,6 +36,7 @@ export async function findByType(
 export namespace findByType {
   export type Query = {
     observationType:
+      | 'RUNNING_NOTES'
       | 'OXYGEN_RATE'
       | 'RESPIRATION_RATE'
       | 'BLOOD_PRESSURE'

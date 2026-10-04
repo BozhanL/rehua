@@ -1,5 +1,6 @@
 export enum ObservationType {
   //Numrical Observations
+  RUNNING_NOTES = 'RUNNING_NOTES',
   OXYGEN_RATE = 'OXYGEN_RATE',
   RESPIRATION_RATE = 'RESPIRATION_RATE',
   BLOOD_PRESSURE = 'BLOOD_PRESSURE',
