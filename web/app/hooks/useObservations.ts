@@ -1,10 +1,11 @@
-import { DEMO_OBSERVATIONS } from '../(pages)/patients/profile/tempobservationsdata';
 import {
   isGraphableObservationType,
   OBSERVATION_GRAPH_CONFIG,
   type GraphableObservationType,
 } from '../components/observations/observation-graph.config';
+import { APIUrlContext } from '../providers';
 import dayjs from '../utils/dayjs';
+import { isTesting } from '../utils/env';
 import {
   formatMeasurement,
   getObservationLabel,
@@ -14,11 +15,23 @@ import {
   type ObservationRow,
   type ObservationViewType,
 } from '../utils/observations';
+import { findObservationByDateRange } from '@rehua/sdk/functional/observations/type/startDate/endDate';
 import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
-import { useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
+import {
+  useContext,
+  useMemo,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 
 // interface for below hook
-interface UseObservationsReturn {
+export interface UseObservationsReturn {
   selectedObservation: ObservationViewType;
   startDate: string;
   endDate: string;
@@ -50,7 +63,10 @@ interface UseObservationsReturn {
 }
 
 // React hook for managing state and logic related to patient observations
-export function useObservations(patientId: string): UseObservationsReturn {
+export function useObservations(
+  patientId: string,
+): UseObservationsReturn | null {
+  const host = useContext(APIUrlContext);
   // selected observation type, defaulting to the first option in OBSERVATION_OPTIONS
   const [selectedObservation, setSelectedObservation] =
     useState<ObservationViewType>('RUNNING_NOTES');
@@ -69,9 +85,54 @@ export function useObservations(patientId: string): UseObservationsReturn {
   // state for controlling the visibility of the modal for adding new non-graph observation entries (bowel/urine output)
   const [isAddEntryModalOpen, setIsAddEntryModalOpen] = useState(false);
 
-  // TODO: backend modify this and replace with the patient's observations for the selected observation type and date
-  const [observations, setObservations] =
-    useState<Observation_idstring[]>(DEMO_OBSERVATIONS);
+  const [observations, setObservations] = useState<Observation_idstring[]>([]);
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  function useFindObservationByDateRange(
+    patientId: string,
+    type:
+      | 'RUNNING_NOTES'
+      | 'OXYGEN_RATE'
+      | 'RESPIRATION_RATE'
+      | 'BLOOD_PRESSURE'
+      | 'HEART_RATE'
+      | 'TEMPERATURE'
+      | 'WEIGHT'
+      | 'BLOOD_GLUCOSE_LEVELS'
+      | 'NEUROLOGICAL_OBSERVATION_CHART'
+      | 'BOWEL_OUTPUT'
+      | 'URINE_OUTPUT',
+    startDate: string,
+    endDate: string,
+  ) {
+    console.log(patientId, type, startDate, endDate);
+    return queryOptions({
+      queryKey: ['observations', host, patientId, type, startDate, endDate],
+      queryFn: async ({ signal }: QueryFunctionContext) =>
+        findObservationByDateRange(
+          {
+            host: host,
+            simulate: isTesting,
+            options: { signal, credentials: 'include' },
+          },
+          patientId,
+          {
+            type,
+            startDate,
+            endDate,
+          },
+        ),
+    });
+  }
+
+  const observationQuery = useFindObservationByDateRange(
+    patientId,
+    selectedObservation,
+    startDate,
+    endDate,
+  );
+
+  const doc = useQuery(observationQuery);
 
   // TODO: backend replace this local observations filtering with backend filtering
   const filteredObservations = useMemo(() => {
@@ -80,7 +141,7 @@ export function useObservations(patientId: string): UseObservationsReturn {
         return false;
       }
 
-      const observationDate = dayjs(observation.dateTime)
+      const observationDate = dayjs(observation.createdAt)
         .tz()
         .format('YYYY-MM-DD');
 
@@ -131,8 +192,8 @@ export function useObservations(patientId: string): UseObservationsReturn {
         id: rowIndex,
         content: {
           id: observation._id,
-          date: dayjs(observation.dateTime).tz().format('dddd, DD/MM/YYYY'),
-          time: dayjs(observation.dateTime).tz().format('HH:mm'),
+          date: dayjs(observation.createdAt).tz().format('dddd, DD/MM/YYYY'),
+          time: dayjs(observation.createdAt).tz().format('HH:mm'),
           measurement: formatMeasurement(observation),
           notes: observation.notes ?? '',
         },
@@ -172,7 +233,7 @@ export function useObservations(patientId: string): UseObservationsReturn {
       patientId,
       _id: `OBS-ID-${dayjs().tz().format('DD/MM/YYYY')}-${patientId}`,
       type: observationType,
-      dateTime: dayjs().toISOString(),
+      createdAt: dayjs().toISOString(),
       measurementValue: measurement,
     };
 
@@ -217,6 +278,15 @@ export function useObservations(patientId: string): UseObservationsReturn {
       }
     }
   }
+
+  if (doc.isError) {
+    throw doc.error;
+  } else if (!doc.isSuccess) {
+    return null;
+  }
+
+  const data: Observation_idstring[] = doc.data;
+  setObservations(data);
 
   // return all the state and handlers needed for the PatientObservations component
   return {

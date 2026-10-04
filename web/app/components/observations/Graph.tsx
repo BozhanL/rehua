@@ -8,7 +8,7 @@ import type { JSX } from 'react';
 
 export type ObservationReading = Pick<
   Observation_idstring,
-  'type' | 'dateTime' | 'measurementValue'
+  'type' | 'createdAt' | 'measurementValue'
 >;
 
 interface GraphDataPoint {
@@ -27,7 +27,7 @@ function toGraphDataPoints(
         : [
             {
               value: observation.measurementValue,
-              dateTime: new Date(observation.dateTime), // ISO string to date
+              dateTime: new Date(observation.createdAt), // ISO string to date
             },
           ],
     );

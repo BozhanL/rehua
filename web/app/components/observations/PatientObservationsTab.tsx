@@ -31,6 +31,11 @@ export function PatientObservations({
   const [isInvalidEntryPopupOpen, setIsInvalidEntryPopupOpen] = useState(false);
 
   // custom hooks for managing observations and running notes
+  const observationsHookResult = useObservations(patientId);
+  if (!observationsHookResult) {
+    throw new Error('useObservations hook returned null');
+  }
+
   const {
     selectedObservation,
     startDate,
@@ -55,7 +60,12 @@ export function PatientObservations({
     handleAddNonGraphableEntry,
     onAddNonGraphableEntry,
     handleObservationChange,
-  } = useObservations(patientId);
+  } = observationsHookResult;
+
+  const runningNotesHookResult = useRunningNotes(patientId, startDate, endDate);
+  if (!runningNotesHookResult) {
+    throw new Error('useRunningNotes hook returned null');
+  }
 
   const {
     filteredNotes,
@@ -65,7 +75,7 @@ export function PatientObservations({
     setEditingNoteId,
     handleAddRunningNote,
     handleSaveFormatting,
-  } = useRunningNotes(patientId, startDate, endDate);
+  } = runningNotesHookResult;
 
   return (
     <>
