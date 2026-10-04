@@ -4,11 +4,13 @@ import {
 } from './dto/create-document.dto';
 import { UpdateFormDocumentDto } from './dto/update-document.dto';
 import {
+  DocumentState,
   FileDocument,
   FileDocumentDocument,
   FormDocument,
   FormDocumentDocument,
   FormDocumentPopulatedDocument,
+  DocumentType,
 } from './entities/document.entity';
 import { PatientService } from '@/schema/patients/patient.service';
 import { TemplateDocument } from '@/templates/entities/template.entity';
@@ -86,6 +88,10 @@ export class DocumentsService {
     const doc = await this.fileDocumentModel.create({
       patientId: createFileDocumentDto.patientId,
       tags: createFileDocumentDto.tags,
+      creationDate: dayjs().toDate(),
+      editDate: dayjs().toDate(),
+      state: DocumentState.Current,
+      documentType: DocumentType.Upload,
       path: filePath,
       fileName: file.originalname,
     });
@@ -95,7 +101,13 @@ export class DocumentsService {
   async createForm(
     createFormDocumentDto: CreateFormDocumentDto,
   ): Promise<FormDocumentDocument> {
-    return this.formDocumentModel.create(createFormDocumentDto);
+    return this.formDocumentModel.create({
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...createFormDocumentDto,
+      creationDate: dayjs().toDate(),
+      editDate: dayjs().toDate(),
+      state: DocumentState.Current,
+    });
   }
 
   async updateForm(
@@ -106,10 +118,23 @@ export class DocumentsService {
       .updateOne(
         { _id: id },
         {
-          $set: updateFormDocumentDto,
+          // eslint-disable-next-line @typescript-eslint/no-misused-spread
+          $set: { ...updateFormDocumentDto, editDate: dayjs().toDate() },
         },
       )
       .exec();
+  }
+
+  async updateTags(id: MongoId, tags: string[]): Promise<void> {
+    const doc = await this.findOne(id);
+    if (!doc) {
+      throw new NotFoundException('Invalid id');
+    }
+
+    doc.tags = tags;
+    doc.editDate = dayjs().toDate();
+
+    await doc.save();
   }
 
   async findOne(
@@ -133,6 +158,26 @@ export class DocumentsService {
     }
 
     return null;
+  }
+
+  async findByPatient(
+    patientId: MongoId,
+  ): Promise<
+    (
+      | FormDocumentPopulatedDocument<{ templateId: TemplateDocument }>
+      | FileDocumentDocument
+    )[]
+  > {
+    const formDocument = await this.formDocumentModel
+      .find({ patientId })
+      .populate<{ templateId: TemplateDocument }>('templateId')
+      .exec();
+
+    const fileDocument = await this.fileDocumentModel
+      .find({ patientId })
+      .exec();
+
+    return [...formDocument, ...fileDocument];
   }
 
   async getFile(id: MongoId): Promise<StreamableFile> {

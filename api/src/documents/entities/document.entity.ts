@@ -1,4 +1,5 @@
 import { Patient } from '@/schema/patients/entities/patient.entity';
+import { TemplateType } from '@/templates/entities/template-type.enum';
 import { Template } from '@/templates/entities/template.entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import {
@@ -8,6 +9,23 @@ import {
   Types,
 } from 'mongoose';
 
+export enum DocumentState {
+  Current = 'Current',
+  Archive = 'Archive',
+}
+
+export enum DocumentType {
+  LongTerm = 'Long Term',
+  ShortTerm = 'Short Term',
+  Palliative = 'Palliative',
+  Daycare = 'Daycare',
+  Upload = 'Upload',
+}
+
+DocumentType satisfies {
+  [K in keyof typeof TemplateType]: `${(typeof TemplateType)[K]}`;
+};
+
 @Schema()
 export class FileDocument {
   @Prop({
@@ -15,28 +33,28 @@ export class FileDocument {
     type: MongoSchema.Types.ObjectId,
     ref: Patient.name,
   })
-  patientId: Types.ObjectId;
+  patientId!: Types.ObjectId;
 
   @Prop({ required: true })
-  public tags: string[];
+  public tags!: string[];
 
   @Prop({ required: true })
-  public path: string;
+  public creationDate!: Date;
 
   @Prop({ required: true })
-  public fileName: string;
+  public editDate!: Date;
 
-  constructor(
-    patientId: Types.ObjectId,
-    tags: string[],
-    path: string,
-    fileName: string,
-  ) {
-    this.patientId = patientId;
-    this.tags = tags;
-    this.path = path;
-    this.fileName = fileName;
-  }
+  @Prop({ required: true, type: String, enum: DocumentState })
+  public state!: DocumentState;
+
+  @Prop({ required: true, type: String, enum: DocumentType })
+  public documentType!: DocumentType;
+
+  @Prop({ required: true })
+  public path!: string;
+
+  @Prop({ required: true })
+  public fileName!: string;
 }
 
 export type FileDocumentDocument = HydratedDocument<FileDocument>;
@@ -49,32 +67,32 @@ export class FormDocument {
     type: MongoSchema.Types.ObjectId,
     ref: Patient.name,
   })
-  patientId: Types.ObjectId;
+  patientId!: Types.ObjectId;
 
   @Prop({ required: true })
-  public tags: string[];
+  public tags!: string[];
+
+  @Prop({ required: true })
+  public creationDate!: Date;
+
+  @Prop({ required: true })
+  public editDate!: Date;
+
+  @Prop({ required: true, type: String, enum: DocumentState })
+  public state!: DocumentState;
+
+  @Prop({ required: true, type: String, enum: DocumentType })
+  public documentType!: DocumentType;
 
   @Prop({
     required: true,
     type: MongoSchema.Types.ObjectId,
     ref: Template.name,
   })
-  public templateId: Types.ObjectId;
+  public templateId!: Types.ObjectId;
 
   @Prop({ required: true, type: MongoSchema.Types.Map })
-  public data: Record<string, unknown>;
-
-  constructor(
-    patientId: Types.ObjectId,
-    tags: string[],
-    templateId: Types.ObjectId,
-    data: Record<string, unknown>,
-  ) {
-    this.patientId = patientId;
-    this.tags = tags;
-    this.templateId = templateId;
-    this.data = data;
-  }
+  public data!: Record<string, unknown>;
 }
 
 export type FormDocumentDocument = HydratedDocument<FormDocument>;

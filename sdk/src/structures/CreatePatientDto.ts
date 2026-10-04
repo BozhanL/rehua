@@ -8,8 +8,8 @@ export type CreatePatientDto = {
   gpNameAndMedicalCentre: string;
   nurse: string;
   status:
-    | 'active'
     | 'disabled'
+    | 'active'
     | 'longTerm'
     | 'palliative'
     | 'shortTerm'
