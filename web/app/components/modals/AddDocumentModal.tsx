@@ -253,6 +253,7 @@ function AddDocumentModal({
                                 patientId,
                                 tags: [],
                                 data: {},
+                                documentType: category,
                               },
                             },
                             {
