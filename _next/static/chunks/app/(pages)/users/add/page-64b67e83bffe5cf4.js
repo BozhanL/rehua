@@ -25,4 +25,4 @@
                         `,style:{width:L,height:L,margin:0}}),(0,s.jsx)("span",{style:{fontSize:x},className:`
                         truncate
                         ${!r?"pl-2":""}
-                      `,children:e})]},e)})]}),document.body)]})}}},e=>{e.O(0,[2240,2218,6005,140,6873,2347,2494,7358],()=>e(e.s=16218)),_N_E=e.O()}]);
+                      `,children:e})]},e)})]}),document.body)]})}}},e=>{e.O(0,[1496,2218,6005,140,6873,2347,2494,7358],()=>e(e.s=16218)),_N_E=e.O()}]);

@@ -3,4 +3,4 @@
         ${u.color.textColor}
         ${u.color.backgroundColor}
         font-bold
-      `,children:u.text})}}},e=>{e.O(0,[2240,6005,140,8349,2347,2494,7358],()=>e(e.s=72464)),_N_E=e.O()}]);
+      `,children:u.text})}}},e=>{e.O(0,[1496,6005,140,8349,2347,2494,7358],()=>e(e.s=72464)),_N_E=e.O()}]);

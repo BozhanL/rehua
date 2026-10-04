@@ -29,4 +29,4 @@
         ${o.color.textColor}
         ${o.color.backgroundColor}
         font-bold
-      `,children:o.text})}}},e=>{e.O(0,[2240,6005,140,2347,2494,7358],()=>e(e.s=50724)),_N_E=e.O()}]);
+      `,children:o.text})}}},e=>{e.O(0,[1496,6005,140,2347,2494,7358],()=>e(e.s=50724)),_N_E=e.O()}]);
