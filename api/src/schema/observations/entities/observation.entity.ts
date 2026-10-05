@@ -31,6 +31,9 @@ export class Observation {
   authorName?: string | undefined;
 
   @Prop({ type: String })
+  authorUserName?: string | undefined;
+
+  @Prop({ type: String })
   plainText?: string | undefined;
 
   @Prop({ type: String })

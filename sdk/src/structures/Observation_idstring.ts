@@ -18,6 +18,7 @@ export type Observation_idstring = {
   measurementValue?: undefined | number;
   notes?: undefined | string;
   authorName?: undefined | string;
+  authorUserName?: undefined | string;
   plainText?: undefined | string;
   html?: undefined | string;
   lastFormattedBy?: undefined | string;
@@ -44,6 +45,7 @@ export namespace Observation_idstring {
     measurementValue?: undefined | number;
     notes?: undefined | string;
     authorName?: undefined | string;
+    authorUserName?: undefined | string;
     plainText?: undefined | string;
     html?: undefined | string;
     lastFormattedBy?: undefined | string;
@@ -69,6 +71,7 @@ export namespace Observation_idstring {
     measurementValue?: undefined | number;
     notes?: undefined | string;
     authorName?: undefined | string;
+    authorUserName?: undefined | string;
     plainText?: undefined | string;
     html?: undefined | string;
     lastFormattedBy?: undefined | string;
@@ -94,6 +97,7 @@ export namespace Observation_idstring {
     measurementValue?: undefined | number;
     notes?: undefined | string;
     authorName?: undefined | string;
+    authorUserName?: undefined | string;
     plainText?: undefined | string;
     html?: undefined | string;
     lastFormattedBy?: undefined | string;

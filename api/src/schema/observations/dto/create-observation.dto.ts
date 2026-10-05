@@ -11,6 +11,7 @@ export class CreateObservationDto {
 
     // fields for running notes
     public authorName?: string,
+    public authorUserName?: string,
     public plainText?: string,
     public html?: string,
     public lastFormattedBy?: string,

@@ -4,6 +4,8 @@ import { ObservationType } from './entities/observation-type.enum';
 import { Observation } from './entities/observation.entity';
 import { ObservationService } from './observation.service';
 import { Roles } from '@/auth/roles.decorator';
+import { CurrentUser } from '@/schema/users/users.decorator';
+import type { ExpressUser } from '@/utils/types';
 import {
   SwaggerExample,
   TypedBody,
@@ -35,8 +37,13 @@ export class ObservationsController {
   async update(
     @TypedParam('id') id: string,
     @TypedBody() updateObservationDto: UpdateObservationDto,
+    @CurrentUser() user: ExpressUser,
   ): Promise<Observation & { _id: string }> {
-    const doc = await this.observationService.update(id, updateObservationDto);
+    const doc = await this.observationService.update(
+      id,
+      updateObservationDto,
+      user,
+    );
 
     return {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread

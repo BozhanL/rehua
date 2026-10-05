@@ -6,7 +6,8 @@ import {
   ObservationDocument,
 } from './entities/observation.entity';
 import dayjs from '@/utils/dayjs';
-import { Injectable } from '@nestjs/common';
+import type { ExpressUser } from '@/utils/types';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -28,7 +29,17 @@ export class ObservationService {
   async update(
     id: string,
     updateObservationDto: UpdateObservationDto,
+    user: ExpressUser,
   ): Promise<ObservationDocument> {
+    const observation = await this.observationModel.findById(id).exec();
+    if (
+      observation?.type === ObservationType.RUNNING_NOTES &&
+      user.group === 'nurse' &&
+      observation.authorUserName !== user.userName
+    ) {
+      throw new ForbiddenException('Nurses can only edit their own notes.');
+    }
+
     return this.observationModel
       .findByIdAndUpdate(id, updateObservationDto, { new: true })
       .orFail()
