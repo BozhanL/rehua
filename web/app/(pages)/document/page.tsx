@@ -115,7 +115,8 @@ export default function Home(): JSX.Element {
               },
               text1: 'SAVE',
               backgroundColor: 'bg-rehua-green',
-              iconProps: { name: 'save' },
+              iconProps: { name: 'save', width: 0.5 },
+              className: 'text-2xl',
             }}
             button2Props={{
               onClick: () => {
@@ -123,7 +124,8 @@ export default function Home(): JSX.Element {
               },
               text1: 'GO BACK',
               backgroundColor: 'bg-rehua-red',
-              iconProps: { name: 'circle-arrow' },
+              iconProps: { name: 'circle-arrow', width: 0.6 },
+              className: 'text-2xl',
             }}
             modalProps={{ open: savePopupOpen }}
           />
@@ -132,21 +134,25 @@ export default function Home(): JSX.Element {
           <PopUp
             isAlertPopup
             text1={'Are you sure you\nwant to leave this page?'}
+            text2={<u>UNSAVED CHANGES WILL BE LOST</u>}
+            text2ClassName={'text-rehua-ruby'}
             button1Props={{
               onClick: () => {
                 setExitPopupOpen(false);
               },
               text1: 'STAY',
+              iconProps: { name: 'circle-arrow', rotation: -90 },
               backgroundColor: 'bg-rehua-green',
-              iconProps: { name: 'circle-arrow' },
+              horizontalPadding: 0.5,
             }}
             button2Props={{
               onClick: () => {
                 router.back();
               },
               text1: 'LEAVE',
-              backgroundColor: 'bg-rehua-red',
               iconProps: { name: 'circle-arrow' },
+              backgroundColor: 'bg-rehua-red',
+              horizontalPadding: 0.4,
             }}
             modalProps={{ open: exitPopupOpen }}
           />
@@ -166,80 +172,76 @@ export default function Home(): JSX.Element {
             modalProps={{ open: saveEmptyFieldsPopupOpen }}
           />
 
-          <div className={`flex flex-wrap items-center gap-3 px-4 py-3`}>
-            <ContentButton
-              type="button"
-              iconProps={{ name: 'circle-arrow' }}
-              foregroundColor="text-rehua-navy"
-              backgroundColor="bg-rehua-white"
-              height={72}
-              style={{
-                boxShadow: 'none',
-              }}
-
-              onClick={() => {
-                setExitPopupOpen(true);
-              }}
-            />
-
-            <div className="flex min-w-0 items-center gap-3">
-              <Icon
-                name="folder-open"
-                width={61}
-                className="shrink-0 text-rehua-black"
-              />
-              <span
-                className={`
-                  truncate text-[35px] leading-none font-bold text-rehua-black
-                `}
-              >
-                {data.template.templateName}
-              </span>
-            </div>
-
-            <div
-              className={`
-                ml-0 flex min-w-0 flex-1 flex-row flex-wrap items-center
-                justify-end gap-3
-              `}
-            >
-              <div className="min-w-0">
-                <DropdownBar
-                  options={[
-                    // TODO: Fetch tags from API
-                    'Tag 1',
-                    'Tag 2',
-                    'Tag 3',
-                  ]}
-                  selectedValues={currentData.tags}
-                  multiple
-                  onChange={(d) => {
-                    setDocData((prev) => ({
-                      ...(prev ?? data),
-                      tags: d,
-                    }));
-                  }}
-                  defaultText="Select document tags"
-                />
-              </div>
+          <div className="mx-6 mt-6 mb-5 overflow-x-auto">
+            <div className="flex min-w-max items-center gap-3">
               <ContentButton
                 type="button"
-                text1="Save"
-                text2="Document"
-                iconProps={{ name: 'save' }}
-                iconPosition="left"
-                textAlign="right"
-                foregroundColor="text-rehua-white"
-                backgroundColor="bg-rehua-green"
-                height={50}
+                iconProps={{ name: 'circle-arrow' }}
+                foregroundColor="text-rehua-navy"
+                backgroundColor="bg-rehua-white"
+                height={72}
+                style={{
+                  boxShadow: 'none',
+                }}
                 onClick={() => {
-                  setSavePopupOpen(true);
+                  setExitPopupOpen(true);
                 }}
               />
+
+              <div className="flex shrink-0 items-center gap-6">
+                <Icon
+                  name="folder-open"
+                  width={61}
+                  className="shrink-0 text-rehua-black"
+                />
+                <span className={'text-3xl font-bold text-rehua-black'}>
+                  {data.template.templateName}
+                </span>
+              </div>
+
+              <div className={'ml-auto flex shrink-0 items-center gap-8'}>
+                <div className="min-w-0">
+                  <DropdownBar
+                    options={[
+                      // TODO: Fetch tags from API
+                      'Tag 1',
+                      'Tag 2',
+                      'Tag 3',
+                    ]}
+                    selectedValues={currentData.tags}
+                    multiple
+                    lengthOfDropdown={200}
+                    onChange={(d) => {
+                      setDocData((prev) => ({
+                        ...(prev ?? data),
+                        tags: d,
+                      }));
+                    }}
+                    defaultText="Select document tags"
+                  />
+                </div>
+
+                <ContentButton
+                  type="button"
+                  text1="Save"
+                  text2="Document"
+                  iconProps={{ name: 'save', width: 0.9 }}
+                  verticalPadding={0.2}
+                  horizontalPadding={0.5}
+                  lineHeight={1.1}
+                  textIconGap={0.4}
+                  iconPosition="left"
+                  textAlign="right"
+                  backgroundColor="bg-rehua-green"
+                  onClick={() => {
+                    setSavePopupOpen(true);
+                  }}
+                />
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-1 px-4 py-10">
+          <div className="flex flex-1 px-7 pb-10">
             <FormTemplate
               schema={data.template.schema}
               uiSchema={data.template.uiSchema}
