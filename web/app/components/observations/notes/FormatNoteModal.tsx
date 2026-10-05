@@ -105,8 +105,8 @@ function Toolbar(): JSX.Element {
 }
 
 // normalise Lexical html for comparison with original note html
-function normaliseHtml(html: string): string {
-  return html
+function normaliseHtml(html: string | undefined): string {
+  return (html ?? '')
     .replace(/<span[^>]*>/g, '')
     .replaceAll('</span>', '')
     .replace(/\s+/g, ' ')
@@ -122,7 +122,7 @@ export default function EditFormattingModal({
   onSave,
 }: Readonly<EditFormattingModalProps>): JSX.Element {
   // current formatted html that will be saved
-  const [html, setHtml] = useState(note.html);
+  const [html, setHtml] = useState(note.html ?? '');
   // check if there are any changes to the note's html formatting
   const hasChanges = normaliseHtml(html) !== normaliseHtml(note.html);
   // state to control visibility of pop-up when there are no changes to save
@@ -144,7 +144,7 @@ export default function EditFormattingModal({
       editorState: (editor): void => {
         editor.update(() => {
           const parser = new DOMParser();
-          const dom = parser.parseFromString(note.html, 'text/html');
+          const dom = parser.parseFromString(note.html ?? '', 'text/html');
           const nodes = $generateNodesFromDOM(editor, dom);
           const root = $getRoot();
           root.clear();
@@ -170,7 +170,7 @@ export default function EditFormattingModal({
       noteId: note.noteId,
       formattedBy: currentUser,
       formattedAt: dayjs().toISOString(),
-      beforeHtml: note.html,
+      beforeHtml: note.html ?? '',
       afterHtml: html,
     });
     onClose();
