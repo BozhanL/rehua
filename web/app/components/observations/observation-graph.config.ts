@@ -11,7 +11,7 @@ export type ObservationType = Observation_idstring['type'];
 // shows up as a missing key in OBSERVATION_GRAPH_CONFIG at compile time.
 export type GraphableObservationType = Exclude<
   ObservationType,
-  'BOWEL_OUTPUT' | 'URINE_OUTPUT'
+  'RUNNING_NOTES' | 'BOWEL_OUTPUT' | 'URINE_OUTPUT'
 >;
 
 export interface ObservationGraphConfig {

@@ -47,9 +47,6 @@ function NotesList({
   currentUserName,
   currentUserGroup,
   onEditFormatting,
-  // TODO: version history button callback
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onViewAuditHistory,
 }: Readonly<NoteListProps>): JSX.Element {
   // sort notes such that most recent notes appear first, based on their creation date (ISO format)
   const sortedNotes = [...notes].sort((a, b) =>
