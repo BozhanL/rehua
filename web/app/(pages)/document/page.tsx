@@ -194,7 +194,7 @@ export default function Home(): JSX.Element {
                   width={61}
                   className="shrink-0 text-rehua-black"
                 />
-                <span className={'text-3xl font-bold text-rehua-black'}>
+                <span className="pr-8 text-3xl font-bold">
                   {data.template.templateName}
                 </span>
               </div>
@@ -210,6 +210,8 @@ export default function Home(): JSX.Element {
                     ]}
                     selectedValues={currentData.tags}
                     multiple
+                    size={18}
+                    width={350}
                     lengthOfDropdown={200}
                     onChange={(d) => {
                       setDocData((prev) => ({
