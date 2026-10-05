@@ -1,9 +1,11 @@
 import { CreateObservationDto } from './dto/create-observation.dto';
+import { UpdateObservationDto } from './dto/update-observation.dto';
 import { ObservationType } from './entities/observation-type.enum';
 import {
   Observation,
   ObservationDocument,
 } from './entities/observation.entity';
+import dayjs from '@/utils/dayjs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -23,11 +25,21 @@ export class ObservationService {
     return createdObservation.save();
   }
 
+  async update(
+    id: string,
+    updateObservationDto: UpdateObservationDto,
+  ): Promise<ObservationDocument> {
+    return this.observationModel
+      .findByIdAndUpdate(id, updateObservationDto, { new: true })
+      .orFail()
+      .exec();
+  }
+
   //Get all observations for a patient
   async getAllObservations(patientId: string): Promise<ObservationDocument[]> {
     return this.observationModel
       .find({ patientId })
-      .sort({ dateTime: -1 })
+      .sort({ createdAt: -1 })
       .exec();
   }
 
@@ -38,7 +50,7 @@ export class ObservationService {
   ): Promise<ObservationDocument[]> {
     return this.observationModel
       .find({ patientId, type: observationType })
-      .sort({ dateTime: -1 })
+      .sort({ createdAt: -1 })
       .exec();
   }
 
@@ -50,21 +62,29 @@ export class ObservationService {
     endDateStr: string,
   ): Promise<ObservationDocument[]> {
     //convert provided date to Date object and set 24 hour period
-    const start = new Date(startDateStr);
-    const end = new Date(endDateStr);
-    start.setUTCHours(0, 0, 0, 0);
-    end.setUTCHours(23, 59, 59, 999);
+    const start = dayjs.tz(startDateStr).startOf('day').toISOString();
+    const end = dayjs.tz(endDateStr).endOf('day').toISOString();
 
     return this.observationModel
       .find({
         patientId,
         type,
-        dateTime: {
-          $gte: start.toISOString(),
-          $lte: end.toISOString(),
-        },
+        $or: [
+          {
+            createdAt: {
+              $gte: start,
+              $lte: end,
+            },
+          },
+          {
+            dateTime: {
+              $gte: start,
+              $lte: end,
+            },
+          },
+        ],
       })
-      .sort({ dateTime: -1 })
+      .sort({ createdAt: -1 })
       .exec();
   }
 }

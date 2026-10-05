@@ -32,9 +32,6 @@ export function PatientObservations({
 
   // custom hooks for managing observations and running notes
   const observationsHookResult = useObservations(patientId);
-  if (!observationsHookResult) {
-    throw new Error('useObservations hook returned null');
-  }
 
   const {
     selectedObservation,
@@ -43,6 +40,8 @@ export function PatientObservations({
     showEntries,
     newMeasurement,
     isAddEntryModalOpen,
+    submissionError: observationSubmissionError,
+    setSubmissionError: setObservationSubmissionError,
     filteredObservations,
     observationLabels,
     selectedObservationLabel,
@@ -63,14 +62,13 @@ export function PatientObservations({
   } = observationsHookResult;
 
   const runningNotesHookResult = useRunningNotes(patientId, startDate, endDate);
-  if (!runningNotesHookResult) {
-    throw new Error('useRunningNotes hook returned null');
-  }
 
   const {
     filteredNotes,
     editingNote,
     isAddNoteOpen,
+    submissionError: notesSubmissionError,
+    setSubmissionError: setNotesSubmissionError,
     setIsAddNoteOpen,
     setEditingNoteId,
     handleAddRunningNote,
@@ -80,6 +78,25 @@ export function PatientObservations({
   return (
     <>
       <div className="overflow-x-auto">
+        <PopUp
+          isAlertPopup
+          text1={"The entry couldn't be made,\nplease try again later."}
+          button1Props={{
+            text1: 'OK',
+            iconProps: { name: 'circle-arrow' },
+            backgroundColor: 'bg-rehua-green',
+            onClick: () => {
+              setObservationSubmissionError(null);
+              setNotesSubmissionError(null);
+            },
+          }}
+          modalProps={{
+            open:
+              observationSubmissionError !== null ||
+              notesSubmissionError !== null,
+          }}
+        />
+
         {/* popup for confirming new graphable entries */}
         <PopUp
           isAlertPopup={true}
@@ -94,7 +111,7 @@ export function PatientObservations({
               if (!isGraphableType(selectedObservation)) {
                 return;
               }
-              handleAddGraphableEntry(selectedObservation);
+              void handleAddGraphableEntry(selectedObservation);
               setIsConfirmPopupOpen(false);
             },
           }}
@@ -331,7 +348,9 @@ export function PatientObservations({
         onClose={() => {
           setIsAddNoteOpen(false);
         }}
-        onAdd={handleAddRunningNote}
+        onAdd={(noteInput) => {
+          void handleAddRunningNote(noteInput);
+        }}
       />
 
       {editingNote && (
@@ -342,7 +361,9 @@ export function PatientObservations({
           onClose={() => {
             setEditingNoteId(null);
           }}
-          onSave={handleSaveFormatting}
+          onSave={(auditUpdate) => {
+            void handleSaveFormatting(auditUpdate);
+          }}
         />
       )}
 
@@ -354,7 +375,9 @@ export function PatientObservations({
           onClose={() => {
             setIsAddEntryModalOpen(false);
           }}
-          onAdd={onAddNonGraphableEntry}
+          onAdd={(entry) => {
+            void onAddNonGraphableEntry(entry);
+          }}
           onInvalid={() => {
             setIsInvalidEntryPopupOpen(true);
           }}

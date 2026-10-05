@@ -13,6 +13,9 @@ export class Observation {
   @Prop({ required: true, type: String })
   createdAt: string;
 
+  @Prop({ type: String })
+  dateTime?: string | undefined;
+
   @Prop({ required: true, type: String, enum: ObservationType })
   type: ObservationType;
 

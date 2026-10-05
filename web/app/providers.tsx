@@ -49,6 +49,8 @@ export const queryClient = new QueryClient({
   },
 });
 
+const developmentApiUrl = 'http://localhost:3001';
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useRefreshOptions(host: string) {
   return queryOptions({
@@ -85,9 +87,23 @@ export default function Providers({
   });
 
   useEffect(() => {
+    const isLocalDevelopment =
+      globalThis.location.hostname === 'localhost' ||
+      globalThis.location.hostname === '127.0.0.1';
+
     if (apiUrl.trim() === '') {
-      const url = new URL('/api', globalThis.location.href);
-      setApiUrl(url.href.replace(/\/$/, ''));
+      if (isLocalDevelopment) {
+        setApiUrl(developmentApiUrl);
+      } else {
+        const url = new URL('/api', globalThis.location.href);
+        setApiUrl(url.href.replace(/\/$/, ''));
+      }
+      return;
+    }
+
+    if (isLocalDevelopment && apiUrl === `${globalThis.location.origin}/api`) {
+      setApiUrl(developmentApiUrl);
+      return;
     }
 
     if (apiUrl.trim() !== apiUrl) {

@@ -1,4 +1,5 @@
 import { CreateObservationDto } from './dto/create-observation.dto';
+import { UpdateObservationDto } from './dto/update-observation.dto';
 import { ObservationType } from './entities/observation-type.enum';
 import { Observation } from './entities/observation.entity';
 import { ObservationService } from './observation.service';
@@ -22,6 +23,20 @@ export class ObservationsController {
     @TypedBody() createObservationDto: CreateObservationDto,
   ): Promise<Observation & { _id: string }> {
     const doc = await this.observationService.create(createObservationDto);
+
+    return {
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
+      ...doc.toJSON(),
+      _id: doc._id.toString(),
+    };
+  }
+
+  @TypedRoute.Patch(':id')
+  async update(
+    @TypedParam('id') id: string,
+    @TypedBody() updateObservationDto: UpdateObservationDto,
+  ): Promise<Observation & { _id: string }> {
+    const doc = await this.observationService.update(id, updateObservationDto);
 
     return {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
