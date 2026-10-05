@@ -9,7 +9,7 @@ import {
   TableToolbar,
   type DocumentTag,
 } from '@/app/components/dashboard/TableToolbar';
-import AddDocumentModal from '@/app/components/modals/AddDocumentModal';
+import AddDocumentModal from '@/app/components/document/AddDocumentModal';
 import useApiUrl from '@/app/hooks/useApiUrl';
 import dayjs from '@/app/utils/dayjs';
 import { isTesting } from '@/app/utils/env';
