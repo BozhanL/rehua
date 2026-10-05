@@ -3,7 +3,10 @@ import {
   CreateFileDocumentDto,
   CreateFormDocumentDto,
 } from './dto/create-document.dto';
-import { FindDocumentDto } from './dto/find-document.dto';
+import {
+  type FindDocumentByPatientDto,
+  FindDocumentDto,
+} from './dto/find-document.dto';
 import { UpdateFormDocumentDto } from './dto/update-document.dto';
 import { Roles } from '@/auth/roles.decorator';
 import { getFilesFromRequest } from '@/utils/helpers';
@@ -81,6 +84,15 @@ export class DocumentsController {
     return this.documentsService.updateForm(id, updateFormDocumentDto);
   }
 
+  @TypedRoute.Patch('tag/:id')
+  async updateTags(
+    @TypedParam('id') id: MongoId,
+    @TypedBody()
+    tags: string[],
+  ): Promise<void> {
+    return this.documentsService.updateTags(id, tags);
+  }
+
   @TypedRoute.Get(':id')
   async findOne(
     @TypedParam('id') id: MongoId,
@@ -103,6 +115,31 @@ export class DocumentsController {
       template,
       doc.toJSON().data,
     );
+  }
+
+  @TypedRoute.Get('patient/:patientId')
+  async findByPatient(
+    @TypedParam('patientId') patientId: MongoId,
+  ): Promise<FindDocumentByPatientDto[]> {
+    const doc = await this.documentsService.findByPatient(patientId);
+
+    return doc.map((d) => {
+      if ('path' in d) {
+        return {
+          // eslint-disable-next-line @typescript-eslint/no-misused-spread
+          ...d.toJSON(),
+          patientId: d.patientId.toString(),
+          _id: d._id.toString(),
+        };
+      } else {
+        return {
+          ...d.toJSON(),
+          patientId: d.patientId.toString(),
+          templateId: d.templateId.toJSON(),
+          _id: d._id.toString(),
+        };
+      }
+    });
   }
 
   /**

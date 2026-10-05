@@ -10,7 +10,18 @@ import {
   type DocumentTag,
 } from '@/app/components/dashboard/TableToolbar';
 import AddDocumentModal from '@/app/components/modals/AddDocumentModal';
+import useApiUrl from '@/app/hooks/useApiUrl';
 import dayjs from '@/app/utils/dayjs';
+import { isTesting } from '@/app/utils/env';
+import { findByPatient } from '@rehua/sdk/functional/documents/patient';
+import { updateTags as updateTagsSdk } from '@rehua/sdk/functional/documents/tag';
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import {
   useMemo,
@@ -19,17 +30,6 @@ import {
   type JSX,
   type ReactNode,
 } from 'react';
-
-// interface for patient documents
-interface PatientDocument {
-  id: string;
-  name: string;
-  creationDate: string; // ISO string
-  state: 'Current' | 'Archive';
-  documentType: MiniPresetLabel;
-  tagIds: string[];
-  editDate: string | null; // ISO string or null
-}
 
 // TODO: backend to return all tags in the system
 const allTags: DocumentTag[] = [
@@ -40,37 +40,6 @@ const allTags: DocumentTag[] = [
   { id: 'medication', name: 'Medication' },
   { id: 'mental-health', name: 'Mental Health' },
   { id: 'hygiene', name: 'Hygiene' },
-];
-
-// TODO: backend to return all documents for the current patient
-const initialDocuments: PatientDocument[] = [
-  {
-    id: '1',
-    name: 'Consent Form',
-    creationDate: '2024-01-01T00:00:00.000Z',
-    state: 'Current',
-    documentType: 'daycare',
-    tagIds: ['fall-risk', 'mobility'],
-    editDate: '2024-12-31T00:00:00.000Z',
-  },
-  {
-    id: '2',
-    name: 'Mobility Assessment',
-    creationDate: '2024-02-12T00:00:00.000Z',
-    state: 'Current',
-    documentType: 'longTerm',
-    tagIds: ['mobility'],
-    editDate: null,
-  },
-  {
-    id: '3',
-    name: 'Nutrition Plan',
-    creationDate: '2024-03-08T00:00:00.000Z',
-    state: 'Archive',
-    documentType: 'upload',
-    tagIds: ['nutrition'],
-    editDate: '2025-03-08T00:00:00.000Z',
-  },
 ];
 
 // interface for table rows representing documents
@@ -132,22 +101,24 @@ export const documentColumns: TableColumn[] = [
 
 // button to view a specific document for a patient
 function DocumentViewButton({
-  patientId,
   documentId,
+  documentType,
 }: Readonly<{
-  patientId: string;
   documentId: string;
+  documentType: findByPatient.Output[number]['documentType'];
 }>): JSX.Element {
   const router = useRouter();
+  const apiUrl = useApiUrl();
 
   return (
     <button
       type="button"
       onClick={() => {
-        // TODO: backend to provide patient id and documentId; adjust the route if needed
-        router.push(
-          `/patients/profile?id=${patientId}&documentId=${documentId}`,
-        );
+        if (documentType === 'Upload') {
+          router.push(`${apiUrl}/documents/file/${documentId}`);
+        } else {
+          router.push(`/document?id=${documentId}`);
+        }
       }}
       style={{ cursor: 'pointer' }}
     >
@@ -160,6 +131,51 @@ function DocumentViewButton({
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function useFindDocumentsByPatientOptions(patientId: string) {
+  const host = useApiUrl();
+
+  return queryOptions({
+    queryKey: [findByPatient.path(patientId), host],
+    queryFn: async ({ signal }: QueryFunctionContext) =>
+      findByPatient(
+        {
+          host: host,
+          simulate: isTesting,
+          options: { signal, credentials: 'include' },
+        },
+        patientId,
+      ),
+  });
+}
+
+async function updateTags({
+  host,
+  id,
+  tags: docData,
+}: {
+  host: string;
+  id: string;
+  tags: updateTagsSdk.Body;
+}): Promise<void> {
+  return updateTagsSdk(
+    { host, simulate: isTesting, options: { credentials: 'include' } },
+    id,
+    docData,
+  );
+}
+
+const documentTypeLabels = {
+  'Long Term': 'longTerm',
+  'Short Term': 'shortTerm',
+  Palliative: 'palliative',
+  Daycare: 'daycare',
+  Upload: 'upload',
+} satisfies Record<
+  findByPatient.Output[number]['documentType'],
+  MiniPresetLabel
+>;
+
 interface PatientDocumentsProps {
   patientId: string;
 }
@@ -168,10 +184,17 @@ interface PatientDocumentsProps {
 export function PatientDocuments({
   patientId,
 }: Readonly<PatientDocumentsProps>): JSX.Element {
-  // TODO: backend replace inital mock data with actual data from the backend
-  // state for documents and tags
-  const [documents, setDocuments] =
-    useState<PatientDocument[]>(initialDocuments);
+  const options = useFindDocumentsByPatientOptions(patientId);
+  const docs = useQuery(options);
+  const documents = docs.data;
+
+  const host = useApiUrl();
+  const queryClient = useQueryClient();
+  const updateTagsMutation = useMutation({
+    mutationFn: updateTags,
+    onSuccess: async () => queryClient.invalidateQueries(options),
+  });
+
   const [tags, setTags] = useState<DocumentTag[]>(allTags);
 
   // selected rows for exporting documents
@@ -186,6 +209,11 @@ export function PatientDocuments({
   // open add document modal to create a new document from a template, or upload a pdf document
   const [openAddDocumentModal, setOpenAddDocumentModal] = useState(false);
 
+  // function to update the tags associated with a document
+  function updateDocumentTags(documentId: string, nextTagIds: string[]): void {
+    updateTagsMutation.mutate({ host, id: documentId, tags: nextTagIds });
+  }
+
   // function to toggle the selection of a document for exporting
   function toggleDocument(documentId: string): void {
     setSelectedDocumentIds((previous) =>
@@ -193,21 +221,6 @@ export function PatientDocuments({
         ? previous.filter((id) => id !== documentId)
         : [...previous, documentId],
     );
-  }
-
-  // function to update the tags associated with a document
-  function updateDocumentTags(documentId: string, nextTagIds: string[]): void {
-    // updates ui immediately
-    setDocuments((previous) =>
-      previous.map((document) =>
-        document.id === documentId
-          ? { ...document, tagIds: nextTagIds }
-          : document,
-      ),
-    );
-
-    // TODO: backend update tags for specific document
-    console.log('"patch" tags', documentId, nextTagIds);
   }
 
   // function to add a new tag
@@ -238,20 +251,20 @@ export function PatientDocuments({
       return documents;
     }
 
-    return documents.filter((document) =>
-      document.tagIds.some((tagId) => selectedFilterTags.includes(tagId)),
+    return documents?.filter((document) =>
+      document.tags.some((tagId) => selectedFilterTags.includes(tagId)),
     );
   }, [documents, selectedFilterTags]);
 
   // construct table rows for the filtered documents
-  const documentRows: DocumentRow[] = filteredDocuments.map(
+  const documentRows: DocumentRow[] | undefined = filteredDocuments?.map(
     (document, rowIndex) => ({
       id: rowIndex,
       content: {
         checkbox: (
           <input
             type="checkbox"
-            checked={selectedDocumentIds.includes(document.id)}
+            checked={selectedDocumentIds.includes(document._id)}
             style={{
               width: 25,
               height: 25,
@@ -259,18 +272,23 @@ export function PatientDocuments({
               transform: 'translateY(3px)',
             }}
             onChange={() => {
-              toggleDocument(document.id);
+              toggleDocument(document._id);
             }}
           />
         ),
-        document: document.name,
+        document: document.fileName ?? document.templateId?.templateName ?? '',
         creationDate: dayjs(document.creationDate).tz().format('DD/MM/YYYY'),
         state: document.state,
-        documentType: <MiniLabel name={document.documentType} height={34} />,
+        documentType: (
+          <MiniLabel
+            name={documentTypeLabels[document.documentType]}
+            height={34}
+          />
+        ),
         tags: (
           <DropdownBar
             options={tags.map((tag) => tag.name)}
-            selectedValues={document.tagIds.map(
+            selectedValues={document.tags.map(
               (tagId) => tags.find((tag) => tag.id === tagId)?.name ?? tagId,
             )}
             multiple={true}
@@ -283,7 +301,7 @@ export function PatientDocuments({
               const selectedIds = tags
                 .filter((tag) => selectedNames.includes(tag.name))
                 .map((tag) => tag.id);
-              updateDocumentTags(document.id, selectedIds);
+              updateDocumentTags(document._id, selectedIds);
             }}
           />
         ),
@@ -291,11 +309,20 @@ export function PatientDocuments({
           ? dayjs(document.editDate).tz().format('DD/MM/YYYY')
           : '-',
         open: (
-          <DocumentViewButton patientId={patientId} documentId={document.id} />
+          <DocumentViewButton
+            documentId={document._id}
+            documentType={document.documentType}
+          />
         ),
       },
     }),
   );
+
+  if (docs.isError) {
+    throw docs.error;
+  } else if (!docs.isSuccess || !documentRows) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <>
