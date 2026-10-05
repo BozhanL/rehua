@@ -95,7 +95,7 @@ export default function Home(): JSX.Element {
           {/* Save Document PopUp */}
           <PopUp
             isAlertPopup
-            text1={`Are you sure you want to save\nthe this document?`}
+            text1={`Are you sure you want to\nsave this document?`}
             button1Props={{
               onClick: () => {
                 if (!docData) {
@@ -115,8 +115,8 @@ export default function Home(): JSX.Element {
               },
               text1: 'SAVE',
               backgroundColor: 'bg-rehua-green',
-              iconProps: { name: 'save', width: 0.5 },
-              className: 'text-2xl',
+              iconProps: { name: 'save', width: 0.65 },
+              horizontalPadding: 0.5,
             }}
             button2Props={{
               onClick: () => {
@@ -124,8 +124,8 @@ export default function Home(): JSX.Element {
               },
               text1: 'GO BACK',
               backgroundColor: 'bg-rehua-red',
-              iconProps: { name: 'circle-arrow', width: 0.6 },
-              className: 'text-2xl',
+              iconProps: { name: 'circle-arrow', width: 0.65 },
+              horizontalPadding: 0.4,
             }}
             modalProps={{ open: savePopupOpen }}
           />
