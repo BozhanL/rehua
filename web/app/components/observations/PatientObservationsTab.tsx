@@ -16,7 +16,8 @@ import dayjs from '@/app/utils/dayjs';
 import { isGraphableType, isNonGraphableType } from '@/app/utils/observations';
 import { useState, type ChangeEvent, type JSX } from 'react';
 
-const userName = `${sessionStorageGetUserInfo().firstName} ${sessionStorageGetUserInfo().lastName}`;
+const userInfo = sessionStorageGetUserInfo();
+const userName = `${userInfo.firstName} ${userInfo.lastName}`;
 
 interface PatientObservationsProps {
   patientId: string;
@@ -309,6 +310,8 @@ export function PatientObservations({
             <div className="bg-rehua-white">
               <NoteList
                 notes={filteredNotes}
+                currentUserName={userInfo.userName}
+                currentUserGroup={userInfo.group}
                 onEditFormatting={(note) => {
                   setEditingNoteId(note.noteId);
                 }}

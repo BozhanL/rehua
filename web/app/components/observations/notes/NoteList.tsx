@@ -17,6 +17,7 @@ interface NoteAuditEntry {
 // interface representing a single note, including its metadata and content
 interface Note {
   noteId: string;
+  authorUserName?: string | undefined;
   authorName: string | undefined;
   createdAt: string; // ISO date string representing when note was created
   plainText: string | undefined; // immutable, once note is created, the plain text cannot be changed
@@ -29,6 +30,8 @@ interface Note {
 // interface for a list of notes, includes callback function for editing formatting of a note and viewing audits
 interface NoteListProps {
   notes: Note[];
+  currentUserName?: string;
+  currentUserGroup?: 'admin' | 'nurse';
   onEditFormatting: (note: Note) => void;
   onViewAuditHistory: (note: Note) => void;
 }
@@ -41,6 +44,8 @@ function formatDate(isoDate: string): string {
 // React component that renders a list of notes, each with its metadata, content, and an edit button
 function NotesList({
   notes,
+  currentUserName,
+  currentUserGroup,
   onEditFormatting,
   // TODO: version history button callback
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -85,16 +90,19 @@ function NotesList({
 
               {/* edit button & version history button */}
               <div className="flex justify-start gap-3">
-                <ContentButton
-                  text1="Edit Note"
-                  iconProps={{ name: 'pencil' }}
-                  backgroundColor="bg-rehua-orange"
-                  textIconGap={0.3}
-                  verticalPadding={0.2}
-                  onClick={() => {
-                    onEditFormatting(note);
-                  }}
-                />
+                {(currentUserGroup === 'admin' ||
+                  note.authorUserName === currentUserName) && (
+                  <ContentButton
+                    text1="Edit Note"
+                    iconProps={{ name: 'pencil' }}
+                    backgroundColor="bg-rehua-orange"
+                    textIconGap={0.3}
+                    verticalPadding={0.2}
+                    onClick={() => {
+                      onEditFormatting(note);
+                    }}
+                  />
+                )}
                 {/* TODO: version history button as per orignal designs */}
                 {/* {Boolean(note.auditHistory?.length) && (
                   <ContentButton

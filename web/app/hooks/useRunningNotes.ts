@@ -3,6 +3,7 @@ import type {
   NoteAuditEntry,
 } from '../components/observations/notes/NoteList';
 import { APIUrlContext, queryClient } from '../providers';
+import { sessionStorageGetUserInfo } from '../utils/auth';
 import dayjs from '../utils/dayjs';
 import { isTesting } from '../utils/env';
 import { create } from '@rehua/sdk/functional/observations';
@@ -102,6 +103,7 @@ export function useRunningNotes(
       (doc.data ?? []).map((note) => ({
         noteId: note._id,
         authorName: note.authorName ?? '[Invalid Author Name]',
+        authorUserName: note.authorUserName,
         createdAt: note.createdAt,
         plainText: note.plainText ?? '',
         html: note.html ?? '',
@@ -138,7 +140,8 @@ export function useRunningNotes(
         patientId,
         type: 'RUNNING_NOTES',
         createdAt: dayjs().tz().toISOString(),
-        authorName: 'Jane Smith',
+        authorName: `${sessionStorageGetUserInfo().firstName} ${sessionStorageGetUserInfo().lastName}`,
+        authorUserName: sessionStorageGetUserInfo().userName,
         ...noteInput,
       });
     } catch (error) {
