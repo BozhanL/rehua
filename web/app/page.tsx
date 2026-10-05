@@ -2,8 +2,8 @@
 
 import ContentButton from './components/common/ContentButton';
 import Icon from './components/common/Icon';
-import AddDocumentModal from './components/modals/AddDocumentModal';
-import { UploadDocumentButton } from './components/modals/UploadDocumentButton';
+import AddDocumentModal from './components/document/AddDocumentModal';
+import { UploadDocumentButton } from './components/document/UploadDocumentButton';
 import { APIUrlContext } from './providers';
 import {
   ShowManualButton,

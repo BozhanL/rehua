@@ -139,6 +139,7 @@ export default function PatientProfilePage(): JSX.Element {
                   iconProps={{ name: 'pencil', width: 0.8 }}
                   iconPosition="right"
                   horizontalPadding={0.5}
+                  verticalPadding={0.3}
                   textIconGap={0.3}
                   backgroundColor="bg-rehua-tangerine"
                   className="text-xl"
@@ -147,7 +148,8 @@ export default function PatientProfilePage(): JSX.Element {
                   }}
                 />
 
-                <ContentButton
+                {/* TODO: emergency contacts button from original designs */}
+                {/* <ContentButton
                   text1="Emergency"
                   text2="Contacts"
                   textAlign="left"
@@ -157,7 +159,7 @@ export default function PatientProfilePage(): JSX.Element {
                   verticalPadding={0.2}
                   horizontalPadding={0.4}
                   backgroundColor="bg-rehua-blue"
-                />
+                /> */}
               </div>
             </div>
           </div>
@@ -188,7 +190,7 @@ export default function PatientProfilePage(): JSX.Element {
                   name: 'heart-pulse',
                   width: 35,
                 },
-                content: <PatientObservations />,
+                content: <PatientObservations patientId={patientId} />,
               },
             ]}
           />

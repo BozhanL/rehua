@@ -224,7 +224,6 @@ export default function EditFormPage({
               textIconGap={0.4}
               iconPosition="left"
               textAlign="right"
-              foregroundColor="text-rehua-white"
               backgroundColor="bg-rehua-green"
               onClick={() => {
                 if (templateName === '' || templateType.length === 0) {

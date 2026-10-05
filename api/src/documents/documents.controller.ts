@@ -130,6 +130,8 @@ export class DocumentsController {
           ...d.toJSON(),
           patientId: d.patientId.toString(),
           _id: d._id.toString(),
+          creationDate: d.creationDate,
+          editDate: d.editDate,
         };
       } else {
         return {
@@ -137,6 +139,8 @@ export class DocumentsController {
           patientId: d.patientId.toString(),
           templateId: d.templateId.toJSON(),
           _id: d._id.toString(),
+          creationDate: d.creationDate,
+          editDate: d.editDate,
         };
       }
     });

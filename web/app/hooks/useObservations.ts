@@ -1,13 +1,11 @@
 import {
-  DEMO_OBSERVATIONS,
-  patientId,
-} from '../(pages)/patients/profile/tempobservationsdata';
-import {
   isGraphableObservationType,
   OBSERVATION_GRAPH_CONFIG,
   type GraphableObservationType,
 } from '../components/observations/observation-graph.config';
+import { APIUrlContext, queryClient } from '../providers';
 import dayjs from '../utils/dayjs';
+import { isTesting } from '../utils/env';
 import {
   formatMeasurement,
   getObservationLabel,
@@ -17,17 +15,31 @@ import {
   type ObservationRow,
   type ObservationViewType,
 } from '../utils/observations';
+import { create } from '@rehua/sdk/functional/observations';
+import { findObservationByDateRange } from '@rehua/sdk/functional/observations/type/startDate/endDate';
 import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
-import { useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import {
+  queryOptions,
+  useQuery,
+  type QueryFunctionContext,
+} from '@tanstack/react-query';
+import {
+  useContext,
+  useMemo,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 
 // interface for below hook
-interface UseObservationsReturn {
+export interface UseObservationsReturn {
   selectedObservation: ObservationViewType;
   startDate: string;
   endDate: string;
   showEntries: boolean;
   newMeasurement: string;
   isAddEntryModalOpen: boolean;
+  submissionError: string | null;
   filteredObservations: Observation_idstring[];
   observationLabels: string[];
   selectedObservationLabel: string;
@@ -41,19 +53,23 @@ interface UseObservationsReturn {
   setShowEntries: Dispatch<SetStateAction<boolean>>;
   setNewMeasurement: Dispatch<SetStateAction<string>>;
   setIsAddEntryModalOpen: Dispatch<SetStateAction<boolean>>;
+  setSubmissionError: Dispatch<SetStateAction<string | null>>;
 
   isValidMeasurementInput: () => boolean;
-  handleAddGraphableEntry: (observationType: GraphableObservationType) => void;
+  handleAddGraphableEntry: (
+    observationType: GraphableObservationType,
+  ) => Promise<void>;
   handleAddNonGraphableEntry: () => void;
   onAddNonGraphableEntry: (entry: {
     measurementValue?: number;
     notes: string;
-  }) => void;
+  }) => Promise<void>;
   handleObservationChange: (selectedLabels: string[]) => void;
 }
 
 // React hook for managing state and logic related to patient observations
-export function useObservations(): UseObservationsReturn {
+export function useObservations(patientId: string): UseObservationsReturn {
+  const host = useContext(APIUrlContext);
   // selected observation type, defaulting to the first option in OBSERVATION_OPTIONS
   const [selectedObservation, setSelectedObservation] =
     useState<ObservationViewType>('RUNNING_NOTES');
@@ -71,25 +87,67 @@ export function useObservations(): UseObservationsReturn {
 
   // state for controlling the visibility of the modal for adding new non-graph observation entries (bowel/urine output)
   const [isAddEntryModalOpen, setIsAddEntryModalOpen] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
 
-  // TODO: backend modify this and replace with the patient's observations for the selected observation type and date
-  const [observations, setObservations] =
-    useState<Observation_idstring[]>(DEMO_OBSERVATIONS);
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  function useFindObservationByDateRange(
+    patientId: string,
+    type:
+      | 'RUNNING_NOTES'
+      | 'OXYGEN_RATE'
+      | 'RESPIRATION_RATE'
+      | 'BLOOD_PRESSURE'
+      | 'HEART_RATE'
+      | 'TEMPERATURE'
+      | 'WEIGHT'
+      | 'BLOOD_GLUCOSE_LEVELS'
+      | 'NEUROLOGICAL_OBSERVATION_CHART'
+      | 'BOWEL_OUTPUT'
+      | 'URINE_OUTPUT',
+    startDate: string,
+    endDate: string,
+  ) {
+    return queryOptions({
+      queryKey: ['observations', host, patientId, type, startDate, endDate],
+      queryFn: async ({ signal }: QueryFunctionContext) =>
+        findObservationByDateRange(
+          {
+            host: host,
+            simulate: isTesting,
+            options: { signal, credentials: 'include' },
+          },
+          patientId,
+          {
+            type,
+            startDate,
+            endDate,
+          },
+        ),
+    });
+  }
 
-  // TODO: backend replace this local observations filtering with backend filtering
+  const observationQuery = useFindObservationByDateRange(
+    patientId,
+    selectedObservation,
+    startDate,
+    endDate,
+  );
+
+  const doc = useQuery(observationQuery);
+
   const filteredObservations = useMemo(() => {
-    return observations.filter((observation) => {
+    return (doc.data ?? []).filter((observation) => {
       if (observation.type !== selectedObservation) {
         return false;
       }
 
-      const observationDate = dayjs(observation.dateTime)
+      const observationDate = dayjs(observation.createdAt)
         .tz()
         .format('YYYY-MM-DD');
 
       return observationDate >= startDate && observationDate <= endDate;
     });
-  }, [observations, selectedObservation, startDate, endDate]);
+  }, [doc.data, selectedObservation, startDate, endDate]);
 
   // unique labels from the backend observation enum/data
   const observationLabels = OBSERVATION_OPTIONS.map((type) => {
@@ -134,8 +192,8 @@ export function useObservations(): UseObservationsReturn {
         id: rowIndex,
         content: {
           id: observation._id,
-          date: dayjs(observation.dateTime).tz().format('dddd, DD/MM/YYYY'),
-          time: dayjs(observation.dateTime).tz().format('HH:mm'),
+          date: dayjs(observation.createdAt).tz().format('dddd, DD/MM/YYYY'),
+          time: dayjs(observation.createdAt).tz().format('HH:mm'),
           measurement: formatMeasurement(observation),
           notes: observation.notes ?? '',
         },
@@ -164,24 +222,46 @@ export function useObservations(): UseObservationsReturn {
     return true;
   }
 
-  // TODO: backend modify this to make a POST request to the backend to add a new observation for the patient
-  // updates the local state with the new observation
-  function handleAddGraphableEntry(
+  // add a new graphable observation through the backend and reset the input
+  async function handleAddGraphableEntry(
     observationType: GraphableObservationType,
-  ): void {
+  ): Promise<void> {
     const measurement = Number(newMeasurement);
-    // TODO: backend modify id creation (?) and replace with the backend-generated observation ID
-    const newObservation: Observation_idstring = {
-      patientId,
-      _id: `OBS-ID-${dayjs().tz().format('DD/MM/YYYY')}-${patientId}`,
-      type: observationType,
-      dateTime: dayjs().toISOString(),
-      measurementValue: measurement,
-    };
+    try {
+      setSubmissionError(null);
+      await createObservation({
+        patientId,
+        type: observationType,
+        createdAt: dayjs().toISOString(),
+        measurementValue: measurement,
+      });
+      setNewMeasurement('');
+    } catch (error) {
+      setSubmissionError(
+        error instanceof Error ? error.message : 'Unable to add observation.',
+      );
+    }
+  }
 
-    // local state update to include new observation
-    setObservations((current) => [...current, newObservation]);
-    setNewMeasurement('');
+  // create an observation and refresh the cached observations for the patient
+  async function createObservation(
+    observation: Parameters<typeof create>[1],
+  ): Promise<void> {
+    const createdObservation = await create(
+      {
+        host,
+        simulate: isTesting,
+        options: { credentials: 'include' },
+      },
+      observation,
+    );
+    queryClient.setQueriesData<Observation_idstring[]>(
+      { queryKey: ['observations', host, patientId] },
+      (current) => (current ? [createdObservation, ...current] : current),
+    );
+    await queryClient.invalidateQueries({
+      queryKey: ['observations', host, patientId],
+    });
   }
 
   // open modal for adding a new non-numeric observation (bowel/urine)
@@ -189,13 +269,25 @@ export function useObservations(): UseObservationsReturn {
     setIsAddEntryModalOpen(true);
   }
 
-  // TODO: backend POST bowel/urine observation
-  function onAddNonGraphableEntry(entry: {
+  // add a new bowel or urine observation through the backend
+  async function onAddNonGraphableEntry(entry: {
     measurementValue?: number;
     notes: string;
-  }): void {
-    console.log(entry);
-    setIsAddEntryModalOpen(false);
+  }): Promise<void> {
+    try {
+      setSubmissionError(null);
+      await createObservation({
+        patientId,
+        type: selectedObservation,
+        createdAt: dayjs().toISOString(),
+        ...entry,
+      });
+      setIsAddEntryModalOpen(false);
+    } catch (error) {
+      setSubmissionError(
+        error instanceof Error ? error.message : 'Unable to add observation.',
+      );
+    }
   }
 
   // handle dropdown change for selecting a different observation type
@@ -221,6 +313,10 @@ export function useObservations(): UseObservationsReturn {
     }
   }
 
+  if (doc.isError) {
+    throw doc.error;
+  }
+
   // return all the state and handlers needed for the PatientObservations component
   return {
     selectedObservation,
@@ -229,6 +325,7 @@ export function useObservations(): UseObservationsReturn {
     showEntries,
     newMeasurement,
     isAddEntryModalOpen,
+    submissionError,
     filteredObservations,
     observationLabels,
     selectedObservationLabel,
@@ -241,6 +338,7 @@ export function useObservations(): UseObservationsReturn {
     setShowEntries,
     setNewMeasurement,
     setIsAddEntryModalOpen,
+    setSubmissionError,
     isValidMeasurementInput,
     handleAddGraphableEntry,
     handleAddNonGraphableEntry,

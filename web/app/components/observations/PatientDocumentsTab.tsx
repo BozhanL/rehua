@@ -9,7 +9,7 @@ import {
   TableToolbar,
   type DocumentTag,
 } from '@/app/components/dashboard/TableToolbar';
-import AddDocumentModal from '@/app/components/modals/AddDocumentModal';
+import AddDocumentModal from '@/app/components/document/AddDocumentModal';
 import useApiUrl from '@/app/hooks/useApiUrl';
 import dayjs from '@/app/utils/dayjs';
 import { isTesting } from '@/app/utils/env';
@@ -59,15 +59,16 @@ interface DocumentRow extends TableRow {
 
 // table columns for the patient documents table
 export const documentColumns: TableColumn[] = [
-  {
-    rowKey: 'checkbox',
-    header: <Icon name="checked-box" width={30} />,
-    width: 50,
-    contentAlignment: 'center',
-  },
+  // {
+  //   rowKey: 'checkbox',
+  //   header: <Icon name="checked-box" width={30} />,
+  //   width: 50,
+  //   contentAlignment: 'center',
+  // },
   {
     rowKey: 'document',
     header: 'Document',
+    columnClassName: 'pl-7',
   },
   {
     rowKey: 'creationDate',

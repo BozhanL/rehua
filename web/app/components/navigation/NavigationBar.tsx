@@ -1,4 +1,3 @@
-import ContentButton from '../common/ContentButton';
 import Icon from '../common/Icon';
 import Logo from '../common/Logo';
 import { LogoutButton } from './LogoutButton';
@@ -61,8 +60,8 @@ function NavigationBar({
         {/* admin only actions */}
         {group === 'admin' && (
           <>
-            {/* TODO: backend to implement view logs button and use this snippet within <ViewLogsButton />  */}
-            <ContentButton
+            {/* TODO: view logs button as per original designs  */}
+            {/* <ContentButton
               text1="View"
               text2="Logs"
               iconProps={{ name: 'clipboard' }}
@@ -73,7 +72,7 @@ function NavigationBar({
               lineHeight={1.1}
               textIconGap={0.4}
               className="text-base"
-            />
+            /> */}
             <UploadManualButton />
           </>
         )}

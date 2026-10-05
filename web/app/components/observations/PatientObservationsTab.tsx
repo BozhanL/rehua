@@ -11,17 +11,29 @@ import FormatNoteModal from '@/app/components/observations/notes/FormatNoteModal
 import NoteList from '@/app/components/observations/notes/NoteList';
 import { useObservations } from '@/app/hooks/useObservations';
 import { useRunningNotes } from '@/app/hooks/useRunningNotes';
+import { sessionStorageGetUserInfo } from '@/app/utils/auth';
 import dayjs from '@/app/utils/dayjs';
 import { isGraphableType, isNonGraphableType } from '@/app/utils/observations';
 import { useState, type ChangeEvent, type JSX } from 'react';
 
+const userInfo = sessionStorageGetUserInfo();
+const userName = `${userInfo.firstName} ${userInfo.lastName}`;
+
+interface PatientObservationsProps {
+  patientId: string;
+}
+
 // React component for displaying patient's observations
-export function PatientObservations(): JSX.Element {
+export function PatientObservations({
+  patientId,
+}: Readonly<PatientObservationsProps>): JSX.Element {
   // state for managing the visibility of confirmation and invalid measurement popups
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
   const [isInvalidEntryPopupOpen, setIsInvalidEntryPopupOpen] = useState(false);
 
   // custom hooks for managing observations and running notes
+  const observationsHookResult = useObservations(patientId);
+
   const {
     selectedObservation,
     startDate,
@@ -29,6 +41,8 @@ export function PatientObservations(): JSX.Element {
     showEntries,
     newMeasurement,
     isAddEntryModalOpen,
+    submissionError: observationSubmissionError,
+    setSubmissionError: setObservationSubmissionError,
     filteredObservations,
     observationLabels,
     selectedObservationLabel,
@@ -46,21 +60,44 @@ export function PatientObservations(): JSX.Element {
     handleAddNonGraphableEntry,
     onAddNonGraphableEntry,
     handleObservationChange,
-  } = useObservations();
+  } = observationsHookResult;
+
+  const runningNotesHookResult = useRunningNotes(patientId, startDate, endDate);
 
   const {
     filteredNotes,
     editingNote,
     isAddNoteOpen,
+    submissionError: notesSubmissionError,
+    setSubmissionError: setNotesSubmissionError,
     setIsAddNoteOpen,
     setEditingNoteId,
     handleAddRunningNote,
     handleSaveFormatting,
-  } = useRunningNotes(startDate, endDate);
+  } = runningNotesHookResult;
 
   return (
     <>
       <div className="overflow-x-auto">
+        <PopUp
+          isAlertPopup
+          text1={"The entry couldn't be made,\nplease try again later."}
+          button1Props={{
+            text1: 'OK',
+            iconProps: { name: 'circle-arrow' },
+            backgroundColor: 'bg-rehua-green',
+            onClick: () => {
+              setObservationSubmissionError(null);
+              setNotesSubmissionError(null);
+            },
+          }}
+          modalProps={{
+            open:
+              observationSubmissionError !== null ||
+              notesSubmissionError !== null,
+          }}
+        />
+
         {/* popup for confirming new graphable entries */}
         <PopUp
           isAlertPopup={true}
@@ -75,7 +112,7 @@ export function PatientObservations(): JSX.Element {
               if (!isGraphableType(selectedObservation)) {
                 return;
               }
-              handleAddGraphableEntry(selectedObservation);
+              void handleAddGraphableEntry(selectedObservation);
               setIsConfirmPopupOpen(false);
             },
           }}
@@ -273,6 +310,8 @@ export function PatientObservations(): JSX.Element {
             <div className="bg-rehua-white">
               <NoteList
                 notes={filteredNotes}
+                currentUserName={userInfo.userName}
+                currentUserGroup={userInfo.group}
                 onEditFormatting={(note) => {
                   setEditingNoteId(note.noteId);
                 }}
@@ -312,18 +351,22 @@ export function PatientObservations(): JSX.Element {
         onClose={() => {
           setIsAddNoteOpen(false);
         }}
-        onAdd={handleAddRunningNote}
+        onAdd={(noteInput) => {
+          void handleAddRunningNote(noteInput);
+        }}
       />
 
       {editingNote && (
         <FormatNoteModal
           open={true}
           note={editingNote}
-          currentUser="Jane Smith" // TODO: backend use authenticated user
+          currentUser={userName}
           onClose={() => {
             setEditingNoteId(null);
           }}
-          onSave={handleSaveFormatting}
+          onSave={(auditUpdate) => {
+            void handleSaveFormatting(auditUpdate);
+          }}
         />
       )}
 
@@ -335,7 +378,9 @@ export function PatientObservations(): JSX.Element {
           onClose={() => {
             setIsAddEntryModalOpen(false);
           }}
-          onAdd={onAddNonGraphableEntry}
+          onAdd={(entry) => {
+            void onAddNonGraphableEntry(entry);
+          }}
           onInvalid={() => {
             setIsInvalidEntryPopupOpen(true);
           }}

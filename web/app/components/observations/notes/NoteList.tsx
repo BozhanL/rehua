@@ -17,18 +17,21 @@ interface NoteAuditEntry {
 // interface representing a single note, including its metadata and content
 interface Note {
   noteId: string;
-  authorName: string;
+  authorUserName?: string | undefined;
+  authorName: string | undefined;
   createdAt: string; // ISO date string representing when note was created
-  plainText: string; // immutable, once note is created, the plain text cannot be changed
-  html: string; // mutable, can be changed when formatting is edited
-  lastFormattedBy?: string;
-  lastFormattedAt?: string; // ISO date string representing when note was last formatted
-  auditHistory?: NoteAuditEntry[]; // version history of note, may not be present if no formatting edits have been made
+  plainText: string | undefined; // immutable, once note is created, the plain text cannot be changed
+  html: string | undefined; // mutable, can be changed when formatting is edited
+  lastFormattedBy?: string | undefined;
+  lastFormattedAt?: string | undefined; // ISO date string representing when note was last formatted
+  auditHistory?: NoteAuditEntry[] | undefined; // version history of note, may not be present if no formatting edits have been made
 }
 
 // interface for a list of notes, includes callback function for editing formatting of a note and viewing audits
 interface NoteListProps {
   notes: Note[];
+  currentUserName?: string;
+  currentUserGroup?: 'admin' | 'nurse';
   onEditFormatting: (note: Note) => void;
   onViewAuditHistory: (note: Note) => void;
 }
@@ -41,8 +44,9 @@ function formatDate(isoDate: string): string {
 // React component that renders a list of notes, each with its metadata, content, and an edit button
 function NotesList({
   notes,
+  currentUserName,
+  currentUserGroup,
   onEditFormatting,
-  onViewAuditHistory,
 }: Readonly<NoteListProps>): JSX.Element {
   // sort notes such that most recent notes appear first, based on their creation date (ISO format)
   const sortedNotes = [...notes].sort((a, b) =>
@@ -77,23 +81,27 @@ function NotesList({
                   boxShadow: 'inset 0 1px 3px rgb(0 0 0 / 0.3)',
                 }}
                 dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(note.html),
+                  __html: DOMPurify.sanitize(note.html ?? ''),
                 }} // render sanitised html content to see formatting changes
               />
 
               {/* edit button & version history button */}
               <div className="flex justify-start gap-3">
-                <ContentButton
-                  text1="Edit Note"
-                  iconProps={{ name: 'pencil' }}
-                  backgroundColor="bg-rehua-orange"
-                  textIconGap={0.3}
-                  verticalPadding={0.2}
-                  onClick={() => {
-                    onEditFormatting(note);
-                  }}
-                />
-                {Boolean(note.auditHistory?.length) && (
+                {(currentUserGroup === 'admin' ||
+                  note.authorUserName === currentUserName) && (
+                  <ContentButton
+                    text1="Edit Note"
+                    iconProps={{ name: 'pencil' }}
+                    backgroundColor="bg-rehua-orange"
+                    textIconGap={0.3}
+                    verticalPadding={0.2}
+                    onClick={() => {
+                      onEditFormatting(note);
+                    }}
+                  />
+                )}
+                {/* TODO: version history button as per orignal designs */}
+                {/* {Boolean(note.auditHistory?.length) && (
                   <ContentButton
                     text1="Previous Audits"
                     iconProps={{ name: 'version-history' }}
@@ -104,7 +112,7 @@ function NotesList({
                       onViewAuditHistory(note);
                     }}
                   />
-                )}
+                )} */}
               </div>
 
               {/* footer of each note */}

@@ -3,5 +3,5 @@ import { OmitType, PartialType } from '@nestjs/swagger';
 
 export class UpdateObservationDto extends OmitType(
   PartialType(CreateObservationDto),
-  ['patientId'],
+  ['patientId', 'authorUserName'],
 ) {}

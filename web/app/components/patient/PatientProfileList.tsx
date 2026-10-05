@@ -74,7 +74,6 @@ export function getPatientListRows(
           },
         ]
       : []),
-    { heading: 'Address', content: patient.address },
     { heading: 'Funding', content: patient.funding },
     { heading: 'Email', content: patient.email },
     { heading: 'Home Phone Number', content: patient.homePhoneNumber },
