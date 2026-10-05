@@ -41,7 +41,7 @@ export class ObservationService {
     }
 
     return this.observationModel
-      .findByIdAndUpdate(id, updateObservationDto, { new: true })
+      .findByIdAndUpdate(id, updateObservationDto, { returnDocument: 'after' })
       .orFail()
       .exec();
   }
