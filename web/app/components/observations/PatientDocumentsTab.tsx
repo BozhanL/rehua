@@ -59,15 +59,16 @@ interface DocumentRow extends TableRow {
 
 // table columns for the patient documents table
 export const documentColumns: TableColumn[] = [
-  {
-    rowKey: 'checkbox',
-    header: <Icon name="checked-box" width={30} />,
-    width: 50,
-    contentAlignment: 'center',
-  },
+  // {
+  //   rowKey: 'checkbox',
+  //   header: <Icon name="checked-box" width={30} />,
+  //   width: 50,
+  //   contentAlignment: 'center',
+  // },
   {
     rowKey: 'document',
     header: 'Document',
+    columnClassName: 'pl-7',
   },
   {
     rowKey: 'creationDate',

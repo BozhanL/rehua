@@ -45,7 +45,6 @@ export function TableToolbar({
   inputValue,
   onInputChange,
   onAddTag,
-  onExport,
   onAddDocument,
   documentColumns,
   documentRows,
@@ -97,7 +96,7 @@ export function TableToolbar({
 
           {/* righthand side buttons */}
           <div className="ml-auto flex shrink-0 gap-5">
-            <ContentButton
+            {/* <ContentButton
               text1="Export"
               text2="Selected"
               textAlign="left"
@@ -109,7 +108,7 @@ export function TableToolbar({
               textIconGap={0.4}
               backgroundColor="bg-rehua-blue"
               onClick={onExport}
-            />
+            /> */}
 
             <ContentButton
               text1="Add"
