@@ -1,6 +1,6 @@
 services:
   app:
-    image: mcr.microsoft.com/devcontainers/typescript-node:24-trixie@sha256:cba90c28e53ac2f5a8a5a0388b71b8e98bbe1a4711e0faaa6ef48b137037d4ae
+    image: mcr.microsoft.com/devcontainers/typescript-node:24-trixie@sha256:5d4dfbb91a7d76906484ff55f69a883eb8ed3c2628ab5611a826c94b06f09fe2
     volumes:
       - ../..:/workspaces:cached
     network_mode: service:db
