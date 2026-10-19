@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { CreateObservationDto } from './dto/create-observation.dto';
 import { UpdateObservationDto } from './dto/update-observation.dto';
 import { ObservationType } from './entities/observation-type.enum';

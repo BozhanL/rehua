@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { ConfigModule, registerAs } from '@nestjs/config';
 import { mkdtempSync, accessSync, constants } from 'fs-extra';
 import Joi, { type CustomHelpers, type ErrorReport } from 'joi';

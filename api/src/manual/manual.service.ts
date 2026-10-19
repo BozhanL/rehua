@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { Config } from '@/utils/config';
 import {
   BadRequestException,

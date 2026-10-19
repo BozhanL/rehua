@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { DocumentsService } from './documents.service';
 import {
   CreateFileDocumentDto,

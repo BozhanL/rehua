@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { NoteAuditEntry } from '../dto/noteAutditEntity.dto';
 import { ObservationType } from './observation-type.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import CheckboxGroup from '@/app/components/common/CheckboxGroup';
 import type {
   StrictRJSFSchema,

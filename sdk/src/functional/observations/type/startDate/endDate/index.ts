@@ -48,7 +48,7 @@ export namespace findObservationByDateRange {
     startDate: string;
     endDate: string;
   };
-  export type Output = Observation_idstring.o3[];
+  export type Output = Observation_idstring.o4[];
 
   export const METADATA = {
     method: 'GET',
@@ -73,8 +73,8 @@ export namespace findObservationByDateRange {
       ? location
       : `${location}?${variables.toString()}`;
   };
-  export const random = (): Resolved<Observation_idstring.o3[]> =>
-    typia.random<Observation_idstring.o3[]>();
+  export const random = (): Resolved<Observation_idstring.o4[]> =>
+    typia.random<Observation_idstring.o4[]>();
   export const simulate = (
     connection: IConnection,
     id: string,

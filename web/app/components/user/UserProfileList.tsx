@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { ListRow } from '@/app/components/common/ListView';
 import MiniLabel, {
   type MiniPresetLabel,

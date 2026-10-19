@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { ManualService } from './manual.service';
 import { configModule } from '@/utils/config';
 import { beforeEach, describe, expect, it } from '@jest/globals';

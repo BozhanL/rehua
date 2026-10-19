@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { Request } from 'express';
 
 // Extracts Express.Multer.File[] from the request object

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { JWT_STRATEGY_NAME } from './jwt.strategy';
 import { IS_PUBLIC_KEY } from './public.decorator';
 import { ExecutionContext, Injectable } from '@nestjs/common';

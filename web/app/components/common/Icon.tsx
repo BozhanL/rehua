@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { icons } from './auto-generated-icons';
 import type { JSX, SVGProps } from 'react';
 

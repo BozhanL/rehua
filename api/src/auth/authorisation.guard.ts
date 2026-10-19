@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { IS_PUBLIC_KEY } from './public.decorator';
 import { ROLES_KEY } from './roles.decorator';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';

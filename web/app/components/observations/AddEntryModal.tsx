@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import ContentButton from '../common/ContentButton';
 import Icon from '../common/Icon';
 import Modal from '../common/Modal';

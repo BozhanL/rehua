@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import AddButton from './AddButton';
 import { MoveDownButton, MoveUpButton, RemoveButton } from './IconButton';
 import SubmitButton from './SubmitButton';

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { CreateEmergencyContactDto } from './create-emergency_contact.dto';
 import { OmitType, PartialType } from '@nestjs/swagger';
 

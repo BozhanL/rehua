@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 'use client';
 import ContentButton from '@/app/components/common/ContentButton';
 import DropdownBar from '@/app/components/common/DropdownBar';

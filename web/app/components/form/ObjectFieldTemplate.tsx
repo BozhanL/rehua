@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 /*
   This template is not included in the default theme, but is used in the CreateTemplate page to allow users to add and remove sections from the form.
  */

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { EmergencyContactController } from './emergency_contact.controller';
 import { EmergencyContactService } from './emergency_contact.service';
 import {

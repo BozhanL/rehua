@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
 import type { Request } from 'express';
 

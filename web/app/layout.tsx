@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 /* c8 ignore start */
 // This is the root layout of the application.
 // It does not need to be tested as it is a simple wrapper around the HTML and body tags, and does not contain any logic or state.

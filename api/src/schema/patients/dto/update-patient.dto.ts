@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { CreatePatientDto } from './create-patient.dto';
 import { PartialType } from '@nestjs/swagger';
 

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { statusToText, textToStatus } from '../patient/PatientForm';
 import type { UserListInformation } from './UserProfileList';
 import { userGroups } from '@/app/(pages)/users/rowsandcolumns';

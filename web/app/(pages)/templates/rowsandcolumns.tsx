@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import DropdownBar from '@/app/components/common/DropdownBar';
 import Icon from '@/app/components/common/Icon';
 import type { TableColumn, TableRow } from '@/app/components/common/Table';

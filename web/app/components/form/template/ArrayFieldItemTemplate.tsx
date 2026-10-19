@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import {
   type StrictRJSFSchema,
   type RJSFSchema,

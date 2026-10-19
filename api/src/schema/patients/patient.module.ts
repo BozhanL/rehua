@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { Patient, PatientSchema } from './entities/patient.entity';
 import { PatientController } from './patient.controller';
 import { PatientService } from './patient.service';

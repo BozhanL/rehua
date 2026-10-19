@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { LoginResponseDto } from './dto/login-response.dto';
 import { UserService } from '@/schema/users/user.service';
 import { ExpressUser } from '@/utils/types';

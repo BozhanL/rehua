@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import useApiUrl from '@/app/hooks/useApiUrl';
 import { isTesting } from '@/app/utils/env';
 import { findOne as findOneTemplate } from '@rehua/sdk/functional/templates/id';

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import Page from '@/app/hello/page';
 import Providers from '@/app/providers';
 import {

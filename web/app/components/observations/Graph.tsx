@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import {
   OBSERVATION_GRAPH_CONFIG,
   type GraphableObservationType,

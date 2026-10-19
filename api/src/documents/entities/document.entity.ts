@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { Patient } from '@/schema/patients/entities/patient.entity';
 import { TemplateType } from '@/templates/entities/template-type.enum';
 import { Template } from '@/templates/entities/template.entity';

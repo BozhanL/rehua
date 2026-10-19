@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { HTMLAttributes, JSX } from 'react';
 
 // predefined colors for all mini labels

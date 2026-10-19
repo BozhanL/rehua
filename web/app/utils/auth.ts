@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { isTesting } from '@/app/utils/env';
 import {
   login as loginSdk,

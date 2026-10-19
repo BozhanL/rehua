@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { useState, useRef, useEffect } from 'react';
 import type { Dispatch, SetStateAction, RefObject } from 'react';
 

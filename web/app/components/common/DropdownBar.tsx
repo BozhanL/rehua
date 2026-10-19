@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 'use client';
 import Icon from './Icon';
 import { useDropdown } from '@/app/hooks/useDropdown';

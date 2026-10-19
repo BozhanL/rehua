@@ -1,13 +1,11 @@
 comment-summary-in-pr: always
 allow-licenses:
-  - GPL-3.0-or-later
   - MIT
   - Apache-2.0
   - ISC
   - Unicode-3.0
   - BSD-3-Clause
   - CDLA-Permissive-2.0
-  - LGPL-3.0
   - BSD-2-Clause
   - CC0-1.0
   - CC-BY-4.0

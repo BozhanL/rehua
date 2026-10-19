@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { Hello } from './entities/hello.entity';
 import { HelloService } from './hello.service';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';

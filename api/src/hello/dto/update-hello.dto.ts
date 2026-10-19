@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { CreateHelloDto } from './create-hello.dto';
 import { PartialType } from '@nestjs/swagger';
 

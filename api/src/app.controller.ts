@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { AppService } from './app.service';
 import { Roles } from '@/auth/roles.decorator';
 import { SwaggerExample, TypedRoute } from '@nestia/core';

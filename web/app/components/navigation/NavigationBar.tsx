@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import Icon from '../common/Icon';
 import Logo from '../common/Logo';
 import { LogoutButton } from './LogoutButton';

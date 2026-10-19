@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { CreateEmergencyContactDto } from './dto/create-emergency_contact.dto';
 import { UpdateEmergencyContactDto } from './dto/update-emergency_contact.dto';
 import {

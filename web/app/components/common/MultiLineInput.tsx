@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { JSX, TextareaHTMLAttributes } from 'react';
 
 // React component that renders a normal, multi-line input, with flexible props and pre-set styling

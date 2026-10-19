@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { InputHTMLAttributes, JSX } from 'react';
 
 // React component that renders single line input, with flexible props and pre-set styling

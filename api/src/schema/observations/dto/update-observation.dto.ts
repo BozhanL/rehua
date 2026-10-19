@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { CreateObservationDto } from './create-observation.dto';
 import { OmitType, PartialType } from '@nestjs/swagger';
 

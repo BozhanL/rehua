@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import DropdownBar from '@/app/components/common/DropdownBar';
 import type { ListRow } from '@/app/components/common/ListView';
 import {

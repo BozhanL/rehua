@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { User } from '@/schema/users/entities/user.entity';
 import type { tags } from 'typia';
 

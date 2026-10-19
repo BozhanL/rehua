@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { CreateTemplateDto } from './dto/create-template.dto';
 import * as updateStatusTemplateDto from './dto/update-status-template.dto';
 import { TemplateType } from './entities/template-type.enum';

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { ObservationType } from '../entities/observation-type.enum';
 import type { NoteAuditEntry } from './noteAutditEntity.dto';
 

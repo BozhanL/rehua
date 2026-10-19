@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 'use client';
 import PopUp from '@/app/components/common/PopUp';
 import UserFormPage from '@/app/components/user/UserFormPage';

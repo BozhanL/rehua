@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { TableColumn, TableRow } from '../components/common/Table';
 import {
   isGraphableObservationType,

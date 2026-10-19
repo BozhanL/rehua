@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { TemplateType } from '../entities/template-type.enum';
 
 export class CreateTemplateDto {

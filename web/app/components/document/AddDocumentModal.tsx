@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 'use client';
 import ContentButton from '../common/ContentButton';
 import Icon from '../common/Icon';

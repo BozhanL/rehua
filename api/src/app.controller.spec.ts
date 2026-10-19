@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { beforeEach, describe, expect, it } from '@jest/globals';
