@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { TOTP_STRATEGY_NAME } from './totp.strategy';
 import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';

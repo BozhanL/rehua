@@ -43,10 +43,10 @@ jobs:
         with:
           images: ghcr.io/BozhanL/rehua-${{ matrix.workspace }}
           labels: |
-            org.opencontainers.image.licenses=GPL-3.0-or-later
+            org.opencontainers.image.licenses=MIT
             org.opencontainers.image.title=rehua-${{ matrix.workspace }}
           annotations: |
-            org.opencontainers.image.licenses=GPL-3.0-or-later
+            org.opencontainers.image.licenses=MIT
             org.opencontainers.image.title=rehua-${{ matrix.workspace }}
 
       - name: Set up QEMU

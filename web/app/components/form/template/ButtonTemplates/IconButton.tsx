@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import ContentButton, {
   type ContentButtonProps,
 } from '@/app/components/common/ContentButton';

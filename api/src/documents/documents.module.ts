@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { DocumentsController } from './documents.controller';
 import { DocumentsService } from './documents.service';
 import {

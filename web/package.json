@@ -1,7 +1,7 @@
 {
   "name": "@rehua/web",
   "version": "0.0.1",
-  "license": "GPL-3.0-or-later",
+  "license": "MIT",
   "homepage": "https://github.com/BozhanL/rehua",
   "repository": {
     "type": "git",

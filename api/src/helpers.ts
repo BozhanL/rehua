@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { AppModule } from './app.module';
 import { configModule } from './utils/config';
 import type { Config } from './utils/config';

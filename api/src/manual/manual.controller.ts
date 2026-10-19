@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { CreateManualDto } from './dto/create-manual.dto';
 import { MANUAL_TYPE, ManualService } from './manual.service';
 import { Roles } from '@/auth/roles.decorator';

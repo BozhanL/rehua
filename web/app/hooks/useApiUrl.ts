@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { APIUrlContext } from '@/app/providers';
 import { useContext } from 'react';
 

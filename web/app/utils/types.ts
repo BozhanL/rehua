@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { create as createTemplateSDK } from '@rehua/sdk/functional/templates';
 
 export enum TemplateDocumentType {

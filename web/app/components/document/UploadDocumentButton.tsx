@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import ContentButton from '../common/ContentButton';
 import PopUp from '../common/PopUp';
 import useApiUrl from '@/app/hooks/useApiUrl';

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { Observation, ObservationSchema } from './entities/observation.entity';
 import { ObservationsController } from './observation.controller';
 import { ObservationService } from './observation.service';

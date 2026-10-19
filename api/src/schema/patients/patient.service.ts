@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { CreatePatientDto } from './dto/create-patient.dto';
 import { PaginatedResponseDto } from './dto/pagination-response.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';

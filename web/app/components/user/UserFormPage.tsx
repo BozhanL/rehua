@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 'use client';
 import { buildUserFormRows } from './UserForm';
 import type { UserListInformation } from './UserProfileList';

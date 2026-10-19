@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { Observation_idstring } from '@rehua/sdk/structures/Observation_idstring';
 
 // the backend's ObservationType enum, as the SDK surfaces it: nestia inlines

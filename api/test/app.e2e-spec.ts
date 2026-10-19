@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { AppModule } from '@/app.module.js';
 import { JWT_COOKIE_NAME } from '@/auth/jwt.strategy';
 import { User } from '@/schema/users/entities/user.entity';

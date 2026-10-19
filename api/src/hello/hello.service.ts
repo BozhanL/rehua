@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { CreateHelloDto } from './dto/create-hello.dto';
 import { UpdateHelloDto } from './dto/update-hello.dto';
 import { Hello, HelloDocument } from './entities/hello.entity';

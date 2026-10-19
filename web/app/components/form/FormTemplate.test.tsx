@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import FormTemplate from './FormTemplate';
 import {
   afterEach,

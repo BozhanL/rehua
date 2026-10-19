@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 'use client';
 import NavigationBar from '../components/navigation/NavigationBar';
 import { sessionStorageGetUserInfo } from '../utils/auth';

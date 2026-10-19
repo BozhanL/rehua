@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import ContentButton from '@/app/components/common/ContentButton';
 import {
   getSubmitButtonOptions,

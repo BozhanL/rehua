@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { ManualController } from './manual.controller';
 import { ManualService } from './manual.service';
 import { configModule } from '@/utils/config';

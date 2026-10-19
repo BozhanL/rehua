@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { Config } from 'jest';
 import { createDefaultEsmPreset } from 'ts-jest';
 

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import FormTemplate from './FormTemplate';
 import ContentButton from '@/app/components/common/ContentButton';
 import Icon from '@/app/components/common/Icon';

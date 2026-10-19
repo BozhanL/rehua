@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import SingleLineInput from '@/app/components/common/SingleLineInput';
 import {
   type StrictRJSFSchema,

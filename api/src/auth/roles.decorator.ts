@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { type CustomDecorator, SetMetadata } from '@nestjs/common';
 
 export const ROLES_KEY = 'roles';

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import * as paginationRequestDto from '../patients/dto/pagination-request.dto';
 import { CurrentUser } from '../users/users.decorator';
 import type { CreatePatientDto } from './dto/create-patient.dto';

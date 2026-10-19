@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';

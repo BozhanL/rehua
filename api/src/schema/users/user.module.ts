@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { User, UserSchema } from './entities/user.entity';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import Image, { type ImageProps } from 'next/image';
 import type { JSX } from 'react';
 

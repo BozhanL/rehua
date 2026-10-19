@@ -48,7 +48,7 @@ export namespace findByType {
       | 'BOWEL_OUTPUT'
       | 'URINE_OUTPUT';
   };
-  export type Output = Observation_idstring.o2[];
+  export type Output = Observation_idstring.o3[];
 
   export const METADATA = {
     method: 'GET',
@@ -73,8 +73,8 @@ export namespace findByType {
       ? location
       : `${location}?${variables.toString()}`;
   };
-  export const random = (): Resolved<Observation_idstring.o2[]> =>
-    typia.random<Observation_idstring.o2[]>();
+  export const random = (): Resolved<Observation_idstring.o3[]> =>
+    typia.random<Observation_idstring.o3[]>();
   export const simulate = (
     connection: IConnection,
     patientId: string,

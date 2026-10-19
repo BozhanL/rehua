@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 // sort-imports-ignore
 import { env } from 'process'; //NOSONAR
 

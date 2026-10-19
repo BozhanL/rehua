@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { AuthService } from './auth.service';
 import type { LoginBody } from './dto/login-body.dto';
 import { ExpressUser } from '@/utils/types';

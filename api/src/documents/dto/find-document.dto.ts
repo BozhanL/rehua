@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { DocumentState, DocumentType } from '../entities/document.entity';
 import type { Template } from '@/templates/entities/template.entity';
 import type { MongoId } from '@/utils/types';

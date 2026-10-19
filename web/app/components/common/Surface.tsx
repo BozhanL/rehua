@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { HTMLAttributes, JSX, ReactNode } from 'react';
 
 // type that is a subset of HTMLAttributes, omitting consistent properties

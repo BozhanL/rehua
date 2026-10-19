@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 export class CreateUserDto {
   constructor(
     public userName: string,

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { createApp, swaggerConfig } from './helpers';
 import type { Config } from '@/utils/config';
 import { NestiaSwaggerComposer } from '@nestia/sdk';

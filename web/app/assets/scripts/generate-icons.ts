@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 // import promises api and path from fs module
 import { promises as fs } from 'node:fs';
 import path from 'node:path';

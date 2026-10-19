@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { generateTheme } from './template';
 import { type FormProps, withTheme } from '@rjsf/core';
 import type {

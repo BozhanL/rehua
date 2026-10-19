@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { User } from '@/schema/users/entities/user.entity';
 import { PickType } from '@nestjs/swagger';
 

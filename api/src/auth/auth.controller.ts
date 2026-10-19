@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { AuthService, TOKEN_TTL_SEC } from './auth.service';
 import type { LoginBody } from './dto/login-body.dto';
 import type { LoginResponseDto } from './dto/login-response.dto';

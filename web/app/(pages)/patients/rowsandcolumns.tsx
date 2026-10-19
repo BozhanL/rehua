@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import Icon from '@/app/components/common/Icon';
 import MiniLabel, {
   type MiniPresetLabel,

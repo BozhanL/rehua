@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { ExpressUser } from '@/utils/types';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';

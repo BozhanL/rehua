@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import type { CreateTemplateDto } from '../dto/create-template.dto';
 import { TemplateType, TemplateTypeValues } from './template-type.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';

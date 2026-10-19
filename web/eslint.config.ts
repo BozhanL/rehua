@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import js from '@eslint/js';
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import nextVitals from 'eslint-config-next/core-web-vitals';

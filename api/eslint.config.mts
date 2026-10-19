@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import eslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import jest from 'eslint-plugin-jest';

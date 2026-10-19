@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 export enum ObservationType {
   //Numrical Observations
   RUNNING_NOTES = 'RUNNING_NOTES',

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import { LOCAL_STRATEGY_NAME } from './local.strategy';
 import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
