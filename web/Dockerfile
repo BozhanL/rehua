@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 
-FROM node:24-trixie-slim@sha256:a6155384446670e9719bdc4fd0ebe4d4b29fb32a8d6aa523da3547a6cfbcf22c AS builder
+FROM node:24-trixie-slim@sha256:1375326a10579cc1fd089d5da149ad29ae76dc3ccee6c0b0746d3de09dc5d0a1 AS builder
 
 
 COPY --chown=node:node ./package-lock.json ./package.json ./.npmrc /app/
