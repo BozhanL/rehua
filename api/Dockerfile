@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 
-FROM node:24-trixie-slim@sha256:43b9ba1142b8dcf33fa8f922ca1be85714adc444e0586c7cf7726daaeabc1bea AS builder
+FROM node:24-trixie-slim@sha256:89c5244bc22a9bc3287d89ebc7e49b9cb5bb84cd40e6175ac3421d5a9f68b95a AS builder
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ RUN npm ci --no-audit && \
   npm run build -w api && \
   rm ./api/dist/tsconfig.build.tsbuildinfo
 
-FROM node:24-trixie-slim@sha256:43b9ba1142b8dcf33fa8f922ca1be85714adc444e0586c7cf7726daaeabc1bea AS dependencies
+FROM node:24-trixie-slim@sha256:89c5244bc22a9bc3287d89ebc7e49b9cb5bb84cd40e6175ac3421d5a9f68b95a AS dependencies
 
 WORKDIR /app
 
@@ -26,7 +26,7 @@ RUN mkdir -p ./node_modules ./api/node_modules && \
   -w api \
   --include-workspace-root
 
-FROM node:24-trixie-slim@sha256:43b9ba1142b8dcf33fa8f922ca1be85714adc444e0586c7cf7726daaeabc1bea AS app
+FROM node:24-trixie-slim@sha256:89c5244bc22a9bc3287d89ebc7e49b9cb5bb84cd40e6175ac3421d5a9f68b95a AS app
 
 WORKDIR /app
 
