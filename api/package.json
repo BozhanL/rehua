@@ -13,7 +13,7 @@
   "description": "Digital Patient File Storage Enhancement - Ex32 Backend",
   "private": true,
   "engines": {
-    "node": "^24",
+    "node": "^26.0.0",
     "npm": "^11.11"
   },
   "scripts": {
